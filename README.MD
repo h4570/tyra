@@ -1,10 +1,9 @@
 [![Contributors][contributors-shield]][contributors-url]  
 [![MIT License][license-shield]][license-url] 
-[![LinkedIn][linkedin-shield]][linkedin-url]  
 
 <br />
 <p align="center">
-  <a href="https://github.com/h4570/tyra">
+  <a href="https://github.com/ps2-tyra/tyra">
     <img src="http://allvectorlogo.com/img/2016/05/ps2-logo.png" alt="Logo" width="230" height="125">
   </a>
 
@@ -16,9 +15,9 @@
     <a href="https://www.youtube.com/"><strong>View Demo (soon) »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
+    <a href="https://github.com/ps2-tyra/tyra/issues">Report Bug</a>
     ·
-    <a href="https://github.com/h4570/tyra/issues">Request Feature</a>
+    <a href="https://github.com/ps2-tyra/tyra/issues">Request Feature</a>
   </p>
 </p>  
 
@@ -52,8 +51,8 @@ Coding something for PS2 requires from you doing everything from scratch, even d
 * IOP - I/O processor which enables access to peripheral devices, such the game controller  
 
 ### Samples
-* [Floors](https://github.com/h4570/tyra/tree/master/src/samples/floors) 
-* [Ari (WIP)](https://github.com/h4570/tyra/tree/master/src/samples/ari) 
+* [Floors](https://github.com/ps2-tyra/tyra/tree/master/src/samples/floors) 
+* [Ari (WIP)](https://github.com/ps2-tyra/tyra/tree/master/src/samples/ari) 
 
 ### Features
 * VU1 (PATH 1 rendering) with double buffering  
@@ -92,7 +91,7 @@ This is an example of how to list things you need to use the software and how to
 
 1. Clone the repo 
 ```sh
-git clone https://github.com/h4570/tyra.git
+git clone https://github.com/ps2-tyra/tyra.git
 ```
 2. Get into src folder and compile it!  
 ```sh
@@ -120,7 +119,7 @@ Here is a list of the things I'm working on:
 * Sound effects 
 * Code documentation  
 
-See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
+See the [open issues](https://github.com/ps2-tyra/tyra/issues) for a list of proposed features (and known issues). 
 
 ## Contributing 
 
@@ -138,13 +137,14 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 
 ## Contact  
 
-Sandro Sobczyński - hastoklai@gmail.com 
+Sandro Sobczyński - sandro.sobczynski@gmail.com   
+[![LinkedIn][linkedin-shield]][linkedin-url]  
 
-Project Link: [https://github.com/h4570/tyra](https://github.com/h4570/tyra)  
+Project Link: [https://github.com/ps2-tyra/tyra](https://github.com/ps2-tyra/tyra)  
 
-[contributors-shield]: https://img.shields.io/github/contributors/h4570/tyra.svg?style=flat-square  
-[contributors-url]: https://github.com/h4570/tyra/graphs/contributors 
+[contributors-shield]: https://img.shields.io/github/contributors/ps2-tyra/tyra.svg?style=flat-square  
+[contributors-url]: https://github.com/ps2-tyra/tyra/graphs/contributors 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555  
 [linkedin-url]: https://linkedin.com/in/sandro-sobczyński-28820b15a/  
-[license-shield]: https://img.shields.io/github/license/h4570/tyra.svg?style=flat-square  
-[license-url]: https://github.com/h4570/tyra/blob/master/LICENSE  
+[license-shield]: https://img.shields.io/github/license/ps2-tyra/tyra.svg?style=flat-square  
+[license-url]: https://github.com/ps2-tyra/tyra/blob/master/LICENSE  
