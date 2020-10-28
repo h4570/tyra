@@ -105,19 +105,9 @@ make
 
 ## Roadmap  
 
-Here is a list of the things I'm working on:  
+### Roadmap moved to github kanban:  
+[https://github.com/ps2-tyra/tyra/projects/1](https://github.com/ps2-tyra/tyra/projects/1)  
 
-* Fix PATH3 and PATH1 triangle clipping
-* Add skybox with 6 textures to ari sample
-* Ariana textures 
-* Bugfix: Player speed on different zoom  
-* Implement player rotation 
-* Bugfix: Backface culling bug on rotation  
-* Bugfix: Remove camera rotation reset flickering 
-* Bugfix: 2x Audio tick overflow  
-* Audio - change listeners logic 
-* Sound effects 
-* Code documentation  
 
 See the [open issues](https://github.com/ps2-tyra/tyra/issues) for a list of proposed features (and known issues). 
 
