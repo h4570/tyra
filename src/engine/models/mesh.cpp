@@ -78,16 +78,36 @@ void Mesh::setDff(Vector3 &t_initPos, DffModel *t_dffModel, MeshSpec *t_spec)
     isDffLoaded = true;
 }
 
-void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale)
+void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 framesAmount)
 {
     createSpecIfNotCreated();
     ObjLoader loader = ObjLoader();
     obj = new ObjModel(t_objFile);
-    char *objPath = String::createConcatenated(t_subfolder, t_objFile);
-    loader.load(obj, objPath, t_scale);
-    delete[] objPath;
+
+    obj->frameCount = framesAmount;
+    obj->frames = new Frame[framesAmount];
+
+    char *part1 = String::createConcatenated(t_subfolder, t_objFile); // "folder/object"
+    char *part2 = String::createConcatenated(part1, "_");             // "folder/object_"
+    delete[] part1;
+
+    for (u16 i = 0; i < framesAmount; i++)
+    {
+        char *part3 = String::createU32ToString(i + 1);              // 0 -> "1"
+        char *part4 = String::createWithLeadingZeros(part3);         // "000001"
+        char *part5 = String::createConcatenated(part2, part4);      // "folder/object_000001"
+        char *finalPath = String::createConcatenated(part5, ".obj"); // "folder/object_000001.obj"
+        loader.load(&obj->frames[i], finalPath, t_scale);
+        delete[] part3;
+        delete[] part4;
+        delete[] part5;
+        delete[] finalPath;
+    }
+
+    delete[] part2;
+
     position = t_initPos;
-    setVerticesReference(obj->getFacesCount(), obj->vertices);
+    setVerticesReference(obj->getFacesCount(), obj->frames[0].vertices);
     setDefaultColor();
     isObjLoaded = true;
     loadTextures(t_subfolder, ".bmp");
@@ -100,7 +120,7 @@ void Mesh::setObj(Vector3 &t_initPos, ObjModel *t_objModel, MeshSpec *t_spec)
     spec = t_spec;
     isSpecInitialized = true;
     obj = t_objModel;
-    setVerticesReference(obj->getFacesCount(), obj->vertices);
+    setVerticesReference(obj->getFacesCount(), obj->frames[0].vertices);
     setDefaultColor();
     isObjLoaded = true;
 }
@@ -159,10 +179,10 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
     BmpLoader bmpLoader = BmpLoader();
     if (isObjLoaded)
     {
-        spec->textures = new Texture[obj->materialsCount];
-        for (u8 i = 0; i < obj->materialsCount; i++)
+        spec->textures = new Texture[obj->frames[0].materialsCount];
+        for (u8 i = 0; i < obj->frames[0].materialsCount; i++)
         {
-            bmpLoader.load(spec->textures[i], t_subfolder, obj->materials[i].materialName, t_extension);
+            bmpLoader.load(spec->textures[i], t_subfolder, obj->frames[0].materials[i].materialName, t_extension);
             setDefaultWrapSettings(spec->textures[i].wrapSettings);
         }
     }
@@ -265,8 +285,13 @@ void Mesh::playAnimation(u32 t_startFrame, u32 t_endFrame)
         md2->animState.startFrame = t_startFrame;
         md2->animState.endFrame = t_endFrame;
     }
+    else if (isObjLoaded == 1)
+    {
+        obj->animState.startFrame = t_startFrame;
+        obj->animState.endFrame = t_endFrame;
+    }
     else
-        PRINT_ERR("Animation is only supported in MD2 format!");
+        PRINT_ERR("Animation is only supported in MD2/OBJ format!");
 }
 
 /** Returns next farthest vertex of 3D object

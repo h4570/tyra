@@ -15,17 +15,7 @@
 #include <math3d.h>
 #include "math/vector3.hpp"
 #include "math/point.hpp"
-
-typedef struct
-{
-    u32 startFrame;
-    u32 endFrame;
-    float speed;
-    float interpolation;
-    u32 animType;
-    u32 currentFrame;
-    u32 nextFrame;
-} MD2AnimState;
+#include "./anim_state.hpp"
 
 typedef struct
 {
@@ -43,7 +33,7 @@ public:
     Point *coordinates;
     u32 *normalIndexes;
     MD2Triangle *triangles;
-    MD2AnimState animState;
+    AnimState animState;
     /** File name without extension */
     char *filename;
     MD2Model(char *t_md2File);

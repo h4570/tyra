@@ -181,7 +181,7 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     VECTOR *coordinates = new VECTOR[vertCount];
     VECTOR *colors = new VECTOR[vertCount];
     if (t_mesh->isObjLoaded)
-        for (u32 i = 0; i < t_mesh->obj->materialsCount; i++)
+        for (u32 i = 0; i < t_mesh->obj->frames[0].materialsCount; i++)
         {
             changeTexture(t_mesh, i);
             vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, colors, *renderData.cameraPosition);

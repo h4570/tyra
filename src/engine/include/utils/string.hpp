@@ -17,6 +17,8 @@ class String
 {
 
 public:
+    static char *createU32ToString(u32 a);
+    static char *createWithLeadingZeros(char *a);
     static char *createCopy(char *source);
     static u32 getLength(char *a);
     static char *createConcatenated(char *a, char *b);

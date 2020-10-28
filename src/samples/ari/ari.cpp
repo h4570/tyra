@@ -35,7 +35,7 @@ Ari::~Ari() {}
 
 // TEST START
 const u8 WATER_TILES_COUNT = 64;
-Mesh *island, *islandAddons, *skybox;
+Mesh *island, *islandAddons, *skybox, *test;
 Mesh **waterFloors;
 Point *spirals;
 
@@ -73,45 +73,53 @@ void Ari::onInit()
     engine.audio.init(0);
     engine.audio.setVolume(40);
     engine.audio.loadSong("MOV-CIRC.WAV");
-    engine.audio.play();
+    // engine.audio.play();
 
-    Vector3 islandPos = Vector3(0.0F, 10.0F, 0.0F);
-    island = new Mesh();
-    island->rotation.x = -1.6F;
-    island->loadDff("sunnyisl/", "sunnyisl.dff", islandPos, 0.1F);
-    island->shouldBeFrustumCulled = false;
-    island->shouldBeBackfaceCulled = true;
+    // Vector3 islandPos = Vector3(0.0F, 10.0F, 0.0F);
+    // island = new Mesh();
+    // island->rotation.x = -1.6F;
+    // island->loadDff("sunnyisl/", "sunnyisl.dff", islandPos, 0.1F);
+    // island->shouldBeFrustumCulled = false;
+    // island->shouldBeBackfaceCulled = true;
 
-    islandAddons = new Mesh();
-    islandAddons->rotation.x = -1.6F;
-    islandAddons->loadDff("sunnyisl/", "sunnyisl3.dff", islandPos, 0.1F);
-    islandAddons->shouldBeFrustumCulled = false;
+    // islandAddons = new Mesh();
+    // islandAddons->rotation.x = -1.6F;
+    // islandAddons->loadDff("sunnyisl/", "sunnyisl3.dff", islandPos, 0.1F);
+    // islandAddons->shouldBeFrustumCulled = false;
 
-    skybox = new Mesh();
-    Vector3 skyboxPos = Vector3(0.0F, 10.0F, 0.0F);
-    skybox->loadObj("skybox/", "skybox.obj", skyboxPos, 80.0F);
-    skybox->shouldBeFrustumCulled = true;
+    test = new Mesh();
+    Vector3 testpos = Vector3(0.0F, 10.0F, 0.0F);
+    test->loadObj("objanim/", "untitled", testpos, 10.0F, 2);
+    test->playAnimation(0, 1);
+    // test->shouldBeFrustumCulled = true;
 
-    waterFloors = new Mesh *[WATER_TILES_COUNT];
-    spirals = new Point[WATER_TILES_COUNT];
-    Vector3 initPos = Vector3(0.0F, 8.0F, 0.0F);
-    waterFloors[0] = new Mesh();
-    waterFloors[0]->loadObj("water/", "water.obj", initPos, 5.0F);
-    waterFloors[0]->shouldBeFrustumCulled = true;
-    for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-    {
-        spirals[i].x = 1.0F;
-        spirals[i].y = 2.0F;
-    }
-    u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
-    calcSpiral(spiralOffset, spiralOffset);
-    for (u8 i = 1; i < WATER_TILES_COUNT; i++)
-    {
-        waterFloors[i] = new Mesh();
-        Vector3 nextPos = Vector3(10.0F * spirals[i].x, 8.0F, 10.0F * spirals[i].y);
-        waterFloors[i]->setObj(nextPos, waterFloors[0]->obj, waterFloors[0]->spec);
-        waterFloors[i]->shouldBeFrustumCulled = true;
-    }
+    // skybox = new Mesh();
+    // Vector3 skyboxPos = Vector3(0.0F, 10.0F, 0.0F);
+    // skybox->loadObj("skybox/", "skybox.obj", skyboxPos, 80.0F);
+    // skybox->shouldBeFrustumCulled = true;
+
+    // waterFloors = new Mesh *[WATER_TILES_COUNT];
+    // spirals = new Point[WATER_TILES_COUNT];
+    // Vector3 initPos = Vector3(0.0F, 8.0F, 0.0F);
+    // waterFloors[0] = new Mesh();
+    // // loadObj("water/", "water", initPos, 5.0F,12);
+    // // loadObj("water/", "water", initPos, 5.0F);
+    // waterFloors[0]->loadObj("water/", "water", initPos, 5.0F, 2);
+    // waterFloors[0]->shouldBeFrustumCulled = true;
+    // for (u8 i = 0; i < WATER_TILES_COUNT; i++)
+    // {
+    //     spirals[i].x = 1.0F;
+    //     spirals[i].y = 2.0F;
+    // }
+    // u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
+    // calcSpiral(spiralOffset, spiralOffset);
+    // for (u8 i = 1; i < WATER_TILES_COUNT; i++)
+    // {
+    //     waterFloors[i] = new Mesh();
+    //     Vector3 nextPos = Vector3(10.0F * spirals[i].x, 8.0F, 10.0F * spirals[i].y);
+    //     waterFloors[i]->setObj(nextPos, waterFloors[0]->obj, waterFloors[0]->spec);
+    //     waterFloors[i]->shouldBeFrustumCulled = true;
+    // }
 }
 
 void Ari::initBulb()
@@ -125,10 +133,11 @@ void Ari::onUpdate()
     if (engine.pad.isCrossClicked)
         printf("FPS:%f\n", engine.fps);
     camera->update(engine.pad, player->mesh);
-    engine.renderer->draw(skybox);
-    engine.renderer->draw(island);
-    engine.renderer->draw(islandAddons);
-    // engine.renderer->draw(&player->mesh);
-    for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-        engine.renderer->draw(waterFloors[i]); // TODO
+    engine.renderer->draw(test);
+    // engine.renderer->draw(skybox);
+    // engine.renderer->draw(island);
+    // engine.renderer->draw(islandAddons);
+    // // engine.renderer->draw(&player->mesh);
+    // for (u8 i = 0; i < WATER_TILES_COUNT; i++)
+    //     engine.renderer->draw(waterFloors[i]); // TODO
 }

@@ -14,6 +14,7 @@
 #include <tamtypes.h>
 #include <math3d.h>
 #include "math/vector3.hpp"
+#include "./anim_state.hpp"
 
 struct ObjMaterial
 {
@@ -22,19 +23,26 @@ struct ObjMaterial
     u32 *verticeFaces, *coordinateFaces, *normalFaces;
 };
 
+struct Frame
+{
+    u16 number;
+    u32 verticesCount, coordinatesCount, normalsCount, materialsCount;
+    Vector3 *vertices __attribute__((aligned(16))),
+        *coordinates __attribute__((aligned(16))),
+        *normals __attribute__((aligned(16)));
+    ObjMaterial *materials;
+};
+
 /** Class which have common types for all 3D objects */
 class ObjModel
 {
 
 public:
-    u32 verticesCount, coordinatesCount, normalsCount, materialsCount;
-    Vector3 *vertices __attribute__((aligned(16))),
-        *coordinates __attribute__((aligned(16))),
-        *normals __attribute__((aligned(16)));
-
     /** File name without extension */
     char *filename;
-    ObjMaterial *materials;
+    u16 frameCount;
+    Frame *frames;
+    AnimState animState;
 
     ObjModel(char *t_objFile);
     ~ObjModel();
@@ -43,6 +51,8 @@ public:
     u8 isMemoryAllocated;
 
 private:
+    Vector3 calc3Vectors[3];
+    Vector3 calcVector;
     void fillNextFace(VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, VECTOR *o_colors, u32 t_materialI, u32 t_getI, u32 t_setI);
 };
 

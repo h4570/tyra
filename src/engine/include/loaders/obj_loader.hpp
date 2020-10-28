@@ -22,10 +22,10 @@ public:
     ObjLoader();
     ~ObjLoader();
 
-    void load(ObjModel *o_result, char *t_fileName, float t_scale);
+    void load(Frame *o_result, char *t_fileName, float t_scale);
 
 private:
-    void allocateObjMemory(FILE *t_file, ObjModel *t_result);
+    void allocateObjMemory(FILE *t_file, Frame *t_result);
 };
 
 #endif

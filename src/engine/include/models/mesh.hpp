@@ -39,7 +39,7 @@ public:
     Mesh();
     ~Mesh();
 
-    void loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale);
+    void loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 framesAmount);
     void setObj(Vector3 &t_initPos, ObjModel *t_objModel, MeshSpec *t_spec);
     void loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float t_scale);
     void setDff(Vector3 &t_initPos, DffModel *t_dffModel, MeshSpec *t_spec);

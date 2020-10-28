@@ -30,7 +30,7 @@ ObjLoader::~ObjLoader() {}
  * Notice: At this moment textures names are MATERIAL names from .obj file!
  * Notice 2: Faces MUST be triangulated (check out blender export settings).
  */
-void ObjLoader::load(ObjModel *o_result, char *t_filename, float t_scale)
+void ObjLoader::load(Frame *o_result, char *t_filename, float t_scale)
 {
     FILE *file = fopen(t_filename, "rb");
     if (file == NULL)
@@ -102,7 +102,7 @@ void ObjLoader::load(ObjModel *o_result, char *t_filename, float t_scale)
 }
 
 /** Calculate how many vertices(v), coordinates(vt), normals(vn) and faces(f) have .obj file */
-void ObjLoader::allocateObjMemory(FILE *t_file, ObjModel *o_result)
+void ObjLoader::allocateObjMemory(FILE *t_file, Frame *o_result)
 {
     o_result->verticesCount = 0;
     o_result->coordinatesCount = 0;
@@ -157,5 +157,5 @@ void ObjLoader::allocateObjMemory(FILE *t_file, ObjModel *o_result)
     o_result->vertices = new Vector3[o_result->verticesCount];
     o_result->coordinates = new Vector3[o_result->coordinatesCount];
     o_result->normals = new Vector3[o_result->normalsCount];
-    o_result->isMemoryAllocated = true;
+    // o_result->isMemoryAllocated = true;
 }

@@ -9,7 +9,30 @@
 */
 
 #include "../include/utils/string.hpp"
+#include "../include/utils/debug.hpp"
 #include <stdio.h>
+
+char *String::createU32ToString(u32 a)
+{
+    char *result = new char[(((sizeof a) * CHAR_BIT) + 2) / 3 + 2];
+    sprintf(result, "%d", a);
+    return result;
+}
+
+/** Converts "123" to "000123". 6 digits length */
+char *String::createWithLeadingZeros(char *a)
+{
+    const u8 digitsAmount = 6;
+    char *part = createConcatenated("00000000", a);
+    u16 partLength = getLength(part);
+    u16 insert = 0;
+    char *result = new char[digitsAmount + 1];
+    for (u16 i = partLength - digitsAmount; i < partLength; i++)
+        result[insert++] = part[i];
+    delete[] part;
+    result[digitsAmount] = '\0';
+    return result;
+}
 
 char *String::createWithoutExtension(char *source)
 {
@@ -34,6 +57,7 @@ char *String::createCopy(char *source)
     return res;
 }
 
+// For test\0 will return 4
 u32 String::getLength(char *a)
 {
     if (a == NULL)
