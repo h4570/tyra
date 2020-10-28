@@ -39,6 +39,10 @@
 
 <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.0.0/tyra.gif" alt="sample" width="600" height="auto">
 
+### Samples
+* [Floors](https://github.com/ps2-tyra/tyra/tree/master/src/samples/floors) 
+* [Ari (WIP)](https://github.com/ps2-tyra/tyra/tree/master/src/samples/ari) 
+
 This repository contains a early version of game engine with simple demos for PS2 (PlayStation 2™) that I've developed using the freely available PS2DEV, unofficial SDK. 
 Developing for PS2 was and is a big challenge for me, it's pretty low-level and hard (for me :D). The architecture is completely different from an Intel x86 and there are lots of extra things that you need to take into account. There are some samples available to teach on, but overall community died several years ago :/ 
   
@@ -49,10 +53,6 @@ Coding something for PS2 requires from you doing everything from scratch, even d
 * VU0 - vector processor accessed by inline assembly code injected into C program  
 * VU1 - vector processor (similar vertex shader) accessed via DMAC  
 * IOP - I/O processor which enables access to peripheral devices, such the game controller  
-
-### Samples
-* [Floors](https://github.com/ps2-tyra/tyra/tree/master/src/samples/floors) 
-* [Ari (WIP)](https://github.com/ps2-tyra/tyra/tree/master/src/samples/ari) 
 
 ### Features
 * VU1 (PATH 1 rendering) with double buffering  
