@@ -88,8 +88,8 @@ void Ari::onInit()
     islandAddons->shouldBeFrustumCulled = false;
 
     skybox = new Mesh();
-    Vector3 skyboxPos = Vector3(0.0F, 0.0F, 0.0F);
-    skybox->loadObj("skybox/", "skybox.obj", skyboxPos, 100.0F);
+    Vector3 skyboxPos = Vector3(0.0F, 10.0F, 0.0F);
+    skybox->loadObj("skybox/", "skybox.obj", skyboxPos, 80.0F);
     skybox->shouldBeFrustumCulled = true;
 
     waterFloors = new Mesh *[WATER_TILES_COUNT];
@@ -114,8 +114,6 @@ void Ari::onInit()
     }
 }
 
-u32 currentTexI = 0;
-
 void Ari::initBulb()
 {
     bulb.intensity = 15;
@@ -130,7 +128,7 @@ void Ari::onUpdate()
     engine.renderer->draw(skybox);
     engine.renderer->draw(island);
     engine.renderer->draw(islandAddons);
-    engine.renderer->draw(&player->mesh);
+    // engine.renderer->draw(&player->mesh);
     for (u8 i = 0; i < WATER_TILES_COUNT; i++)
         engine.renderer->draw(waterFloors[i]); // TODO
 }

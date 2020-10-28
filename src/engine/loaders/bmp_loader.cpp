@@ -51,6 +51,8 @@ void BmpLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     o_texture.height = height;
     o_texture.data = new unsigned char[width * height * 3];
     printf("BMPLoader - width: %d | height: %d\n", width, height);
+    if (width > 128 || height > 128)
+        PRINT_ERR("Given texture is big for PS2. Please strict to 128x128 max");
 
     u64 rowPadded = (width * 3 + 3) & (~3);
 
@@ -76,4 +78,5 @@ void BmpLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     }
     delete[] t_path;
     delete[] data;
+    // fclose(file); // wtf?
 }

@@ -180,7 +180,14 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     VECTOR *normals = new VECTOR[vertCount];
     VECTOR *coordinates = new VECTOR[vertCount];
     VECTOR *colors = new VECTOR[vertCount];
-    if (t_mesh->isObjLoaded || t_mesh->isMd2Loaded)
+    if (t_mesh->isObjLoaded)
+        for (u32 i = 0; i < t_mesh->obj->materialsCount; i++)
+        {
+            changeTexture(t_mesh, i);
+            vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, colors, *renderData.cameraPosition);
+            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, colors, t_mesh, t_bulbs, t_bulbsCount);
+        }
+    else if (t_mesh->isMd2Loaded)
     {
         changeTexture(t_mesh, 0);
         vertCount = t_mesh->getDrawData(0, vertices, normals, coordinates, colors, *renderData.cameraPosition);

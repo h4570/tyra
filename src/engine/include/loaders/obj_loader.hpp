@@ -25,7 +25,7 @@ public:
     void load(ObjModel *o_result, char *t_fileName, float t_scale);
 
 private:
-    void setObjDataQuantities(FILE *t_file, ObjModel *t_result);
+    void allocateObjMemory(FILE *t_file, ObjModel *t_result);
 };
 
 #endif

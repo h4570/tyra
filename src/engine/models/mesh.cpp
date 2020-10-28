@@ -87,7 +87,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float
     loader.load(obj, objPath, t_scale);
     delete[] objPath;
     position = t_initPos;
-    setVerticesReference(obj->facesCount, obj->vertices);
+    setVerticesReference(obj->getFacesCount(), obj->vertices);
     setDefaultColor();
     isObjLoaded = true;
     loadTextures(t_subfolder, ".bmp");
@@ -100,7 +100,7 @@ void Mesh::setObj(Vector3 &t_initPos, ObjModel *t_objModel, MeshSpec *t_spec)
     spec = t_spec;
     isSpecInitialized = true;
     obj = t_objModel;
-    setVerticesReference(obj->facesCount, obj->vertices);
+    setVerticesReference(obj->getFacesCount(), obj->vertices);
     setDefaultColor();
     isObjLoaded = true;
 }
@@ -134,7 +134,7 @@ u32 Mesh::getVertexCount()
     if (isMd2Loaded)
         return md2->trianglesCount * 3;
     else if (isObjLoaded)
-        return obj->facesCount;
+        return obj->getFacesCount();
     else if (isDffLoaded)
         return dff->clump.geometryList.geometries[0].data.dataHeader.triangleCount * 3;
     else
@@ -157,13 +157,19 @@ void Mesh::setDefaultWrapSettings(texwrap_t &t_wrapSettings)
 void Mesh::loadTextures(char *t_subfolder, char *t_extension)
 {
     BmpLoader bmpLoader = BmpLoader();
-    if (isMd2Loaded || isObjLoaded)
+    if (isObjLoaded)
+    {
+        spec->textures = new Texture[obj->materialsCount];
+        for (u8 i = 0; i < obj->materialsCount; i++)
+        {
+            bmpLoader.load(spec->textures[i], t_subfolder, obj->materials[i].materialName, t_extension);
+            setDefaultWrapSettings(spec->textures[i].wrapSettings);
+        }
+    }
+    else if (isMd2Loaded)
     {
         spec->textures = new Texture[1];
-        if (isMd2Loaded)
-            bmpLoader.load(spec->textures[0], t_subfolder, md2->filename, t_extension);
-        if (isObjLoaded)
-            bmpLoader.load(spec->textures[0], t_subfolder, obj->filename, t_extension);
+        bmpLoader.load(spec->textures[0], t_subfolder, md2->filename, t_extension);
         setDefaultWrapSettings(spec->textures[0].wrapSettings);
     }
     else if (isDffLoaded)
@@ -186,7 +192,7 @@ u32 Mesh::getDrawData(u32 splitIndex, VECTOR *t_vertices, VECTOR *t_normals, VEC
     if (isMd2Loaded)
         return md2->getCurrentFrameData(t_vertices, t_normals, t_coordinates, t_colors, t_cameraPos, scale, shouldBeBackfaceCulled);
     else if (isObjLoaded)
-        return obj->getDrawData(t_vertices, t_normals, t_coordinates, t_colors, t_cameraPos, scale, shouldBeBackfaceCulled);
+        return obj->getDrawData(splitIndex, t_vertices, t_normals, t_coordinates, t_colors, t_cameraPos, scale, shouldBeBackfaceCulled);
     else if (isDffLoaded)
         return dff->getDrawData(splitIndex, t_vertices, t_normals, t_coordinates, t_colors, t_cameraPos, scale, shouldBeBackfaceCulled);
     PRINT_ERR("Can't get draw data, because no 3D model was loaded!");
