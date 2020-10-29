@@ -83,10 +83,7 @@ u32 MD2Model::getCurrentFrameData(VECTOR *o_vertices, VECTOR *o_normals, VECTOR 
                 const u32 NEXT_VERTICE =
                     triangles[iTri].verticeIndexes[iVert] +
                     (verticesPerFrameCount * animState.nextFrame);
-                calcVector.setByLerp(vertices[CURR_VERTICE], vertices[NEXT_VERTICE], animState.interpolation);
-                calc3Vectors[iVert].x = calcVector.x * t_scale;
-                calc3Vectors[iVert].y = calcVector.y * t_scale;
-                calc3Vectors[iVert].z = calcVector.z * t_scale;
+                calc3Vectors[iVert].setByLerp(vertices[CURR_VERTICE], vertices[NEXT_VERTICE], animState.interpolation, t_scale);
             }
         }
         if (!t_shouldBeBackfaceCulled || Vector3::shouldBeBackfaceCulled(&t_cameraPos, &calc3Vectors[2], &calc3Vectors[1], &calc3Vectors[0]) == 0)

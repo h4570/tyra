@@ -65,6 +65,8 @@ void calcSpiral(int X, int Y)
 }
 // TEST END
 
+#include "models/mesh_frame.hpp"
+
 void Ari::onInit()
 {
     player = new Player();
@@ -91,6 +93,7 @@ void Ari::onInit()
     Vector3 testpos = Vector3(0.0F, 10.0F, 0.0F);
     test->loadObj("objanim/", "untitled", testpos, 10.0F, 2);
     test->playAnimation(0, 1);
+    test->shouldBeBackfaceCulled = true;
     // test->shouldBeFrustumCulled = true;
 
     // skybox = new Mesh();
@@ -130,6 +133,7 @@ void Ari::initBulb()
 
 void Ari::onUpdate()
 {
+
     if (engine.pad.isCrossClicked)
         printf("FPS:%f\n", engine.fps);
     camera->update(engine.pad, player->mesh);

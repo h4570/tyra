@@ -93,6 +93,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float
 
     for (u16 i = 0; i < framesAmount; i++)
     {
+        // obj->frames[i] = Frame();
         char *part3 = String::createU32ToString(i + 1);              // 0 -> "1"
         char *part4 = String::createWithLeadingZeros(part3);         // "000001"
         char *part5 = String::createConcatenated(part2, part4);      // "folder/object_000001"
@@ -182,7 +183,7 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
         spec->textures = new Texture[obj->frames[0].materialsCount];
         for (u8 i = 0; i < obj->frames[0].materialsCount; i++)
         {
-            bmpLoader.load(spec->textures[i], t_subfolder, obj->frames[0].materials[i].materialName, t_extension);
+            bmpLoader.load(spec->textures[i], t_subfolder, obj->frames[0].materials[i].getName(), t_extension);
             setDefaultWrapSettings(spec->textures[i].wrapSettings);
         }
     }

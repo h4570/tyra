@@ -48,10 +48,10 @@ public:
     u8 isOnSquare(Vector3 &t_min, Vector3 &t_max);
     float length();
     void normalize();
-    void setByLerp(const Vector3 &v1, const Vector3 &v2, const float t_interp);
+    void setByLerp(const Vector3 &v1, const Vector3 &v2, const float &t_interp, const float &t_scale);
     float innerProduct(Vector3 &v);
-    void set(Vector3 &v);
-    void set(float x, float y, float z);
+    void set(const Vector3 &v);
+    void set(const float &x, const float &y, const float &z);
     void copy(Vector3 &v);
     float distanceTo(Vector3 &v);
     void print();

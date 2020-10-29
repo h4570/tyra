@@ -33,7 +33,7 @@ Vector3::Vector3(const Vector3 &another)
     z = another.z;
 }
 
-void Vector3::setByLerp(const Vector3 &v1, const Vector3 &v2, const float t_interp)
+void Vector3::setByLerp(const Vector3 &v1, const Vector3 &v2, const float &t_interp, const float &t_scale)
 {
     asm volatile(
         "lqc2      vf4, 0x0(%1)  \n\t" // vf4 = v1
@@ -47,6 +47,9 @@ void Vector3::setByLerp(const Vector3 &v1, const Vector3 &v2, const float t_inte
         :
         : "r"(&this->xyz), "r"(&v1.xyz), "r"(&v2.xyz), "f"(t_interp)
         : "$8");
+    x *= t_scale;
+    y *= t_scale;
+    z *= t_scale;
 }
 
 /** Create empty vector */
@@ -245,14 +248,14 @@ float Vector3::innerProduct(Vector3 &v)
     // return (x * v.x + y * v.y + z * v.z);
 }
 
-void Vector3::set(float x, float y, float z)
+void Vector3::set(const float &x, const float &y, const float &z)
 {
     this->x = x;
     this->y = y;
     this->z = z;
 }
 
-void Vector3::set(Vector3 &v)
+void Vector3::set(const Vector3 &v)
 {
     this->x = v.x;
     this->y = v.y;

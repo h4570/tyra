@@ -67,7 +67,7 @@ void ObjLoader::load(Frame *o_result, char *t_filename, float t_scale)
             {
                 char temp[30];
                 fscanf(file, "%s\n", temp);
-                o_result->materials[++materialsI].materialName = String::createCopy(temp);
+                o_result->materials[++materialsI].setName(temp);
                 faceI = 0;
             }
             else if (strcmp(lineHeader, "f") == 0)
@@ -80,17 +80,17 @@ void ObjLoader::load(Frame *o_result, char *t_filename, float t_scale)
                     PRINT_ERR(".obj can't be read by this simple parser. Try exporting with other options");
                 else
                 {
-                    o_result->materials[materialsI].verticeFaces[faceI] = vertexIndex[0] - 1;
-                    o_result->materials[materialsI].verticeFaces[faceI + 1] = vertexIndex[1] - 1;
-                    o_result->materials[materialsI].verticeFaces[faceI + 2] = vertexIndex[2] - 1;
+                    o_result->materials[materialsI].setVertexFace(faceI, vertexIndex[0] - 1);
+                    o_result->materials[materialsI].setVertexFace(faceI + 1, vertexIndex[1] - 1);
+                    o_result->materials[materialsI].setVertexFace(faceI + 2, vertexIndex[2] - 1);
 
-                    o_result->materials[materialsI].coordinateFaces[faceI] = coordIndex[0] - 1;
-                    o_result->materials[materialsI].coordinateFaces[faceI + 1] = coordIndex[1] - 1;
-                    o_result->materials[materialsI].coordinateFaces[faceI + 2] = coordIndex[2] - 1;
+                    o_result->materials[materialsI].setStFace(faceI, coordIndex[0] - 1);
+                    o_result->materials[materialsI].setStFace(faceI + 1, coordIndex[1] - 1);
+                    o_result->materials[materialsI].setStFace(faceI + 2, coordIndex[2] - 1);
 
-                    o_result->materials[materialsI].normalFaces[faceI] = normalIndex[0] - 1;
-                    o_result->materials[materialsI].normalFaces[faceI + 1] = normalIndex[1] - 1;
-                    o_result->materials[materialsI].normalFaces[faceI + 2] = normalIndex[2] - 1;
+                    o_result->materials[materialsI].setNormalFace(faceI, normalIndex[0] - 1);
+                    o_result->materials[materialsI].setNormalFace(faceI + 1, normalIndex[1] - 1);
+                    o_result->materials[materialsI].setNormalFace(faceI + 2, normalIndex[2] - 1);
                     faceI += 3;
                 }
             }
@@ -128,11 +128,11 @@ void ObjLoader::allocateObjMemory(FILE *t_file, Frame *o_result)
             break;
     }
 
-    o_result->materials = new ObjMaterial[o_result->materialsCount];
+    o_result->materials = new MeshMaterial[o_result->materialsCount];
     s16 currentMatI = -1;
 
     fseek(t_file, 0, SEEK_SET);
-
+    u32 facesCounter = 0;
     while (1)
     {
         char lineHeader[128];
@@ -140,20 +140,20 @@ void ObjLoader::allocateObjMemory(FILE *t_file, Frame *o_result)
         if (res != EOF)
         {
             if (strcmp(lineHeader, "usemtl") == 0)
-                o_result->materials[++currentMatI].facesCount = 0;
+            {
+                if (currentMatI >= 0) // Skip -1
+                    o_result->materials[currentMatI].setFacesCount(facesCounter);
+                currentMatI++;
+            }
             else if (strcmp(lineHeader, "f") == 0)
-                o_result->materials[currentMatI].facesCount += 3;
+                facesCounter += 3;
         }
         else
             break;
     }
 
-    for (u16 i = 0; i < o_result->materialsCount; i++)
-    {
-        o_result->materials[i].coordinateFaces = new u32[o_result->materials[i].facesCount];
-        o_result->materials[i].normalFaces = new u32[o_result->materials[i].facesCount];
-        o_result->materials[i].verticeFaces = new u32[o_result->materials[i].facesCount];
-    }
+    o_result->materials[currentMatI].setFacesCount(facesCounter); // Allocate last one
+
     o_result->vertices = new Vector3[o_result->verticesCount];
     o_result->coordinates = new Vector3[o_result->coordinatesCount];
     o_result->normals = new Vector3[o_result->normalsCount];

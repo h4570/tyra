@@ -14,13 +14,21 @@
 #include <tamtypes.h>
 #include <math3d.h>
 #include "math/vector3.hpp"
+#include "utils/debug.hpp"
 #include "./anim_state.hpp"
+#include "./mesh_material.hpp"
 
-struct ObjMaterial
+class Frame2
 {
-    char *materialName;
-    u32 facesCount;
-    u32 *verticeFaces, *coordinateFaces, *normalFaces;
+public:
+    Frame2() { printf("Frame2 constructor\n"); };
+    ~Frame2() { printf("Frame2 destructor\n"); };
+    u16 number;
+    u32 verticesCount, coordinatesCount, normalsCount, materialsCount;
+    Vector3 *vertices __attribute__((aligned(16))),
+        *coordinates __attribute__((aligned(16))),
+        *normals __attribute__((aligned(16)));
+    MeshMaterial *materials;
 };
 
 struct Frame
@@ -30,7 +38,7 @@ struct Frame
     Vector3 *vertices __attribute__((aligned(16))),
         *coordinates __attribute__((aligned(16))),
         *normals __attribute__((aligned(16)));
-    ObjMaterial *materials;
+    MeshMaterial *materials;
 };
 
 /** Class which have common types for all 3D objects */
@@ -46,14 +54,13 @@ public:
 
     ObjModel(char *t_objFile);
     ~ObjModel();
+    void animate();
     u32 getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, VECTOR *o_colors, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled);
     u32 getFacesCount();
     u8 isMemoryAllocated;
 
 private:
     Vector3 calc3Vectors[3];
-    Vector3 calcVector;
-    void fillNextFace(VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, VECTOR *o_colors, u32 t_materialI, u32 t_getI, u32 t_setI);
 };
 
 #endif

@@ -42,7 +42,6 @@ public:
     void allocateMemory();
 
 private:
-    Vector3 calcVector;
     Vector3 calc3Vectors[3];
 };
 
