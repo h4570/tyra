@@ -51,7 +51,7 @@ GifSender::~GifSender()
 #include <gs_gp.h>
 
 /** Send texture via GIF */
-void GifSender::sendTexture(Texture &texture, texbuffer_t *t_texBuffer)
+void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
 {
     const u16 packetSize = 40;
     packet_t *packet = packet_init(packetSize, PACKET_NORMAL);

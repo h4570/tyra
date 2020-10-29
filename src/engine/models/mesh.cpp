@@ -14,6 +14,7 @@
 #include "../include/loaders/md2_loader.hpp"
 #include "../include/loaders/dff_loader.hpp"
 #include "../include/loaders/bmp_loader.hpp"
+#include "../include/models/mesh_texture.hpp"
 #include "../include/utils/debug.hpp"
 #include "../include/utils/string.hpp"
 
@@ -178,7 +179,7 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
     BmpLoader bmpLoader = BmpLoader();
     if (isObjLoaded)
     {
-        spec->textures = new Texture[obj->frames[0].getMaterialsCount()];
+        spec->textures = new MeshTexture[obj->frames[0].getMaterialsCount()];
         for (u8 i = 0; i < obj->frames[0].getMaterialsCount(); i++)
         {
             bmpLoader.load(spec->textures[i], t_subfolder, obj->frames[0].getMaterial(i).getName(), t_extension);
@@ -187,13 +188,13 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
     }
     else if (isMd2Loaded)
     {
-        spec->textures = new Texture[1];
+        spec->textures = new MeshTexture[1];
         bmpLoader.load(spec->textures[0], t_subfolder, md2->filename, t_extension);
         setDefaultWrapSettings(spec->textures[0].wrapSettings);
     }
     else if (isDffLoaded)
     {
-        spec->textures = new Texture[dff->clump.geometryList.geometries[0].materialList.data.materialCount];
+        spec->textures = new MeshTexture[dff->clump.geometryList.geometries[0].materialList.data.materialCount];
         for (u8 i = 0; i < dff->clump.geometryList.geometries[0].materialList.data.materialCount; i++)
             for (u8 j = 0; j < dff->clump.geometryList.geometries[0].materialList.materials[i].data.textureCount; j++)
             {

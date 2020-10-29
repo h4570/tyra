@@ -16,6 +16,12 @@
 #include "math/vector3.hpp"
 #include "./mesh_material.hpp"
 
+/**
+ * Class which contains core mesh data 
+ * which are needed for drawing.
+ * Static object (not animated), will have 
+ * only one instance of this class. 
+ */
 class MeshFrame
 {
 

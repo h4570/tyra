@@ -8,9 +8,21 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#ifndef _TYRA_TEXTURE_
-#define _TYRA_TEXTURE_
+#include "../include/models/mesh_texture.hpp"
+#include "../include/utils/debug.hpp"
 
+// ----
+// Constructors/Destructors
+// ----
 
+MeshTexture::MeshTexture()
+{
+}
 
-#endif
+MeshTexture::~MeshTexture()
+{
+}
+
+// ----
+// Methods
+// ----

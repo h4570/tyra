@@ -30,7 +30,7 @@ BmpLoader::~BmpLoader() {}
  * @param t_name Without extension. Example "skyfall2"
  * @param t_extension With dot and extension. Example ".BMP"
  */
-void BmpLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *t_extension)
+void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, char *t_extension)
 {
     char *t_path_part = String::createConcatenated(t_subfolder, t_name);
     char *t_path = String::createConcatenated(t_path_part, t_extension);

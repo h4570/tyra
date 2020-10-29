@@ -12,7 +12,7 @@
 #define _TYRA_OBJECT3D_SPEC_
 
 #include "math/vector3.hpp"
-#include "./texture.hpp"
+#include "./mesh_texture.hpp"
 #include <tamtypes.h>
 #include <draw_buffers.h>
 #include <draw_sampling.h>
@@ -30,7 +30,7 @@ public:
 
     void allocateMemory();
     void setupLodAndClut();
-    Texture *textures;
+    MeshTexture *textures;
 
 private:
 };

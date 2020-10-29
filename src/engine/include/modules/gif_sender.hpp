@@ -22,6 +22,7 @@
 #include "../models/screen_settings.hpp"
 #include "../models/light_bulb.hpp"
 #include "../models/render_data.hpp"
+#include "../models/mesh_texture.hpp"
 
 /** Class responsible for sending data packets via GIF (PATH3) */
 class GifSender
@@ -36,7 +37,7 @@ public:
     void addClear(zbuffer_t *t_zBuffer);
     void sendPacket();
     void sendClear(zbuffer_t *t_zBuffer);
-    static void sendTexture(Texture &texture, texbuffer_t *t_texBuffer);
+    static void sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer);
 
 private:
     xyz_t *xyz;

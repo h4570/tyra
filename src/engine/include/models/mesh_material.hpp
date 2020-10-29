@@ -13,9 +13,9 @@
 
 #include <tamtypes.h>
 
-/** Class which contains draw data for mesh part.
+/** Class which contains draw instructions for part mesh of mesh.
  * Mesh can have many materials.
- * For example, car can have three materials:
+ * For example, car mesh can have three materials:
  * body, tires and windows. 
  */
 class MeshMaterial
