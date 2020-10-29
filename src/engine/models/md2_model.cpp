@@ -53,7 +53,7 @@ MD2Model::~MD2Model()
 // Methods
 // ----
 
-u32 MD2Model::getCurrentFrameData(VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, VECTOR *o_colors, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled)
+u32 MD2Model::getCurrentFrameData(VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled)
 {
     u32 i = 0;
     animState.interpolation += animState.speed;
@@ -109,11 +109,6 @@ u32 MD2Model::getCurrentFrameData(VECTOR *o_vertices, VECTOR *o_normals, VECTOR 
                 o_coordinates[i][1] = 1.0F - coordinates[CURR_COORD].y;
                 o_coordinates[i][2] = 1.0F;
                 o_coordinates[i][3] = 1.0F;
-
-                o_colors[i][0] = 1.0F;
-                o_colors[i][1] = 1.0F;
-                o_colors[i][2] = 1.0F;
-                o_colors[i][3] = 1.0F;
                 i++;
             }
     }

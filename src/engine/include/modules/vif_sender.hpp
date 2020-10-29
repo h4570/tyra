@@ -28,10 +28,10 @@ public:
     ~VifSender();
 
     // TODO refactor
-    void drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, VECTOR *colors, Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
+    void drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
 
 private:
-    void drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_colors, VECTOR *t_coordinates, prim_t *t_prim);
+    void drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim);
 
     MATRIX localWorld, localScreen;
     VECTOR position, rotation;

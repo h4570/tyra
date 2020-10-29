@@ -177,7 +177,7 @@ u32 GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, RenderData *t_re
     VECTOR *normals = new VECTOR[vertexCount];
     VECTOR *coordinates = new VECTOR[vertexCount];
     VECTOR *colors = new VECTOR[vertexCount];
-    vertexCount = t_mesh.getDrawData(0, vertices, normals, coordinates, colors, *t_renderData->cameraPosition);
+    vertexCount = t_mesh.getDrawData(0, vertices, normals, coordinates, *t_renderData->cameraPosition);
 
     xyz = new xyz_t[vertexCount];
     rgbaq = new color_t[vertexCount];
@@ -195,7 +195,7 @@ u32 GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, RenderData *t_re
     if (SHOULD_BE_LIGHTED)
         create_local_light(localLight, rotation);
 
-    // I cant put perspective from renderData here. PS2SDK bug?
+    // I cant put perspective from renderData here. ee-gcc bug?
     create_local_screen(localScreen, localWorld, t_renderData->worldView->data, t_perspective.data);
 
     if (SHOULD_BE_LIGHTED)
@@ -212,27 +212,41 @@ u32 GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, RenderData *t_re
 
         calculate_lights(lights, vertexCount, normals, lightDirections, lightColors, lightTypes, lightsCount);
 
-        calculate_colours(colors, vertexCount, colors, lights);
+        for (u32 i = 0; i < vertexCount; i++)
+        {
+            // Apply the light value to the colour.
+            colors[i][0] = (t_mesh.color.r * lights[i][0]);
+            colors[i][1] = (t_mesh.color.g * lights[i][1]);
+            colors[i][2] = (t_mesh.color.b * lights[i][2]);
+            vector_clamp(colors[i], colors[i], 0.00f, 1.99f);
+        }
 
         delete[] lightDirections;
         delete[] lightColors;
         delete[] lightTypes;
         delete[] lights;
     }
+    else
+        for (u32 i = 0; i < vertexCount; i++)
+        {
+            colors[i][0] = t_mesh.color.r / 128.0F;
+            colors[i][1] = t_mesh.color.g / 128.0F;
+            colors[i][2] = t_mesh.color.b / 128.0F;
+        }
 
     calculate_vertices(vertices, vertexCount, vertices, localScreen);
 
-    convertCalcs(vertexCount, vertices, colors, coordinates, t_mesh.color.a);
+    convertCalcs(vertexCount, vertices, colors, coordinates, t_mesh.color);
 
     delete[] vertices;
     delete[] normals;
-    delete[] coordinates;
     delete[] colors;
+    delete[] coordinates;
 
     return vertexCount;
 }
 
-void GifSender::convertCalcs(u32 t_vertexCount, VECTOR *t_vertices, VECTOR *t_colors, VECTOR *t_sts, u8 t_alpha)
+void GifSender::convertCalcs(u32 t_vertexCount, VECTOR *t_vertices, VECTOR *t_colors, VECTOR *t_sts, color_t &t_color)
 {
     // TODO get this via screensettings
     const s32 centerX = ftoi4(2048);
@@ -254,7 +268,7 @@ void GifSender::convertCalcs(u32 t_vertexCount, VECTOR *t_vertices, VECTOR *t_co
         rgbaq[i].r = (u8)(t_colors[i][0] * 128.0F);
         rgbaq[i].g = (u8)(t_colors[i][1] * 128.0F);
         rgbaq[i].b = (u8)(t_colors[i][2] * 128.0F);
-        rgbaq[i].a = t_alpha;
+        rgbaq[i].a = t_color.a;
         rgbaq[i].q = q;
     }
 }

@@ -37,7 +37,7 @@ VifSender::~VifSender() {}
 // Methods
 // ----
 
-void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, VECTOR *colors, Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
+void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     if (t_mesh->shouldBeFrustumCulled == 1 && !t_mesh->isInFrustum(t_renderData->frustumPlanes))
         return;
@@ -60,7 +60,7 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
                 i -= 3;
 
             const u32 endI = i + (VU1_PACKAGE_VERTS_PER_BUFF - 1) > vertCount2 ? vertCount2 : i + (VU1_PACKAGE_VERTS_PER_BUFF - 1);
-            drawVertices(t_mesh, i, endI, vertices, colors, coordinates, t_renderData->prim);
+            drawVertices(t_mesh, i, endI, vertices, coordinates, t_renderData->prim);
             if (endI == vertCount2) // if there are no more vertices to draw, break
             {
                 i = vertCount2;
@@ -74,7 +74,7 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
 }
 
 /** Draw using PATH1 */
-void VifSender::drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_colors, VECTOR *t_coordinates, prim_t *t_prim)
+void VifSender::drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim)
 {
     const u32 vertCount = t_end - t_start;
     vu1.addListBeginning();

@@ -24,11 +24,11 @@ public:
     DffModel();
     ~DffModel();
 
-    u32 getDrawData(u32 splitIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, VECTOR *o_colors, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled);
+    u32 getDrawData(u32 splitIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled);
     RwClump clump;
 
 private:
-    void fillNextFace(VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, VECTOR *o_colors, u8 geometry, u32 t_getI, u32 t_setI);
+    void fillNextFace(VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, u8 geometry, u32 t_getI, u32 t_setI);
     u8 isMemoryAllocated;
 };
 

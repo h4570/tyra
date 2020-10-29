@@ -72,7 +72,7 @@ void ObjModel::animate()
     }
 }
 
-u32 ObjModel::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, VECTOR *o_colors, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled)
+u32 ObjModel::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled)
 {
 #define CURR_FRAME frames[animState.currentFrame]
 #define NEXT_FRAME frames[animState.nextFrame]
@@ -107,12 +107,7 @@ u32 ObjModel::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_nor
                 o_coordinates[addedFaces][0] = CURR_FRAME.coordinates[MATERIAL.getStFace(matI + vertI)].x;
                 o_coordinates[addedFaces][1] = CURR_FRAME.coordinates[MATERIAL.getStFace(matI + vertI)].y;
                 o_coordinates[addedFaces][2] = 1.0F;
-                o_coordinates[addedFaces][3] = 1.0F;
-
-                o_colors[addedFaces][0] = 1.0F;
-                o_colors[addedFaces][1] = 1.0F;
-                o_colors[addedFaces][2] = 1.0F;
-                o_colors[addedFaces++][3] = 1.0F;
+                o_coordinates[addedFaces++][3] = 1.0F;
             }
     }
     return addedFaces;

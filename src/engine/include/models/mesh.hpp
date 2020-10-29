@@ -48,7 +48,7 @@ public:
     void playAnimation(u32 t_startFrame, u32 t_endFrame);
     u32 getVertexCount();
     void setAnimSpeed(float t_value);
-    u32 getDrawData(u32 splitIndex, VECTOR *t_vertices, VECTOR *t_normals, VECTOR *t_coordinates, VECTOR *t_colors, Vector3 &t_cameraPos);
+    u32 getDrawData(u32 splitIndex, VECTOR *t_vertices, VECTOR *t_normals, VECTOR *t_coordinates, Vector3 &t_cameraPos);
     u8 isInFrustum(Plane *t_frustumPlanes);
 
     u8 isMd2Loaded, isObjLoaded, isDffLoaded, isSpecInitialized;

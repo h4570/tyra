@@ -54,7 +54,7 @@ private:
     MATRIX localWorld, localScreen, localLight;
 
     u32 calc3DObject(Matrix t_perspective, Mesh &t_mesh, RenderData *t_renderData, LightBulb *t_bulbs, u16 t_bulbsCount);
-    void convertCalcs(u32 t_vertCount, VECTOR *t_vertices, VECTOR *t_colors, VECTOR *t_sts, u8 t_alpha);
+    void convertCalcs(u32 t_vertCount, VECTOR *t_vertices, VECTOR *t_colors, VECTOR *t_sts, color_t &t_color);
     void addCurrentCalcs(u32 &t_vertexCount);
 };
 

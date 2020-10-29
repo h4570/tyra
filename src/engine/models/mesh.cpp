@@ -208,14 +208,14 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
 }
 
 // TODO refactor
-u32 Mesh::getDrawData(u32 splitIndex, VECTOR *t_vertices, VECTOR *t_normals, VECTOR *t_coordinates, VECTOR *t_colors, Vector3 &t_cameraPos)
+u32 Mesh::getDrawData(u32 splitIndex, VECTOR *t_vertices, VECTOR *t_normals, VECTOR *t_coordinates, Vector3 &t_cameraPos)
 {
     if (isMd2Loaded)
-        return md2->getCurrentFrameData(t_vertices, t_normals, t_coordinates, t_colors, t_cameraPos, scale, shouldBeBackfaceCulled);
+        return md2->getCurrentFrameData(t_vertices, t_normals, t_coordinates, t_cameraPos, scale, shouldBeBackfaceCulled);
     else if (isObjLoaded)
-        return obj->getDrawData(splitIndex, t_vertices, t_normals, t_coordinates, t_colors, t_cameraPos, scale, shouldBeBackfaceCulled);
+        return obj->getDrawData(splitIndex, t_vertices, t_normals, t_coordinates, t_cameraPos, scale, shouldBeBackfaceCulled);
     else if (isDffLoaded)
-        return dff->getDrawData(splitIndex, t_vertices, t_normals, t_coordinates, t_colors, t_cameraPos, scale, shouldBeBackfaceCulled);
+        return dff->getDrawData(splitIndex, t_vertices, t_normals, t_coordinates, t_cameraPos, scale, shouldBeBackfaceCulled);
     PRINT_ERR("Can't get draw data, because no 3D model was loaded!");
     return 0;
 }

@@ -143,9 +143,9 @@ void Renderer::drawByPath3(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u1
 void Renderer::drawByPath3(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
+    changeTexture(t_mesh, 0);
     gifSender->initPacket(context);
     // TODO
-    changeTexture(t_mesh, 0);
     gifSender->addObjects(&renderData, &t_mesh, 1, t_bulbs, t_bulbsCount);
     gifSender->sendPacket();
     draw_wait_finish();
@@ -179,35 +179,33 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     VECTOR *vertices = new VECTOR[vertCount];
     VECTOR *normals = new VECTOR[vertCount];
     VECTOR *coordinates = new VECTOR[vertCount];
-    VECTOR *colors = new VECTOR[vertCount];
     if (t_mesh->isObjLoaded)
     {
         t_mesh->obj->animate();
         for (u32 i = 0; i < t_mesh->obj->frames[0].materialsCount; i++)
         {
             changeTexture(t_mesh, i);
-            vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, colors, *renderData.cameraPosition);
-            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, colors, t_mesh, t_bulbs, t_bulbsCount);
+            vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
+            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount);
         }
     }
     else if (t_mesh->isMd2Loaded)
     {
         changeTexture(t_mesh, 0);
-        vertCount = t_mesh->getDrawData(0, vertices, normals, coordinates, colors, *renderData.cameraPosition);
-        vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, colors, t_mesh, t_bulbs, t_bulbsCount);
+        vertCount = t_mesh->getDrawData(0, vertices, normals, coordinates, *renderData.cameraPosition);
+        vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount);
     }
     else if (t_mesh->isDffLoaded)
         for (u32 i = 0; i < t_mesh->dff->clump.geometryList.geometries[0].extension.materialSplit.header.splitCount; i++)
         {
             const u32 currentTexI = t_mesh->dff->clump.geometryList.geometries[0].extension.materialSplit.splitInformation[i].materialIndex;
             changeTexture(t_mesh, currentTexI);
-            vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, colors, *renderData.cameraPosition);
-            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, colors, t_mesh, t_bulbs, t_bulbsCount);
+            vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
+            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount);
         }
     delete[] vertices;
     delete[] normals;
     delete[] coordinates;
-    delete[] colors;
 }
 
 /** PATH1 Many */

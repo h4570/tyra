@@ -38,7 +38,7 @@ public:
     char *filename;
     MD2Model(char *t_md2File);
     ~MD2Model();
-    u32 getCurrentFrameData(VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, VECTOR *o_colors, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled);
+    u32 getCurrentFrameData(VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled);
     void allocateMemory();
 
 private:
