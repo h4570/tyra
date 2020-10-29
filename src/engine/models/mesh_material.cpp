@@ -11,6 +11,7 @@
 #include "../include/models/mesh_material.hpp"
 #include "../include/utils/debug.hpp"
 #include "../include/utils/string.hpp"
+#include <cstdlib>
 
 // ----
 // Constructors/Destructors
@@ -18,51 +19,49 @@
 
 MeshMaterial::MeshMaterial()
 {
+    id = rand() % 100000;
     facesCount = 0;
-    isNameAllocated = false;
-    areFacesAllocated = false;
+    _isNameSet = false;
+    _areFacesAllocated = false;
 }
 
 MeshMaterial::~MeshMaterial()
 {
-
-    if (areFacesAllocated)
+    if (_areFacesAllocated)
     {
         delete[] vertexFaces;
         delete[] stFaces;
         delete[] normalFaces;
     }
-    if (isNameAllocated)
-    {
+    if (_isNameSet)
         delete[] name;
-    }
 }
 
 // ----
 // Methods
 // ----
 
-void MeshMaterial::setFacesCount(const u32 &t_val)
+void MeshMaterial::allocateFaces(const u32 &t_val)
 {
-    if (areFacesAllocated)
+    if (_areFacesAllocated)
     {
-        PRINT_ERR("Can't set faces, because faces were already set!");
+        PRINT_ERR("Can't allocate faces, because were already set!");
         return;
     }
     facesCount = t_val;
     stFaces = new u32[t_val];
     normalFaces = new u32[t_val];
     vertexFaces = new u32[t_val];
-    areFacesAllocated = true;
+    _areFacesAllocated = true;
 }
 
 void MeshMaterial::setName(char *t_val)
 {
-    if (isNameAllocated)
+    if (_isNameSet)
     {
         PRINT_ERR("Can't set name, because was already set!");
         return;
     }
     name = String::createCopy(t_val);
-    isNameAllocated = true;
+    _isNameSet = true;
 }

@@ -18,11 +18,11 @@
 // ----
 
 /** Create by specifying 3 points */
-Vector3::Vector3(float x, float y, float z)
+Vector3::Vector3(float t_x, float t_y, float t_z)
 {
-    this->x = x;
-    this->y = y;
-    this->z = z;
+    x = t_x;
+    y = t_y;
+    z = t_z;
 }
 
 /** Create with another vector values */

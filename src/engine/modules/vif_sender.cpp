@@ -37,7 +37,7 @@ VifSender::~VifSender() {}
 // Methods
 // ----
 
-void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
+void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
     if (t_mesh->shouldBeFrustumCulled == 1 && !t_mesh->isInFrustum(t_renderData->frustumPlanes))
         return;
@@ -60,7 +60,7 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
                 i -= 3;
 
             const u32 endI = i + (VU1_PACKAGE_VERTS_PER_BUFF - 1) > vertCount2 ? vertCount2 : i + (VU1_PACKAGE_VERTS_PER_BUFF - 1);
-            drawVertices(t_mesh, i, endI, vertices, coordinates, t_renderData->prim);
+            drawVertices(t_mesh, i, endI, vertices, coordinates, t_renderData->prim, textureBuffer);
             if (endI == vertCount2) // if there are no more vertices to draw, break
             {
                 i = vertCount2;
@@ -74,7 +74,7 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
 }
 
 /** Draw using PATH1 */
-void VifSender::drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim)
+void VifSender::drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer)
 {
     const u32 vertCount = t_end - t_start;
     vu1.addListBeginning();
@@ -100,13 +100,13 @@ void VifSender::drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_ver
 
     vu1.add128( // tex -> buff + clut
         GS_SET_TEX0(
-            t_mesh->spec->textureBuffer.address >> 6,
-            t_mesh->spec->textureBuffer.width >> 6,
-            t_mesh->spec->textureBuffer.psm,
-            t_mesh->spec->textureBuffer.info.width,
-            t_mesh->spec->textureBuffer.info.height,
-            t_mesh->spec->textureBuffer.info.components,
-            t_mesh->spec->textureBuffer.info.function,
+            textureBuffer->address >> 6,
+            textureBuffer->width >> 6,
+            textureBuffer->psm,
+            textureBuffer->info.width,
+            textureBuffer->info.height,
+            textureBuffer->info.components,
+            textureBuffer->info.function,
             t_mesh->spec->clut.address >> 6,
             t_mesh->spec->clut.psm,
             t_mesh->spec->clut.storage_mode,

@@ -31,7 +31,7 @@ public:
         float xyz[3] __attribute__((__aligned__(16)));
     };
 
-    Vector3(float x, float y, float z);
+    Vector3(float t_x, float t_y, float t_z);
     Vector3(const Vector3 &v);
     Vector3();
     ~Vector3();

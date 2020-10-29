@@ -26,11 +26,13 @@ public:
         float xy[2] __attribute__((__aligned__(16)));
     };
 
-    Point(float x, float y);
+    Point(float t_x, float t_y);
+    Point(const Point &v);
     Point();
     ~Point();
 
-    void set(float x, float y);
+    void set(float t_x, float t_y);
+    void set(const Point &v);
     void print();
 };
 

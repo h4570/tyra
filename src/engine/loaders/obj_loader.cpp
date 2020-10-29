@@ -30,7 +30,7 @@ ObjLoader::~ObjLoader() {}
  * Notice: At this moment textures names are MATERIAL names from .obj file!
  * Notice 2: Faces MUST be triangulated (check out blender export settings).
  */
-void ObjLoader::load(Frame *o_result, char *t_filename, float t_scale)
+void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 invertT)
 {
     FILE *file = fopen(t_filename, "rb");
     if (file == NULL)
@@ -49,25 +49,27 @@ void ObjLoader::load(Frame *o_result, char *t_filename, float t_scale)
             {
                 Vector3 vector = Vector3();
                 fscanf(file, "%f %f %f\n", &vector.x, &vector.y, &vector.z);
-                o_result->vertices[verticesI++] = vector * t_scale;
+                o_result->setVertex(verticesI++, vector * t_scale);
             }
             else if (strcmp(lineHeader, "vt") == 0)
             {
-                Vector3 vector = Vector3();
-                fscanf(file, "%f %f\n", &vector.x, &vector.y);
-                o_result->coordinates[cordsI++] = vector;
+                Point point = Point();
+                fscanf(file, "%f %f\n", &point.x, &point.y);
+                if (invertT)
+                    point.y = 1.0F - point.y;
+                o_result->setST(cordsI++, point);
             }
             else if (strcmp(lineHeader, "vn") == 0)
             {
                 Vector3 vector = Vector3();
                 fscanf(file, "%f %f %f\n", &vector.x, &vector.y, &vector.z);
-                o_result->normals[normalsI++] = vector;
+                o_result->setNormal(normalsI++, vector);
             }
             else if (strcmp(lineHeader, "usemtl") == 0)
             {
                 char temp[30];
                 fscanf(file, "%s\n", temp);
-                o_result->materials[++materialsI].setName(temp);
+                o_result->getMaterial(++materialsI).setName(temp);
                 faceI = 0;
             }
             else if (strcmp(lineHeader, "f") == 0)
@@ -80,17 +82,17 @@ void ObjLoader::load(Frame *o_result, char *t_filename, float t_scale)
                     PRINT_ERR(".obj can't be read by this simple parser. Try exporting with other options");
                 else
                 {
-                    o_result->materials[materialsI].setVertexFace(faceI, vertexIndex[0] - 1);
-                    o_result->materials[materialsI].setVertexFace(faceI + 1, vertexIndex[1] - 1);
-                    o_result->materials[materialsI].setVertexFace(faceI + 2, vertexIndex[2] - 1);
+                    o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
+                    o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
+                    o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
 
-                    o_result->materials[materialsI].setStFace(faceI, coordIndex[0] - 1);
-                    o_result->materials[materialsI].setStFace(faceI + 1, coordIndex[1] - 1);
-                    o_result->materials[materialsI].setStFace(faceI + 2, coordIndex[2] - 1);
+                    o_result->getMaterial(materialsI).setSTFace(faceI, coordIndex[0] - 1);
+                    o_result->getMaterial(materialsI).setSTFace(faceI + 1, coordIndex[1] - 1);
+                    o_result->getMaterial(materialsI).setSTFace(faceI + 2, coordIndex[2] - 1);
 
-                    o_result->materials[materialsI].setNormalFace(faceI, normalIndex[0] - 1);
-                    o_result->materials[materialsI].setNormalFace(faceI + 1, normalIndex[1] - 1);
-                    o_result->materials[materialsI].setNormalFace(faceI + 2, normalIndex[2] - 1);
+                    o_result->getMaterial(materialsI).setNormalFace(faceI, normalIndex[0] - 1);
+                    o_result->getMaterial(materialsI).setNormalFace(faceI + 1, normalIndex[1] - 1);
+                    o_result->getMaterial(materialsI).setNormalFace(faceI + 2, normalIndex[2] - 1);
                     faceI += 3;
                 }
             }
@@ -102,12 +104,12 @@ void ObjLoader::load(Frame *o_result, char *t_filename, float t_scale)
 }
 
 /** Calculate how many vertices(v), coordinates(vt), normals(vn) and faces(f) have .obj file */
-void ObjLoader::allocateObjMemory(FILE *t_file, Frame *o_result)
+void ObjLoader::allocateObjMemory(FILE *t_file, MeshFrame *o_result)
 {
-    o_result->verticesCount = 0;
-    o_result->coordinatesCount = 0;
-    o_result->normalsCount = 0;
-    o_result->materialsCount = 0;
+    u32 vertexCount = 0;
+    u32 stsCount = 0;
+    u32 normalsCount = 0;
+    u32 materialsCount = 0;
 
     while (1)
     {
@@ -116,19 +118,23 @@ void ObjLoader::allocateObjMemory(FILE *t_file, Frame *o_result)
         if (res != EOF)
         {
             if (strcmp(lineHeader, "v") == 0)
-                o_result->verticesCount += 1;
+                vertexCount += 1;
             else if (strcmp(lineHeader, "vt") == 0)
-                o_result->coordinatesCount += 1;
+                stsCount += 1;
             else if (strcmp(lineHeader, "vn") == 0)
-                o_result->normalsCount += 1;
+                normalsCount += 1;
             else if (strcmp(lineHeader, "usemtl") == 0)
-                o_result->materialsCount += 1;
+                materialsCount += 1;
         }
         else
             break;
     }
 
-    o_result->materials = new MeshMaterial[o_result->materialsCount];
+    o_result->allocateVertices(vertexCount);
+    o_result->allocateNormals(normalsCount);
+    o_result->allocateSTs(stsCount);
+    o_result->allocateMaterials(materialsCount);
+
     s16 currentMatI = -1;
 
     fseek(t_file, 0, SEEK_SET);
@@ -142,7 +148,7 @@ void ObjLoader::allocateObjMemory(FILE *t_file, Frame *o_result)
             if (strcmp(lineHeader, "usemtl") == 0)
             {
                 if (currentMatI >= 0) // Skip -1
-                    o_result->materials[currentMatI].setFacesCount(facesCounter);
+                    o_result->getMaterial(currentMatI).allocateFaces(facesCounter);
                 currentMatI++;
             }
             else if (strcmp(lineHeader, "f") == 0)
@@ -152,10 +158,7 @@ void ObjLoader::allocateObjMemory(FILE *t_file, Frame *o_result)
             break;
     }
 
-    o_result->materials[currentMatI].setFacesCount(facesCounter); // Allocate last one
+    o_result->getMaterial(currentMatI).allocateFaces(facesCounter); // Allocate last one
 
-    o_result->vertices = new Vector3[o_result->verticesCount];
-    o_result->coordinates = new Vector3[o_result->coordinatesCount];
-    o_result->normals = new Vector3[o_result->normalsCount];
     // o_result->isMemoryAllocated = true;
 }

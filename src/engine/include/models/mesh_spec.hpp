@@ -22,20 +22,17 @@ class MeshSpec
 {
 
 public:
-    texbuffer_t textureBuffer;
     clutbuffer_t clut;
     lod_t lod;
 
     MeshSpec();
     ~MeshSpec();
-    void allocateTextureBuffer(u16 t_width, u16 t_height);
-    void deallocateTextureBuffer();
+
     void allocateMemory();
     void setupLodAndClut();
     Texture *textures;
 
 private:
-    u8 isTextureVRAMAllocated;
 };
 
 #endif

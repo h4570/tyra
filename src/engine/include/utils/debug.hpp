@@ -16,6 +16,6 @@
 #include <stdio.h>
 
 #define PRINT_LOG(TEXT) printf("LOG: " TEXT " (" __FILE__ ")\n")
-#define PRINT_ERR(TEXT) printf("---\n--- ---\n--- --- --- ERR: " TEXT " (" __FILE__ ")\n--- ---\n---\n")
+#define PRINT_ERR(TEXT) printf("\n====================================\n| ERROR: " TEXT "\n| File : " __FILE__ "\n====================================\n\n")
 
 #endif

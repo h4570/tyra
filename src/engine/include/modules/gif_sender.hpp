@@ -32,7 +32,7 @@ public:
     ~GifSender();
 
     void initPacket(u8 context);
-    void addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
+    void addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer);
     void addClear(zbuffer_t *t_zBuffer);
     void sendPacket();
     void sendClear(zbuffer_t *t_zBuffer);

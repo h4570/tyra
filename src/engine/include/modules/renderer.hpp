@@ -56,13 +56,15 @@ public:
     void endFrame(float fps);
 
 private:
+    void allocateTextureBuffer(u16 t_width, u16 t_height);
+    void deallocateTextureBuffer();
     void changeTexture(Mesh *t_mesh, u8 t_textureIndex);
     void flipBuffers();
     void beginFrameIfNeeded();
-    u8 isFrameEmpty;
+    u8 isFrameEmpty, isTextureVRAMAllocated;
     Matrix perspective;
     RenderData renderData;
-
+    texbuffer_t textureBuffer;
     u32 lastTextureId;
     GifSender *gifSender;
     VifSender *vifSender;

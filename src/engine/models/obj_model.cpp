@@ -55,8 +55,8 @@ ObjModel::~ObjModel()
 u32 ObjModel::getFacesCount()
 {
     u32 result = 0; // TODO
-    for (u16 i = 0; i < frames[0].materialsCount; i++)
-        result += frames[0].materials[i].getFacesCount();
+    for (u16 i = 0; i < frames[0].getMaterialsCount(); i++)
+        result += frames[0].getMaterial(i).getFacesCount();
     return result;
 }
 
@@ -76,9 +76,9 @@ u32 ObjModel::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_nor
 {
 #define CURR_FRAME frames[animState.currentFrame]
 #define NEXT_FRAME frames[animState.nextFrame]
-#define MATERIAL CURR_FRAME.materials[t_materialIndex]
-#define CURR_VERT CURR_FRAME.vertices[MATERIAL.getVertexFace(matI + vertI)]
-#define NEXT_VERT NEXT_FRAME.vertices[MATERIAL.getVertexFace(matI + vertI)]
+#define MATERIAL CURR_FRAME.getMaterial(t_materialIndex)
+#define CURR_VERT CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI))
+#define NEXT_VERT NEXT_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI))
     u32 addedFaces = 0;
 
     for (u32 matI = 0; matI < MATERIAL.getFacesCount(); matI += 3)
@@ -99,13 +99,13 @@ u32 ObjModel::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_nor
                 o_vertices[addedFaces][2] = calc3Vectors[vertI].z;
                 o_vertices[addedFaces][3] = 1.0F;
 
-                o_normals[addedFaces][0] = CURR_FRAME.normals[MATERIAL.getNormalFace(matI + vertI)].x;
-                o_normals[addedFaces][1] = CURR_FRAME.normals[MATERIAL.getNormalFace(matI + vertI)].y;
-                o_normals[addedFaces][2] = CURR_FRAME.normals[MATERIAL.getNormalFace(matI + vertI)].z;
+                o_normals[addedFaces][0] = CURR_FRAME.getNormal(MATERIAL.getNormalFace(matI + vertI)).x;
+                o_normals[addedFaces][1] = CURR_FRAME.getNormal(MATERIAL.getNormalFace(matI + vertI)).y;
+                o_normals[addedFaces][2] = CURR_FRAME.getNormal(MATERIAL.getNormalFace(matI + vertI)).z;
                 o_normals[addedFaces][3] = 1.0F;
 
-                o_coordinates[addedFaces][0] = CURR_FRAME.coordinates[MATERIAL.getStFace(matI + vertI)].x;
-                o_coordinates[addedFaces][1] = CURR_FRAME.coordinates[MATERIAL.getStFace(matI + vertI)].y;
+                o_coordinates[addedFaces][0] = CURR_FRAME.getST(MATERIAL.getSTFace(matI + vertI)).x;
+                o_coordinates[addedFaces][1] = CURR_FRAME.getST(MATERIAL.getSTFace(matI + vertI)).y;
                 o_coordinates[addedFaces][2] = 1.0F;
                 o_coordinates[addedFaces++][3] = 1.0F;
             }

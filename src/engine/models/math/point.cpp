@@ -17,10 +17,17 @@
 // ----
 
 /** Create by specifying values */
-Point::Point(float x, float y)
+Point::Point(float t_x, float t_y)
 {
-    this->x = x;
-    this->y = y;
+    x = t_x;
+    y = t_y;
+}
+
+/** Create with other point values */
+Point::Point(const Point &v)
+{
+    x = v.x;
+    y = v.y;
 }
 
 /** Create empty point */
@@ -36,10 +43,16 @@ Point::~Point() {}
 // Methods
 // ----
 
-void Point::set(float x, float y)
+void Point::set(float t_x, float t_y)
 {
-    this->x = x;
-    this->y = y;
+    x = x;
+    y = y;
+}
+
+void Point::set(const Point &v)
+{
+    x = v.x;
+    y = v.y;
 }
 
 void Point::print()

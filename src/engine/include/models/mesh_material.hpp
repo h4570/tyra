@@ -13,6 +13,11 @@
 
 #include <tamtypes.h>
 
+/** Class which contains draw data for mesh part.
+ * Mesh can have many materials.
+ * For example, car can have three materials:
+ * body, tires and windows. 
+ */
 class MeshMaterial
 {
 
@@ -20,44 +25,78 @@ public:
     MeshMaterial();
     ~MeshMaterial();
 
+    // ----
+    // Getters
+    // ----
+
     /** Material name. */
     char *getName() const { return name; };
+
+    /** 
+     * Auto generated unique Id. 
+     * Core role of this variable is to select correct texture to draw
+     */
+    const u32 &getId() const { return id; };
+
     const u32 &getFacesCount() const { return facesCount; };
+
     /** Indexes of vertices. Each 3 faces will give you vertices of next triangle. */
-    const u32 &getVertexFace(const u32 &i) const { return vertexFaces[i]; };
+    u32 &getVertexFace(const u32 &i) const { return vertexFaces[i]; };
+
     /** Indexes of texture coords. Each 3 faces will give you texture coords of next triangle. */
-    const u32 &getStFace(const u32 &i) const { return stFaces[i]; };
+    u32 &getSTFace(const u32 &i) const { return stFaces[i]; };
+
     /** Indexes of normal vectors used for lighting. Each 3 faces will give you normal vectors of next triangle. */
-    const u32 &getNormalFace(const u32 &i) const { return normalFaces[i]; };
+    u32 &getNormalFace(const u32 &i) const { return normalFaces[i]; };
+
     /** Array of vertex faces. Size of getFacesCount() */
-    const u32 *getVertexFaces() const { return vertexFaces; };
+    u32 *getVertexFaces() const { return vertexFaces; };
+
     /** Array of texture coords faces. Size of getFacesCount() */
-    const u32 *getStFaces() const { return stFaces; };
+    u32 *getSTFaces() const { return stFaces; };
+
     /** Array of normal vector faces. Size of getFacesCount() */
-    const u32 *getNormalFaces() const { return normalFaces; };
+    u32 *getNormalFaces() const { return normalFaces; };
 
-    /** Set faces count and allocate faces memory. */
-    void setFacesCount(const u32 &t_val);
+    // ----
+    //  Setters
+    // ----
 
-    /** Set vertex face. Do not call this method until you know what you do.
-     * Should be called by data loader. */
+    /** 
+     * Do not call this method unless you know what you do.
+     * Should be called by data loader. 
+     */
     void setVertexFace(const u32 &t_index, const u32 &t_val) { vertexFaces[t_index] = t_val; }
 
-    /** Set st face. Do not call this method until you know what you do.
-     * Should be called by data loader. */
-    void setStFace(const u32 &t_index, const u32 &t_val) { stFaces[t_index] = t_val; }
+    /** 
+     * Do not call this method unless you know what you do.
+     * Should be called by data loader. 
+     */
+    void setSTFace(const u32 &t_index, const u32 &t_val) { stFaces[t_index] = t_val; }
 
-    /** Set vertex face. Do not call this method until you know what you do.
-     * Should be called by data loader. */
+    /** 
+     * Do not call this method unless you know what you do.
+     * Should be called by data loader. 
+     */
     void setNormalFace(const u32 &t_index, const u32 &t_val) { normalFaces[t_index] = t_val; }
 
     /** Set material name. */
     void setName(char *t_val);
 
+    // ----
+    //  Other
+    // ----
+
+    const u8 &isNameSet() const { return _isNameSet; };
+    const u8 &areFacesAllocated() const { return _areFacesAllocated; };
+
+    /** Set faces count and allocate memory. */
+    void allocateFaces(const u32 &t_val);
+
 private:
-    u32 facesCount;
+    u32 facesCount, id;
     u32 *vertexFaces, *stFaces, *normalFaces;
-    u8 isNameAllocated, areFacesAllocated;
+    u8 _isNameSet, _areFacesAllocated;
     char *name;
 };
 

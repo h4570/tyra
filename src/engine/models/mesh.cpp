@@ -62,7 +62,6 @@ void Mesh::loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float
     setDefaultColor();
     isDffLoaded = true;
     loadTextures(t_subfolder, ".bmp");
-    spec->allocateTextureBuffer(spec->textures[0].width, spec->textures[0].height); // wtf?
 }
 
 void Mesh::setDff(Vector3 &t_initPos, DffModel *t_dffModel, MeshSpec *t_spec)
@@ -85,7 +84,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float
     obj = new ObjModel(t_objFile);
 
     obj->frameCount = framesAmount;
-    obj->frames = new Frame[framesAmount];
+    obj->frames = new MeshFrame[framesAmount];
 
     char *part1 = String::createConcatenated(t_subfolder, t_objFile); // "folder/object"
     char *part2 = String::createConcatenated(part1, "_");             // "folder/object_"
@@ -98,7 +97,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float
         char *part4 = String::createWithLeadingZeros(part3);         // "000001"
         char *part5 = String::createConcatenated(part2, part4);      // "folder/object_000001"
         char *finalPath = String::createConcatenated(part5, ".obj"); // "folder/object_000001.obj"
-        loader.load(&obj->frames[i], finalPath, t_scale);
+        loader.load(&obj->frames[i], finalPath, t_scale, false);
         delete[] part3;
         delete[] part4;
         delete[] part5;
@@ -108,11 +107,10 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float
     delete[] part2;
 
     position = t_initPos;
-    setVerticesReference(obj->getFacesCount(), obj->frames[0].vertices);
+    setVerticesReference(obj->getFacesCount(), obj->frames[0].getVertices());
     setDefaultColor();
     isObjLoaded = true;
     loadTextures(t_subfolder, ".bmp");
-    spec->allocateTextureBuffer(spec->textures[0].width, spec->textures[0].height); // wtf?
 }
 
 void Mesh::setObj(Vector3 &t_initPos, ObjModel *t_objModel, MeshSpec *t_spec)
@@ -121,7 +119,7 @@ void Mesh::setObj(Vector3 &t_initPos, ObjModel *t_objModel, MeshSpec *t_spec)
     spec = t_spec;
     isSpecInitialized = true;
     obj = t_objModel;
-    setVerticesReference(obj->getFacesCount(), obj->frames[0].vertices);
+    setVerticesReference(obj->getFacesCount(), obj->frames[0].getVertices());
     setDefaultColor();
     isObjLoaded = true;
 }
@@ -180,10 +178,10 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
     BmpLoader bmpLoader = BmpLoader();
     if (isObjLoaded)
     {
-        spec->textures = new Texture[obj->frames[0].materialsCount];
-        for (u8 i = 0; i < obj->frames[0].materialsCount; i++)
+        spec->textures = new Texture[obj->frames[0].getMaterialsCount()];
+        for (u8 i = 0; i < obj->frames[0].getMaterialsCount(); i++)
         {
-            bmpLoader.load(spec->textures[i], t_subfolder, obj->frames[0].materials[i].getName(), t_extension);
+            bmpLoader.load(spec->textures[i], t_subfolder, obj->frames[0].getMaterial(i).getName(), t_extension);
             setDefaultWrapSettings(spec->textures[i].wrapSettings);
         }
     }
@@ -234,7 +232,6 @@ void Mesh::loadMD2(char *t_subfolder, char *t_md2File, Vector3 &t_initPos, float
     setDefaultColor();
     isMd2Loaded = true;
     loadTextures(t_subfolder, ".bmp");
-    spec->allocateTextureBuffer(spec->textures[0].width, spec->textures[0].height); // wtf?
 }
 
 /** Set's default object color + no transparency */

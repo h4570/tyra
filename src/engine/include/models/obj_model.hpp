@@ -17,29 +17,7 @@
 #include "utils/debug.hpp"
 #include "./anim_state.hpp"
 #include "./mesh_material.hpp"
-
-class Frame2
-{
-public:
-    Frame2() { printf("Frame2 constructor\n"); };
-    ~Frame2() { printf("Frame2 destructor\n"); };
-    u16 number;
-    u32 verticesCount, coordinatesCount, normalsCount, materialsCount;
-    Vector3 *vertices __attribute__((aligned(16))),
-        *coordinates __attribute__((aligned(16))),
-        *normals __attribute__((aligned(16)));
-    MeshMaterial *materials;
-};
-
-struct Frame
-{
-    u16 number;
-    u32 verticesCount, coordinatesCount, normalsCount, materialsCount;
-    Vector3 *vertices __attribute__((aligned(16))),
-        *coordinates __attribute__((aligned(16))),
-        *normals __attribute__((aligned(16)));
-    MeshMaterial *materials;
-};
+#include "./mesh_frame.hpp"
 
 /** Class which have common types for all 3D objects */
 class ObjModel
@@ -49,7 +27,7 @@ public:
     /** File name without extension */
     char *filename;
     u16 frameCount;
-    Frame *frames;
+    MeshFrame *frames;
     AnimState animState;
 
     ObjModel(char *t_objFile);

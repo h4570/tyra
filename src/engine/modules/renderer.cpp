@@ -88,14 +88,39 @@ void Renderer::setPrim()
     PRINT_LOG("Prim set!");
 }
 
+/** Configure and allocate vRAM for texture buffer */
+void Renderer::allocateTextureBuffer(u16 t_width, u16 t_height)
+{
+    textureBuffer.width = t_width;
+    textureBuffer.psm = GS_PSM_24;
+    textureBuffer.address = graph_vram_allocate(t_width, t_height, GS_PSM_24, GRAPH_ALIGN_BLOCK);
+    if (textureBuffer.address <= 1)
+        PRINT_ERR("Texture buffer allocation error. No memory!");
+    textureBuffer.info.width = draw_log2(t_width);
+    textureBuffer.info.height = draw_log2(t_height);
+    textureBuffer.info.components = TEXTURE_COMPONENTS_RGB;
+    textureBuffer.info.function = TEXTURE_FUNCTION_MODULATE;
+    isTextureVRAMAllocated = true;
+}
+
+/** Configure and allocate vRAM for texture buffer */
+void Renderer::deallocateTextureBuffer()
+{
+    if (isTextureVRAMAllocated)
+    {
+        graph_vram_free(textureBuffer.address);
+        isTextureVRAMAllocated = false;
+    }
+}
+
 void Renderer::changeTexture(Mesh *t_mesh, u8 t_textureIndex)
 {
     if (t_mesh->spec->textures[t_textureIndex].id != lastTextureId)
     {
         lastTextureId = t_mesh->spec->textures[t_textureIndex].id;
-        t_mesh->spec->deallocateTextureBuffer();
-        t_mesh->spec->allocateTextureBuffer(t_mesh->spec->textures[t_textureIndex].width, t_mesh->spec->textures[t_textureIndex].height);
-        GifSender::sendTexture(t_mesh->spec->textures[t_textureIndex], &t_mesh->spec->textureBuffer);
+        deallocateTextureBuffer();
+        allocateTextureBuffer(t_mesh->spec->textures[t_textureIndex].width, t_mesh->spec->textures[t_textureIndex].height);
+        GifSender::sendTexture(t_mesh->spec->textures[t_textureIndex], &textureBuffer);
     }
 }
 
@@ -134,7 +159,7 @@ void Renderer::drawByPath3(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u1
     gifSender->initPacket(context);
     // TODO
     changeTexture(t_meshes[0], 0);
-    gifSender->addObjects(&renderData, t_meshes, t_amount, t_bulbs, t_bulbsCount);
+    gifSender->addObjects(&renderData, t_meshes, t_amount, t_bulbs, t_bulbsCount, &textureBuffer);
     gifSender->sendPacket();
     draw_wait_finish();
 }
@@ -146,7 +171,7 @@ void Renderer::drawByPath3(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     changeTexture(t_mesh, 0);
     gifSender->initPacket(context);
     // TODO
-    gifSender->addObjects(&renderData, &t_mesh, 1, t_bulbs, t_bulbsCount);
+    gifSender->addObjects(&renderData, &t_mesh, 1, t_bulbs, t_bulbsCount, &textureBuffer);
     gifSender->sendPacket();
     draw_wait_finish();
 }
@@ -182,18 +207,18 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     if (t_mesh->isObjLoaded)
     {
         t_mesh->obj->animate();
-        for (u32 i = 0; i < t_mesh->obj->frames[0].materialsCount; i++)
+        for (u32 i = 0; i < t_mesh->obj->frames[0].getMaterialsCount(); i++)
         {
             changeTexture(t_mesh, i);
             vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
-            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount);
+            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
         }
     }
     else if (t_mesh->isMd2Loaded)
     {
         changeTexture(t_mesh, 0);
         vertCount = t_mesh->getDrawData(0, vertices, normals, coordinates, *renderData.cameraPosition);
-        vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount);
+        vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
     }
     else if (t_mesh->isDffLoaded)
         for (u32 i = 0; i < t_mesh->dff->clump.geometryList.geometries[0].extension.materialSplit.header.splitCount; i++)
@@ -201,7 +226,7 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
             const u32 currentTexI = t_mesh->dff->clump.geometryList.geometries[0].extension.materialSplit.splitInformation[i].materialIndex;
             changeTexture(t_mesh, currentTexI);
             vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
-            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount);
+            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
         }
     delete[] vertices;
     delete[] normals;

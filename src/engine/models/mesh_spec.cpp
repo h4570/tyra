@@ -29,38 +29,11 @@ MeshSpec::MeshSpec()
 /** Release memory if object was initialized */
 MeshSpec::~MeshSpec()
 {
-    if (this->isTextureVRAMAllocated == true)
-        graph_vram_free(this->textureBuffer.address);
 }
 
 // ----
 // Methods
 // ----
-
-/** Configure and allocate vRAM for texture buffer */
-void MeshSpec::allocateTextureBuffer(u16 t_width, u16 t_height)
-{
-    this->textureBuffer.width = t_width;
-    this->textureBuffer.psm = GS_PSM_24;
-    this->textureBuffer.address = graph_vram_allocate(t_width, t_height, GS_PSM_24, GRAPH_ALIGN_BLOCK);
-    if (this->textureBuffer.address <= 1)
-        PRINT_ERR("Texture buffer allocation error. No memory!");
-    this->textureBuffer.info.width = draw_log2(t_width);
-    this->textureBuffer.info.height = draw_log2(t_height);
-    this->textureBuffer.info.components = TEXTURE_COMPONENTS_RGB;
-    this->textureBuffer.info.function = TEXTURE_FUNCTION_MODULATE;
-    this->isTextureVRAMAllocated = true;
-}
-
-/** Configure and allocate vRAM for texture buffer */
-void MeshSpec::deallocateTextureBuffer()
-{
-    if (this->isTextureVRAMAllocated)
-    {
-        graph_vram_free(textureBuffer.address);
-        this->isTextureVRAMAllocated = false;
-    }
-}
 
 /** Sets texture level of details settings and CLUT settings */
 void MeshSpec::setupLodAndClut()

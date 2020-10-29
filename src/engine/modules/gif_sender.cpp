@@ -129,7 +129,7 @@ void GifSender::addClear(zbuffer_t *t_zBuffer)
  * @param objects3D Array of 3D objects pointers
  * @param amount Amount of 3D objects
  */
-void GifSender::addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
+void GifSender::addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
     if (!isAnyObjectAdded)
     {
@@ -141,7 +141,7 @@ void GifSender::addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_a
     q++;
 
     q = draw_texture_sampling(q, 0, &t_objects3D[0]->spec->lod);
-    q = draw_texturebuffer(q, 0, &t_objects3D[0]->spec->textureBuffer, &t_objects3D[0]->spec->clut);
+    q = draw_texturebuffer(q, 0, textureBuffer, &t_objects3D[0]->spec->clut);
     dw = (u64 *)draw_prim_start(q, 0, t_renderData->prim, &t_objects3D[0]->color);
 
     for (u32 i = 0; i < t_amount; i++)
