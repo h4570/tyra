@@ -13,7 +13,6 @@
 
 #include "../camera.hpp"
 #include <modules/pad.hpp>
-#include <models/mesh_spec.hpp>
 #include <tamtypes.h>
 
 /** Player 3D object class  */
@@ -24,7 +23,6 @@ public:
     float gravity, velocity, lift;
     u8 isOnFloor, isCollideFloor, indexOfCurrentFloor;
     Mesh mesh;
-    MeshSpec *spec;
     Player();
     ~Player();
 

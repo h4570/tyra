@@ -65,10 +65,9 @@ void Mesh::loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float
     loadTextures(t_subfolder, ".bmp");
 }
 
-void Mesh::setDff(Vector3 &t_initPos, DffModel *t_dffModel, MeshSpec *t_spec)
+void Mesh::setDff(Vector3 &t_initPos, DffModel *t_dffModel)
 {
     position = t_initPos;
-    spec = t_spec;
     isSpecInitialized = 1;
     dff = t_dffModel;
     setVerticesReference(
@@ -114,10 +113,9 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float
     loadTextures(t_subfolder, ".bmp");
 }
 
-void Mesh::setObj(Vector3 &t_initPos, ObjModel *t_objModel, MeshSpec *t_spec)
+void Mesh::setObj(Vector3 &t_initPos, ObjModel *t_objModel)
 {
     position = t_initPos;
-    spec = t_spec;
     isSpecInitialized = true;
     obj = t_objModel;
     setVerticesReference(obj->getFacesCount(), obj->frames[0].getVertices());
@@ -127,11 +125,6 @@ void Mesh::setObj(Vector3 &t_initPos, ObjModel *t_objModel, MeshSpec *t_spec)
 
 void Mesh::createSpecIfNotCreated()
 {
-    if (!isSpecInitialized)
-    {
-        isSpecInitialized = true;
-        spec = new MeshSpec();
-    }
 }
 
 void Mesh::setAnimSpeed(float t_value)
@@ -179,26 +172,26 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
     BmpLoader bmpLoader = BmpLoader();
     if (isObjLoaded)
     {
-        spec->textures = new MeshTexture[obj->frames[0].getMaterialsCount()];
+        textures = new MeshTexture[obj->frames[0].getMaterialsCount()];
         for (u8 i = 0; i < obj->frames[0].getMaterialsCount(); i++)
         {
-            bmpLoader.load(spec->textures[i], t_subfolder, obj->frames[0].getMaterial(i).getName(), t_extension);
+            bmpLoader.load(textures[i], t_subfolder, obj->frames[0].getMaterial(i).getName(), t_extension);
             // setDefaultWrapSettings(spec->textures[i].wrapSettings);
         }
     }
     else if (isMd2Loaded)
     {
-        spec->textures = new MeshTexture[1];
-        bmpLoader.load(spec->textures[0], t_subfolder, md2->filename, t_extension);
+        textures = new MeshTexture[1];
+        bmpLoader.load(textures[0], t_subfolder, md2->filename, t_extension);
         // setDefaultWrapSettings(spec->textures[0].wrapSettings);
     }
     else if (isDffLoaded)
     {
-        spec->textures = new MeshTexture[dff->clump.geometryList.geometries[0].materialList.data.materialCount];
+        textures = new MeshTexture[dff->clump.geometryList.geometries[0].materialList.data.materialCount];
         for (u8 i = 0; i < dff->clump.geometryList.geometries[0].materialList.data.materialCount; i++)
             for (u8 j = 0; j < dff->clump.geometryList.geometries[0].materialList.materials[i].data.textureCount; j++)
             {
-                bmpLoader.load(spec->textures[i], t_subfolder, dff->clump.geometryList.geometries[0].materialList.materials[i].textures[j].textureName.text, t_extension);
+                bmpLoader.load(textures[i], t_subfolder, dff->clump.geometryList.geometries[0].materialList.materials[i].textures[j].textureName.text, t_extension);
                 // setDefaultWrapSettings(spec->textures[i].wrapSettings);
             }
     }
@@ -301,6 +294,25 @@ void Mesh::getFarthestVertex(Vector3 *o_result, int t_offset)
     o_result->x = boxVertices[t_offset].x + position.x;
     o_result->y = boxVertices[t_offset].y + position.y;
     o_result->z = boxVertices[t_offset].z + position.z;
+}
+
+/** Sets texture level of details settings and CLUT settings */
+void Mesh::setupLodAndClut()
+{
+    PRINT_LOG("Setting LOD, CLUT");
+    lod.calculation = LOD_USE_K;
+    lod.max_level = 0;
+    lod.mag_filter = LOD_MAG_NEAREST;
+    lod.min_filter = LOD_MIN_NEAREST;
+    lod.l = 0;
+    lod.k = 0.0F;
+
+    clut.storage_mode = CLUT_STORAGE_MODE1;
+    clut.start = 0;
+    clut.psm = 0;
+    clut.load_method = CLUT_NO_LOAD;
+    clut.address = 0;
+    PRINT_LOG("LOD, CLUT set!");
 }
 
 /** Check if box is visible in view frustum */

@@ -140,8 +140,8 @@ void GifSender::addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_a
     tempDMATag = q;
     q++;
 
-    q = draw_texture_sampling(q, 0, &t_objects3D[0]->spec->lod);
-    q = draw_texturebuffer(q, 0, textureBuffer, &t_objects3D[0]->spec->clut);
+    q = draw_texture_sampling(q, 0, &t_objects3D[0]->lod);
+    q = draw_texturebuffer(q, 0, textureBuffer, &t_objects3D[0]->clut);
     dw = (u64 *)draw_prim_start(q, 0, t_renderData->prim, &t_objects3D[0]->color);
 
     for (u32 i = 0; i < t_amount; i++)

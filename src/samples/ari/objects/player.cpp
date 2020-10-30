@@ -37,7 +37,6 @@ Player::Player()
 
 Player::~Player()
 {
-    delete[] this->spec;
 }
 
 // ----
