@@ -166,12 +166,12 @@ u32 Mesh::getVertexCount()
 
 void Mesh::setDefaultWrapSettings(texwrap_t &t_wrapSettings)
 {
-    t_wrapSettings.horizontal = WRAP_REPEAT;
-    t_wrapSettings.vertical = WRAP_REPEAT;
-    t_wrapSettings.maxu = 0;
-    t_wrapSettings.maxv = 0;
-    t_wrapSettings.minu = 0;
-    t_wrapSettings.minv = 0;
+    // t_wrapSettings.horizontal = WRAP_REPEAT;
+    // t_wrapSettings.vertical = WRAP_REPEAT;
+    // t_wrapSettings.maxu = 0;
+    // t_wrapSettings.maxv = 0;
+    // t_wrapSettings.minu = 0;
+    // t_wrapSettings.minv = 0;
 }
 
 void Mesh::loadTextures(char *t_subfolder, char *t_extension)
@@ -183,14 +183,14 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
         for (u8 i = 0; i < obj->frames[0].getMaterialsCount(); i++)
         {
             bmpLoader.load(spec->textures[i], t_subfolder, obj->frames[0].getMaterial(i).getName(), t_extension);
-            setDefaultWrapSettings(spec->textures[i].wrapSettings);
+            // setDefaultWrapSettings(spec->textures[i].wrapSettings);
         }
     }
     else if (isMd2Loaded)
     {
         spec->textures = new MeshTexture[1];
         bmpLoader.load(spec->textures[0], t_subfolder, md2->filename, t_extension);
-        setDefaultWrapSettings(spec->textures[0].wrapSettings);
+        // setDefaultWrapSettings(spec->textures[0].wrapSettings);
     }
     else if (isDffLoaded)
     {
@@ -199,7 +199,7 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
             for (u8 j = 0; j < dff->clump.geometryList.geometries[0].materialList.materials[i].data.textureCount; j++)
             {
                 bmpLoader.load(spec->textures[i], t_subfolder, dff->clump.geometryList.geometries[0].materialList.materials[i].textures[j].textureName.text, t_extension);
-                setDefaultWrapSettings(spec->textures[i].wrapSettings);
+                // setDefaultWrapSettings(spec->textures[i].wrapSettings);
             }
     }
     else

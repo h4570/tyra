@@ -56,10 +56,10 @@ void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
     const u16 packetSize = 40;
     packet_t *packet = packet_init(packetSize, PACKET_NORMAL);
     qword_t *q = packet->data;
-    q = draw_texture_transfer(q, texture.data, texture.width, texture.height, GS_PSM_24, t_texBuffer->address, t_texBuffer->width);
+    q = draw_texture_transfer(q, texture.getData(), texture.getWidth(), texture.getHeight(), GS_PSM_24, t_texBuffer->address, t_texBuffer->width);
     DMATAG_CNT(q, 2, 0, 0, 0);
     q++;
-    q = draw_texture_wrapping(q, 0, &texture.wrapSettings);
+    q = draw_texture_wrapping(q, 0, texture.getWrapSettings());
     q = draw_texture_flush(q);
     dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
     dma_wait_fast();

@@ -115,11 +115,11 @@ void Renderer::deallocateTextureBuffer()
 
 void Renderer::changeTexture(Mesh *t_mesh, u8 t_textureIndex)
 {
-    if (t_mesh->spec->textures[t_textureIndex].id != lastTextureId)
+    if (t_mesh->spec->textures[t_textureIndex].getId() != lastTextureId)
     {
-        lastTextureId = t_mesh->spec->textures[t_textureIndex].id;
+        lastTextureId = t_mesh->spec->textures[t_textureIndex].getId();
         deallocateTextureBuffer();
-        allocateTextureBuffer(t_mesh->spec->textures[t_textureIndex].width, t_mesh->spec->textures[t_textureIndex].height);
+        allocateTextureBuffer(t_mesh->spec->textures[t_textureIndex].getWidth(), t_mesh->spec->textures[t_textureIndex].getHeight());
         GifSender::sendTexture(t_mesh->spec->textures[t_textureIndex], &textureBuffer);
     }
 }

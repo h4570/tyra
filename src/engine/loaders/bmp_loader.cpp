@@ -32,6 +32,7 @@ BmpLoader::~BmpLoader() {}
  */
 void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, char *t_extension)
 {
+    o_texture.setName(t_name);
     char *t_path_part = String::createConcatenated(t_subfolder, t_name);
     char *t_path = String::createConcatenated(t_path_part, t_extension);
     delete[] t_path_part;
@@ -46,10 +47,7 @@ void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, ch
 
     u32 width = *(u32 *)&header[18];
     u32 height = *(u32 *)&header[22];
-    o_texture.id = rand() % 100000;
-    o_texture.width = width;
-    o_texture.height = height;
-    o_texture.data = new unsigned char[width * height * 3];
+    o_texture.setSize(width, height);
     printf("BMPLoader - width: %d | height: %d\n", width, height);
     if (width > 128 || height > 128)
         PRINT_ERR("Given texture is big for PS2. Please strict to 128x128 max");
@@ -70,9 +68,9 @@ void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, ch
             data[j] = data[j + 2];
             data[j + 2] = tmp;
 
-            o_texture.data[x] = data[j];
-            o_texture.data[x + 1] = data[j + 1];
-            o_texture.data[x + 2] = data[j + 2];
+            o_texture.setData(x, data[j]);
+            o_texture.setData(x + 1, data[j + 1]);
+            o_texture.setData(x + 2, data[j + 2]);
             x += 3;
         }
     }
