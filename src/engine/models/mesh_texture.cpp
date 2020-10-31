@@ -10,7 +10,6 @@
 
 #include "../include/models/mesh_texture.hpp"
 #include "../include/utils/string.hpp"
-#include "../include/utils/debug.hpp"
 #include <cstdlib>
 #include <draw_sampling.h>
 

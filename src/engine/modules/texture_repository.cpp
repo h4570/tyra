@@ -18,72 +18,40 @@
 TextureRepository::TextureRepository()
 {
     PRINT_LOG("Initializing texture repository");
-    texturesCount = 0;
     PRINT_LOG("Texture repository initialized!");
 }
 
-TextureRepository::~TextureRepository() {}
+TextureRepository::~TextureRepository()
+{
+    if (getTexturesCount() > 0)
+    {
+        for (u32 i = 0; i < getTexturesCount(); i++)
+            delete textures[i];
+        textures.clear();
+    }
+}
 
 // ----
 // Methods
 // ----
 
-/** Add unlinked texture.
- * @param t_subfolder Relative path. Ex.: "textures/"
- * @param t_name Filename without extension. Ex.: "water"
- */
 MeshTexture *TextureRepository::add(char *t_subfolder, char *t_name)
 {
-    increaseArray(texturesCount + 1);
-    // texturesCount is updated
-    loader.load(*textures[texturesCount - 1], t_subfolder, t_name, ".bmp");
-    return textures[texturesCount - 1];
+    MeshTexture *texture = new MeshTexture();
+    loader.load(*texture, t_subfolder, t_name, ".bmp");
+    texture->setName(t_name);
+    textures.push_back(texture);
+    return texture;
 }
 
 void TextureRepository::addByMesh(char *t_path, Mesh &mesh)
 {
-#define MATERIAL mesh.getMaterial(i)
-    u32 newLength = texturesCount + mesh.getMaterialsCount();
-    increaseArray(newLength);
-    for (u8 i = newLength - mesh.getMaterialsCount(); i < newLength; i++)
+    for (u32 i = 0; i < mesh.getMaterialsCount(); i++)
     {
-        textures[i] = new MeshTexture();
-        loader.load(*textures[i], t_path, MATERIAL.getName(), ".bmp");
-        textures[i]->setName(mesh.getMaterial(i).getName());
-        textures[i]->addLink(mesh.id, MATERIAL.getId());
+        MeshTexture *texture = new MeshTexture();
+        loader.load(*texture, t_path, mesh.getMaterial(i).getName(), ".bmp");
+        texture->setName(mesh.getMaterial(i).getName());
+        texture->addLink(mesh.id, mesh.getMaterial(i).getId());
+        textures.push_back(texture);
     }
-}
-
-/** 
- * Remove texture from repository.
- * Texture is not destructed.
- */
-void TextureRepository::remove(u32 t_textureId)
-{
-    MeshTexture **savedTextures = textures;
-    textures = new MeshTexture *[texturesCount - 1];
-    u32 savedCount = 0;
-    for (u32 i = 0; i < texturesCount; i++)
-        if (savedTextures[i]->getId() != t_textureId)
-            textures[savedCount++] = savedTextures[i];
-    delete[] savedTextures;
-    texturesCount--;
-}
-
-/** 
- * Resize textures array. 
- * texturesCount variable is updated. 
- * Classes are NOT instantiated. 
- */
-void TextureRepository::increaseArray(u32 newLength)
-{
-    MeshTexture **savedTextures = textures;
-    textures = new MeshTexture *[newLength];
-    if (texturesCount)
-    {
-        for (u32 i = 0; i < texturesCount; i++)
-            textures[i] = savedTextures[i];
-        delete[] savedTextures;
-    }
-    texturesCount = newLength;
 }

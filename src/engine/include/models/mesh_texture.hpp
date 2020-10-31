@@ -15,6 +15,7 @@
 #include <draw_sampling.h>
 #include "./texture_wrap_settings.hpp"
 #include "./texture_link.hpp"
+#include "../include/utils/debug.hpp"
 #include <vector>
 
 /** 
@@ -138,8 +139,11 @@ public:
 
     void removeLink(const u32 &t_meshId, const u32 &t_materialId)
     {
-        u32 index = getIndexOfLink(t_meshId, t_materialId);
-        removeLink(index);
+        s32 index = getIndexOfLink(t_meshId, t_materialId);
+        if (index != -1)
+            removeLink(index);
+        else
+            PRINT_ERR("Cant remove link, because it was not found!");
     }
 
 private:

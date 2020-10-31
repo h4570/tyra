@@ -66,6 +66,7 @@ void calcSpiral(int X, int Y)
 // TEST END
 
 #include "models/mesh_frame.hpp"
+#include <vector>
 
 void Ari::onInit()
 {
@@ -94,10 +95,11 @@ void Ari::onInit()
     Vector3 testpos = Vector3(0.0F, 10.0F, 0.0F);
     test->loadObj("objanim/", "untitled", testpos, 10.0F, 2);
     texRepo->addByMesh("objanim/", *test);
-    MeshTexture **textures = texRepo->getAll();
-    textures[0]->removeLink(test->id, test->getMaterial(0).getId());
+    std::vector<MeshTexture *> *textures = texRepo->getAll();
+    textures->at(0)->removeLink(test->id, test->getMaterial(0).getId());
     MeshTexture *tex = texRepo->add("objanim/", "water");
     tex->addLink(test->id, test->getMaterial(0).getId());
+    texRepo->removeById(textures->at(0)->getId());
     test->playAnimation(0, 1);
     test->shouldBeBackfaceCulled = true;
     // test->shouldBeFrustumCulled = true;
