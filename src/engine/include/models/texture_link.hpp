@@ -8,22 +8,14 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#ifndef _TYRA_TEXTURE_REPOSITORY_
-#define _TYRA_TEXTURE_REPOSITORY_
+#ifndef _TYRA_TEXTURE_USAGE_
+#define _TYRA_TEXTURE_USAGE_
 
 #include <tamtypes.h>
-#include <draw_buffers.h>
-#include "../models/mesh.hpp"
 
-/** Class responsible for intializing draw env, textures and buffers */
-class TextureRepository
+struct TextureLink
 {
-
-public:
-    TextureRepository();
-    ~TextureRepository();
-
-private:
+    u32 meshId, materialId;
 };
 
 #endif

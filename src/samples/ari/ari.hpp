@@ -16,6 +16,7 @@
 #include <engine.hpp>
 #include "objects/player.hpp"
 #include <models/light_bulb.hpp>
+#include <modules/texture_repository.hpp>
 #include "./camera.hpp"
 
 class Ari : public Game
@@ -35,6 +36,7 @@ private:
     LightBulb bulb;
     Player *player;
     Camera *camera;
+    TextureRepository *texRepo;
 };
 
 #endif

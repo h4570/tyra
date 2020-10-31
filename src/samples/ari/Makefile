@@ -18,6 +18,7 @@ EE_OBJS =											\
 	../../engine/modules/light.o					\
 	../../engine/modules/pad.o						\
 	../../engine/modules/renderer.o					\
+	../../engine/modules/texture_repository.o		\
 	../../engine/modules/timer.o					\
 	../../engine/modules/vif_sender.o				\
 	../../engine/modules/vu1.o						\

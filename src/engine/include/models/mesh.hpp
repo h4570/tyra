@@ -54,7 +54,7 @@ public:
     u8 isMd2Loaded, isObjLoaded, isDffLoaded, isSpecInitialized;
     clutbuffer_t clut;
     lod_t lod;
-    MeshTexture **textures;
+    MeshTexture *textures;
 
 private:
     void setupLodAndClut();

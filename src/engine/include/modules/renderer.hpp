@@ -19,6 +19,7 @@
 #include "../models/math/plane.hpp"
 #include "../models/screen_settings.hpp"
 #include "../models/render_data.hpp"
+#include "./texture_repository.hpp"
 
 /** Class responsible for intializing draw env, textures and buffers */
 class Renderer
@@ -55,17 +56,21 @@ public:
 
     void endFrame(float fps);
 
+    TextureRepository *getTextureRepository() { return &textureRepo; };
+
 private:
+    void changeTexture(Mesh *t_mesh, u8 t_textureIndex);
+    u32 lastTextureId;
+    texbuffer_t textureBuffer;
+    u8 isTextureVRAMAllocated;
     void allocateTextureBuffer(u16 t_width, u16 t_height);
     void deallocateTextureBuffer();
-    void changeTexture(Mesh *t_mesh, u8 t_textureIndex);
     void flipBuffers();
     void beginFrameIfNeeded();
-    u8 isFrameEmpty, isTextureVRAMAllocated;
+    u8 isFrameEmpty;
     Matrix perspective;
     RenderData renderData;
-    texbuffer_t textureBuffer;
-    u32 lastTextureId;
+    TextureRepository textureRepo;
     GifSender *gifSender;
     VifSender *vifSender;
     packet_t *flipPacket;

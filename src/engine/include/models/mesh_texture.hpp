@@ -14,12 +14,12 @@
 #include <tamtypes.h>
 #include <draw_sampling.h>
 #include "./texture_wrap_settings.hpp"
+#include "./texture_link.hpp"
 
 /** 
- * Class which contains texture data
- * Textures are paired with material via material id.
- * Additionaly, you can load two textures for single material
- * and switch materialId here to change texture.
+ * Class which contains texture data.
+ * Textures are paired with meshes via addUsage(),
+ * removeUsage() functions which use meshId and materialId.
  */
 class MeshTexture
 {
@@ -40,16 +40,11 @@ public:
      */
     const u32 &getId() const { return id; };
 
-    /**
-     * Core role of this variable is to assign texture to correct material.
-     * For example you can have two textures for single material.
-     * Example: Same player can have two textures (team A, team B)
-     */
-    const u32 &getMaterialId() const { return materialId; };
-
     const u8 &getWidth() const { return width; };
 
     const u8 &getHeight() const { return height; };
+
+    const u32 &getTextureLinksCount() const { return texLinkCount; };
 
     texwrap_t *getWrapSettings() { return &wrapSettings; };
 
@@ -71,16 +66,12 @@ public:
      */
     char *getName() const { return name; };
 
+    /** Array of texture links. Size of getTextureLinksCount() */
+    TextureLink *getTextureLinks() const { return texLinks; };
+
     // ----
     //  Setters
     // ----
-
-    /**
-     * Core role of this variable is to assign texture to correct material.
-     * For example you can have two textures for single material.
-     * Example: Same player can have two textures (team A, team B)
-     */
-    void setMaterialId(const u32 &t_val) { materialId = t_val; }
 
     /** 
      * Set texture size and allocate texture data
@@ -114,16 +105,22 @@ public:
     //  Other
     // ----
 
+    /** Assign texture to mesh and mesh material */
+    void addLink(u32 t_meshId, u32 t_materialId);
+
+    /** Remove mesh and mesh material assignment */
+    void removeLink(u32 t_meshId, u32 t_materialId);
+
     const u8 &isNameSet() const { return _isNameSet; };
 
     const u8 &isSizeSet() const { return _isSizeSet; };
 
 private:
     void setDefaultWrapSettings();
-
     texwrap_t wrapSettings;
     char *name;
-    u32 id, materialId;
+    TextureLink *texLinks;
+    u32 id, texLinkCount;
     u8 width, height, _isNameSet, _isSizeSet;
     unsigned char *data;
 };

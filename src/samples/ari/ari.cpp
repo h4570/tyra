@@ -75,6 +75,7 @@ void Ari::onInit()
     engine.audio.init(0);
     engine.audio.setVolume(40);
     engine.audio.loadSong("MOV-CIRC.WAV");
+    texRepo = engine.renderer->getTextureRepository();
     // engine.audio.play();
 
     // Vector3 islandPos = Vector3(0.0F, 10.0F, 0.0F);

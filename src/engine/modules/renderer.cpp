@@ -36,8 +36,9 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     dma_channel_initialize(DMA_CHANNEL_GIF, NULL, 0); // Initialize DMA to enable data transfer
     dma_channel_fast_waits(DMA_CHANNEL_GIF);
     context = 0;
-    lastTextureId = 0;
+    isTextureVRAMAllocated = false;
     isFrameEmpty = false;
+    lastTextureId = 0;
     flipPacket = packet_init(3, PACKET_UCAB); // Uncached accelerated
     allocateBuffers(t_screen->width, t_screen->height);
     initDrawingEnv(t_screen->width, t_screen->height);
@@ -54,6 +55,42 @@ Renderer::~Renderer() {}
 // ----
 // Methods
 // ----
+
+/** Configure and allocate vRAM for texture buffer */
+void Renderer::allocateTextureBuffer(u16 t_width, u16 t_height)
+{
+    textureBuffer.width = t_width;
+    textureBuffer.psm = GS_PSM_24;
+    textureBuffer.address = graph_vram_allocate(t_width, t_height, GS_PSM_24, GRAPH_ALIGN_BLOCK);
+    if (textureBuffer.address <= 1)
+        PRINT_ERR("Texture buffer allocation error. No memory!");
+    textureBuffer.info.width = draw_log2(t_width);
+    textureBuffer.info.height = draw_log2(t_height);
+    textureBuffer.info.components = TEXTURE_COMPONENTS_RGB;
+    textureBuffer.info.function = TEXTURE_FUNCTION_MODULATE;
+    isTextureVRAMAllocated = true;
+}
+
+/** Configure and allocate vRAM for texture buffer */
+void Renderer::deallocateTextureBuffer()
+{
+    if (isTextureVRAMAllocated)
+    {
+        graph_vram_free(textureBuffer.address);
+        isTextureVRAMAllocated = false;
+    }
+}
+
+void Renderer::changeTexture(Mesh *t_mesh, u8 t_textureIndex)
+{
+    if (t_mesh->textures[t_textureIndex].getId() != lastTextureId)
+    {
+        lastTextureId = t_mesh->textures[t_textureIndex].getId();
+        deallocateTextureBuffer();
+        allocateTextureBuffer(t_mesh->textures[t_textureIndex].getWidth(), t_mesh->textures[t_textureIndex].getHeight());
+        GifSender::sendTexture(t_mesh->textures[t_textureIndex], &textureBuffer);
+    }
+}
 
 /** Initializes drawing environment (1st app packet) */
 void Renderer::initDrawingEnv(float t_screenW, float t_screenH)
@@ -86,42 +123,6 @@ void Renderer::setPrim()
     prim.colorfix = PRIM_UNFIXED;
     renderData.prim = &prim;
     PRINT_LOG("Prim set!");
-}
-
-/** Configure and allocate vRAM for texture buffer */
-void Renderer::allocateTextureBuffer(u16 t_width, u16 t_height)
-{
-    textureBuffer.width = t_width;
-    textureBuffer.psm = GS_PSM_24;
-    textureBuffer.address = graph_vram_allocate(t_width, t_height, GS_PSM_24, GRAPH_ALIGN_BLOCK);
-    if (textureBuffer.address <= 1)
-        PRINT_ERR("Texture buffer allocation error. No memory!");
-    textureBuffer.info.width = draw_log2(t_width);
-    textureBuffer.info.height = draw_log2(t_height);
-    textureBuffer.info.components = TEXTURE_COMPONENTS_RGB;
-    textureBuffer.info.function = TEXTURE_FUNCTION_MODULATE;
-    isTextureVRAMAllocated = true;
-}
-
-/** Configure and allocate vRAM for texture buffer */
-void Renderer::deallocateTextureBuffer()
-{
-    if (isTextureVRAMAllocated)
-    {
-        graph_vram_free(textureBuffer.address);
-        isTextureVRAMAllocated = false;
-    }
-}
-
-void Renderer::changeTexture(Mesh *t_mesh, u8 t_textureIndex)
-{
-    if (t_mesh->textures[t_textureIndex]->getId() != lastTextureId)
-    {
-        lastTextureId = t_mesh->textures[t_textureIndex]->getId();
-        deallocateTextureBuffer();
-        allocateTextureBuffer(t_mesh->textures[t_textureIndex]->getWidth(), t_mesh->textures[t_textureIndex]->getHeight());
-        GifSender::sendTexture(*t_mesh->textures[t_textureIndex], &textureBuffer);
-    }
 }
 
 /** Defines and allocates framebuffers and zbuffer */
