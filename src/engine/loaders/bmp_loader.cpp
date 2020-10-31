@@ -40,7 +40,10 @@ void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, ch
     FILE *file = fopen(t_path, "rb");
 
     if (file == NULL)
+    {
         PRINT_ERR("Failed to load .bmp file!");
+        return;
+    }
 
     unsigned char header[54];
     fread(header, sizeof(unsigned char), 54, file);

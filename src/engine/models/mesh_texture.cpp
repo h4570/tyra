@@ -21,7 +21,6 @@
 MeshTexture::MeshTexture()
 {
     id = rand() % 1000000;
-    texLinkCount = 0;
     _isSizeSet = false;
     _isNameSet = false;
     setDefaultWrapSettings();
@@ -29,8 +28,8 @@ MeshTexture::MeshTexture()
 
 MeshTexture::~MeshTexture()
 {
-    if (texLinkCount > 0)
-        delete[] texLinks;
+    if (getTextureLinksCount() > 0)
+        texLinks.clear();
     if (_isNameSet)
         delete[] name;
     if (_isSizeSet)
@@ -83,31 +82,8 @@ void MeshTexture::setWrapSettings(const WrapSettings t_horizontal, const WrapSet
 
 void MeshTexture::addLink(const u32 &t_meshId, const u32 &t_materialId)
 {
-    TextureLink *savedLinks = texLinks;
-    texLinks = new TextureLink[texLinkCount + 1];
-    for (u32 i = 0; i < texLinkCount; i++)
-    {
-        texLinks[i].materialId = savedLinks[i].materialId;
-        texLinks[i].meshId = savedLinks[i].meshId;
-    }
-    if (texLinkCount != 0)
-        delete[] savedLinks;
-    texLinkCount++;
-    texLinks[texLinkCount - 1].materialId = t_materialId;
-    texLinks[texLinkCount - 1].meshId = t_meshId;
-}
-
-void MeshTexture::removeLink(const u32 &t_meshId, const u32 &t_materialId)
-{
-    TextureLink *savedLinks = texLinks;
-    texLinks = new TextureLink[texLinkCount - 1];
-    u32 savedCount = 0;
-    for (u32 i = 0; i < texLinkCount; i++)
-        if (savedLinks[i].materialId != t_materialId && savedLinks[i].meshId != t_meshId)
-        {
-            texLinks[savedCount++].materialId = savedLinks[i].materialId;
-            texLinks[savedCount++].meshId = savedLinks[i].meshId;
-        }
-    delete[] savedLinks;
-    texLinkCount--;
+    TextureLink link;
+    link.materialId = t_materialId;
+    link.meshId = t_meshId;
+    texLinks.push_back(link);
 }

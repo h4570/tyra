@@ -83,6 +83,7 @@ void Renderer::deallocateTextureBuffer()
 
 void Renderer::changeTexture(Mesh *t_mesh, u32 t_materialId)
 {
+
     MeshTexture *tex = textureRepo.getByMesh(t_mesh->id, t_materialId);
     if (tex != NULL)
     {

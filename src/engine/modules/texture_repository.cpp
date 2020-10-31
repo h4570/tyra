@@ -28,6 +28,10 @@ TextureRepository::~TextureRepository() {}
 // Methods
 // ----
 
+/** Add unlinked texture.
+ * @param t_subfolder Relative path. Ex.: "textures/"
+ * @param t_name Filename without extension. Ex.: "water"
+ */
 MeshTexture *TextureRepository::add(char *t_subfolder, char *t_name)
 {
     increaseArray(texturesCount + 1);

@@ -15,6 +15,7 @@
 #include <draw_sampling.h>
 #include "./texture_wrap_settings.hpp"
 #include "./texture_link.hpp"
+#include <vector>
 
 /** 
  * Class which contains texture data.
@@ -44,7 +45,7 @@ public:
 
     const u8 &getHeight() const { return height; };
 
-    const u32 &getTextureLinksCount() const { return texLinkCount; };
+    u32 getTextureLinksCount() const { return static_cast<u32>(texLinks.size()); };
 
     texwrap_t *getWrapSettings() { return &wrapSettings; };
 
@@ -67,7 +68,19 @@ public:
     char *getName() const { return name; };
 
     /** Array of texture links. Size of getTextureLinksCount() */
-    TextureLink *getTextureLinks() const { return texLinks; };
+    const std::vector<TextureLink> &getTextureLinks() const { return texLinks; };
+
+    /** 
+     * Returns index of link.
+     * -1 if not found.
+     */
+    const s32 getIndexOfLink(const u32 &t_meshId, const u32 &t_materialId) const
+    {
+        for (u32 i = 0; i < texLinks.size(); i++)
+            if (texLinks[i].materialId == t_materialId && texLinks[i].meshId == t_meshId)
+                return i;
+        return -1;
+    };
 
     // ----
     //  Setters
@@ -108,27 +121,33 @@ public:
     /** Assign texture to mesh and mesh material */
     void addLink(const u32 &t_meshId, const u32 &t_materialId);
 
-    /** Remove mesh and mesh material assignment */
-    void removeLink(const u32 &t_meshId, const u32 &t_materialId);
-
     const u8 &isNameSet() const { return _isNameSet; };
 
     const u8 &isSizeSet() const { return _isSizeSet; };
 
     const u8 isLinkedWith(const u32 &t_meshId, const u32 &t_materialId) const
     {
-        for (u32 i = 0; i < texLinkCount; i++)
-            if (texLinks[i].materialId == t_materialId && texLinks[i].meshId == t_meshId)
-                return true;
-        return false;
+        s32 index = getIndexOfLink(t_meshId, t_materialId);
+        if (index != -1)
+            return true;
+        else
+            return false;
     };
+
+    void removeLink(const u32 &t_index) { texLinks.erase(texLinks.begin() + t_index); }
+
+    void removeLink(const u32 &t_meshId, const u32 &t_materialId)
+    {
+        u32 index = getIndexOfLink(t_meshId, t_materialId);
+        removeLink(index);
+    }
 
 private:
     void setDefaultWrapSettings();
     texwrap_t wrapSettings;
     char *name;
-    TextureLink *texLinks;
-    u32 id, texLinkCount;
+    std::vector<TextureLink> texLinks;
+    u32 id;
     u8 width, height, _isNameSet, _isSizeSet;
     unsigned char *data;
 };
