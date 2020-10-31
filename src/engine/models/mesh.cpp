@@ -139,7 +139,6 @@ void Mesh::setVerticesReference(u32 t_verticesCount, Vector3 *t_verticesRef)
 {
     verticesCount = t_verticesCount;
     vertices = t_verticesRef;
-    computeBoundingBox();
 }
 
 u32 Mesh::getVertexCount()
@@ -172,26 +171,29 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
     BmpLoader bmpLoader = BmpLoader();
     if (isObjLoaded)
     {
-        textures = new MeshTexture[obj->frames[0].getMaterialsCount()];
+        textures = new MeshTexture *[obj->frames[0].getMaterialsCount()];
         for (u8 i = 0; i < obj->frames[0].getMaterialsCount(); i++)
         {
-            bmpLoader.load(textures[i], t_subfolder, obj->frames[0].getMaterial(i).getName(), t_extension);
+            textures[i] = new MeshTexture();
+            bmpLoader.load(*textures[i], t_subfolder, obj->frames[0].getMaterial(i).getName(), t_extension);
             // setDefaultWrapSettings(spec->textures[i].wrapSettings);
         }
     }
     else if (isMd2Loaded)
     {
-        textures = new MeshTexture[1];
-        bmpLoader.load(textures[0], t_subfolder, md2->filename, t_extension);
+        textures = new MeshTexture *[1];
+        textures[0] = new MeshTexture();
+        bmpLoader.load(*textures[0], t_subfolder, md2->filename, t_extension);
         // setDefaultWrapSettings(spec->textures[0].wrapSettings);
     }
     else if (isDffLoaded)
     {
-        textures = new MeshTexture[dff->clump.geometryList.geometries[0].materialList.data.materialCount];
+        textures = new MeshTexture *[dff->clump.geometryList.geometries[0].materialList.data.materialCount];
         for (u8 i = 0; i < dff->clump.geometryList.geometries[0].materialList.data.materialCount; i++)
             for (u8 j = 0; j < dff->clump.geometryList.geometries[0].materialList.materials[i].data.textureCount; j++)
             {
-                bmpLoader.load(textures[i], t_subfolder, dff->clump.geometryList.geometries[0].materialList.materials[i].textures[j].textureName.text, t_extension);
+                textures[i] = new MeshTexture();
+                bmpLoader.load(*textures[i], t_subfolder, dff->clump.geometryList.geometries[0].materialList.materials[i].textures[j].textureName.text, t_extension);
                 // setDefaultWrapSettings(spec->textures[i].wrapSettings);
             }
     }
@@ -291,9 +293,10 @@ void Mesh::playAnimation(u32 t_startFrame, u32 t_endFrame)
  */
 void Mesh::getFarthestVertex(Vector3 *o_result, int t_offset)
 {
-    o_result->x = boxVertices[t_offset].x + position.x;
-    o_result->y = boxVertices[t_offset].y + position.y;
-    o_result->z = boxVertices[t_offset].z + position.z;
+    // TODO current frame
+    o_result->x = obj->frames[0].getBoundingBox(t_offset).x + position.x;
+    o_result->y = obj->frames[0].getBoundingBox(t_offset).y + position.y;
+    o_result->z = obj->frames[0].getBoundingBox(t_offset).z + position.z;
 }
 
 /** Sets texture level of details settings and CLUT settings */
@@ -343,39 +346,4 @@ u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
             boxResult = 1;
     }
     return boxResult;
-}
-
-/** Compute 8 farthest corners for intersection check */
-void Mesh::computeBoundingBox()
-{
-    float lowX, lowY, lowZ, hiX, hiY, hiZ;
-    lowX = hiX = vertices[0].x;
-    lowY = hiY = vertices[0].y;
-    lowZ = hiZ = vertices[0].z;
-    for (u32 i = 0; i < verticesCount; i++)
-    {
-        if (lowX > vertices[i].x)
-            lowX = vertices[i].x;
-        if (hiX < vertices[i].x)
-            hiX = vertices[i].x;
-
-        if (lowY > vertices[i].y)
-            lowY = vertices[i].y;
-        if (hiY < vertices[i].y)
-            hiY = vertices[i].y;
-
-        if (lowZ > vertices[i].z)
-            lowZ = vertices[i].z;
-        if (hiZ < vertices[i].z)
-            hiZ = vertices[i].z;
-    }
-    boxVertices[0].set(lowX, lowY, lowZ);
-    boxVertices[1].set(lowX, lowY, hiZ);
-    boxVertices[2].set(lowX, hiY, lowZ);
-    boxVertices[3].set(lowX, hiY, hiZ);
-
-    boxVertices[4].set(hiX, lowY, lowZ);
-    boxVertices[5].set(hiX, lowY, hiZ);
-    boxVertices[6].set(hiX, hiY, lowZ);
-    boxVertices[7].set(hiX, hiY, hiZ);
 }

@@ -35,7 +35,6 @@ public:
     DffModel *dff;
     float scale;
     color_t color;
-    Vector3 boxVertices[8];
 
     Mesh();
     ~Mesh();
@@ -55,7 +54,7 @@ public:
     u8 isMd2Loaded, isObjLoaded, isDffLoaded, isSpecInitialized;
     clutbuffer_t clut;
     lod_t lod;
-    MeshTexture *textures;
+    MeshTexture **textures;
 
 private:
     void setupLodAndClut();
@@ -63,7 +62,6 @@ private:
     u32 verticesCount;
     Vector3 *vertices;
     void loadTextures(char *t_subfolder, char *t_extension);
-    void computeBoundingBox();
     void setVerticesReference(u32 t_verticesCount, Vector3 *t_verticesRef);
     void createSpecIfNotCreated();
     void setDefaultColor();

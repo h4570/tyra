@@ -62,6 +62,12 @@ public:
     /** Array of materials. Size of getMaterialsCount() */
     MeshMaterial *getMaterials() const { return materials; };
 
+    /** 
+     * Returns bounding box (AABB) vertex.
+     * Total length: 8
+     */
+    Vector3 &getBoundingBox(const u8 &i) { return boundingBox[i]; };
+
     // ----
     // Setters
     // ----
@@ -92,6 +98,7 @@ public:
     const u8 &areVerticesAllocated() const { return _areVerticesAllocated; };
     const u8 &areNormalsAllocated() const { return _areNormalsAllocated; };
     const u8 &areMaterialsAllocated() const { return _areMaterialsAllocated; };
+    const u8 &isBoundingBoxCalculated() const { return _isBoundingBoxCalculated; };
 
     /** Set STs count and allocate memory. */
     void allocateSTs(const u32 &t_val);
@@ -105,8 +112,20 @@ public:
     /** Set materials count and allocate memory. */
     void allocateMaterials(const u32 &t_val);
 
+    /** 
+     * Calculates bounding box (AABB).
+     * Should be called by data loader,
+     * so there is no need to run it again.
+     */
+    void calculateBoundingBox();
+
 private:
-    u8 _areSTsAllocated, _areVerticesAllocated, _areNormalsAllocated, _areMaterialsAllocated;
+    Vector3 boundingBox[8];
+    u8 _areSTsAllocated,
+        _areVerticesAllocated,
+        _areNormalsAllocated,
+        _areMaterialsAllocated,
+        _isBoundingBoxCalculated;
     u32 vertexCount, stsCount, normalsCount, materialsCount;
     MeshMaterial *materials;
     Point *sts __attribute__((aligned(16)));
