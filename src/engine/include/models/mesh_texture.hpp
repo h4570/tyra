@@ -106,14 +106,22 @@ public:
     // ----
 
     /** Assign texture to mesh and mesh material */
-    void addLink(u32 t_meshId, u32 t_materialId);
+    void addLink(const u32 &t_meshId, const u32 &t_materialId);
 
     /** Remove mesh and mesh material assignment */
-    void removeLink(u32 t_meshId, u32 t_materialId);
+    void removeLink(const u32 &t_meshId, const u32 &t_materialId);
 
     const u8 &isNameSet() const { return _isNameSet; };
 
     const u8 &isSizeSet() const { return _isSizeSet; };
+
+    const u8 isLinkedWith(const u32 &t_meshId, const u32 &t_materialId) const
+    {
+        for (u32 i = 0; i < texLinkCount; i++)
+            if (texLinks[i].materialId == t_materialId && texLinks[i].meshId == t_meshId)
+                return true;
+        return false;
+    };
 
 private:
     void setDefaultWrapSettings();

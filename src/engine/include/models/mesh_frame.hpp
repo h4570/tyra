@@ -11,6 +11,7 @@
 #ifndef _TYRA_MESH_FRAME_
 #define _TYRA_MESH_FRAME_
 
+#include <stddef.h>
 #include <tamtypes.h>
 #include "math/point.hpp"
 #include "math/vector3.hpp"
@@ -49,6 +50,18 @@ public:
 
     /** Returns material, which is a mesh "subgroup". */
     MeshMaterial &getMaterial(const u32 &i) const { return materials[i]; };
+
+    /** 
+     * Returns material, which is a mesh "subgroup".
+     * NULL if not found.
+     */
+    MeshMaterial *getMaterialById(const u32 &t_id) const
+    {
+        for (u32 i = 0; i < materialsCount; i++)
+            if (materials[i].getId() == t_id)
+                return &materials[i];
+        return NULL;
+    }
 
     /** Array of vertices. Size of getVertexCount() */
     Vector3 *getVertices() const { return vertices; };

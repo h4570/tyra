@@ -19,7 +19,7 @@
 
 MeshMaterial::MeshMaterial()
 {
-    id = rand() % 100000;
+    id = rand() % 1000000;
     facesCount = 0;
     _isNameSet = false;
     _areFacesAllocated = false;

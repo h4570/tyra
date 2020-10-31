@@ -93,6 +93,8 @@ void Ari::onInit()
     test = new Mesh();
     Vector3 testpos = Vector3(0.0F, 10.0F, 0.0F);
     test->loadObj("objanim/", "untitled", testpos, 10.0F, 2);
+    texRepo->addByMesh("objanim/", *test);
+    // MeshTexture **textures = texRepo->getAll();
     test->playAnimation(0, 1);
     test->shouldBeBackfaceCulled = true;
     // test->shouldBeFrustumCulled = true;

@@ -54,7 +54,22 @@ public:
     u8 isMd2Loaded, isObjLoaded, isDffLoaded, isSpecInitialized;
     clutbuffer_t clut;
     lod_t lod;
+    u32 id;
     MeshTexture *textures;
+
+    /** Array of materials. Size of getMaterialsCount() */
+    MeshMaterial *getMaterials() const { return obj->frames[0].getMaterials(); };
+
+    const u32 &getMaterialsCount() const { return obj->frames[0].getMaterialsCount(); };
+
+    /** Returns material, which is a mesh "subgroup". */
+    MeshMaterial &getMaterial(const u32 &i) const { return obj->frames[0].getMaterial(i); };
+
+    /** 
+     * Returns material, which is a mesh "subgroup".
+     * NULL if not found.
+     */
+    MeshMaterial *getMaterialById(const u32 &t_id) const { return obj->frames[0].getMaterialById(t_id); }
 
 private:
     void setupLodAndClut();

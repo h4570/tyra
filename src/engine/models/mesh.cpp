@@ -17,6 +17,7 @@
 #include "../include/models/mesh_texture.hpp"
 #include "../include/utils/debug.hpp"
 #include "../include/utils/string.hpp"
+#include <cstdlib>
 
 // ----
 // Constructors/Destructors
@@ -31,6 +32,7 @@ Mesh::Mesh()
     isObjLoaded = false;
     isDffLoaded = false;
     isSpecInitialized = false;
+    id = rand() % 1000000;
     scale = 1.0F;
 }
 
@@ -110,7 +112,6 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float
     setVerticesReference(obj->getFacesCount(), obj->frames[0].getVertices());
     setDefaultColor();
     isObjLoaded = true;
-    loadTextures(t_subfolder, ".bmp");
 }
 
 void Mesh::setObj(Vector3 &t_initPos, ObjModel *t_objModel)
@@ -171,12 +172,6 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
     BmpLoader bmpLoader = BmpLoader();
     if (isObjLoaded)
     {
-        textures = new MeshTexture[obj->frames[0].getMaterialsCount()];
-        for (u8 i = 0; i < obj->frames[0].getMaterialsCount(); i++)
-        {
-            bmpLoader.load(textures[i], t_subfolder, obj->frames[0].getMaterial(i).getName(), t_extension);
-            // setDefaultWrapSettings(spec->textures[i].wrapSettings);
-        }
     }
     else if (isMd2Loaded)
     {

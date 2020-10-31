@@ -59,7 +59,7 @@ public:
     TextureRepository *getTextureRepository() { return &textureRepo; };
 
 private:
-    void changeTexture(Mesh *t_mesh, u8 t_textureIndex);
+    void changeTexture(Mesh *t_mesh, u32 t_materialId);
     u32 lastTextureId;
     texbuffer_t textureBuffer;
     u8 isTextureVRAMAllocated;

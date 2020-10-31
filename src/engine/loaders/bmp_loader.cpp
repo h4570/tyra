@@ -32,7 +32,7 @@ BmpLoader::~BmpLoader() {}
  */
 void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, char *t_extension)
 {
-    o_texture.setName(t_name);
+
     char *t_path_part = String::createConcatenated(t_subfolder, t_name);
     char *t_path = String::createConcatenated(t_path_part, t_extension);
     delete[] t_path_part;

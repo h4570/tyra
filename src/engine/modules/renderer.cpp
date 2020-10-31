@@ -81,15 +81,21 @@ void Renderer::deallocateTextureBuffer()
     }
 }
 
-void Renderer::changeTexture(Mesh *t_mesh, u8 t_textureIndex)
+void Renderer::changeTexture(Mesh *t_mesh, u32 t_materialId)
 {
-    if (t_mesh->textures[t_textureIndex].getId() != lastTextureId)
+    MeshTexture *tex = textureRepo.getByMesh(t_mesh->id, t_materialId);
+    if (tex != NULL)
     {
-        lastTextureId = t_mesh->textures[t_textureIndex].getId();
-        deallocateTextureBuffer();
-        allocateTextureBuffer(t_mesh->textures[t_textureIndex].getWidth(), t_mesh->textures[t_textureIndex].getHeight());
-        GifSender::sendTexture(t_mesh->textures[t_textureIndex], &textureBuffer);
+        if (tex->getId() != lastTextureId)
+        {
+            lastTextureId = tex->getId();
+            deallocateTextureBuffer();
+            allocateTextureBuffer(tex->getWidth(), tex->getHeight());
+            GifSender::sendTexture(*tex, &textureBuffer);
+        }
     }
+    else
+        PRINT_ERR("Texture was not found in texture repository!");
 }
 
 /** Initializes drawing environment (1st app packet) */
@@ -208,9 +214,9 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     if (t_mesh->isObjLoaded)
     {
         t_mesh->obj->animate();
-        for (u32 i = 0; i < t_mesh->obj->frames[0].getMaterialsCount(); i++)
+        for (u32 i = 0; i < t_mesh->getMaterialsCount(); i++)
         {
-            changeTexture(t_mesh, i);
+            changeTexture(t_mesh, t_mesh->getMaterial(i).getId());
             vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
             vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
         }
