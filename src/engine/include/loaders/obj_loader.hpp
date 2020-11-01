@@ -11,7 +11,6 @@
 #ifndef _TYRA_OBJ_LOADER_
 #define _TYRA_OBJ_LOADER_
 
-#include "../models/obj_model.hpp"
 #include "../models/mesh_frame.hpp"
 #include <stdio.h>
 

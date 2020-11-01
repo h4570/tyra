@@ -13,10 +13,10 @@
 
 #include "math/vector3.hpp"
 #include "math/plane.hpp"
-#include "obj_model.hpp"
 #include "dff_model.hpp"
 #include "md2_model.hpp"
 #include "./mesh_texture.hpp"
+#include "./mesh_frame.hpp"
 #include <tamtypes.h>
 #include <draw_types.h>
 #include <draw_buffers.h>
@@ -31,7 +31,6 @@ public:
     u8 shouldBeLighted, shouldBeBackfaceCulled, shouldBeFrustumCulled;
 
     MD2Model *md2;
-    ObjModel *obj;
     DffModel *dff;
     float scale;
     color_t color;
@@ -39,8 +38,8 @@ public:
     Mesh();
     ~Mesh();
 
-    void loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 framesAmount);
-    void setObj(Vector3 &t_initPos, ObjModel *t_objModel);
+    void loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 t_framesCount);
+    // void setObj(Vector3 &t_initPos); // TODO
     void loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float t_scale);
     void setDff(Vector3 &t_initPos, DffModel *t_dffModel);
     void loadMD2(char *t_subfolder, char *t_md2File, Vector3 &t_initPos, float t_scale);
@@ -57,21 +56,32 @@ public:
     u32 id;
     MeshTexture *textures;
 
-    /** Array of materials. Size of getMaterialsCount() */
-    MeshMaterial *getMaterials() const { return obj->frames[0].getMaterials(); };
+    // NOWE TODO
 
-    const u32 &getMaterialsCount() const { return obj->frames[0].getMaterialsCount(); };
+    u16 framesCount;
+    MeshFrame *frames;
+    AnimState animState;
+    void animate();
+    u32 getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled);
+    u32 getFacesCount();
+    u8 isMemoryAllocated;
+
+    /** Array of materials. Size of getMaterialsCount() */
+    MeshMaterial *getMaterials() const { return frames[0].getMaterials(); };
+
+    const u32 &getMaterialsCount() const { return frames[0].getMaterialsCount(); };
 
     /** Returns material, which is a mesh "subgroup". */
-    MeshMaterial &getMaterial(const u32 &i) const { return obj->frames[0].getMaterial(i); };
+    MeshMaterial &getMaterial(const u32 &i) const { return frames[0].getMaterial(i); };
 
     /** 
      * Returns material, which is a mesh "subgroup".
      * NULL if not found.
      */
-    MeshMaterial *getMaterialById(const u32 &t_id) const { return obj->frames[0].getMaterialById(t_id); }
+    MeshMaterial *getMaterialById(const u32 &t_id) const { return frames[0].getMaterialById(t_id); }
 
 private:
+    Vector3 calc3Vectors[3];
     void setupLodAndClut();
     void setDefaultWrapSettings(texwrap_t &t_wrapSettings);
     u32 verticesCount;

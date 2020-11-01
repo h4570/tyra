@@ -102,6 +102,12 @@ void Ari::onInit()
     texRepo->removeById(textures->at(0)->getId());
     test->playAnimation(0, 1);
     test->shouldBeBackfaceCulled = true;
+
+    // TODO 1 - Merge dff/md2
+    // TODO 2 - Refactor
+    // TODO 3 - Destructor
+    // TODO 4 - Mesh copy();
+
     // test->shouldBeFrustumCulled = true;
 
     // skybox = new Mesh();

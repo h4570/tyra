@@ -11,7 +11,6 @@ EE_OBJS =											\
 	../../engine/models/mesh_material.o				\
 	../../engine/models/mesh.o						\
 	../../engine/models/mesh_texture.o				\
-	../../engine/models/obj_model.o					\
 	../../engine/modules/audio.o					\
 	../../engine/modules/camera_base.o				\
 	../../engine/modules/gif_sender.o				\

@@ -214,7 +214,7 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     VECTOR *coordinates = new VECTOR[vertCount];
     if (t_mesh->isObjLoaded)
     {
-        t_mesh->obj->animate();
+        t_mesh->animate();
         for (u32 i = 0; i < t_mesh->getMaterialsCount(); i++)
         {
             changeTexture(t_mesh, t_mesh->getMaterial(i).getId());
