@@ -34,7 +34,7 @@ DffLoader::~DffLoader() {}
 // Methods
 // ----
 
-void DffLoader::load(RwClump &o_clump, char *t_filename, float t_scale)
+void DffLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_invertT)
 {
     PRINT_LOG("Loading dff file");
     FILE *file = fopen(t_filename, "rb");
@@ -46,9 +46,63 @@ void DffLoader::load(RwClump &o_clump, char *t_filename, float t_scale)
     rewind(file);
     fread(data, sizeof(u8), fileSize, file);
     fclose(file);
-    serialize(o_clump, data, t_scale);
+    RwClump *clump = new RwClump();
+    serialize(*clump, data, t_scale);
     delete[] data;
+    // delete[] clump; // TODO
+    convert(o_result, *clump, t_invertT);
     PRINT_LOG("Dff file loaded!");
+}
+
+void DffLoader::convert(MeshFrame *frames, RwClump &t_clump, u8 t_invertT)
+{
+#define GEOMETRY t_clump.geometryList.geometries[0]
+
+    MeshFrame *frame = &frames[0];
+    u32 vertNormalStCount = GEOMETRY.data.dataHeader.vertexCount;
+    frame->allocateVertices(vertNormalStCount);
+    frame->allocateNormals(vertNormalStCount);
+    frame->allocateSTs(vertNormalStCount);
+
+    Vector3 tempVec = Vector3();
+    Point tempPoint = Point();
+    for (u32 i = 0; i < vertNormalStCount; i++)
+    {
+        tempVec.set(
+            GEOMETRY.data.vertexInformation[i].x,
+            GEOMETRY.data.vertexInformation[i].y,
+            GEOMETRY.data.vertexInformation[i].z);
+        frame->setVertex(i, tempVec);
+        tempVec.set(
+            GEOMETRY.data.normalInformation[i].x,
+            GEOMETRY.data.normalInformation[i].y,
+            GEOMETRY.data.normalInformation[i].z);
+        frame->setNormal(i, tempVec);
+        tempPoint.set(
+            GEOMETRY.data.textureMappingInformation[i].u,
+            GEOMETRY.data.textureMappingInformation[i].v);
+        if (t_invertT)
+            tempPoint.y = 1.0F - tempPoint.y;
+        frame->setST(i, tempPoint);
+    }
+
+#define CURR_SPLIT GEOMETRY.extension.materialSplit.splitInformation[i]
+    u32 materialsCount = GEOMETRY.extension.materialSplit.header.splitCount;
+    frame->allocateMaterials(materialsCount);
+    for (u32 i = 0; i < materialsCount; i++)
+    {
+        u32 facesCount = CURR_SPLIT.faceIndex;
+        u32 materialIndex = CURR_SPLIT.materialIndex;
+        frame->getMaterial(i).allocateFaces(facesCount);
+        char **materialName = &GEOMETRY.materialList.materials[materialIndex].textures[0].textureName.text;
+        frame->getMaterial(i).setName(*materialName);
+        for (u32 j = 0; j < facesCount; j++)
+        {
+            frame->getMaterial(i).setVertexFace(j, CURR_SPLIT.vertexInformation[j].vertex1);
+            frame->getMaterial(i).setNormalFace(j, CURR_SPLIT.vertexInformation[j].vertex1);
+            frame->getMaterial(i).setSTFace(j, CURR_SPLIT.vertexInformation[j].vertex1);
+        }
+    }
 }
 
 void DffLoader::serialize(RwClump &t_clump, u8 *t_data, float t_scale)

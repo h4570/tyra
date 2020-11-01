@@ -13,7 +13,6 @@
 
 #include "math/vector3.hpp"
 #include "math/plane.hpp"
-#include "dff_model.hpp"
 #include "md2_model.hpp"
 #include "./mesh_texture.hpp"
 #include "./mesh_frame.hpp"
@@ -31,17 +30,16 @@ public:
     u8 shouldBeLighted, shouldBeBackfaceCulled, shouldBeFrustumCulled;
 
     MD2Model *md2;
-    DffModel *dff;
     float scale;
     color_t color;
 
     Mesh();
     ~Mesh();
 
-    void loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 t_framesCount);
+    void loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 t_framesCount, u8 t_invertT);
     // void setObj(Vector3 &t_initPos); // TODO
     void loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float t_scale);
-    void setDff(Vector3 &t_initPos, DffModel *t_dffModel);
+    // void setDff(Vector3 &t_initPos, DffModel *t_dffModel);
     void loadMD2(char *t_subfolder, char *t_md2File, Vector3 &t_initPos, float t_scale);
     void getMinMax(Vector3 *t_min, Vector3 *t_max);
     void playAnimation(u32 t_startFrame, u32 t_endFrame);
@@ -50,7 +48,7 @@ public:
     u32 getDrawData(u32 splitIndex, VECTOR *t_vertices, VECTOR *t_normals, VECTOR *t_coordinates, Vector3 &t_cameraPos);
     u8 isInFrustum(Plane *t_frustumPlanes);
 
-    u8 isMd2Loaded, isObjLoaded, isDffLoaded, isSpecInitialized;
+    u8 isMd2Loaded, isObjLoaded, isSpecInitialized;
     clutbuffer_t clut;
     lod_t lod;
     u32 id;

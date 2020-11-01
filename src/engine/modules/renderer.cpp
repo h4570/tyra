@@ -201,12 +201,14 @@ void Renderer::draw(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bul
         draw(t_meshes[i], t_bulbs, t_bulbsCount);
 }
 
+u8 once = true;
+
 /** PATH1 Single + lighting */
 void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
     // TODO VU1 send single list here
-    if (!t_mesh->isObjLoaded && !t_mesh->isDffLoaded && !t_mesh->isMd2Loaded)
+    if (!t_mesh->isObjLoaded && !t_mesh->isMd2Loaded)
         return;
     u32 vertCount = t_mesh->getVertexCount();
     VECTOR *vertices = new VECTOR[vertCount];
@@ -214,13 +216,17 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     VECTOR *coordinates = new VECTOR[vertCount];
     if (t_mesh->isObjLoaded)
     {
-        t_mesh->animate();
+        if (t_mesh->animState.startFrame != t_mesh->animState.endFrame)
+            t_mesh->animate();
         for (u32 i = 0; i < t_mesh->getMaterialsCount(); i++)
         {
             changeTexture(t_mesh, t_mesh->getMaterial(i).getId());
+            if (once)
+                printf("Changing material to:%d\n", t_mesh->getMaterial(i).getId());
             vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
             vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
         }
+        once = false;
     }
     else if (t_mesh->isMd2Loaded)
     {
@@ -228,14 +234,6 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         vertCount = t_mesh->getDrawData(0, vertices, normals, coordinates, *renderData.cameraPosition);
         vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
     }
-    else if (t_mesh->isDffLoaded)
-        for (u32 i = 0; i < t_mesh->dff->clump.geometryList.geometries[0].extension.materialSplit.header.splitCount; i++)
-        {
-            const u32 currentTexI = t_mesh->dff->clump.geometryList.geometries[0].extension.materialSplit.splitInformation[i].materialIndex;
-            changeTexture(t_mesh, currentTexI);
-            vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
-            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
-        }
     delete[] vertices;
     delete[] normals;
     delete[] coordinates;

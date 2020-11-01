@@ -22,7 +22,7 @@ public:
     ObjLoader();
     ~ObjLoader();
 
-    void load(MeshFrame *o_result, char *t_fileName, float t_scale, u8 invertT);
+    void load(MeshFrame *o_result, char *t_fileName, float t_scale, u8 t_invertT);
 
 private:
     void allocateObjMemory(FILE *t_file, MeshFrame *t_result);

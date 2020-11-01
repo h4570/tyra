@@ -5,7 +5,6 @@ EE_OBJS =											\
 	../../engine/models/math/plane.o				\
 	../../engine/models/math/point.o				\
 	../../engine/models/math/vector3.o				\
-	../../engine/models/dff_model.o					\
 	../../engine/models/md2_model.o					\
 	../../engine/models/mesh_frame.o				\
 	../../engine/models/mesh_material.o				\

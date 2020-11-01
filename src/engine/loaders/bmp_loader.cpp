@@ -36,7 +36,6 @@ void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, ch
     char *t_path_part = String::createConcatenated(t_subfolder, t_name);
     char *t_path = String::createConcatenated(t_path_part, t_extension);
     delete[] t_path_part;
-
     FILE *file = fopen(t_path, "rb");
 
     if (file == NULL)

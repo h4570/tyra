@@ -11,7 +11,7 @@
 #ifndef _TYRA_DFF_LOADER_
 #define _TYRA_DFF_LOADER_
 
-#include "../models/dff_model.hpp"
+#include "../models/mesh_frame.hpp"
 #include "./dff_structure.hpp"
 
 /** Class responsible for loading&parsing .obj 3D files */
@@ -22,7 +22,7 @@ public:
     DffLoader();
     ~DffLoader();
 
-    void load(RwClump &o_clump, char *t_fileName, float t_scale);
+    void load(MeshFrame *o_result, char *t_fileName, float t_scale, u8 t_invertT);
     void serialize(RwClump &t_clump, u8 *t_data, float t_scale);
 
     static u8 readByteFromArrayLE(u8 *t_buffer, u32 &t_ptrPos);
@@ -35,6 +35,7 @@ public:
     void readSectionHeader(RwSectionHeader &t_sh, u8 *t_buffer, u32 &t_ptrPos);
 
 private:
+    void convert(MeshFrame *frames, RwClump &t_clump, u8 t_invertT);
     // ---
     void readFrameListData(RwFrameListData &t_frd, u8 *t_buffer, u32 &t_ptrPos);
     void readClumpData(RwClumpData &t_cd, u8 *t_buffer, u32 &t_ptrPos);

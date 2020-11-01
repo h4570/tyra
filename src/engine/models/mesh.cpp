@@ -30,7 +30,6 @@ Mesh::Mesh()
     shouldBeLighted = false;
     isMd2Loaded = false;
     isObjLoaded = false;
-    isDffLoaded = false;
     isSpecInitialized = false;
     id = rand() % 1000000;
     scale = 1.0F;
@@ -49,8 +48,6 @@ Mesh::~Mesh()
     // TODO
     if (isMd2Loaded)
         delete md2;
-    if (isDffLoaded)
-        delete dff;
 }
 
 // ----
@@ -89,9 +86,7 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
     for (u32 matI = 0; matI < MATERIAL.getFacesCount(); matI += 3)
     {
         for (u32 vertI = 0; vertI < 3; vertI++)
-            if (animState.startFrame == animState.endFrame)
-                calc3Vectors[vertI].set(CURR_VERT * t_scale);
-            else
+            if (animState.startFrame != animState.endFrame)
                 calc3Vectors[vertI].setByLerp(CURR_VERT, NEXT_VERT, animState.interpolation, t_scale);
 
         if (!t_shouldBeBackfaceCulled ||
@@ -99,9 +94,19 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
 
             for (u32 vertI = 0; vertI < 3; vertI++)
             {
-                o_vertices[addedFaces][0] = calc3Vectors[vertI].x;
-                o_vertices[addedFaces][1] = calc3Vectors[vertI].y;
-                o_vertices[addedFaces][2] = calc3Vectors[vertI].z;
+
+                if (animState.startFrame == animState.endFrame)
+                {
+                    o_vertices[addedFaces][0] = CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI)).x;
+                    o_vertices[addedFaces][1] = CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI)).y;
+                    o_vertices[addedFaces][2] = CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI)).z;
+                }
+                else
+                {
+                    o_vertices[addedFaces][0] = calc3Vectors[vertI].x;
+                    o_vertices[addedFaces][1] = calc3Vectors[vertI].y;
+                    o_vertices[addedFaces][2] = calc3Vectors[vertI].z;
+                }
                 o_vertices[addedFaces][3] = 1.0F;
 
                 o_normals[addedFaces][0] = CURR_FRAME.getNormal(MATERIAL.getNormalFace(matI + vertI)).x;
@@ -122,58 +127,67 @@ void Mesh::loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float
 {
     createSpecIfNotCreated();
     DffLoader loader = DffLoader();
-    dff = new DffModel();
     char *dffPath = String::createConcatenated(t_subfolder, t_dffFile);
-    loader.load(dff->clump, dffPath, t_scale);
+    framesCount = 1;
+    frames = new MeshFrame[1];
+    loader.load(frames, dffPath, t_scale, true);
     delete[] dffPath;
     position = t_initPos;
-    setVerticesReference(
-        dff->clump.geometryList.geometries[0].data.dataHeader.vertexCount,
-        dff->clump.geometryList.geometries[0].data.vertexInformation);
+    setVerticesReference(getFacesCount(), frames[0].getVertices());
     setDefaultColor();
-    isDffLoaded = true;
-    loadTextures(t_subfolder, ".bmp");
+    isObjLoaded = true;
+    // position = t_initPos;
+    // setVerticesReference(
+    //     dff->clump.geometryList.geometries[0].data.dataHeader.vertexCount,
+    //     dff->clump.geometryList.geometries[0].data.vertexInformation);
+    // setDefaultColor();
+    // isDffLoaded = true;
+    // loadTextures(t_subfolder, ".bmp");
 }
 
-void Mesh::setDff(Vector3 &t_initPos, DffModel *t_dffModel)
-{
-    position = t_initPos;
-    isSpecInitialized = 1;
-    dff = t_dffModel;
-    setVerticesReference(
-        dff->clump.geometryList.geometries[0].data.dataHeader.vertexCount,
-        dff->clump.geometryList.geometries[0].data.vertexInformation);
-    setDefaultColor();
-    isDffLoaded = true;
-}
+// void Mesh::setDff(Vector3 &t_initPos, DffModel *t_dffModel)
+// {
+//     position = t_initPos;
+//     isSpecInitialized = 1;
+//     dff = t_dffModel;
+//     setVerticesReference(
+//         dff->clump.geometryList.geometries[0].data.dataHeader.vertexCount,
+//         dff->clump.geometryList.geometries[0].data.vertexInformation);
+//     setDefaultColor();
+//     isDffLoaded = true;
+// }
 
-void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 t_framesCount)
+void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 t_framesCount, u8 t_invertT)
 {
     createSpecIfNotCreated();
     ObjLoader loader = ObjLoader();
-
     framesCount = t_framesCount;
-
     frames = new MeshFrame[framesCount];
-
     char *part1 = String::createConcatenated(t_subfolder, t_objFile); // "folder/object"
-    char *part2 = String::createConcatenated(part1, "_");             // "folder/object_"
-    delete[] part1;
-
-    for (u16 i = 0; i < framesCount; i++)
+    if (framesCount == 1)
     {
-        char *part3 = String::createU32ToString(i + 1);              // 0 -> "1"
-        char *part4 = String::createWithLeadingZeros(part3);         // "000001"
-        char *part5 = String::createConcatenated(part2, part4);      // "folder/object_000001"
-        char *finalPath = String::createConcatenated(part5, ".obj"); // "folder/object_000001.obj"
-        loader.load(&frames[i], finalPath, t_scale, false);
-        delete[] part3;
-        delete[] part4;
-        delete[] part5;
+        char *finalPath = String::createConcatenated(part1, ".obj"); // "folder/object.obj"
+        loader.load(&frames[0], finalPath, t_scale, t_invertT);
         delete[] finalPath;
     }
-
-    delete[] part2;
+    else
+    {
+        char *part2 = String::createConcatenated(part1, "_"); // "folder/object_"
+        for (u16 i = 0; i < framesCount; i++)
+        {
+            char *part3 = String::createU32ToString(i + 1);              // 0 -> "1"
+            char *part4 = String::createWithLeadingZeros(part3);         // "000001"
+            char *part5 = String::createConcatenated(part2, part4);      // "folder/object_000001"
+            char *finalPath = String::createConcatenated(part5, ".obj"); // "folder/object_000001.obj"
+            loader.load(&frames[i], finalPath, t_scale, t_invertT);
+            delete[] part3;
+            delete[] part4;
+            delete[] part5;
+            delete[] finalPath;
+        }
+        delete[] part2;
+    }
+    delete[] part1;
 
     position = t_initPos;
     setVerticesReference(getFacesCount(), frames[0].getVertices());
@@ -215,8 +229,6 @@ u32 Mesh::getVertexCount()
         return md2->trianglesCount * 3;
     else if (isObjLoaded)
         return getFacesCount();
-    else if (isDffLoaded)
-        return dff->clump.geometryList.geometries[0].data.dataHeader.triangleCount * 3;
     else
     {
         PRINT_ERR("Can't get vertex count, because no 3D model was loaded!");
@@ -246,16 +258,6 @@ void Mesh::loadTextures(char *t_subfolder, char *t_extension)
         bmpLoader.load(textures[0], t_subfolder, md2->filename, t_extension);
         // setDefaultWrapSettings(spec->textures[0].wrapSettings);
     }
-    else if (isDffLoaded)
-    {
-        textures = new MeshTexture[dff->clump.geometryList.geometries[0].materialList.data.materialCount];
-        for (u8 i = 0; i < dff->clump.geometryList.geometries[0].materialList.data.materialCount; i++)
-            for (u8 j = 0; j < dff->clump.geometryList.geometries[0].materialList.materials[i].data.textureCount; j++)
-            {
-                bmpLoader.load(textures[i], t_subfolder, dff->clump.geometryList.geometries[0].materialList.materials[i].textures[j].textureName.text, t_extension);
-                // setDefaultWrapSettings(spec->textures[i].wrapSettings);
-            }
-    }
     else
         PRINT_ERR("Can't load textures, because no 3D model was loaded!");
 }
@@ -267,8 +269,6 @@ u32 Mesh::getDrawData(u32 splitIndex, VECTOR *t_vertices, VECTOR *t_normals, VEC
         return md2->getCurrentFrameData(t_vertices, t_normals, t_coordinates, t_cameraPos, scale, shouldBeBackfaceCulled);
     else if (isObjLoaded)
         return getDrawData(splitIndex, t_vertices, t_normals, t_coordinates, t_cameraPos, scale, shouldBeBackfaceCulled);
-    else if (isDffLoaded)
-        return dff->getDrawData(splitIndex, t_vertices, t_normals, t_coordinates, t_cameraPos, scale, shouldBeBackfaceCulled);
     PRINT_ERR("Can't get draw data, because no 3D model was loaded!");
     return 0;
 }

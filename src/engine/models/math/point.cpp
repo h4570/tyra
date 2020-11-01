@@ -17,7 +17,7 @@
 // ----
 
 /** Create by specifying values */
-Point::Point(float t_x, float t_y)
+Point::Point(const float &t_x, const float &t_y)
 {
     x = t_x;
     y = t_y;
@@ -43,10 +43,10 @@ Point::~Point() {}
 // Methods
 // ----
 
-void Point::set(float t_x, float t_y)
+void Point::set(const float &t_x, const float &t_y)
 {
-    x = x;
-    y = y;
+    x = t_x;
+    y = t_y;
 }
 
 void Point::set(const Point &v)

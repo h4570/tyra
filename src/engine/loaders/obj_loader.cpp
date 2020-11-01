@@ -30,7 +30,7 @@ ObjLoader::~ObjLoader() {}
  * Notice: At this moment textures names are MATERIAL names from .obj file!
  * Notice 2: Faces MUST be triangulated (check out blender export settings).
  */
-void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 invertT)
+void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_invertT)
 {
     FILE *file = fopen(t_filename, "rb");
     if (file == NULL)
@@ -55,7 +55,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 in
             {
                 Point point = Point();
                 fscanf(file, "%f %f\n", &point.x, &point.y);
-                if (invertT)
+                if (t_invertT)
                     point.y = 1.0F - point.y;
                 o_result->setST(cordsI++, point);
             }
