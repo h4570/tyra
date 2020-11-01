@@ -61,8 +61,8 @@ void DffLoader::convert(MeshFrame *frames, RwClump &t_clump, u8 t_invertT)
     MeshFrame *frame = &frames[0];
     u32 vertNormalStCount = GEOMETRY.data.dataHeader.vertexCount;
     frame->allocateVertices(vertNormalStCount);
-    frame->allocateNormals(vertNormalStCount);
-    frame->allocateSTs(vertNormalStCount);
+    frame->allocateNormals(vertNormalStCount); // can be optimized
+    frame->allocateSTs(vertNormalStCount);     // can be optimized
 
     Vector3 tempVec = Vector3();
     Point tempPoint = Point();

@@ -8,18 +8,18 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#ifndef _TYRA_OBJECT3D_
-#define _TYRA_OBJECT3D_
+#ifndef _TYRA_MESH_
+#define _TYRA_MESH_
 
 #include "math/vector3.hpp"
 #include "math/plane.hpp"
-#include "md2_model.hpp"
 #include "./mesh_texture.hpp"
 #include "./mesh_frame.hpp"
 #include <tamtypes.h>
 #include <draw_types.h>
 #include <draw_buffers.h>
 #include <draw_sampling.h>
+#include "./anim_state.hpp"
 
 /** Class which have common types for all 3D objects */
 class Mesh
@@ -29,7 +29,6 @@ public:
     Vector3 position, rotation;
     u8 shouldBeLighted, shouldBeBackfaceCulled, shouldBeFrustumCulled;
 
-    MD2Model *md2;
     float scale;
     color_t color;
 
@@ -38,14 +37,13 @@ public:
 
     void loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 t_framesCount, u8 t_invertT);
     // void setObj(Vector3 &t_initPos); // TODO
-    void loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float t_scale);
+    void loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float t_scale, u8 t_invertT);
     // void setDff(Vector3 &t_initPos, DffModel *t_dffModel);
-    void loadMD2(char *t_subfolder, char *t_md2File, Vector3 &t_initPos, float t_scale);
+    void loadMD2(char *t_subfolder, char *t_md2File, Vector3 &t_initPos, float t_scale, u8 t_invertT);
     void getMinMax(Vector3 *t_min, Vector3 *t_max);
     void playAnimation(u32 t_startFrame, u32 t_endFrame);
     u32 getVertexCount();
     void setAnimSpeed(float t_value);
-    u32 getDrawData(u32 splitIndex, VECTOR *t_vertices, VECTOR *t_normals, VECTOR *t_coordinates, Vector3 &t_cameraPos);
     u8 isInFrustum(Plane *t_frustumPlanes);
 
     u8 isMd2Loaded, isObjLoaded, isSpecInitialized;
@@ -60,7 +58,7 @@ public:
     MeshFrame *frames;
     AnimState animState;
     void animate();
-    u32 getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled);
+    u32 getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos);
     u32 getFacesCount();
     u8 isMemoryAllocated;
 
@@ -84,9 +82,7 @@ private:
     void setDefaultWrapSettings(texwrap_t &t_wrapSettings);
     u32 verticesCount;
     Vector3 *vertices;
-    void loadTextures(char *t_subfolder, char *t_extension);
     void setVerticesReference(u32 t_verticesCount, Vector3 *t_verticesRef);
-    void createSpecIfNotCreated();
     void setDefaultColor();
     void getFarthestVertex(Vector3 *o_result, int t_offset);
 };

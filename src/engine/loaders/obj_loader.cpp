@@ -26,10 +26,6 @@ ObjLoader::~ObjLoader() {}
 // Methods
 // ----
 
-/** Parse .obj file, allocate output data and store it. Multitexture support
- * Notice: At this moment textures names are MATERIAL names from .obj file!
- * Notice 2: Faces MUST be triangulated (check out blender export settings).
- */
 void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_invertT)
 {
     FILE *file = fopen(t_filename, "rb");

@@ -201,8 +201,6 @@ void Renderer::draw(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bul
         draw(t_meshes[i], t_bulbs, t_bulbsCount);
 }
 
-u8 once = true;
-
 /** PATH1 Single + lighting */
 void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
@@ -221,12 +219,9 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         for (u32 i = 0; i < t_mesh->getMaterialsCount(); i++)
         {
             changeTexture(t_mesh, t_mesh->getMaterial(i).getId());
-            if (once)
-                printf("Changing material to:%d\n", t_mesh->getMaterial(i).getId());
             vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
             vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
         }
-        once = false;
     }
     else if (t_mesh->isMd2Loaded)
     {

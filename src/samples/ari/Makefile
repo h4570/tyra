@@ -5,7 +5,6 @@ EE_OBJS =											\
 	../../engine/models/math/plane.o				\
 	../../engine/models/math/point.o				\
 	../../engine/models/math/vector3.o				\
-	../../engine/models/md2_model.o					\
 	../../engine/models/mesh_frame.o				\
 	../../engine/models/mesh_material.o				\
 	../../engine/models/mesh.o						\
@@ -51,7 +50,7 @@ all: $(EE_BIN)
 	$(EE_DVP) $< -o $@
 
 clean:
-	rm -f $(EE_BIN) $(EE_OBJS)
+	rm -f $(EE_OBJS)
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal

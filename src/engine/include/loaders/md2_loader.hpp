@@ -11,7 +11,7 @@
 #ifndef _TYRA_MD2_LOADER_
 #define _TYRA_MD2_LOADER_
 
-#include "../models/md2_model.hpp"
+#include "../models/mesh_frame.hpp"
 #include <stdio.h>
 
 // magic number "IDP2" or 844121161
@@ -83,7 +83,8 @@ public:
     MD2Loader();
     ~MD2Loader();
 
-    void load(MD2Model *o_result, char *t_fileName, float t_scale);
+    /** Returns frames count */
+    u32 load(MeshFrame *o_result, char *t_subpath, char *t_nameWithoutExtension, float t_scale, u8 t_invertT);
 
 private:
 };

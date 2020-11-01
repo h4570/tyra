@@ -9,7 +9,6 @@
 */
 
 #include "../include/models/mesh.hpp"
-
 #include "../include/loaders/obj_loader.hpp"
 #include "../include/loaders/md2_loader.hpp"
 #include "../include/loaders/dff_loader.hpp"
@@ -33,6 +32,7 @@ Mesh::Mesh()
     isSpecInitialized = false;
     id = rand() % 1000000;
     scale = 1.0F;
+    framesCount = 0;
     animState.startFrame = 0;
     animState.endFrame = 0;
     animState.interpolation = 0.0F;
@@ -46,8 +46,6 @@ Mesh::Mesh()
 Mesh::~Mesh()
 {
     // TODO
-    if (isMd2Loaded)
-        delete md2;
 }
 
 // ----
@@ -74,8 +72,10 @@ void Mesh::animate()
     }
 }
 
-u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos, float t_scale, u8 t_shouldBeBackfaceCulled)
+u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos)
 {
+    if (!frames)
+        PRINT_ERR("Can't draw, because no mesh data was loaded!");
 #define CURR_FRAME frames[animState.currentFrame]
 #define NEXT_FRAME frames[animState.nextFrame]
 #define MATERIAL CURR_FRAME.getMaterial(t_materialIndex)
@@ -87,9 +87,9 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
     {
         for (u32 vertI = 0; vertI < 3; vertI++)
             if (animState.startFrame != animState.endFrame)
-                calc3Vectors[vertI].setByLerp(CURR_VERT, NEXT_VERT, animState.interpolation, t_scale);
+                calc3Vectors[vertI].setByLerp(CURR_VERT, NEXT_VERT, animState.interpolation, scale);
 
-        if (!t_shouldBeBackfaceCulled ||
+        if (!shouldBeBackfaceCulled ||
             Vector3::shouldBeBackfaceCulled(&t_cameraPos, &calc3Vectors[2], &calc3Vectors[1], &calc3Vectors[0]))
 
             for (u32 vertI = 0; vertI < 3; vertI++)
@@ -123,43 +123,22 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
     return addedFaces;
 }
 
-void Mesh::loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float t_scale)
+void Mesh::loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float t_scale, u8 t_invertT)
 {
-    createSpecIfNotCreated();
     DffLoader loader = DffLoader();
     char *dffPath = String::createConcatenated(t_subfolder, t_dffFile);
     framesCount = 1;
     frames = new MeshFrame[1];
-    loader.load(frames, dffPath, t_scale, true);
+    loader.load(frames, dffPath, t_scale, t_invertT);
     delete[] dffPath;
     position = t_initPos;
     setVerticesReference(getFacesCount(), frames[0].getVertices());
     setDefaultColor();
     isObjLoaded = true;
-    // position = t_initPos;
-    // setVerticesReference(
-    //     dff->clump.geometryList.geometries[0].data.dataHeader.vertexCount,
-    //     dff->clump.geometryList.geometries[0].data.vertexInformation);
-    // setDefaultColor();
-    // isDffLoaded = true;
-    // loadTextures(t_subfolder, ".bmp");
 }
-
-// void Mesh::setDff(Vector3 &t_initPos, DffModel *t_dffModel)
-// {
-//     position = t_initPos;
-//     isSpecInitialized = 1;
-//     dff = t_dffModel;
-//     setVerticesReference(
-//         dff->clump.geometryList.geometries[0].data.dataHeader.vertexCount,
-//         dff->clump.geometryList.geometries[0].data.vertexInformation);
-//     setDefaultColor();
-//     isDffLoaded = true;
-// }
 
 void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 t_framesCount, u8 t_invertT)
 {
-    createSpecIfNotCreated();
     ObjLoader loader = ObjLoader();
     framesCount = t_framesCount;
     frames = new MeshFrame[framesCount];
@@ -195,26 +174,9 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float
     isObjLoaded = true;
 }
 
-// void Mesh::setObj(Vector3 &t_initPos, ObjModel *t_objModel)
-// {
-//     position = t_initPos;
-//     isSpecInitialized = true;
-//     obj = t_objModel;
-//     setVerticesReference(getFacesCount(), frames[0].getVertices());
-//     setDefaultColor();
-//     isObjLoaded = true;
-// }
-
-void Mesh::createSpecIfNotCreated()
-{
-}
-
 void Mesh::setAnimSpeed(float t_value)
 {
-    if (isMd2Loaded == 1)
-        md2->animState.speed = t_value;
-    else
-        PRINT_ERR("Animation speed set is not possible, because no md2 3D model was loaded!");
+    animState.speed = t_value;
 }
 
 void Mesh::setVerticesReference(u32 t_verticesCount, Vector3 *t_verticesRef)
@@ -225,13 +187,11 @@ void Mesh::setVerticesReference(u32 t_verticesCount, Vector3 *t_verticesRef)
 
 u32 Mesh::getVertexCount()
 {
-    if (isMd2Loaded)
-        return md2->trianglesCount * 3;
-    else if (isObjLoaded)
+    if (framesCount > 0)
         return getFacesCount();
     else
     {
-        PRINT_ERR("Can't get vertex count, because no 3D model was loaded!");
+        PRINT_ERR("Can't get vertex count, because mesh data was loaded!");
         return 0;
     }
 }
@@ -246,47 +206,18 @@ void Mesh::setDefaultWrapSettings(texwrap_t &t_wrapSettings)
     // t_wrapSettings.minv = 0;
 }
 
-void Mesh::loadTextures(char *t_subfolder, char *t_extension)
+/** Set object position and specification 
+ * @param t_md2File without extension
+*/
+void Mesh::loadMD2(char *t_subfolder, char *t_md2File, Vector3 &t_initPos, float t_scale, u8 t_invertT)
 {
-    BmpLoader bmpLoader = BmpLoader();
-    if (isObjLoaded)
-    {
-    }
-    else if (isMd2Loaded)
-    {
-        textures = new MeshTexture[1];
-        bmpLoader.load(textures[0], t_subfolder, md2->filename, t_extension);
-        // setDefaultWrapSettings(spec->textures[0].wrapSettings);
-    }
-    else
-        PRINT_ERR("Can't load textures, because no 3D model was loaded!");
-}
-
-// TODO refactor
-u32 Mesh::getDrawData(u32 splitIndex, VECTOR *t_vertices, VECTOR *t_normals, VECTOR *t_coordinates, Vector3 &t_cameraPos)
-{
-    if (isMd2Loaded)
-        return md2->getCurrentFrameData(t_vertices, t_normals, t_coordinates, t_cameraPos, scale, shouldBeBackfaceCulled);
-    else if (isObjLoaded)
-        return getDrawData(splitIndex, t_vertices, t_normals, t_coordinates, t_cameraPos, scale, shouldBeBackfaceCulled);
-    PRINT_ERR("Can't get draw data, because no 3D model was loaded!");
-    return 0;
-}
-
-/** Set object position and specification */
-void Mesh::loadMD2(char *t_subfolder, char *t_md2File, Vector3 &t_initPos, float t_scale)
-{
-    createSpecIfNotCreated();
-    md2 = new MD2Model(t_md2File);
     MD2Loader loader = MD2Loader();
+    frames = new MeshFrame[26];
+    framesCount = loader.load(frames, t_subfolder, t_md2File, t_scale, t_invertT);
     position = t_initPos;
-    char *md2Path = String::createConcatenated(t_subfolder, t_md2File);
-    loader.load(md2, md2Path, t_scale);
-    delete[] md2Path;
-    setVerticesReference(md2->verticesPerFrameCount * md2->framesCount, md2->vertices);
+    setVerticesReference(getFacesCount(), frames[0].getVertices());
     setDefaultColor();
-    isMd2Loaded = true;
-    loadTextures(t_subfolder, ".bmp");
+    isObjLoaded = true;
 }
 
 /** Set's default object color + no transparency */
@@ -333,18 +264,17 @@ void Mesh::getMinMax(Vector3 *t_min, Vector3 *t_max)
 
 void Mesh::playAnimation(u32 t_startFrame, u32 t_endFrame)
 {
-    if (isMd2Loaded == 1)
+    if (framesCount > 1)
     {
-        md2->animState.startFrame = t_startFrame;
-        md2->animState.endFrame = t_endFrame;
-    }
-    else if (isObjLoaded == 1)
-    {
+        if (t_endFrame >= framesCount)
+            PRINT_ERR("End frame value is too high. Valid range: (0, getFramesCount()-1)");
         animState.startFrame = t_startFrame;
         animState.endFrame = t_endFrame;
     }
-    else
-        PRINT_ERR("Animation is only supported in MD2/OBJ format!");
+    else if (framesCount == 0)
+        PRINT_ERR("Cant play animation, because no mesh data was loaded!");
+    else if (framesCount == 1)
+        PRINT_ERR("Cant play animation, because this mesh have only one frame.");
 }
 
 /** Returns next farthest vertex of 3D object

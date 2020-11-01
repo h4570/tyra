@@ -15,7 +15,22 @@
 #include <math3d.h>
 #include <stdio.h>
 
+class Debug
+{
+public:
+    static void errTrap(char *t_text, char *t_file)
+    {
+        printf("\n");
+        printf("====================================\n");
+        printf("| ERROR: %s\n", t_text);
+        printf("| File : %s\n", t_file);
+        printf("====================================\n\n");
+        for (;;)
+            ;
+    }
+};
+
 #define PRINT_LOG(TEXT) printf("LOG: " TEXT " (" __FILE__ ")\n")
-#define PRINT_ERR(TEXT) printf("\n====================================\n| ERROR: " TEXT "\n| File : " __FILE__ "\n====================================\n\n")
+#define PRINT_ERR(TEXT) Debug::errTrap(TEXT, __FILE__)
 
 #endif
