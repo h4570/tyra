@@ -18,6 +18,8 @@ typedef struct
 {
     u32 startFrame;
     u32 endFrame;
+    u32 stayFrame;
+    u8 isStayFrameSet;
     float speed;
     float interpolation;
     u32 animType;

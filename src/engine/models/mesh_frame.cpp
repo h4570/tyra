@@ -95,7 +95,7 @@ void MeshFrame::calculateBoundingBox()
 {
     if (!_areVerticesAllocated)
     {
-        PRINT_ERR("Can't calculate bounding box, because vertices was not allocated!");
+        PRINT_ERR("Can't calculate bounding box, because vertices were not allocated!");
         return;
     }
     float lowX, lowY, lowZ, hiX, hiY, hiZ;

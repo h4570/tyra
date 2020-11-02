@@ -27,9 +27,6 @@ Mesh::Mesh()
     shouldBeFrustumCulled = true;
     shouldBeBackfaceCulled = false;
     shouldBeLighted = false;
-    isMd2Loaded = false;
-    isObjLoaded = false;
-    isSpecInitialized = false;
     id = rand() % 1000000;
     scale = 1.0F;
     framesCount = 0;
@@ -38,19 +35,127 @@ Mesh::Mesh()
     animState.interpolation = 0.0F;
     animState.animType = 0;
     animState.currentFrame = 0;
+    animState.stayFrame = 0;
+    animState.isStayFrameSet = false;
     animState.nextFrame = 0;
     animState.speed = 0.1F;
-    // filename = String::createWithoutExtension(t_objFile);
+    _isMother = false;
+    setDefaultColor();
 }
 
 Mesh::~Mesh()
 {
-    // TODO
+    if (_isMother)
+        delete[] frames;
 }
 
 // ----
 // Methods
 // ----
+
+void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u8 &t_invertT)
+{
+    ObjLoader loader = ObjLoader();
+    framesCount = 1;
+    frames = new MeshFrame[framesCount];
+    char *part1 = String::createConcatenated(t_subfolder, t_objFile); // "folder/object"
+    char *finalPath = String::createConcatenated(part1, ".obj");      // "folder/object.obj"
+    loader.load(&frames[0], finalPath, t_scale, t_invertT);
+    delete[] part1;
+    delete[] finalPath;
+    _isMother = true;
+}
+
+void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT)
+{
+    if (t_framesCount == 0)
+        PRINT_ERR("Frames count cannot be 0!");
+    else if (t_framesCount == 1)
+        loadObj(t_subfolder, t_objFile, t_scale, t_invertT);
+    else
+    {
+        ObjLoader loader = ObjLoader();
+        framesCount = t_framesCount;
+        frames = new MeshFrame[framesCount];
+        char *part1 = String::createConcatenated(t_subfolder, t_objFile); // "folder/object"
+        char *part2 = String::createConcatenated(part1, "_");             // "folder/object_"
+        for (u32 i = 0; i < framesCount; i++)
+        {
+            char *part3 = String::createU32ToString(i + 1);              // 0 -> "1"
+            char *part4 = String::createWithLeadingZeros(part3);         // "000001"
+            char *part5 = String::createConcatenated(part2, part4);      // "folder/object_000001"
+            char *finalPath = String::createConcatenated(part5, ".obj"); // "folder/object_000001.obj"
+            loader.load(&frames[i], finalPath, t_scale, t_invertT);
+            delete[] part3;
+            delete[] part4;
+            delete[] part5;
+            delete[] finalPath;
+        }
+        delete[] part2;
+        delete[] part1;
+        _isMother = true;
+    }
+}
+
+void Mesh::loadDff(char *t_subfolder, char *t_dffFile, const float &t_scale, const u8 &t_invertT)
+{
+    DffLoader loader = DffLoader();
+    char *part1 = String::createConcatenated(t_subfolder, t_dffFile);
+    char *dffPath = String::createConcatenated(part1, ".dff");
+    framesCount = 1;
+    frames = new MeshFrame[1];
+    loader.load(frames, dffPath, t_scale, t_invertT);
+    delete[] part1;
+    delete[] dffPath;
+    _isMother = true;
+}
+
+void Mesh::loadMD2(char *t_subfolder, char *t_md2File, const float &t_scale, const u8 &t_invertT)
+{
+    MD2Loader loader = MD2Loader();
+    frames = loader.load(framesCount, t_subfolder, t_md2File, t_scale, t_invertT);
+    _isMother = true;
+}
+
+void Mesh::loadFrom(const Mesh &t_mesh)
+{
+    frames = t_mesh.frames;
+    framesCount = t_mesh.framesCount;
+}
+
+void Mesh::playAnimation(const u32 &t_startFrame, const u32 &t_endFrame)
+{
+    if (framesCount > 1)
+    {
+        if (t_endFrame >= framesCount)
+            PRINT_ERR("End frame value is too high. Valid range: (0, getFramesCount()-1)");
+        animState.startFrame = t_startFrame;
+        animState.endFrame = t_endFrame;
+        animState.nextFrame = t_startFrame;
+    }
+    else if (framesCount == 0)
+        PRINT_ERR("Cant play animation, because no mesh data was loaded!");
+    else if (framesCount == 1)
+        PRINT_ERR("Cant play animation, because this mesh have only one frame.");
+}
+
+void Mesh::playAnimation(const u32 &t_startFrame, const u32 &t_endFrame, const u32 &t_stayFrame)
+{
+    if (framesCount > 1)
+    {
+        if (t_endFrame >= framesCount)
+            PRINT_ERR("End frame value is too high. Valid range: (0, getFramesCount()-1)");
+        animState.startFrame = t_startFrame;
+        animState.endFrame = t_endFrame;
+        animState.isStayFrameSet = true;
+        animState.stayFrame = t_stayFrame;
+        animState.nextFrame = t_startFrame;
+    }
+    else if (framesCount == 0)
+        PRINT_ERR("Cant play animation, because no mesh data was loaded!");
+    else if (framesCount == 1)
+        PRINT_ERR("Cant play animation, because this mesh have only one frame.");
+}
 
 u32 Mesh::getFacesCount()
 {
@@ -68,25 +173,32 @@ void Mesh::animate()
         animState.interpolation = 0.0F;
         animState.currentFrame = animState.nextFrame;
         if (++animState.nextFrame > animState.endFrame)
-            animState.nextFrame = animState.startFrame;
+        {
+            if (animState.isStayFrameSet)
+            {
+                animState.isStayFrameSet = false;
+                animState.nextFrame = animState.stayFrame;
+                animState.startFrame = animState.stayFrame;
+                animState.endFrame = animState.stayFrame;
+            }
+            else
+                animState.nextFrame = animState.startFrame;
+        }
     }
 }
 
 u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos)
 {
-    if (!frames)
-        PRINT_ERR("Can't draw, because no mesh data was loaded!");
 #define CURR_FRAME frames[animState.currentFrame]
 #define NEXT_FRAME frames[animState.nextFrame]
 #define MATERIAL CURR_FRAME.getMaterial(t_materialIndex)
 #define CURR_VERT CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI))
 #define NEXT_VERT NEXT_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI))
     u32 addedFaces = 0;
-
     for (u32 matI = 0; matI < MATERIAL.getFacesCount(); matI += 3)
     {
         for (u32 vertI = 0; vertI < 3; vertI++)
-            if (animState.startFrame != animState.endFrame)
+            if (animState.currentFrame != animState.nextFrame)
                 calc3Vectors[vertI].setByLerp(CURR_VERT, NEXT_VERT, animState.interpolation, scale);
 
         if (!shouldBeBackfaceCulled ||
@@ -95,7 +207,7 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
             for (u32 vertI = 0; vertI < 3; vertI++)
             {
 
-                if (animState.startFrame == animState.endFrame)
+                if (animState.currentFrame == animState.nextFrame)
                 {
                     o_vertices[addedFaces][0] = CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI)).x;
                     o_vertices[addedFaces][1] = CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI)).y;
@@ -123,66 +235,9 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
     return addedFaces;
 }
 
-void Mesh::loadDff(char *t_subfolder, char *t_dffFile, Vector3 &t_initPos, float t_scale, u8 t_invertT)
-{
-    DffLoader loader = DffLoader();
-    char *dffPath = String::createConcatenated(t_subfolder, t_dffFile);
-    framesCount = 1;
-    frames = new MeshFrame[1];
-    loader.load(frames, dffPath, t_scale, t_invertT);
-    delete[] dffPath;
-    position = t_initPos;
-    setVerticesReference(getFacesCount(), frames[0].getVertices());
-    setDefaultColor();
-    isObjLoaded = true;
-}
-
-void Mesh::loadObj(char *t_subfolder, char *t_objFile, Vector3 &t_initPos, float t_scale, u16 t_framesCount, u8 t_invertT)
-{
-    ObjLoader loader = ObjLoader();
-    framesCount = t_framesCount;
-    frames = new MeshFrame[framesCount];
-    char *part1 = String::createConcatenated(t_subfolder, t_objFile); // "folder/object"
-    if (framesCount == 1)
-    {
-        char *finalPath = String::createConcatenated(part1, ".obj"); // "folder/object.obj"
-        loader.load(&frames[0], finalPath, t_scale, t_invertT);
-        delete[] finalPath;
-    }
-    else
-    {
-        char *part2 = String::createConcatenated(part1, "_"); // "folder/object_"
-        for (u16 i = 0; i < framesCount; i++)
-        {
-            char *part3 = String::createU32ToString(i + 1);              // 0 -> "1"
-            char *part4 = String::createWithLeadingZeros(part3);         // "000001"
-            char *part5 = String::createConcatenated(part2, part4);      // "folder/object_000001"
-            char *finalPath = String::createConcatenated(part5, ".obj"); // "folder/object_000001.obj"
-            loader.load(&frames[i], finalPath, t_scale, t_invertT);
-            delete[] part3;
-            delete[] part4;
-            delete[] part5;
-            delete[] finalPath;
-        }
-        delete[] part2;
-    }
-    delete[] part1;
-
-    position = t_initPos;
-    setVerticesReference(getFacesCount(), frames[0].getVertices());
-    setDefaultColor();
-    isObjLoaded = true;
-}
-
 void Mesh::setAnimSpeed(float t_value)
 {
     animState.speed = t_value;
-}
-
-void Mesh::setVerticesReference(u32 t_verticesCount, Vector3 *t_verticesRef)
-{
-    verticesCount = t_verticesCount;
-    vertices = t_verticesRef;
 }
 
 u32 Mesh::getVertexCount()
@@ -196,30 +251,6 @@ u32 Mesh::getVertexCount()
     }
 }
 
-void Mesh::setDefaultWrapSettings(texwrap_t &t_wrapSettings)
-{
-    // t_wrapSettings.horizontal = WRAP_REPEAT;
-    // t_wrapSettings.vertical = WRAP_REPEAT;
-    // t_wrapSettings.maxu = 0;
-    // t_wrapSettings.maxv = 0;
-    // t_wrapSettings.minu = 0;
-    // t_wrapSettings.minv = 0;
-}
-
-/** Set object position and specification 
- * @param t_md2File without extension
-*/
-void Mesh::loadMD2(char *t_subfolder, char *t_md2File, Vector3 &t_initPos, float t_scale, u8 t_invertT)
-{
-    MD2Loader loader = MD2Loader();
-    frames = new MeshFrame[26];
-    framesCount = loader.load(frames, t_subfolder, t_md2File, t_scale, t_invertT);
-    position = t_initPos;
-    setVerticesReference(getFacesCount(), frames[0].getVertices());
-    setDefaultColor();
-    isObjLoaded = true;
-}
-
 /** Set's default object color + no transparency */
 void Mesh::setDefaultColor()
 {
@@ -231,61 +262,43 @@ void Mesh::setDefaultColor()
 }
 
 /** Calculates minimum and maximum X, Y, Z of this 3D objects vertices + current position */
-void Mesh::getMinMax(Vector3 *t_min, Vector3 *t_max)
+// void Mesh::getMinMax(Vector3 *t_min, Vector3 *t_max)
+// {
+//     Vector3 calc = Vector3();
+//     u8 isInitialized = 0;
+//     for (u32 i = 0; i < 8; i++)
+//     {
+//         getFarthestVertex(&calc, i);
+//         if (isInitialized == 0)
+//         {
+//             isInitialized = 1;
+//             t_min->set(calc);
+//             t_max->set(calc);
+//         }
+
+//         if (t_min->x > calc.x)
+//             t_min->x = calc.x;
+//         if (calc.x > t_max->x)
+//             t_max->x = calc.x;
+
+//         if (t_min->y > calc.y)
+//             t_min->y = calc.y;
+//         if (calc.y > t_max->y)
+//             t_max->y = calc.y;
+
+//         if (t_min->z > calc.z)
+//             t_min->z = calc.z;
+//         if (calc.z > t_max->z)
+//             t_max->z = calc.z;
+//     }
+// }
+
+void Mesh::getCurrentBoundingBoxVertex(Vector3 &o_result, const u32 &t_index)
 {
-    Vector3 calc = Vector3();
-    u8 isInitialized = 0;
-    for (u32 i = 0; i < 8; i++)
-    {
-        getFarthestVertex(&calc, i);
-        if (isInitialized == 0)
-        {
-            isInitialized = 1;
-            t_min->set(calc);
-            t_max->set(calc);
-        }
-
-        if (t_min->x > calc.x)
-            t_min->x = calc.x;
-        if (calc.x > t_max->x)
-            t_max->x = calc.x;
-
-        if (t_min->y > calc.y)
-            t_min->y = calc.y;
-        if (calc.y > t_max->y)
-            t_max->y = calc.y;
-
-        if (t_min->z > calc.z)
-            t_min->z = calc.z;
-        if (calc.z > t_max->z)
-            t_max->z = calc.z;
-    }
-}
-
-void Mesh::playAnimation(u32 t_startFrame, u32 t_endFrame)
-{
-    if (framesCount > 1)
-    {
-        if (t_endFrame >= framesCount)
-            PRINT_ERR("End frame value is too high. Valid range: (0, getFramesCount()-1)");
-        animState.startFrame = t_startFrame;
-        animState.endFrame = t_endFrame;
-    }
-    else if (framesCount == 0)
-        PRINT_ERR("Cant play animation, because no mesh data was loaded!");
-    else if (framesCount == 1)
-        PRINT_ERR("Cant play animation, because this mesh have only one frame.");
-}
-
-/** Returns next farthest vertex of 3D object
- * @param offset Max 8 (because, box have 8 corners)
- */
-void Mesh::getFarthestVertex(Vector3 *o_result, int t_offset)
-{
-    // TODO current frame
-    o_result->x = frames[animState.currentFrame].getBoundingBox(t_offset).x + position.x;
-    o_result->y = frames[animState.currentFrame].getBoundingBox(t_offset).y + position.y;
-    o_result->z = frames[animState.currentFrame].getBoundingBox(t_offset).z + position.z;
+    o_result.set(
+        frames[animState.currentFrame].getBoundingBox(t_index).x + position.x,
+        frames[animState.currentFrame].getBoundingBox(t_index).y + position.y,
+        frames[animState.currentFrame].getBoundingBox(t_index).z + position.z);
 }
 
 /** Sets texture level of details settings and CLUT settings */
@@ -322,7 +335,7 @@ u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
         // both inside and out of the frustum
         for (int y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++)
         {
-            getFarthestVertex(&boxCalcTemp, y);
+            getCurrentBoundingBoxVertex(boxCalcTemp, y);
             if (t_frustumPlanes[i].distanceTo(boxCalcTemp) < 0)
                 boxOut++;
             else

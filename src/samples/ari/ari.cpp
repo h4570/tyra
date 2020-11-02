@@ -79,53 +79,36 @@ void Ari::onInit()
     texRepo = engine.renderer->getTextureRepository();
     // engine.audio.play();
 
-    // Vector3 islandPos = Vector3(0.0F, 10.0F, 0.0F);
-    // island = new Mesh();
-    // island->rotation.x = -1.6F;
-    // island->loadDff("sunnyisl/", "sunnyisl.dff", islandPos, 0.1F);
-    // texRepo->addByMesh("sunnyisl/", *island);
-    // island->shouldBeFrustumCulled = false;
-    // island->shouldBeBackfaceCulled = true;
-
-    test = new Mesh();
-    Vector3 initPos = Vector3(0.00F, 00.00F, 0.00F);
-    test->loadMD2("warrior/", "warrior", initPos, 0.2F, true);
-    texRepo->addByMesh("warrior/", *test);
-    test->rotation.x = -1.6F;
-    test->playAnimation(0, 25);
-    // test->shouldBeBackfaceCulled = false;
-    // test->shouldBeFrustumCulled = false;
-
     // islandAddons = new Mesh();
     // islandAddons->rotation.x = -1.6F;
     // islandAddons->loadDff("sunnyisl/", "sunnyisl3.dff", islandPos, 0.1F);
     // islandAddons->shouldBeFrustumCulled = false;
 
-    // test = new Mesh();
-    // Vector3 testpos = Vector3(0.0F, 00.0F, 0.0F);
-    // test->loadObj("pillar/", "pillar", testpos, .1F, 1);
-    // texRepo->addByMesh("pillar/", *test);
-    // std::vector<MeshTexture *> *textures = texRepo->getAll();
-    // textures->at(0)->removeLink(test->id, test->getMaterial(0).getId());
-    // MeshTexture *tex = texRepo->add("objanim/", "water");
-    // tex->addLink(test->id, test->getMaterial(0).getId());
-    // texRepo->removeById(textures->at(0)->getId());
-    // test->playAnimation(0, 0);
-    // test->shouldBeBackfaceCulled = true;
-
-    // TODO 1 - Merge md2
-    // TODO 2 - Refactor mesh, loaders
-    // TODO 3 - const & in parameters
-    // TODO 4 - Destructor
-    // TODO 5 - Mesh copy();
+    // TODO 1 - Refactor mesh, loaders
+    // TODO 2 - const & in parameters
+    // TODO 3 - Destructor mesh
+    // TODO 4 - Destructor RwClump in dff loader
+    // TODO 5 - Test mesh copy();
 
     // test->shouldBeFrustumCulled = true;
 
-    // skybox = new Mesh();
-    // Vector3 skyboxPos = Vector3(0.0F, 10.0F, 0.0F);
-    // skybox->loadObj("skybox/", "skybox", skyboxPos, 80.0F, 1, false);
-    // skybox->shouldBeFrustumCulled = true;
-    // texRepo->addByMesh("skybox/", *skybox);
+    test = new Mesh();
+    skybox = new Mesh();
+    island = new Mesh();
+
+    island->loadDff("sunnyisl/", "sunnyisl", 0.1F, false);
+    test->loadMD2("warrior/", "warrior", 0.2F, true);
+    skybox->loadObj("skybox/", "skybox", 80.0F, false); // po zamianie miejscami działa
+
+    test->rotation.x = -1.6F;
+    test->playAnimation(9, 15, 0);
+    skybox->position.set(0.0F, 10.0F, 0.0F);
+    island->rotation.x = -1.6F;
+    island->position.set(0.0F, 10.0F, 0.0F);
+
+    texRepo->addByMesh("warrior/", *test);
+    texRepo->addByMesh("skybox/", *skybox);
+    texRepo->addByMesh("sunnyisl/", *island);
 
     // waterFloors = new Mesh *[WATER_TILES_COUNT];
     // spirals = new Point[WATER_TILES_COUNT];
@@ -159,13 +142,12 @@ void Ari::initBulb()
 
 void Ari::onUpdate()
 {
-
     if (engine.pad.isCrossClicked)
         printf("FPS:%f\n", engine.fps);
     camera->update(engine.pad, player->mesh);
     engine.renderer->draw(test);
-    // engine.renderer->draw(skybox);
-    // engine.renderer->draw(island);
+    engine.renderer->draw(skybox);
+    engine.renderer->draw(island);
     // engine.renderer->draw(islandAddons);
     // // engine.renderer->draw(&player->mesh);
     // for (u8 i = 0; i < WATER_TILES_COUNT; i++)

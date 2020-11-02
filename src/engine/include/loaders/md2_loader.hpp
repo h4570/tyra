@@ -83,8 +83,7 @@ public:
     MD2Loader();
     ~MD2Loader();
 
-    /** Returns frames count */
-    u32 load(MeshFrame *o_result, char *t_subpath, char *t_nameWithoutExtension, float t_scale, u8 t_invertT);
+    MeshFrame *load(u32 &o_framesCount, char *t_subpath, char *t_nameWithoutExtension, float t_scale, u8 t_invertT);
 
 private:
 };

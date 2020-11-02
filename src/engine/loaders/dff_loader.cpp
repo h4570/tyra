@@ -54,11 +54,11 @@ void DffLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
     PRINT_LOG("Dff file loaded!");
 }
 
-void DffLoader::convert(MeshFrame *frames, RwClump &t_clump, u8 t_invertT)
+void DffLoader::convert(MeshFrame *o_result, RwClump &t_clump, u8 t_invertT)
 {
 #define GEOMETRY t_clump.geometryList.geometries[0]
 
-    MeshFrame *frame = &frames[0];
+    MeshFrame *frame = &o_result[0];
     u32 vertNormalStCount = GEOMETRY.data.dataHeader.vertexCount;
     frame->allocateVertices(vertNormalStCount);
     frame->allocateNormals(vertNormalStCount); // can be optimized
@@ -103,6 +103,8 @@ void DffLoader::convert(MeshFrame *frames, RwClump &t_clump, u8 t_invertT)
             frame->getMaterial(i).setSTFace(j, CURR_SPLIT.vertexInformation[j].vertex1);
         }
     }
+
+    frame->calculateBoundingBox();
 }
 
 void DffLoader::serialize(RwClump &t_clump, u8 *t_data, float t_scale)

@@ -206,27 +206,20 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
     // TODO VU1 send single list here
-    if (!t_mesh->isObjLoaded && !t_mesh->isMd2Loaded)
-        return;
+    if (!t_mesh->isDataLoaded())
+        PRINT_ERR("Can't draw, because no mesh data was loaded!");
+
     u32 vertCount = t_mesh->getVertexCount();
     VECTOR *vertices = new VECTOR[vertCount];
     VECTOR *normals = new VECTOR[vertCount];
     VECTOR *coordinates = new VECTOR[vertCount];
-    if (t_mesh->isObjLoaded)
+
+    if (t_mesh->animState.currentFrame != t_mesh->animState.nextFrame)
+        t_mesh->animate();
+    for (u32 i = 0; i < t_mesh->getMaterialsCount(); i++)
     {
-        if (t_mesh->animState.startFrame != t_mesh->animState.endFrame)
-            t_mesh->animate();
-        for (u32 i = 0; i < t_mesh->getMaterialsCount(); i++)
-        {
-            changeTexture(t_mesh, t_mesh->getMaterial(i).getId());
-            vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
-            vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
-        }
-    }
-    else if (t_mesh->isMd2Loaded)
-    {
-        changeTexture(t_mesh, 0);
-        vertCount = t_mesh->getDrawData(0, vertices, normals, coordinates, *renderData.cameraPosition);
+        changeTexture(t_mesh, t_mesh->getMaterial(i).getId());
+        vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
         vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
     }
     delete[] vertices;
