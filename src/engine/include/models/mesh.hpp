@@ -33,10 +33,15 @@ public:
     float scale;
     u8 shouldBeLighted, shouldBeBackfaceCulled, shouldBeFrustumCulled;
     color_t color;
+    clutbuffer_t clut;
+    lod_t lod;
 
     // ----
     // Getters
     // ----
+
+    /** Auto generated unique Id. */
+    const u32 &getId() const { return id; };
 
     /** Array of materials. Size of getMaterialsCount() */
     MeshMaterial *getMaterials() const { return frames[0].getMaterials(); };
@@ -45,6 +50,28 @@ public:
 
     /** Returns material, which is a mesh "subgroup". */
     MeshMaterial &getMaterial(const u32 &i) const { return frames[0].getMaterial(i); };
+
+    /** Auto count of frames. Static object (not animated) will have only 1 frame. */
+    const u32 &getFramesCount() const { return framesCount; };
+
+    /** Count of vertices.  */
+    u32 getVertexCount() { return frames[0].getVertexCount(); };
+
+    /** Returns single frame. */
+    MeshFrame &getFrame(const u32 &i) const { return frames[i]; };
+
+    /** Array of frames. Size of getFramesCount() */
+    MeshFrame *getFrames() const { return frames; };
+
+    const u32 &getCurrentAnimationFrame() const { return animState.currentFrame; };
+
+    const u32 &getNextAnimationFrame() const { return animState.nextFrame; };
+
+    const u32 &getStartAnimationFrame() const { return animState.startFrame; };
+
+    const u32 &getEndAnimationFrame() const { return animState.endFrame; };
+
+    const u32 &getStayAnimationFrame() const { return animState.stayFrame; };
 
     /** 
      * Returns material, which is a mesh "subgroup".
@@ -130,38 +157,43 @@ public:
     /** Play animation from startFrame to endFrame and after loop in stayFrame */
     void playAnimation(const u32 &t_startFrame, const u32 &t_endFrame, const u32 &t_stayFrame);
 
+    void setAnimSpeed(const float &t_value) { animState.speed = t_value; }
+
     /** 
      * Check if this class loaded mesh data first.
      * Meshes which use loadFrom() method have false there.
     */
     const u8 &isMother() const { return _isMother; };
 
-    // TODO
+    /** 
+     * Check if this class loaded mesh data first.
+     * Meshes which use loadFrom() method have false there.
+    */
+    const u8 &isStayAnimationSet() const { return animState.isStayFrameSet; };
 
-    // void getMinMax(Vector3 *t_min, Vector3 *t_max);
-    u32 getVertexCount();
-    void setAnimSpeed(float t_value);
+    /** Check if mesh is visible in view frustum */
     u8 isInFrustum(Plane *t_frustumPlanes);
 
-    clutbuffer_t clut;
-    lod_t lod;
-    u32 id;
-
-    // NOWE TODO
-
-    u32 framesCount;
-    MeshFrame *frames;
-    AnimState animState;
+    /** 
+     * Do not call this method unless you know what you do.
+     * Should be called by renderer. 
+     */
     void animate();
+
+    /** 
+     * Do not call this method unless you know what you do.
+     * Should be called by renderer. 
+     */
     u32 getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos);
-    u32 getFacesCount();
-    u8 isMemoryAllocated;
 
 private:
+    AnimState animState;
+    MeshFrame *frames;
+    u32 id, framesCount;
     u8 _isMother;
     Vector3 calc3Vectors[3];
-    void setupLodAndClut();
     void setDefaultColor();
+    void setDefaultLODAndClut();
 };
 
 #endif

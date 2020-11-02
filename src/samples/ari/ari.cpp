@@ -65,8 +65,8 @@ void calcSpiral(int X, int Y)
 }
 // TEST END
 
-#include "models/mesh_frame.hpp"
-#include <vector>
+// TODO 1 - const & in parameters
+// TODO 2 - Destructor mesh
 
 void Ari::onInit()
 {
@@ -76,62 +76,52 @@ void Ari::onInit()
     engine.audio.init(0);
     engine.audio.setVolume(40);
     engine.audio.loadSong("MOV-CIRC.WAV");
+    engine.audio.play();
+
     texRepo = engine.renderer->getTextureRepository();
-    // engine.audio.play();
 
-    // islandAddons = new Mesh();
-    // islandAddons->rotation.x = -1.6F;
-    // islandAddons->loadDff("sunnyisl/", "sunnyisl3.dff", islandPos, 0.1F);
-    // islandAddons->shouldBeFrustumCulled = false;
-
-    // TODO 1 - Refactor mesh, loaders
-    // TODO 2 - const & in parameters
-    // TODO 3 - Destructor mesh
-    // TODO 4 - Destructor RwClump in dff loader
-    // TODO 5 - Test mesh copy();
-
-    // test->shouldBeFrustumCulled = true;
-
-    test = new Mesh();
-    skybox = new Mesh();
     island = new Mesh();
-
     island->loadDff("sunnyisl/", "sunnyisl", 0.1F, false);
-    test->loadMD2("warrior/", "warrior", 0.2F, true);
-    skybox->loadObj("skybox/", "skybox", 80.0F, false); // po zamianie miejscami działa
-
-    test->rotation.x = -1.6F;
-    test->playAnimation(9, 15, 0);
-    skybox->position.set(0.0F, 10.0F, 0.0F);
     island->rotation.x = -1.6F;
-    island->position.set(0.0F, 10.0F, 0.0F);
+    island->position.set(0.0F, 10.0F, 20.0F);
+    island->shouldBeFrustumCulled = false;
+    island->shouldBeBackfaceCulled = true;
 
-    texRepo->addByMesh("warrior/", *test);
-    texRepo->addByMesh("skybox/", *skybox);
+    islandAddons = new Mesh();
+    islandAddons->loadDff("sunnyisl/", "sunnyisl3", 0.1F, false);
+    islandAddons->rotation.x = -1.6F;
+    islandAddons->position.set(0.0F, 10.0F, 20.0F);
+    islandAddons->shouldBeFrustumCulled = false;
+
+    skybox = new Mesh();
+    skybox->loadObj("skybox/", "skybox", 100.0F, false);
+
+    waterFloors = new Mesh *[WATER_TILES_COUNT];
+    spirals = new Point[WATER_TILES_COUNT];
+    waterFloors[0] = new Mesh();
+    waterFloors[0]->loadObj("water/", "water", 5.0F, false);
+    waterFloors[0]->position.set(0.0F, 8.0F, 0.0F);
+    texRepo->addByMesh("water/", *waterFloors[0]);
+    for (u8 i = 0; i < WATER_TILES_COUNT; i++)
+    {
+        spirals[i].x = 1.0F;
+        spirals[i].y = 2.0F;
+    }
+    u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
+    calcSpiral(spiralOffset, spiralOffset);
+    for (u8 i = 1; i < WATER_TILES_COUNT; i++)
+    {
+        waterFloors[i] = new Mesh();
+        waterFloors[i]->loadFrom(*waterFloors[0]);
+        waterFloors[i]->position.set(10.0F * spirals[i].x, 8.0F, 10.0F * spirals[i].y);
+        texRepo->getByMesh(waterFloors[0]->getId(), waterFloors[0]->getMaterial(0).getId())
+            ->addLink(waterFloors[i]->getId(), waterFloors[i]->getMaterial(0).getId());
+    }
+
     texRepo->addByMesh("sunnyisl/", *island);
-
-    // waterFloors = new Mesh *[WATER_TILES_COUNT];
-    // spirals = new Point[WATER_TILES_COUNT];
-    // Vector3 initPos = Vector3(0.0F, 8.0F, 0.0F);
-    // waterFloors[0] = new Mesh();
-    // // loadObj("water/", "water", initPos, 5.0F,12);
-    // // loadObj("water/", "water", initPos, 5.0F);
-    // waterFloors[0]->loadObj("water/", "water", initPos, 5.0F, 2);
-    // waterFloors[0]->shouldBeFrustumCulled = true;
-    // for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-    // {
-    //     spirals[i].x = 1.0F;
-    //     spirals[i].y = 2.0F;
-    // }
-    // u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
-    // calcSpiral(spiralOffset, spiralOffset);
-    // for (u8 i = 1; i < WATER_TILES_COUNT; i++)
-    // {
-    //     waterFloors[i] = new Mesh();
-    //     Vector3 nextPos = Vector3(10.0F * spirals[i].x, 8.0F, 10.0F * spirals[i].y);
-    //     waterFloors[i]->setObj(nextPos, waterFloors[0]->obj, waterFloors[0]->spec);
-    //     waterFloors[i]->shouldBeFrustumCulled = true;
-    // }
+    texRepo->addByMesh("sunnyisl/", *islandAddons);
+    texRepo->addByMesh("skybox/", *skybox);
+    texRepo->addByMesh("ari/", player->mesh);
 }
 
 void Ari::initBulb()
@@ -145,11 +135,10 @@ void Ari::onUpdate()
     if (engine.pad.isCrossClicked)
         printf("FPS:%f\n", engine.fps);
     camera->update(engine.pad, player->mesh);
-    engine.renderer->draw(test);
     engine.renderer->draw(skybox);
     engine.renderer->draw(island);
-    // engine.renderer->draw(islandAddons);
-    // // engine.renderer->draw(&player->mesh);
-    // for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-    //     engine.renderer->draw(waterFloors[i]); // TODO
+    engine.renderer->draw(islandAddons);
+    engine.renderer->draw(&player->mesh);
+    for (u8 i = 0; i < WATER_TILES_COUNT; i++)
+        engine.renderer->draw(waterFloors[i]);
 }

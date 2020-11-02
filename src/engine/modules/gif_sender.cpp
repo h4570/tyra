@@ -171,7 +171,7 @@ void GifSender::addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_a
  */
 u32 GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, RenderData *t_renderData, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
-    u32 vertexCount = t_mesh.getVertexCount();
+    u32 vertexCount = t_mesh.getVertexCount(); // TODO err
 
     VECTOR *vertices = new VECTOR[vertexCount];
     VECTOR *normals = new VECTOR[vertexCount];

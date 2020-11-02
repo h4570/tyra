@@ -84,7 +84,7 @@ void Renderer::deallocateTextureBuffer()
 void Renderer::changeTexture(Mesh *t_mesh, u32 t_materialId)
 {
 
-    MeshTexture *tex = textureRepo.getByMesh(t_mesh->id, t_materialId);
+    MeshTexture *tex = textureRepo.getByMesh(t_mesh->getId(), t_materialId);
     if (tex != NULL)
     {
         if (tex->getId() != lastTextureId)
@@ -209,22 +209,21 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     if (!t_mesh->isDataLoaded())
         PRINT_ERR("Can't draw, because no mesh data was loaded!");
 
-    u32 vertCount = t_mesh->getVertexCount();
-    VECTOR *vertices = new VECTOR[vertCount];
-    VECTOR *normals = new VECTOR[vertCount];
-    VECTOR *coordinates = new VECTOR[vertCount];
-
-    if (t_mesh->animState.currentFrame != t_mesh->animState.nextFrame)
+    if (t_mesh->getCurrentAnimationFrame() != t_mesh->getNextAnimationFrame())
         t_mesh->animate();
     for (u32 i = 0; i < t_mesh->getMaterialsCount(); i++)
     {
+        u32 vertCount = t_mesh->getMaterial(i).getFacesCount();
+        VECTOR *vertices = new VECTOR[vertCount];
+        VECTOR *normals = new VECTOR[vertCount];
+        VECTOR *coordinates = new VECTOR[vertCount];
         changeTexture(t_mesh, t_mesh->getMaterial(i).getId());
         vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
         vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
+        delete[] vertices;
+        delete[] normals;
+        delete[] coordinates;
     }
-    delete[] vertices;
-    delete[] normals;
-    delete[] coordinates;
 }
 
 /** PATH1 Many */

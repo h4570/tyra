@@ -37,7 +37,7 @@ public:
 class RwFrameListChunk
 {
 public:
-    ~RwFrameListChunk() { delete[] rotationalMatrix; }
+    ~RwFrameListChunk() {}
     float *rotationalMatrix; // [ROT_MAT_DIM]
     float coordinatesOffsetX;
     float coordinatesOffsetY;
@@ -50,7 +50,7 @@ public:
 class RwFrameListData : public RwSectionHeader
 {
 public:
-    ~RwFrameListData() { delete frameInformation; }
+    ~RwFrameListData() {}
     static const u32 ROT_MAT_DIM = 9;
     u32 frameCount;
 
@@ -60,7 +60,7 @@ public:
 class RwFrame : public RwSectionHeader
 {
 public:
-    ~RwFrame() { delete[] frameName; }
+    ~RwFrame() {}
     u8 *frameName; // [sectionSize] - should be interpreted as string
 };
 
@@ -74,7 +74,7 @@ class RwFrameList : public RwSectionHeader
 {
 public:
     RwFrameListData data;
-    ~RwFrameList() { delete[] extensions; }
+    ~RwFrameList() {}
     RwFrameListExtension *extensions;
 };
 // ---
@@ -89,38 +89,49 @@ public:
     u32 morphTargetCount;
 };
 
-class RwGeometryDataLightingHeader
+struct RwGeometryDataLightingHeader
 { // IF versionNumber = 4099 - according to not complete documentation
-public:
     float ambient;
     float diffuse;
     float specular;
 };
 
-class RwGeometryDataColorInformationChunk
+struct RwGeometryDataColorInformationChunk
 { // if rwOBJECT_VERTEX_PREILIT in flags
-public:
+
     u8 red;
     u8 green;
     u8 blue;
     u8 alpha;
 };
 
-class RwGeometryDataTextureMappingInformationChunk
+struct RwGeometryDataTextureMappingInformationChunk
 { // if rwOBJECT_VERTEX_TEXTURED in flags
-public:
     float u;
     float v;
 };
 
-class RwGeometryDataFaceInformation
+struct RwGeometryDataFaceInformation
 {
-public:
     u16 vertex2; // this
     u16 vertex1; // is
     u16 flags;   // weird
     u16 vertex3; // order
 };
+
+class RwGeometryDataNonameInfo
+{
+public:
+    float boundingSphereX;
+    float boundingSphereY;
+    float boundingSphereZ;
+    float boundingSphereR;
+    u32 hasPosition;
+    u32 hasNormals;
+};
+
+#include <stdio.h>
+#include <stdlib.h>
 
 // Section: Geometry
 class RwGeometryData : public RwSectionHeader
@@ -128,11 +139,15 @@ class RwGeometryData : public RwSectionHeader
 public:
     ~RwGeometryData()
     {
-        delete colorInformation;
-        delete textureMappingInformation;
-        delete faceInformation;
-        delete vertexInformation;
-        delete normalInformation;
+        // if (dataHeader.flags & rwOBJECT_VERTEX_NORMALS)
+        // delete[] normalInformation;
+        // delete[] vertexInformation;
+        // free(vertexInformation);
+        // delete[] faceInformation;
+        // if (dataHeader.flags & rwOBJECT_VERTEX_PRELIT)
+        //     delete[] colorInformation;
+        // if (dataHeader.flags & rwOBJECT_VERTEX_TEXTURED)
+        //     delete[] textureMappingInformation;
     }
     RwGeometryDataHeader dataHeader;
 
@@ -144,16 +159,7 @@ public:
 
     RwGeometryDataFaceInformation *faceInformation; // [triangleCount]
 
-    class RwGeometryDataNonameInfo
-    {
-    public:
-        float boundingSphereX;
-        float boundingSphereY;
-        float boundingSphereZ;
-        float boundingSphereR;
-        u32 hasPosition;
-        u32 hasNormals;
-    } nonameInfo;
+    RwGeometryDataNonameInfo nonameInfo;
 
     Vector3 *vertexInformation; // [vertexCount]
 
@@ -211,7 +217,7 @@ class RwMaterialExtension : public RwSectionHeader
 class RwMaterial : public RwSectionHeader
 {
 public:
-    ~RwMaterial() { delete[] textures; }
+    ~RwMaterial() {}
     RwMaterialData data;
     RwTexture *textures;
     RwMaterialExtension extension;
@@ -220,7 +226,7 @@ public:
 class RwMaterialListData : public RwSectionHeader
 {
 public:
-    ~RwMaterialListData() { delete[] arrayOfUnks; }
+    ~RwMaterialListData() {}
     u32 materialCount;
     u32 *arrayOfUnks; // Filled with '-1's, [materialCount] - it wasn't mentioned in docs.
 };
@@ -228,7 +234,7 @@ public:
 class RwMaterialList : public RwSectionHeader
 {
 public:
-    ~RwMaterialList() { delete[] materials; }
+    ~RwMaterialList() {}
     RwMaterialListData data;
     RwMaterial *materials;
 };
@@ -242,24 +248,26 @@ public:
 class RwGeometryListInfoChunk
 {
 public:
-    ~RwGeometryListInfoChunk() { delete vertexInformation; }
+    ~RwGeometryListInfoChunk() {}
     u32 faceIndex;
     u32 materialIndex;
 
     RwGeometryListVertexInfoChunk *vertexInformation; // [faceIndex]
 };
 
+class RwMaterialSplitHeader
+{
+public:
+    u32 triangleStrip;
+    u32 splitCount;
+    u32 faceCount;
+};
+
 class RwMaterialSplit
 {
 public:
-    ~RwMaterialSplit() { delete splitInformation; }
-    class Header
-    {
-    public:
-        u32 triangleStrip;
-        u32 splitCount;
-        u32 faceCount;
-    } header;
+    ~RwMaterialSplit() {}
+    RwMaterialSplitHeader header;
 
     RwGeometryListInfoChunk *splitInformation; // [splitCount]
 };
@@ -289,7 +297,7 @@ public:
 class RwGeometryList : public RwSectionHeader
 {
 public:
-    ~RwGeometryList() { delete[] geometries; }
+    ~RwGeometryList() {}
     RwGeometryListData data;
     RwGeometry *geometries;
 };

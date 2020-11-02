@@ -51,7 +51,7 @@ void TextureRepository::addByMesh(char *t_path, Mesh &mesh)
         MeshTexture *texture = new MeshTexture();
         loader.load(*texture, t_path, mesh.getMaterial(i).getName(), ".bmp");
         texture->setName(mesh.getMaterial(i).getName());
-        texture->addLink(mesh.id, mesh.getMaterial(i).getId());
+        texture->addLink(mesh.getId(), mesh.getMaterial(i).getId());
         textures.push_back(texture);
     }
 }

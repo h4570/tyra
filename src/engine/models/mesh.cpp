@@ -24,10 +24,11 @@
 
 Mesh::Mesh()
 {
+    id = rand() % 1000000;
     shouldBeFrustumCulled = true;
     shouldBeBackfaceCulled = false;
     shouldBeLighted = false;
-    id = rand() % 1000000;
+    _isMother = false;
     scale = 1.0F;
     framesCount = 0;
     animState.startFrame = 0;
@@ -39,8 +40,8 @@ Mesh::Mesh()
     animState.isStayFrameSet = false;
     animState.nextFrame = 0;
     animState.speed = 0.1F;
-    _isMother = false;
     setDefaultColor();
+    setDefaultLODAndClut();
 }
 
 Mesh::~Mesh()
@@ -131,7 +132,10 @@ void Mesh::playAnimation(const u32 &t_startFrame, const u32 &t_endFrame)
             PRINT_ERR("End frame value is too high. Valid range: (0, getFramesCount()-1)");
         animState.startFrame = t_startFrame;
         animState.endFrame = t_endFrame;
-        animState.nextFrame = t_startFrame;
+        if (animState.currentFrame == t_startFrame)
+            animState.nextFrame = t_endFrame;
+        else
+            animState.nextFrame = t_startFrame;
     }
     else if (framesCount == 0)
         PRINT_ERR("Cant play animation, because no mesh data was loaded!");
@@ -155,14 +159,6 @@ void Mesh::playAnimation(const u32 &t_startFrame, const u32 &t_endFrame, const u
         PRINT_ERR("Cant play animation, because no mesh data was loaded!");
     else if (framesCount == 1)
         PRINT_ERR("Cant play animation, because this mesh have only one frame.");
-}
-
-u32 Mesh::getFacesCount()
-{
-    u32 result = 0; // TODO
-    for (u16 i = 0; i < frames[0].getMaterialsCount(); i++)
-        result += frames[0].getMaterial(i).getFacesCount();
-    return result;
 }
 
 void Mesh::animate()
@@ -189,29 +185,36 @@ void Mesh::animate()
 
 u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos)
 {
+    u32 addedFaces = 0;
 #define CURR_FRAME frames[animState.currentFrame]
 #define NEXT_FRAME frames[animState.nextFrame]
-#define MATERIAL CURR_FRAME.getMaterial(t_materialIndex)
-#define CURR_VERT CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI))
-#define NEXT_VERT NEXT_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI))
-    u32 addedFaces = 0;
-    for (u32 matI = 0; matI < MATERIAL.getFacesCount(); matI += 3)
+    MeshMaterial *material = &CURR_FRAME.getMaterial(t_materialIndex); // cache
+    Vector3 *verts = CURR_FRAME.getVertices();                         // cache
+    Vector3 *nextVerts = NEXT_FRAME.getVertices();                     // cache
+    Point *sts = CURR_FRAME.getSTs();                                  // cache
+    Vector3 *normals = CURR_FRAME.getNormals();                        // cache
+#define CURR_VERT verts[material->getVertexFace(matI + vertI)]
+#define CURR_ST sts[material->getSTFace(matI + vertI)]
+#define CURR_NORMAL normals[material->getNormalFace(matI + vertI)]
+#define NEXT_VERT nextVerts[material->getVertexFace(matI + vertI)]
+
+    for (u32 matI = 0; matI < material->getFacesCount(); matI += 3)
     {
         for (u32 vertI = 0; vertI < 3; vertI++)
             if (animState.currentFrame != animState.nextFrame)
                 calc3Vectors[vertI].setByLerp(CURR_VERT, NEXT_VERT, animState.interpolation, scale);
 
         if (!shouldBeBackfaceCulled ||
-            Vector3::shouldBeBackfaceCulled(&t_cameraPos, &calc3Vectors[2], &calc3Vectors[1], &calc3Vectors[0]))
+            Vector3::shouldBeBackfaceCulled(&t_cameraPos, &calc3Vectors[0], &calc3Vectors[1], &calc3Vectors[2]))
 
             for (u32 vertI = 0; vertI < 3; vertI++)
             {
 
                 if (animState.currentFrame == animState.nextFrame)
                 {
-                    o_vertices[addedFaces][0] = CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI)).x;
-                    o_vertices[addedFaces][1] = CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI)).y;
-                    o_vertices[addedFaces][2] = CURR_FRAME.getVertex(MATERIAL.getVertexFace(matI + vertI)).z;
+                    o_vertices[addedFaces][0] = CURR_VERT.x;
+                    o_vertices[addedFaces][1] = CURR_VERT.y;
+                    o_vertices[addedFaces][2] = CURR_VERT.z;
                 }
                 else
                 {
@@ -221,77 +224,19 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
                 }
                 o_vertices[addedFaces][3] = 1.0F;
 
-                o_normals[addedFaces][0] = CURR_FRAME.getNormal(MATERIAL.getNormalFace(matI + vertI)).x;
-                o_normals[addedFaces][1] = CURR_FRAME.getNormal(MATERIAL.getNormalFace(matI + vertI)).y;
-                o_normals[addedFaces][2] = CURR_FRAME.getNormal(MATERIAL.getNormalFace(matI + vertI)).z;
+                o_normals[addedFaces][0] = CURR_NORMAL.x;
+                o_normals[addedFaces][1] = CURR_NORMAL.y;
+                o_normals[addedFaces][2] = CURR_NORMAL.z;
                 o_normals[addedFaces][3] = 1.0F;
 
-                o_coordinates[addedFaces][0] = CURR_FRAME.getST(MATERIAL.getSTFace(matI + vertI)).x;
-                o_coordinates[addedFaces][1] = CURR_FRAME.getST(MATERIAL.getSTFace(matI + vertI)).y;
+                o_coordinates[addedFaces][0] = CURR_ST.x;
+                o_coordinates[addedFaces][1] = CURR_ST.y;
                 o_coordinates[addedFaces][2] = 1.0F;
                 o_coordinates[addedFaces++][3] = 1.0F;
             }
     }
     return addedFaces;
 }
-
-void Mesh::setAnimSpeed(float t_value)
-{
-    animState.speed = t_value;
-}
-
-u32 Mesh::getVertexCount()
-{
-    if (framesCount > 0)
-        return getFacesCount();
-    else
-    {
-        PRINT_ERR("Can't get vertex count, because mesh data was loaded!");
-        return 0;
-    }
-}
-
-/** Set's default object color + no transparency */
-void Mesh::setDefaultColor()
-{
-    color.r = 0x80;
-    color.g = 0x80;
-    color.b = 0x80;
-    color.a = 0x80;
-    color.q = 1.0F;
-}
-
-/** Calculates minimum and maximum X, Y, Z of this 3D objects vertices + current position */
-// void Mesh::getMinMax(Vector3 *t_min, Vector3 *t_max)
-// {
-//     Vector3 calc = Vector3();
-//     u8 isInitialized = 0;
-//     for (u32 i = 0; i < 8; i++)
-//     {
-//         getFarthestVertex(&calc, i);
-//         if (isInitialized == 0)
-//         {
-//             isInitialized = 1;
-//             t_min->set(calc);
-//             t_max->set(calc);
-//         }
-
-//         if (t_min->x > calc.x)
-//             t_min->x = calc.x;
-//         if (calc.x > t_max->x)
-//             t_max->x = calc.x;
-
-//         if (t_min->y > calc.y)
-//             t_min->y = calc.y;
-//         if (calc.y > t_max->y)
-//             t_max->y = calc.y;
-
-//         if (t_min->z > calc.z)
-//             t_min->z = calc.z;
-//         if (calc.z > t_max->z)
-//             t_max->z = calc.z;
-//     }
-// }
 
 void Mesh::getCurrentBoundingBoxVertex(Vector3 &o_result, const u32 &t_index)
 {
@@ -301,26 +246,6 @@ void Mesh::getCurrentBoundingBoxVertex(Vector3 &o_result, const u32 &t_index)
         frames[animState.currentFrame].getBoundingBox(t_index).z + position.z);
 }
 
-/** Sets texture level of details settings and CLUT settings */
-void Mesh::setupLodAndClut()
-{
-    PRINT_LOG("Setting LOD, CLUT");
-    lod.calculation = LOD_USE_K;
-    lod.max_level = 0;
-    lod.mag_filter = LOD_MAG_NEAREST;
-    lod.min_filter = LOD_MIN_NEAREST;
-    lod.l = 0;
-    lod.k = 0.0F;
-
-    clut.storage_mode = CLUT_STORAGE_MODE1;
-    clut.start = 0;
-    clut.psm = 0;
-    clut.load_method = CLUT_NO_LOAD;
-    clut.address = 0;
-    PRINT_LOG("LOD, CLUT set!");
-}
-
-/** Check if box is visible in view frustum */
 u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
 {
     Vector3 boxCalcTemp;
@@ -348,4 +273,33 @@ u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
             boxResult = 1;
     }
     return boxResult;
+}
+
+/** Set's default object color + no transparency */
+void Mesh::setDefaultColor()
+{
+    color.r = 0x80;
+    color.g = 0x80;
+    color.b = 0x80;
+    color.a = 0x80;
+    color.q = 1.0F;
+}
+
+/** Sets texture level of details settings and CLUT settings */
+void Mesh::setDefaultLODAndClut()
+{
+    PRINT_LOG("Setting LOD, CLUT");
+    lod.calculation = LOD_USE_K;
+    lod.max_level = 0;
+    lod.mag_filter = LOD_MAG_NEAREST;
+    lod.min_filter = LOD_MIN_NEAREST;
+    lod.l = 0;
+    lod.k = 0.0F;
+
+    clut.storage_mode = CLUT_STORAGE_MODE1;
+    clut.start = 0;
+    clut.psm = 0;
+    clut.load_method = CLUT_NO_LOAD;
+    clut.address = 0;
+    PRINT_LOG("LOD, CLUT set!");
 }
