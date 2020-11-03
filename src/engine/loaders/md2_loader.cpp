@@ -85,7 +85,7 @@ MeshFrame *MD2Loader::load(u32 &o_framesCount, char *t_subpath, char *t_nameWith
 
     fclose(file);
 
-    MeshFrame *resultFrames = new MeshFrame[26];
+    MeshFrame *resultFrames = new MeshFrame[framesCount];
 
     frame_t *frame;
     Vector3 tempVec = Vector3();

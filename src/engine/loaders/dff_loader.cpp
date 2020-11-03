@@ -39,7 +39,7 @@ void DffLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
     PRINT_LOG("Loading dff file");
     FILE *file = fopen(t_filename, "rb");
     if (file == NULL)
-        PRINT_ERR("Failed to load .obj file!");
+        PRINT_ERR("Failed to load .dff file!");
     fseek(file, 0L, SEEK_END);
     long fileSize = ftell(file);
     u8 data[fileSize];
