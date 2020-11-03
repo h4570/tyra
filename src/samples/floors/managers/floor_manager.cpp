@@ -33,7 +33,6 @@ FloorManager::FloorManager(int t_floorAmount)
 FloorManager::~FloorManager()
 {
     delete[] spirals;
-    delete[] meshes;
 }
 
 // ----
@@ -78,17 +77,11 @@ void FloorManager::calcSpiral(int X, int Y)
 void FloorManager::initFloors()
 {
     PRINT_LOG("Initializing floors");
-    meshes = new Mesh *[floorAmount];
-
-    meshes[0] = new Mesh();
-    meshes[0]->loadObj("floor/", "floor", 2.0F, false);
-    meshes[0]->shouldBeFrustumCulled = true;
-    meshes[0]->shouldBeLighted = true;
-    for (u8 i = 0; i < floorAmount; i++)
-    {
-        floors[i].init(meshes[0], spirals[i], i);
-        meshes[i] = &floors[i].mesh;
-    }
+    floors[0].mesh.loadObj("floor/", "floor", 2.0F, false);
+    floors[0].mesh.shouldBeFrustumCulled = true;
+    floors[0].mesh.shouldBeLighted = true;
+    for (u8 i = 1; i < floorAmount; i++)
+        floors[i].init(floors[0].mesh, spirals[i], i);
     PRINT_LOG("Floors initialized!");
 }
 
@@ -113,6 +106,7 @@ void FloorManager::update(Player &t_player)
 /** Called by audio thread */
 void FloorManager::onAudioTick()
 {
+    printf("Hit!\n");
     if (audioTick++ > 16)
     {
         if (audioMode == 0)
@@ -164,7 +158,7 @@ void FloorManager::onAudioTick()
         {
             for (u8 i = 0; i < floorAmount; i++)
             {
-                if (i + 1 > floorAmount / (audioOffset + 1))
+                if (u8(i + 1) > floorAmount / (audioOffset + 1))
                     floors[i].isByAudioTriggered = true;
                 else
                     floors[i].isByAudioTriggered = false;

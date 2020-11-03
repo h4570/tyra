@@ -12,8 +12,8 @@
 
 int main()
 {
-    Ari game = Ari();
-    game.engine.setDefaultScreen();
+    Engine engine = Engine();
+    Ari game = Ari(engine);
     game.engine.init(&game, 40000);
     SleepThread();
     return 0;

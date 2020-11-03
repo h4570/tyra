@@ -27,9 +27,8 @@ public:
     FloorManager(int t_floorAmount);
     ~FloorManager();
     Floor floors[64]; // Temp change it also in floors.cpp
-    int floorAmount;
+    u32 floorAmount;
     void update(Player &t_player);
-    Mesh **meshes;
     void onAudioTick();
 
 private:

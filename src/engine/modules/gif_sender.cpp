@@ -129,7 +129,7 @@ void GifSender::addClear(zbuffer_t *t_zBuffer)
  * @param objects3D Array of 3D objects pointers
  * @param amount Amount of 3D objects
  */
-void GifSender::addObject(RenderData *t_renderData, Mesh *t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
+void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
     if (!isAnyObjectAdded)
     {
@@ -140,14 +140,14 @@ void GifSender::addObject(RenderData *t_renderData, Mesh *t_mesh, u32 vertexCoun
     tempDMATag = q;
     q++;
 
-    q = draw_texture_sampling(q, 0, &t_mesh->lod);
-    q = draw_texturebuffer(q, 0, textureBuffer, &t_mesh->clut);
-    dw = (u64 *)draw_prim_start(q, 0, t_renderData->prim, &t_mesh->color);
+    q = draw_texture_sampling(q, 0, &t_mesh.lod);
+    q = draw_texturebuffer(q, 0, textureBuffer, &t_mesh.clut);
+    dw = (u64 *)draw_prim_start(q, 0, t_renderData->prim, &t_mesh.color);
 
     xyz = new xyz_t[vertexCount];
     rgbaq = new color_t[vertexCount];
     st = new texel_t[vertexCount];
-    calc3DObject(*t_renderData->perspective, *t_mesh, vertexCount, vertices, normals, coordinates, t_renderData, t_bulbs, t_bulbsCount);
+    calc3DObject(*t_renderData->perspective, t_mesh, vertexCount, vertices, normals, coordinates, t_renderData, t_bulbs, t_bulbsCount);
     addCurrentCalcs(vertexCount);
     delete[] xyz;
     delete[] rgbaq;
@@ -205,7 +205,7 @@ void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount
             colors[i][0] = (t_mesh.color.r * lights[i][0] / 128.0F);
             colors[i][1] = (t_mesh.color.g * lights[i][1] / 128.0F);
             colors[i][2] = (t_mesh.color.b * lights[i][2] / 128.0F);
-            vector_clamp(colors[i], colors[i], 0.00f, 1.99f);
+            vector_clamp(colors[i], colors[i], 0.00F, 1.99F);
         }
 
         delete[] lightDirections;

@@ -66,8 +66,8 @@ void Engine::setDefaultScreen()
 void Engine::init(Game *t_game, u32 t_gifPacketSize)
 {
     if (!isScreenInitialized)
-        PRINT_ERR("Cant init because screen was not set!");
-    else if (isInitialized)
+        setDefaultScreen();
+    if (isInitialized)
         PRINT_ERR("Already initialized!");
     else
     {

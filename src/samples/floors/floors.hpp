@@ -24,7 +24,7 @@ class Floors : public Game
 {
 
 public:
-    Floors();
+    Floors(const Engine &t_engine);
     ~Floors();
 
     void onInit();
@@ -35,9 +35,9 @@ public:
 private:
     TextureRepository *texRepo;
     LightManager lightManager;
-    FloorManager *floorManager;
-    Player *player;
-    Camera *camera;
+    FloorManager floorManager;
+    Player player;
+    Camera camera;
 };
 
 #endif

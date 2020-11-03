@@ -35,22 +35,22 @@ public:
     prim_t prim;
 
     /** PATH3 Many + lighting */
-    void drawByPath3(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
+    void drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
     /** PATH3 Single + lighting */
-    void drawByPath3(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
+    void drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
     /** PATH3 Many */
-    void drawByPath3(Mesh **t_meshes, u16 t_amount);
+    void drawByPath3(Mesh *t_meshes, u16 t_amount);
     /** PATH3 Single */
-    void drawByPath3(Mesh *t_mesh);
+    void drawByPath3(Mesh &t_mesh);
 
     /** PATH1 Many + lighting */
-    void draw(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
+    void draw(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
     /** PATH1 Single + lighting */
-    void draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
+    void draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
     /** PATH1 Many */
-    void draw(Mesh **t_meshes, u16 t_amount);
+    void draw(Mesh *t_meshes, u16 t_amount);
     /** PATH1 Single */
-    void draw(Mesh *t_mesh);
+    void draw(Mesh &t_mesh);
 
     void setCameraDefinitions(Matrix *t_worldView, Vector3 *t_cameraPos, Plane *t_planes);
 
@@ -59,7 +59,7 @@ public:
     TextureRepository *getTextureRepository() { return &textureRepo; };
 
 private:
-    void changeTexture(Mesh *t_mesh, u32 t_materialId);
+    void changeTexture(const Mesh &t_mesh, u32 t_materialId);
     u32 lastTextureId;
     texbuffer_t textureBuffer;
     u8 isTextureVRAMAllocated;
