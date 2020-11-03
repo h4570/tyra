@@ -76,10 +76,16 @@ public:
     MeshMaterial *getMaterials() const { return materials; };
 
     /** 
+     * Returns bounding box (AABB).
+     * Total length: 8
+     */
+    Vector3 *getBoundingBox() { return boundingBox; };
+
+    /** 
      * Returns bounding box (AABB) vertex.
      * Total length: 8
      */
-    Vector3 &getBoundingBox(const u8 &i) { return boundingBox[i]; };
+    Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBox[i]; };
 
     // ----
     // Setters
@@ -126,11 +132,11 @@ public:
     void allocateMaterials(const u32 &t_val);
 
     /** 
-     * Calculates bounding box (AABB).
+     * Calculates bounding box (AABB) for frame and for materiaals.
      * Should be called by data loader,
      * so there is no need to run it again.
      */
-    void calculateBoundingBox();
+    void calculateBoundingBoxes();
 
 private:
     Vector3 boundingBox[8];

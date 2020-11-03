@@ -36,10 +36,10 @@ Floor::~Floor() {}
  * @param spiral Spiral position
  * @param initOffset Number of floor (index)
  */
-void Floor::init(ObjModel *obj, MeshSpec *spec, Point &spiral, u8 &initOffset)
+void Floor::init(Mesh *mother, Point &spiral, u8 &initOffset)
 {
-    Vector3 initPos = Vector3(0.00F, -10.00F, 0.00F);
-    this->mesh.setObj(initPos, obj, spec);
+    this->mesh.position.set(0.00F, -10.00F, 0.00F);
+    this->mesh.loadFrom(*mother);
     this->initOffset = initOffset;
     this->animTimer = rand() % FLOOR_ANIMATION_LENGTH;
     this->mesh.shouldBeLighted = true;

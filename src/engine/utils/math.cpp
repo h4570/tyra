@@ -85,7 +85,7 @@ float Math::sqrt(float x)
 float Math::invSqrt(float x) { return 1.0F / sqrt(x); }
 
 /** Converts Vector3 to PS2SDK's Vector4 */
-void vec3ToNative(VECTOR o_result, Vector3 &t_vec, float t_fourthVal)
+void vec3ToNative(VECTOR o_result, const Vector3 &t_vec, float t_fourthVal)
 {
     o_result[0] = t_vec.x;
     o_result[1] = t_vec.y;

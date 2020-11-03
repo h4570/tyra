@@ -26,8 +26,8 @@ Player::Player()
     this->gravity = 0.1F;
     this->lift = -1.0F;
 
-    Vector3 initPos = Vector3(0.00F, 20.00F, 0.00F);
-    this->mesh.loadMD2("warrior/", "warrior.md2", initPos, 0.2F);
+    this->mesh.loadMD2("warrior/", "warrior", 0.2F, true);
+    this->mesh.position.set(0.00F, 20.00F, 0.00F);
     this->mesh.rotation.x = -1.6F;
     this->mesh.shouldBeBackfaceCulled = false;
     this->mesh.shouldBeFrustumCulled = false;
@@ -39,7 +39,6 @@ Player::Player()
 
 Player::~Player()
 {
-    delete[] this->spec;
 }
 
 // ----
@@ -83,7 +82,7 @@ void Player::updatePosition(Pad &pad, Camera &camera, FloorManager &floorManager
     Vector3 max = Vector3();
     for (int i = 0; i < floorManager.floorAmount; i++)
     {
-        floorManager.floors[i].mesh.getMinMax(&min, &max);
+        getMinMax(&floorManager.floors[i].mesh, &min, &max);
         this->isCollideFloor = this->playerNextPosition.collidesSquare(min, max);
         if (this->isCollideFloor == 1)
             break;
@@ -106,37 +105,41 @@ void Player::onBeforePlayerFloorMove(Floor *floor, float &newY)
         this->mesh.position.y -= -newY * 1.05F;
 }
 
-/** Calculates minimum and maximum X, Y, Z of this 3D objects vertices + current position */
-// void Mesh::getMinMax(Vector3 *t_min, Vector3 *t_max)
-// {
-//     Vector3 calc = Vector3();
-//     u8 isInitialized = 0;
-//     for (u32 i = 0; i < 8; i++)
-//     {
-//         getFarthestVertex(&calc, i);
-//         if (isInitialized == 0)
-//         {
-//             isInitialized = 1;
-//             t_min->set(calc);
-//             t_max->set(calc);
-//         }
+/** Calculates minimum and maximum X, Y, Z of mesh vertices + current position */
+void Player::getMinMax(Mesh *t_mesh, Vector3 *t_min, Vector3 *t_max)
+{
+    Vector3 calc = Vector3();
+    u8 isInitialized = 0;
+    Vector3 *boundingBox = t_mesh->getCurrentBoundingBox();
+    for (u32 i = 0; i < 8; i++)
+    {
+        calc.set(
+            boundingBox[i].x + t_mesh->position.x,
+            boundingBox[i].y + t_mesh->position.y,
+            boundingBox[i].z + t_mesh->position.z);
+        if (isInitialized == 0)
+        {
+            isInitialized = 1;
+            t_min->set(calc);
+            t_max->set(calc);
+        }
 
-//         if (t_min->x > calc.x)
-//             t_min->x = calc.x;
-//         if (calc.x > t_max->x)
-//             t_max->x = calc.x;
+        if (t_min->x > calc.x)
+            t_min->x = calc.x;
+        if (calc.x > t_max->x)
+            t_max->x = calc.x;
 
-//         if (t_min->y > calc.y)
-//             t_min->y = calc.y;
-//         if (calc.y > t_max->y)
-//             t_max->y = calc.y;
+        if (t_min->y > calc.y)
+            t_min->y = calc.y;
+        if (calc.y > t_max->y)
+            t_max->y = calc.y;
 
-//         if (t_min->z > calc.z)
-//             t_min->z = calc.z;
-//         if (calc.z > t_max->z)
-//             t_max->z = calc.z;
-//     }
-// }
+        if (t_min->z > calc.z)
+            t_min->z = calc.z;
+        if (calc.z > t_max->z)
+            t_max->z = calc.z;
+    }
+}
 
 /** Update player position by gravity and update index of current floor */
 void Player::updateGravity(Pad &pad, FloorManager &floorManager)
@@ -150,7 +153,7 @@ void Player::updateGravity(Pad &pad, FloorManager &floorManager)
     this->isOnFloor = 0;
     for (int i = 0; i < floorManager.floorAmount; i++)
     {
-        floorManager.floors[i].mesh.getMinMax(&min, &max);
+        getMinMax(&floorManager.floors[i].mesh, &min, &max);
         this->isOnFloor = this->mesh.position.isOnSquare(min, max);
         if (this->isOnFloor == 1)
         {

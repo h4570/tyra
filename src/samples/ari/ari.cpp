@@ -8,15 +8,6 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-// SANDRO TODO
-// Ogarnac czemu tekstura sie zle wczytuje
-// Ogarnac wiele tekstur do skyboxa (wczytywane z .mtl i .obj)
-// texture loading for obj and md2
-// animation for dff
-// TODO obj destructor
-// TODO md2 destructor
-// TODO dff destructor
-
 #include "ari.hpp"
 
 #include "utils/math.hpp"
@@ -84,17 +75,17 @@ void Ari::onInit()
     island->loadDff("sunnyisl/", "sunnyisl", 0.1F, false);
     island->rotation.x = -1.6F;
     island->position.set(0.0F, 10.0F, 20.0F);
-    island->shouldBeFrustumCulled = false;
     island->shouldBeBackfaceCulled = true;
+    island->shouldBeFrustumCulled = false;
 
     islandAddons = new Mesh();
     islandAddons->loadDff("sunnyisl/", "sunnyisl3", 0.1F, false);
     islandAddons->rotation.x = -1.6F;
     islandAddons->position.set(0.0F, 10.0F, 20.0F);
-    islandAddons->shouldBeFrustumCulled = false;
 
     skybox = new Mesh();
     skybox->loadObj("skybox/", "skybox", 100.0F, false);
+    skybox->shouldBeFrustumCulled = false;
 
     waterFloors = new Mesh *[WATER_TILES_COUNT];
     spirals = new Point[WATER_TILES_COUNT];

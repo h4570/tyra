@@ -80,13 +80,16 @@ public:
     // ----
 
     /** Add unlinked texture.
+     * NOTICE: BMP (RGB 888 24bit, without color information) is suppored only!
      * @param t_subfolder Relative path. Ex.: "textures/"
      * @param t_name Filename without extension. Ex.: "water"
+     * 
      */
     MeshTexture *add(char *t_subfolder, char *t_name);
 
     /** 
      * Add linked textures in given subpath for mesh material names.
+     * NOTICE: BMP (RGB 888 24bit, without color information) is suppored only!
      * @param t_path Relative path where textures should be searched
      */
     void addByMesh(char *t_path, Mesh &mesh);

@@ -79,11 +79,14 @@ public:
      */
     MeshMaterial *getMaterialById(const u32 &t_id) const { return frames[0].getMaterialById(t_id); }
 
-    /** Returns bounding box vertex at given index with added mesh position.
-     * @param o_result Result
-     * @param offset 0-7. Because, bounding box have 8 corners
+    /** 
+     * Returns bounding vertex of current frame.
+     * @param i 0-7. Because, bounding box have 8 corners
      */
-    void getCurrentBoundingBoxVertex(Vector3 &o_result, const u32 &t_index);
+    Vector3 &getCurrentBoundingBoxVertex(const u8 &i) { return frames[animState.currentFrame].getBoundingBoxVertex(i); };
+
+    /** Returns bounding box of current frame. Size: 8 */
+    Vector3 *getCurrentBoundingBox() const { return frames[animState.currentFrame].getBoundingBox(); };
 
     // ----
     //  Setters
@@ -171,7 +174,7 @@ public:
     */
     const u8 &isStayAnimationSet() const { return animState.isStayFrameSet; };
 
-    /** Check if mesh is visible in view frustum */
+    /** True when mesh is in view frustum */
     u8 isInFrustum(Plane *t_frustumPlanes);
 
     /** 

@@ -37,19 +37,17 @@ VifSender::~VifSender() {}
 // Methods
 // ----
 
+void VifSender::sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation)
+{
+    vec3ToNative(position, t_position, 1.0F);
+    vec3ToNative(rotation, t_rotation, 1.0F);
+    create_local_world(localWorld, position, rotation);
+    create_local_screen(localScreen, localWorld, t_renderData.worldView->data, t_renderData.perspective->data);
+    vu1.sendSingleRefList(0, &localScreen, 4);
+}
+
 void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
-    if (t_mesh->shouldBeFrustumCulled == 1 && !t_mesh->isInFrustum(t_renderData->frustumPlanes))
-        return;
-
-    vec3ToNative(position, t_mesh->position, 1.0F);
-    vec3ToNative(rotation, t_mesh->rotation, 1.0F);
-    create_local_world(localWorld, position, rotation);
-    create_local_screen(localScreen, localWorld, t_renderData->worldView->data, t_perspective.data);
-
-    // TODO Send it once man xd
-    vu1.sendSingleRefList(0, &localScreen, 4);
-
     // we have to split 3D object into small parts, because of small memory of VU1
     for (u32 i = 0; i < vertCount2;)
     {
@@ -138,38 +136,43 @@ void VifSender::drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_ver
 
     //// Clipping tests start
 
-    // const float minZ = 1;
-    // const float maxZ = 65535;
-    // const int iGuardDimXY = 2048;
+    // // const float minZ = 1;
+    // // const float maxZ = 65535;
+    // // const int iGuardDimXY = 2048;
 
-    // vu1.addFloat(1.0F); // TODO clipping maybe there is problem?
-    // vu1.addFloat(1.0F);
-    // vu1.addFloat(1.0F);
-    // vu1.addFloat(1.0F);
-    //  float xClip = (float)2048.0f/(drawContext.GetFBWidth() * 0.5f * 2.0f);
-    //       packet += Math::Max( xClip, 1.0f );
-    //       float yClip = (float)2048.0f/(drawContext.GetFBHeight() * 0.5f * 2.0f);
-    //       packet += Math::Max( yClip, 1.0f );
-    //       float depthClip = 2048.0f / depthClipToGs;
-    //       // FIXME: maybe these 2048's should be 2047.5s...
-    //       depthClip *= 1.003f; // round up a bit for fp error (????)
-    //       packet += depthClip;
-    //       // enable/disable clipping
-    //       packet += (drawContext.GetDoClipping()) ? 1 : 0;
+    // // vu1.addFloat(1.0F); // f_TODO clipping maybe there is problem?
+    // // vu1.addFloat(1.0F);
+    // // vu1.addFloat(1.0F);
+    // // vu1.addFloat(1.0F);
+    // //  float xClip = (float)2048.0f/(drawContext.GetFBWidth() * 0.5f * 2.0f);
+    // //       packet += Math::Max( xClip, 1.0f );
+    // //       float yClip = (float)2048.0f/(drawContext.GetFBHeight() * 0.5f * 2.0f);
+    // //       packet += Math::Max( yClip, 1.0f );
+    // //       float depthClip = 2048.0f / depthClipToGs;
+    // //       // F_FIXME: maybe these 2048's should be 2047.5s...
+    // //       depthClip *= 1.003f; // round up a bit for fp error (????)
+    // //       packet += depthClip;
+    // //       // enable/disable clipping
+    // //       packet += (drawContext.GetDoClipping()) ? 1 : 0;
 
-    u32 depthBits = 24; // or 28(fog) or 16
-    float depthClipToGs = (float)((1 << depthBits) - 1) / 2.0f;
-    vu1.addFloat(2048.0f / (640.0F * 0.5f * 2.0f));
-    vu1.addFloat(2048.0f / (480.0F * 0.5f * 2.0f));
-    vu1.addFloat((2048.0f / depthClipToGs) * 1.003F);
-    // vu1.addFloat(2048.0F);                   // scale
-    // vu1.addFloat(2048.0F);                   // scale
-    // vu1.addFloat(((float)0xFFFFFF) / 32.0F); // scale
+    // u32 depthBits = 24; // or 28(fog) or 16
+    // float depthClipToGs = (float)((1 << depthBits) - 1) / 2.0f;
+    // vu1.addFloat(2048.0f / (640.0F * 0.5f * 2.0f));
+    // vu1.addFloat(2048.0f / (480.0F * 0.5f * 2.0f));
+    // vu1.addFloat((2048.0f / depthClipToGs) * 1.003F);
+    // // vu1.addFloat(2048.0F);                   // scale
+    // // vu1.addFloat(2048.0F);                   // scale
+    // // vu1.addFloat(((float)0xFFFFFF) / 32.0F); // scale
+    // vu1.addFloat(0.0F);
+    // // vu1.addFloat(0.5f * iGuardDimXY);
+    // // vu1.addFloat(-0.5f * iGuardDimXY);
+    // // vu1.addFloat(1.0F);
+    // // vu1.addFloat(500.0F); // far
+
     vu1.addFloat(0.0F);
-    // vu1.addFloat(0.5f * iGuardDimXY);
-    // vu1.addFloat(-0.5f * iGuardDimXY);
-    // vu1.addFloat(1.0F);
-    // vu1.addFloat(500.0F); // far
+    vu1.addFloat(0.0F);
+    vu1.addFloat(0.0F);
+    vu1.addFloat(0.0F);
 
     //// Clipping tests end
 

@@ -29,14 +29,14 @@ public:
 
     // TODO refactor
     void drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer);
+    void sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation);
 
 private:
     void drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer);
-
+    VU1 vu1; // TODO
     MATRIX localWorld, localScreen;
     VECTOR position, rotation;
     u32 vertCount;
-    VU1 vu1;
 };
 
 #endif

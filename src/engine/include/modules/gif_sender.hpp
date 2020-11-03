@@ -33,7 +33,7 @@ public:
     ~GifSender();
 
     void initPacket(u8 context);
-    void addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer);
+    void addObject(RenderData *t_renderData, Mesh *t_objects3D, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer);
     void addClear(zbuffer_t *t_zBuffer);
     void sendPacket();
     void sendClear(zbuffer_t *t_zBuffer);
@@ -54,7 +54,7 @@ private:
     float halfScreenW, halfScreenH;
     MATRIX localWorld, localScreen, localLight;
 
-    u32 calc3DObject(Matrix t_perspective, Mesh &t_mesh, RenderData *t_renderData, LightBulb *t_bulbs, u16 t_bulbsCount);
+    void calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, RenderData *t_renderData, LightBulb *t_bulbs, u16 t_bulbsCount);
     void convertCalcs(u32 t_vertCount, VECTOR *t_vertices, VECTOR *t_colors, VECTOR *t_sts, color_t &t_color);
     void addCurrentCalcs(u32 &t_vertexCount);
 };

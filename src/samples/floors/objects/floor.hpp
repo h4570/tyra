@@ -14,7 +14,6 @@
 class Player; // Forward definition
 
 #include <models/mesh.hpp>
-#include <models/obj_model.hpp>
 #include <models/math/point.hpp>
 #include <tamtypes.h>
 
@@ -30,7 +29,7 @@ public:
     Floor();
     ~Floor();
 
-    void init(ObjModel *obj, MeshSpec *spec, Point &spiral, u8 &initOffset);
+    void init(Mesh *mother, Point &spiral, u8 &initOffset);
     void animate(Player &player);
 };
 

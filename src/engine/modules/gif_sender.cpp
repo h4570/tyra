@@ -129,7 +129,7 @@ void GifSender::addClear(zbuffer_t *t_zBuffer)
  * @param objects3D Array of 3D objects pointers
  * @param amount Amount of 3D objects
  */
-void GifSender::addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
+void GifSender::addObject(RenderData *t_renderData, Mesh *t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
     if (!isAnyObjectAdded)
     {
@@ -140,19 +140,18 @@ void GifSender::addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_a
     tempDMATag = q;
     q++;
 
-    q = draw_texture_sampling(q, 0, &t_objects3D[0]->lod);
-    q = draw_texturebuffer(q, 0, textureBuffer, &t_objects3D[0]->clut);
-    dw = (u64 *)draw_prim_start(q, 0, t_renderData->prim, &t_objects3D[0]->color);
+    q = draw_texture_sampling(q, 0, &t_mesh->lod);
+    q = draw_texturebuffer(q, 0, textureBuffer, &t_mesh->clut);
+    dw = (u64 *)draw_prim_start(q, 0, t_renderData->prim, &t_mesh->color);
 
-    for (u32 i = 0; i < t_amount; i++)
-        if (t_objects3D[i]->shouldBeFrustumCulled == 0 || t_objects3D[i]->isInFrustum(t_renderData->frustumPlanes))
-        {
-            u32 vertexCount = calc3DObject(*t_renderData->perspective, *t_objects3D[i], t_renderData, t_bulbs, t_bulbsCount);
-            addCurrentCalcs(vertexCount);
-            delete[] xyz;
-            delete[] rgbaq;
-            delete[] st;
-        }
+    xyz = new xyz_t[vertexCount];
+    rgbaq = new color_t[vertexCount];
+    st = new texel_t[vertexCount];
+    calc3DObject(*t_renderData->perspective, *t_mesh, vertexCount, vertices, normals, coordinates, t_renderData, t_bulbs, t_bulbsCount);
+    addCurrentCalcs(vertexCount);
+    delete[] xyz;
+    delete[] rgbaq;
+    delete[] st;
 
     if ((u32)dw % 16) // if we are in the middle of qw, switch packet
         *dw++ = 0;
@@ -167,22 +166,10 @@ void GifSender::addObjects(RenderData *t_renderData, Mesh **t_objects3D, u32 t_a
  * @param worldView Matrix
  * @param perspective Matrix with .setPerpsective() used [clone of gluPerspective]
  * @param mesh 3D object
- * @returns Vertex count
  */
-u32 GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, RenderData *t_renderData, LightBulb *t_bulbs, u16 t_bulbsCount)
+void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, RenderData *t_renderData, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
-    u32 vertexCount = t_mesh.getVertexCount(); // TODO err
-
-    VECTOR *vertices = new VECTOR[vertexCount];
-    VECTOR *normals = new VECTOR[vertexCount];
-    VECTOR *coordinates = new VECTOR[vertexCount];
     VECTOR *colors = new VECTOR[vertexCount];
-    vertexCount = t_mesh.getDrawData(0, vertices, normals, coordinates, *t_renderData->cameraPosition);
-
-    xyz = new xyz_t[vertexCount];
-    rgbaq = new color_t[vertexCount];
-    st = new texel_t[vertexCount];
-
     VECTOR position, rotation;
 
     vec3ToNative(position, t_mesh.position, 1.0F);
@@ -215,9 +202,9 @@ u32 GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, RenderData *t_re
         for (u32 i = 0; i < vertexCount; i++)
         {
             // Apply the light value to the colour.
-            colors[i][0] = (t_mesh.color.r * lights[i][0]);
-            colors[i][1] = (t_mesh.color.g * lights[i][1]);
-            colors[i][2] = (t_mesh.color.b * lights[i][2]);
+            colors[i][0] = (t_mesh.color.r * lights[i][0] / 128.0F);
+            colors[i][1] = (t_mesh.color.g * lights[i][1] / 128.0F);
+            colors[i][2] = (t_mesh.color.b * lights[i][2] / 128.0F);
             vector_clamp(colors[i], colors[i], 0.00f, 1.99f);
         }
 
@@ -238,12 +225,7 @@ u32 GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, RenderData *t_re
 
     convertCalcs(vertexCount, vertices, colors, coordinates, t_mesh.color);
 
-    delete[] vertices;
-    delete[] normals;
     delete[] colors;
-    delete[] coordinates;
-
-    return vertexCount;
 }
 
 void GifSender::convertCalcs(u32 t_vertexCount, VECTOR *t_vertices, VECTOR *t_colors, VECTOR *t_sts, color_t &t_color)

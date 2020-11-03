@@ -12,6 +12,8 @@
 #define _TYRA_MESH_MATERIAL_
 
 #include <tamtypes.h>
+#include "./math/vector3.hpp"
+#include "./math/plane.hpp"
 
 /** Class which contains draw instructions for part mesh of mesh.
  * Mesh can have many materials.
@@ -58,6 +60,18 @@ public:
     /** Array of normal vector faces. Size of getFacesCount() */
     u32 *getNormalFaces() const { return normalFaces; };
 
+    /** 
+     * Returns bounding box (AABB).
+     * Total length: 8
+     */
+    Vector3 *getBoundingBox() { return boundingBox; };
+
+    /** 
+     * Returns bounding box (AABB) vertex.
+     * Total length: 8
+     */
+    Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBox[i]; };
+
     // ----
     //  Setters
     // ----
@@ -93,10 +107,21 @@ public:
     /** Set faces count and allocate memory. */
     void allocateFaces(const u32 &t_val);
 
+    /** 
+     * Do not call this method unless you know what you do.
+     * Calculates bounding box (AABB).
+     * Called automatically in mesh frame class on data loading.
+     */
+    void calculateBoundingBox(Vector3 *t_vertices, u32 t_vertCount);
+
+    /** True when mesh is in view frustum */
+    u8 isInFrustum(Plane *t_frustumPlanes, const Vector3 &position);
+
 private:
+    Vector3 boundingBox[8];
     u32 facesCount, id;
     u32 *vertexFaces, *stFaces, *normalFaces;
-    u8 _isNameSet, _areFacesAllocated;
+    u8 _isNameSet, _areFacesAllocated, _isBoundingBoxCalculated;
     char *name;
 };
 

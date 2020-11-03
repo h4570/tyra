@@ -18,7 +18,7 @@
 class Vector3; // Forward definition
 
 void manyVec3ToNative(VECTOR *t_result, Vector3 *t_vec, int t_amount, float t_fourthVal);
-void vec3ToNative(VECTOR t_result, Vector3 &t_vec, float t_fourthVal);
+void vec3ToNative(VECTOR t_result, const Vector3 &t_vec, float t_fourthVal);
 
 class Math
 {

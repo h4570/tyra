@@ -238,19 +238,11 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
     return addedFaces;
 }
 
-void Mesh::getCurrentBoundingBoxVertex(Vector3 &o_result, const u32 &t_index)
-{
-    o_result.set(
-        frames[animState.currentFrame].getBoundingBox(t_index).x + position.x,
-        frames[animState.currentFrame].getBoundingBox(t_index).y + position.y,
-        frames[animState.currentFrame].getBoundingBox(t_index).z + position.z);
-}
-
 u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
 {
     Vector3 boxCalcTemp;
-    int boxResult = 1, boxIn = 0, boxOut = 0;
-
+    u8 boxResult = 1, boxIn = 0, boxOut = 0;
+    Vector3 *currentBoundingBox = getCurrentBoundingBox();
     for (int i = 0; i < 6; i++)
     {
         boxOut = 0;
@@ -260,7 +252,10 @@ u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
         // both inside and out of the frustum
         for (int y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++)
         {
-            getCurrentBoundingBoxVertex(boxCalcTemp, y);
+            boxCalcTemp.set(
+                currentBoundingBox[y].x + position.x,
+                currentBoundingBox[y].y + position.y,
+                currentBoundingBox[y].z + position.z);
             if (t_frustumPlanes[i].distanceTo(boxCalcTemp) < 0)
                 boxOut++;
             else
@@ -288,7 +283,6 @@ void Mesh::setDefaultColor()
 /** Sets texture level of details settings and CLUT settings */
 void Mesh::setDefaultLODAndClut()
 {
-    PRINT_LOG("Setting LOD, CLUT");
     lod.calculation = LOD_USE_K;
     lod.max_level = 0;
     lod.mag_filter = LOD_MAG_NEAREST;
@@ -301,5 +295,4 @@ void Mesh::setDefaultLODAndClut()
     clut.psm = 0;
     clut.load_method = CLUT_NO_LOAD;
     clut.address = 0;
-    PRINT_LOG("LOD, CLUT set!");
 }

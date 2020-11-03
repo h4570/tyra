@@ -147,6 +147,6 @@ MeshFrame *MD2Loader::load(u32 &o_framesCount, char *t_subpath, char *t_nameWith
     delete[] finalPath;
     o_framesCount = framesCount;
     for (u32 i = 0; i < framesCount; i++)
-        resultFrames[i].calculateBoundingBox();
+        resultFrames[i].calculateBoundingBoxes();
     return resultFrames;
 }

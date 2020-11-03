@@ -33,6 +33,12 @@ void Floors::onInit()
     engine.audio.addListener(&lightManager);
     engine.audio.loadSong("NF-CHILL.WAV");
     engine.audio.play();
+    texRepo = engine.renderer->getTextureRepository();
+    texRepo->addByMesh("warrior/", player->mesh);
+    texRepo->addByMesh("floor/", *floorManager->meshes[0]);
+    for (size_t i = 1; i < floorManager->floorAmount; i++)
+        texRepo->getByMesh(floorManager->meshes[0]->getId(), floorManager->meshes[0]->getMaterial(0).getId())
+            ->addLink(floorManager->meshes[i]->getId(), floorManager->meshes[i]->getMaterial(0).getId());
 }
 
 void Floors::onUpdate()

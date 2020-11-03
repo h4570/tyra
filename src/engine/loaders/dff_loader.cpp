@@ -47,7 +47,7 @@ void DffLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
     fread(&data, sizeof(u8), fileSize, file);
     fclose(file);
     serialize(o_result, t_invertT, data, t_scale);
-    o_result->calculateBoundingBox();
+    o_result->calculateBoundingBoxes();
     PRINT_LOG("Dff file loaded!");
 }
 

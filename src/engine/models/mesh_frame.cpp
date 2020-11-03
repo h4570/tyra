@@ -91,13 +91,15 @@ void MeshFrame::allocateMaterials(const u32 &t_val)
     _areMaterialsAllocated = true;
 }
 
-void MeshFrame::calculateBoundingBox()
+void MeshFrame::calculateBoundingBoxes()
 {
     if (!_areVerticesAllocated)
     {
         PRINT_ERR("Can't calculate bounding box, because vertices were not allocated!");
         return;
     }
+    for (u32 i = 0; i < materialsCount; i++)
+        materials->calculateBoundingBox(vertices, vertexCount);
     float lowX, lowY, lowZ, hiX, hiY, hiZ;
     lowX = hiX = vertices[0].x;
     lowY = hiY = vertices[0].y;

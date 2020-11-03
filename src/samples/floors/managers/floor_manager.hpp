@@ -14,8 +14,6 @@
 class Player; // Forward definition
 
 #include <models/math/point.hpp>
-#include <models/obj_model.hpp>
-#include <models/mesh_spec.hpp>
 #include <modules/camera_base.hpp>
 #include <models/audio_listener.hpp>
 
@@ -33,12 +31,10 @@ public:
     void update(Player &t_player);
     Mesh **meshes;
     void onAudioTick();
-    MeshSpec *spec;
 
 private:
     u8 audioOffset, audioMode;
     u32 audioTick;
-    ObjModel *obj;
     Point *spirals;
     void calcSpiral(int X, int Y);
     void initFloors();

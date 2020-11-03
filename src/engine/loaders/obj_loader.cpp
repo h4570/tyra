@@ -96,7 +96,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
         else
             break;
     }
-    o_result->calculateBoundingBox();
+    o_result->calculateBoundingBoxes();
     fclose(file);
 }
 

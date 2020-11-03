@@ -5,17 +5,17 @@ EE_OBJS =											\
 	../../engine/models/math/plane.o				\
 	../../engine/models/math/point.o				\
 	../../engine/models/math/vector3.o				\
-	../../engine/models/dff_model.o					\
-	../../engine/models/md2_model.o					\
+	../../engine/models/mesh_frame.o				\
+	../../engine/models/mesh_material.o				\
 	../../engine/models/mesh.o						\
-	../../engine/models/mesh_spec.o					\
-	../../engine/models/obj_model.o					\
+	../../engine/models/mesh_texture.o				\
 	../../engine/modules/audio.o					\
 	../../engine/modules/camera_base.o				\
 	../../engine/modules/gif_sender.o				\
 	../../engine/modules/light.o					\
 	../../engine/modules/pad.o						\
 	../../engine/modules/renderer.o					\
+	../../engine/modules/texture_repository.o		\
 	../../engine/modules/timer.o					\
 	../../engine/modules/vif_sender.o				\
 	../../engine/modules/vu1.o						\

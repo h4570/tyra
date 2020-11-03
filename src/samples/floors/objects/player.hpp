@@ -14,7 +14,6 @@
 #include "../managers/floor_manager.hpp"
 #include "../camera.hpp"
 #include <modules/pad.hpp>
-#include <models/mesh_spec.hpp>
 #include <tamtypes.h>
 
 /** Player 3D object class  */
@@ -25,7 +24,6 @@ public:
     float gravity, velocity, lift;
     u8 isOnFloor, isCollideFloor, indexOfCurrentFloor;
     Mesh mesh;
-    MeshSpec *spec;
     Player();
     ~Player();
 
@@ -34,6 +32,7 @@ public:
 
 private:
     Vector3 playerNextPosition;
+    void getMinMax(Mesh *t_mesh, Vector3 *t_min, Vector3 *t_max);
     void updatePosition(Pad &pad, Camera &camera, FloorManager &floorManager);
     void updateGravity(Pad &pad, FloorManager &floorManager);
 };

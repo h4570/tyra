@@ -16,6 +16,7 @@
 #include <engine.hpp>
 #include "managers/floor_manager.hpp"
 #include "managers/light_manager.hpp"
+#include "modules/texture_repository.hpp"
 #include "objects/player.hpp"
 #include "./camera.hpp"
 
@@ -32,6 +33,7 @@ public:
     Engine engine;
 
 private:
+    TextureRepository *texRepo;
     LightManager lightManager;
     FloorManager *floorManager;
     Player *player;

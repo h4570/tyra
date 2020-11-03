@@ -7,10 +7,10 @@
     <img src="http://allvectorlogo.com/img/2016/05/ps2-logo.png" alt="Logo" width="230" height="125">
   </a>
 
-  <h3 align="center">Tyra (Work in progress)</h3>
+  <h3 align="center">Tyra alpha 1.1.0</h3>
 
   <p align="center">
-    Tiny game engine for PS2 (PlayStation 2™) homebrew, written in C++98
+    First open source renderer and game engine for PS2 (PlayStation 2™).
     <br />
     <a href="https://www.youtube.com/"><strong>View Demo (soon) »</strong></a>
     <br />
@@ -25,7 +25,9 @@
 
 * [About the Project](#about-the-project) 
   * [Samples](#samples) 
-  * [Features](#features) 
+  * [About project](#about-project) 
+  * [Acronyms](#acronyms) 
+  * [Tyra features](#tyra-features) 
   * [Built With](#built-with) 
 * [Getting Started](#getting-started) 
   * [Prerequisites](#prerequisites) 
@@ -34,43 +36,47 @@
 * [Contributing](#contributing) 
 * [License](#license) 
 * [Contact](#contact) 
+* [Thanks](#thanks) 
 
 ## About The Project  
 
-<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.0.0/tyra.gif" alt="sample" width="600" height="auto">
+<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.1.0/tyra.gif" alt="sample" width="600" height="auto">
 
 ### Samples
 * [Floors](https://github.com/ps2-tyra/tyra/tree/master/src/samples/floors) 
 * [Ari (WIP)](https://github.com/ps2-tyra/tyra/tree/master/src/samples/ari) 
 
-This repository contains a early version of game engine with simple demos for PS2 (PlayStation 2™) that I've developed using the freely available PS2DEV, unofficial SDK. 
-Developing for PS2 was and is a big challenge for me, it's pretty low-level and hard (for me :D). The architecture is completely different from an Intel x86 and there are lots of extra things that you need to take into account. There are some samples available to teach on, but overall community died several years ago :/ 
+### Contributors wanted
+#### I will be grateful for any help, Discord: Sandro#3402  
   
-**Why PS2 game dev is so different?** Creating games for PS2 is completly different from dragging colored buttons from side to side through an application with nice GUI (ex. Unity).  
-Coding something for PS2 requires from you doing everything from scratch, even data transfer management through (/co)processors like: 
+### About project
+Goal of Tyra project is to provide simple API for PS2 (PlayStation 2™) game creation. So you can just run PS2 emulator, grab your .obj file, and put it into live in a seconds. Project is on early stage, so a lot of stuff is changing from release to release.  
+ 
+YouTube tutorials soon!  
+  
+**Why PS2 game dev is so different?** Raw PS2 development can be a big challenge. PS2 it's pretty low-level and there are a lot of stuff that you must do from scratch.  
+Tyra takes care for you, and rendering, coprocessors communication and many more low-level stuff is already done.
+
+### Acronyms 
 * EE (Emotion Engine) - whole set of processors and subsystems that make up the PlayStation 2 
-* GS (Graphic synthesizer) - configurable rasterizer and texture mapper, geometry transformations are not done by it. Has only 2MB~ memory for textures, but very high transfer rate, so you can switch them in the blink 
-* VU0 - vector processor accessed by inline assembly code injected into C program  
-* VU1 - vector processor (similar vertex shader) accessed via DMAC  
+* GS (Graphic synthesizer) - configurable rasterizer and texture mapper. Has only 2MB~ memory for textures, but for the opposite have very high transfer rate, so you can switch textures in the blink 
+* VU0 - programmable (ASM) vector processor that is accessed by inline assembly code injected into C program.  
+* VU1 - programmable (ASM) vector processor, which is similar to vertex shader. Accessed via DMA.  
 * IOP - I/O processor which enables access to peripheral devices, such the game controller  
 
-### Features
-* VU1 (PATH 1 rendering) with double buffering  
-* GIF (PATH 3 rendering) with double buffering 
-* Optimized calculations using VU0
-* Frustum culling 
-* Backface culling  
-* Perspective projection (like OpenGL's)  
-* Audio support 
-* Animation support 
-* Third person view "lookAt" camera (like OpenGL's) 
-* Dualshock 2 pad support 
-* RGB 888 24bit texture support (with .bmp loader)  
-* 3D files loaders: ".obj", ".dff" (renderware) and ".md2" 
-* Multi threading management  
-* 3D object management  
+### Tyra features
+* VU1 rendering (PATH 1), double-buffered  
+* GIF rendering (PATH 3), double-buffered    
+* Frustum culling, backface culling  
+* OpenGL adaptions: Perspective projection, lookAt camera  
+* Texture support (.bmp loader)  
+* Mesh loaders: ".obj", ".dff" (RenderWare, GTA:SA) and ".md2" (Quake II) 
+* Threading support 
 * Lighting support (now PATH3 only)  
-* Other: collision, gravity etc.  
+* Animation support 
+* Audio support 
+* Pad support 
+* TODO: physics, ADPCM and many more!  
 
 ### Built With  
 
@@ -78,7 +84,8 @@ Coding something for PS2 requires from you doing everything from scratch, even d
 
 ## Getting Started  
 
-To get a local copy up and running follow these simple steps. 
+To get a local copy up and running follow these simple steps.  
+YouTube tutorials soon!
 
 ### Prerequisites 
 
@@ -116,9 +123,9 @@ See the [open issues](https://github.com/ps2-tyra/tyra/issues) for a list of pro
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**. 
 
 1. Fork the Project 
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)  
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)  
-4. Push to the Branch (`git push origin feature/AmazingFeature`)  
+2. Create your Feature Branch (`git checkout -b feature/amazing-feature`)  
+3. Commit your Changes (`git commit -m 'Add some amazing-feature'`)  
+4. Push to the Branch (`git push origin feature/amazing-feature`)  
 5. Open a Pull Request  
 
 ## License  
@@ -129,6 +136,16 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 
 Sandro Sobczyński - sandro.sobczynski@gmail.com   
 [![LinkedIn][linkedin-shield]][linkedin-url]  
+
+## Thanks  
+
+Without these guys, everything would be harder:
+* Dr Henry Fortuna - Abertay University (code sources)
+* Lukasz D.K. (huge archive of PS2 stuff)
+* Guilherme Lampert - PlayStation London (code sources)
+* Jesper Svennevid, Daniel Collin - Microcode (openvcl, code samples)
+* Whole PS2SDK/PS2Scene team
+* And so many other guys. Thanks!
 
 Project Link: [https://github.com/ps2-tyra/tyra](https://github.com/ps2-tyra/tyra)  
 

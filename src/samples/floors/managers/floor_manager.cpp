@@ -12,7 +12,6 @@
 
 #include <utils/math.hpp>
 #include <utils/debug.hpp>
-#include <loaders/obj_loader.hpp>
 
 // ----
 // Constructors/Destructors
@@ -34,8 +33,6 @@ FloorManager::FloorManager(int t_floorAmount)
 FloorManager::~FloorManager()
 {
     delete[] spirals;
-    delete[] spec;
-    delete[] obj;
     delete[] meshes;
 }
 
@@ -83,15 +80,13 @@ void FloorManager::initFloors()
     PRINT_LOG("Initializing floors");
     meshes = new Mesh *[floorAmount];
 
-    Vector3 initPos = Vector3(0.0F, 0.0F, 0.0F);
     meshes[0] = new Mesh();
-    meshes[0]->loadObj("floor/", "floor.obj", initPos, 2.0F);
+    meshes[0]->loadObj("floor/", "floor", 2.0F, false);
     meshes[0]->shouldBeFrustumCulled = true;
-    obj = meshes[0]->obj;
-    spec = meshes[0]->spec;
+    meshes[0]->shouldBeLighted = true;
     for (u8 i = 0; i < floorAmount; i++)
     {
-        floors[i].init(obj, spec, spirals[i], i);
+        floors[i].init(meshes[0], spirals[i], i);
         meshes[i] = &floors[i].mesh;
     }
     PRINT_LOG("Floors initialized!");
