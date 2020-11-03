@@ -21,7 +21,10 @@
 #include <draw_sampling.h>
 #include "./anim_state.hpp"
 
-/** Class which have common types for all 3D objects */
+/** 
+ * Class which have contain 3D object data.
+ * External data can be loaded via loadXXX() methods.
+ */
 class Mesh
 {
 
@@ -51,7 +54,7 @@ public:
     /** Returns material, which is a mesh "subgroup". */
     MeshMaterial &getMaterial(const u32 &i) const { return frames[0].getMaterial(i); };
 
-    /** Auto count of frames. Static object (not animated) will have only 1 frame. */
+    /** Count of frames. Static object (not animated) will have only 1 frame. */
     const u32 &getFramesCount() const { return framesCount; };
 
     /** Count of vertices.  */

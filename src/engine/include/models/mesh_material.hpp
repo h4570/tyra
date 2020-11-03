@@ -15,7 +15,8 @@
 #include "./math/vector3.hpp"
 #include "./math/plane.hpp"
 
-/** Class which contains draw instructions for part mesh of mesh.
+/** 
+ * Class which contains draw instructions for part of mesh.
  * Mesh can have many materials.
  * For example, car mesh can have three materials:
  * body, tires and windows. 

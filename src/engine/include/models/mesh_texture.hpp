@@ -20,8 +20,8 @@
 
 /** 
  * Class which contains texture data.
- * Textures are paired with meshes via addUsage(),
- * removeUsage() functions which use meshId and materialId.
+ * Textures are paired with meshes via addLink() and 
+ * removeLink() functions which use meshId and materialId.
  */
 class MeshTexture
 {

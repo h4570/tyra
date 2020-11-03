@@ -78,7 +78,11 @@ void Audio::loadModules()
 {
     PRINT_LOG("Modules loading started (LIBSD, AUDSRV)");
     ret = SifLoadModule("rom0:LIBSD", 0, NULL);
+    if (ret == -203)
+        PRINT_ERR("LIBSD loading failed!");
     ret = SifLoadModule("host:AUDSRV.IRX", 0, NULL);
+    if (ret == -203)
+        PRINT_ERR("AUDSRV.IRX loading failed!");
     PRINT_LOG("Modules loaded");
 }
 

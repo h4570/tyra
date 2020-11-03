@@ -44,8 +44,6 @@ private:
     Game *game;
     s32 mainThreadId;
     static void wakeup(s32 t_alarmId, u16 t_time, void *t_common);
-
-    // ThreadManager threadManager;
 };
 
 #endif
