@@ -34,7 +34,15 @@ public:
 
     Vector3 position, rotation;
     float scale;
-    u8 shouldBeLighted, shouldBeBackfaceCulled, shouldBeFrustumCulled;
+    u8 shouldBeLighted;
+    /** 
+     * When true, invisible triangles of mesh materials are not drawn.
+     */
+    u8 shouldBeBackfaceCulled;
+    /** 
+     * When true, mesh materials are not drawn when they are outside of view frustum.
+     */
+    u8 shouldBeFrustumCulled;
     color_t color;
     clutbuffer_t clut;
     lod_t lod;
