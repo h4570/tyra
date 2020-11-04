@@ -133,7 +133,6 @@ void Audio::loadSong(char *t_filename)
         else
         {
             fseek(wav, 0x30, SEEK_SET);
-            played = 0;
             songLoaded = 1;
             PRINT_LOG("Song loaded!");
         }
@@ -216,15 +215,14 @@ void Audio::work()
             isTrackDone = true;
             return;
         }
-        played++;
-        if ((played + 20) % 41 == 0 && addedListeners)
-            for (u32 i = 0; i < addedListeners; i++)
-                listeners[i]->onAudioTick();
+        for (u32 i = 0; i < addedListeners; i++)
+            listeners[i]->onAudioTick();
     }
     else
     {
         PRINT_LOG("Song " SONG_NAME " finished. Running again...");
-        played = 0;
+        for (u32 i = 0; i < addedListeners; i++)
+            listeners[i]->onAudioFinish();
         fseek(wav, 0x30, SEEK_SET);
         isTrackDone = false;
     }

@@ -20,7 +20,7 @@ class Player; // Forward definition
 #include "../objects/floor.hpp"
 
 /** Class which is maintaining floors objects */
-class FloorManager : public AudioListener
+class FloorManager
 {
 
 public:

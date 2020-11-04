@@ -15,7 +15,7 @@
 #include <models/audio_listener.hpp>
 
 /** Class which is maintaining floors objects */
-class LightManager : public AudioListener
+class LightManager
 {
 
 public:

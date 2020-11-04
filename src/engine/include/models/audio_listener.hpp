@@ -17,6 +17,7 @@ class AudioListener
 public:
     virtual ~AudioListener(){};
     virtual void onAudioTick() = 0;
+    virtual void onAudioFinish() = 0;
 
 private:
 };

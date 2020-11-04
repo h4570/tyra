@@ -56,7 +56,7 @@ private:
     void loadModules();
     void initAUDSRV();
 
-    int ret, played;
+    int ret;
     char chunk[2048];
     FILE *wav;
     audsrv_fmt_t format;

@@ -20,7 +20,7 @@
 #include "objects/player.hpp"
 #include "./camera.hpp"
 
-class Floors : public Game
+class Floors : public Game, AudioListener
 {
 
 public:
@@ -29,10 +29,13 @@ public:
 
     void onInit();
     void onUpdate();
+    void onAudioTick();
+    void onAudioFinish();
 
     Engine *engine;
 
 private:
+    u32 audioTicks;
     TextureRepository *texRepo;
     LightManager lightManager;
     FloorManager floorManager;

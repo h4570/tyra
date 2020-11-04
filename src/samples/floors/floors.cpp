@@ -17,7 +17,10 @@
 const u8 FLOORS_COUNT = 64; // Temp change it also in floor_manager.hpp
 
 Floors::Floors(Engine *t_engine)
-    : engine(t_engine), floorManager(FLOORS_COUNT), camera(&t_engine->screen) {}
+    : engine(t_engine), floorManager(FLOORS_COUNT), camera(&t_engine->screen)
+{
+    audioTicks = 0;
+}
 
 Floors::~Floors() {}
 
@@ -28,11 +31,10 @@ Floors::~Floors() {}
 void Floors::onInit()
 {
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
-    engine->audio.init(2);
-    engine->audio.addListener(&floorManager);
-    engine->audio.addListener(&lightManager);
+    engine->audio.init(1);
+    engine->audio.addListener(this);
     engine->audio.loadSong("NF-CHILL.WAV");
-    engine->audio.setVolume(1);
+    engine->audio.setVolume(100);
     engine->audio.play();
     texRepo = engine->renderer->getTextureRepository();
     texRepo->addByMesh("warrior/", player.mesh);
@@ -53,4 +55,20 @@ void Floors::onUpdate()
     engine->renderer->draw(player.mesh);
     for (u8 i = 0; i < FLOORS_COUNT; i++)
         engine->renderer->drawByPath3(floorManager.floors[i].mesh, lightManager.bulbs, lightManager.bulbsCount);
+}
+
+void Floors::onAudioTick()
+{
+    if ((++audioTicks + 20) % 41 == 0)
+    {
+        floorManager.onAudioTick();
+        lightManager.onAudioTick();
+    }
+    if (audioTicks > 10000)
+        audioTicks = 0;
+}
+
+void Floors::onAudioFinish()
+{
+    audioTicks = 0;
 }
