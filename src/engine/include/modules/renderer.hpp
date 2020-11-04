@@ -30,9 +30,12 @@ public:
     ~Renderer();
 
     framebuffer_t frameBuffers[2];
-    u8 context;
+    u8 context; // TODO
     zbuffer_t zBuffer;
     prim_t prim;
+
+    void enableVSync() { isVSyncEnabled = true; }
+    void disableVSync() { isVSyncEnabled = false; }
 
     /** PATH3 Many + lighting */
     void drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
@@ -62,7 +65,7 @@ private:
     void changeTexture(const Mesh &t_mesh, u32 t_materialId);
     u32 lastTextureId;
     texbuffer_t textureBuffer;
-    u8 isTextureVRAMAllocated;
+    u8 isTextureVRAMAllocated, isVSyncEnabled;
     void allocateTextureBuffer(u16 t_width, u16 t_height);
     void deallocateTextureBuffer();
     void flipBuffers();

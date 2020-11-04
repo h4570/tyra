@@ -34,6 +34,7 @@ void Ari::onInit()
 {
 
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
+    engine->renderer->disableVSync();
     engine->audio.init(0);
     engine->audio.setVolume(40);
     engine->audio.loadSong("MOV-CIRC.WAV");

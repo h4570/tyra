@@ -183,8 +183,6 @@ void Mesh::animate()
     }
 }
 
-// TODO think about that, because in Ari sample it eats 88 FPS :O
-
 u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos)
 {
     VECTOR ONE_VEC = {1.0F, 1.0F, 1.0F, 1.0F};

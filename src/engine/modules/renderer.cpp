@@ -37,6 +37,7 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     dma_channel_fast_waits(DMA_CHANNEL_GIF);
     context = 0;
     isTextureVRAMAllocated = false;
+    isVSyncEnabled = true;
     isFrameEmpty = false;
     lastTextureId = 0;
     flipPacket = packet_init(3, PACKET_UCAB); // Uncached accelerated
@@ -264,7 +265,7 @@ void Renderer::endFrame(float fps)
 {
     if (!isFrameEmpty)
     {
-        if (fps > 49.0F)
+        if (fps > 49.0F && isVSyncEnabled)
             graph_wait_vsync();
         flipBuffers();
     }
