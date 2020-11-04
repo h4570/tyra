@@ -161,14 +161,12 @@ void Renderer::allocateBuffers(float t_screenW, float t_screenH)
 
 /// --- Draw: PATH3
 
-/** PATH3 Many + lighting */
 void Renderer::drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     for (u16 i = 0; i < t_amount; i++)
         drawByPath3(t_meshes[i], t_bulbs, t_bulbsCount);
 }
 
-/** PATH3 Single + lighting */
 void Renderer::drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
@@ -195,22 +193,18 @@ void Renderer::drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     }
 }
 
-/** PATH3 Many */
 void Renderer::drawByPath3(Mesh *t_meshes, u16 t_amount) { drawByPath3(t_meshes, t_amount, NULL, 0); }
 
-/** PATH3 Single */
 void Renderer::drawByPath3(Mesh &t_mesh) { drawByPath3(t_mesh, NULL, 0); }
 
 /// --- Draw: PATH1
 
-/** PATH1 Many + lighting */
 void Renderer::draw(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     for (u16 i = 0; i < t_amount; i++)
         draw(t_meshes[i], t_bulbs, t_bulbsCount);
 }
 
-/** PATH1 Single + lighting */
 void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
@@ -240,10 +234,8 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     }
 }
 
-/** PATH1 Many */
 void Renderer::draw(Mesh *t_meshes, u16 t_amount) { draw(t_meshes, t_amount, NULL, 0); }
 
-/** PATH1 Single */
 void Renderer::draw(Mesh &t_mesh) { draw(t_mesh, NULL, 0); }
 
 /// ---

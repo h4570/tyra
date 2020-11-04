@@ -37,22 +37,64 @@ public:
     void enableVSync() { isVSyncEnabled = true; }
     void disableVSync() { isVSyncEnabled = false; }
 
-    /** PATH3 Many + lighting */
+    /// --- Draw: PATH3
+
+    /** 
+     * Draw many meshes with lighting information.
+     * Slowest way of rendering (PATH 3, using EE and GIF). 
+     * NOTICE: Animation supported, lighting supported
+     */
     void drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
-    /** PATH3 Single + lighting */
+
+    /** 
+     * Draw mesh with lighting information.
+     * Slowest way of rendering (PATH 3, using EE and GIF). 
+     * NOTICE: Animation supported, lighting supported
+     */
     void drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
-    /** PATH3 Many */
+
+    /** 
+     * Draw many meshes without lighting information.
+     * Slowest way of rendering (PATH 3, using EE and GIF). 
+     * NOTICE: Animation supported, lighting supported
+     */
     void drawByPath3(Mesh *t_meshes, u16 t_amount);
-    /** PATH3 Single */
+
+    /** 
+     * Draw mesh without lighting information.
+     * Slowest way of rendering (PATH 3, using EE and GIF). 
+     * NOTICE: Animation supported, lighting supported
+     */
     void drawByPath3(Mesh &t_mesh);
 
-    /** PATH1 Many + lighting */
+    /// --- Draw: PATH1
+
+    /** 
+     * Draw many meshes with lighting information.
+     * Fastest way of rendering (PATH 1, using VU1). 
+     * NOTICE: Animation supported, lighting NOT supported (at this moment)
+     */
     void draw(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
-    /** PATH1 Single + lighting */
+
+    /** 
+     * Draw mesh with lighting information.
+     * Fastest way of rendering (PATH 1, using VU1). 
+     * NOTICE: Animation supported, lighting NOT supported (at this moment)
+     */
     void draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
-    /** PATH1 Many */
+
+    /** 
+     * Draw many meshes without lighting information.
+     * Fastest way of rendering (PATH 1, using VU1). 
+     * NOTICE: Animation supported, lighting NOT supported (at this moment)
+     */
     void draw(Mesh *t_meshes, u16 t_amount);
-    /** PATH1 Single */
+
+    /** 
+     * Draw mesh without lighting information.
+     * Fastest way of rendering (PATH 1, using VU1). 
+     * NOTICE: Animation supported, lighting NOT supported (at this moment)
+     */
     void draw(Mesh &t_mesh);
 
     void setCameraDefinitions(Matrix *t_worldView, Vector3 *t_cameraPos, Plane *t_planes);
