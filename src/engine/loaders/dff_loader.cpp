@@ -228,9 +228,10 @@ void DffLoader::readGeometryExtension(MeshFrame *o_frame, char **materialNames, 
         for (u32 j = 0; j < facesCount; j++)
         {
             u32 vertex1 = readDwordFromArrayLE(t_buffer, t_ptrPos);
-            o_frame->getMaterial(i).setVertexFace(j, vertex1);
-            o_frame->getMaterial(i).setNormalFace(j, vertex1);
-            o_frame->getMaterial(i).setSTFace(j, vertex1);
+            // Inverted insertind due to backface culling
+            o_frame->getMaterial(i).setVertexFace(facesCount - 1 - j, vertex1);
+            o_frame->getMaterial(i).setNormalFace(facesCount - 1 - j, vertex1);
+            o_frame->getMaterial(i).setSTFace(facesCount - 1 - j, vertex1);
         }
     }
 }
