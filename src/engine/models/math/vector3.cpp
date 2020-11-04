@@ -243,6 +243,44 @@ void Vector3::set(const float &x, const float &y, const float &z)
     this->z = z;
 }
 
+void Vector3::rotate(const Vector3 &v, u8 inversed)
+{
+    VECTOR cameraPos = {x, y, z, 0.0F};
+    VECTOR rotation;
+    if (inversed)
+    {
+        rotation[0] = -v.x;
+        rotation[1] = -v.y;
+        rotation[2] = -v.z;
+    }
+    else
+    {
+        rotation[0] = v.x;
+        rotation[1] = v.y;
+        rotation[2] = v.z;
+    }
+    rotation[3] = 0.0F;
+
+    MATRIX rotationMatrix;
+    matrix_unit(rotationMatrix);
+    matrix_rotate(rotationMatrix, rotationMatrix, rotation);
+    VECTOR result;
+    asm volatile(
+        "lqc2         vf4, 0x0(%1)  \n\t"
+        "lqc2         vf5, 0x10(%1) \n\t"
+        "lqc2         vf6, 0x20(%1) \n\t"
+        "lqc2         vf7, 0x30(%1) \n\t"
+        "lqc2         vf8, 0x0(%2)  \n\t"
+        "vmulax.xyzw  ACC, vf4, vf8 \n\t"
+        "vmadday.xyzw ACC, vf5, vf8 \n\t"
+        "vmaddaz.xyzw ACC, vf6, vf8 \n\t"
+        "vmaddw.xyzw  vf9, vf7, vf8 \n\t"
+        "sqc2         vf9, 0x0(%0)  \n\t"
+        :
+        : "r"(&result), "r"(&rotationMatrix), "r"(&cameraPos));
+    set(Vector3(result[0], result[1], result[2]));
+}
+
 void Vector3::set(const Vector3 &v)
 {
     this->x = v.x;

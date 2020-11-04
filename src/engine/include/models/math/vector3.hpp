@@ -51,6 +51,7 @@ public:
     void setByLerp(const Vector3 &v1, const Vector3 &v2, const float &t_interp, const float &t_scale);
     float innerProduct(Vector3 &v);
     void set(const Vector3 &v);
+    void rotate(const Vector3 &v, u8 inversed = false);
     void set(const float &x, const float &y, const float &z);
     void copy(Vector3 &v);
     float distanceTo(Vector3 &v);
