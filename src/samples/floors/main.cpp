@@ -13,8 +13,8 @@
 int main()
 {
     Engine engine = Engine();
-    Floors game = Floors(engine);
-    game.engine.init(&game, 40000);
+    Floors game = Floors(&engine);
+    game.engine->init(&game, 40000);
     SleepThread();
     return 0;
 }

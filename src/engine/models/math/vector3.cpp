@@ -295,7 +295,7 @@ float Vector3::distanceTo(Vector3 &v)
     //                   (this->z - another.z) * (this->z - another.z));
 }
 
-void Vector3::print()
+const void Vector3::print() const
 {
     printf("Vector3(%f, %f, %f)\n", x, y, z);
 }

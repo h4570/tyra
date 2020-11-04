@@ -54,7 +54,7 @@ public:
     void set(const float &x, const float &y, const float &z);
     void copy(Vector3 &v);
     float distanceTo(Vector3 &v);
-    void print();
+    const void print() const;
 };
 
 #endif

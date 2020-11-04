@@ -27,7 +27,7 @@ public:
 
     void update(Vector3 &a, Vector3 &b, Vector3 &c);
     inline float distanceTo(Vector3 &t_vec) { return this->distance + this->normal.innerProduct(t_vec); }
-    void print();
+    const void print() const;
 };
 
 #endif

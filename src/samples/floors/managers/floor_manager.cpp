@@ -106,7 +106,6 @@ void FloorManager::update(Player &t_player)
 /** Called by audio thread */
 void FloorManager::onAudioTick()
 {
-    printf("Hit!\n");
     if (audioTick++ > 16)
     {
         if (audioMode == 0)

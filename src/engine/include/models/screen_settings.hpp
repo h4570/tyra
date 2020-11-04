@@ -21,7 +21,6 @@ struct ScreenSettings
     float aspectRatio;
     float nearPlaneDist;
     float farPlaneDist;
-    /** change it to 4096.0F to check out frustum culling! 😎 */
     float projectionScale;
 };
 

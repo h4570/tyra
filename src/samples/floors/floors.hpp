@@ -24,13 +24,13 @@ class Floors : public Game
 {
 
 public:
-    Floors(const Engine &t_engine);
+    Floors(Engine *t_engine);
     ~Floors();
 
     void onInit();
     void onUpdate();
 
-    Engine engine;
+    Engine *engine;
 
 private:
     TextureRepository *texRepo;

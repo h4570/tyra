@@ -24,12 +24,12 @@ class Engine
 {
 
 public:
+    Engine(const ScreenSettings &screen);
     Engine();
     ~Engine();
 
     void init(Game *t_game, u32 t_gifPacketSize);
     void setDefaultScreen();
-    void setScreen(ScreenSettings &t_settings);
     Renderer *renderer;
     Audio audio;
     ScreenSettings screen;
@@ -37,9 +37,10 @@ public:
     float fps;
 
 private:
+    void firePS2();
     u8 fpsDelayer;
     Timer timer;
-    u8 isInitialized, isScreenInitialized;
+    u8 isInitialized;
     void gameLoop();
     Game *game;
     s32 mainThreadId;

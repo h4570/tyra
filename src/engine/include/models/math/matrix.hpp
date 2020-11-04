@@ -35,7 +35,7 @@ public:
     void makeZRotation(float t_radians);
     void translate(float t_x, float t_y, float t_z);
     void setPerspective(ScreenSettings &screen);
-    void print();
+    const void print() const;
 };
 
 #endif

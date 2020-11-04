@@ -18,7 +18,7 @@
 
 const u8 WATER_TILES_COUNT = 64;
 
-Ari::Ari(const Engine &t_engine) : engine(t_engine), camera(&engine.screen)
+Ari::Ari(Engine *t_engine) : engine(t_engine), camera(&engine->screen)
 {
     waterFloors = new Mesh[WATER_TILES_COUNT];
     spirals = new Point[WATER_TILES_COUNT];
@@ -33,13 +33,13 @@ Ari::~Ari() {}
 void Ari::onInit()
 {
 
-    engine.renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
-    engine.audio.init(0);
-    engine.audio.setVolume(40);
-    engine.audio.loadSong("MOV-CIRC.WAV");
-    engine.audio.play();
+    engine->renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
+    engine->audio.init(0);
+    engine->audio.setVolume(40);
+    engine->audio.loadSong("MOV-CIRC.WAV");
+    engine->audio.play();
 
-    texRepo = engine.renderer->getTextureRepository();
+    texRepo = engine->renderer->getTextureRepository();
 
     island.loadDff("sunnyisl/", "sunnyisl", 0.1F, false);
     island.rotation.x = -1.6F;
@@ -86,15 +86,15 @@ void Ari::initBulb()
 
 void Ari::onUpdate()
 {
-    if (engine.pad.isCrossClicked)
-        printf("FPS:%f\n", engine.fps);
-    camera.update(engine.pad, player.mesh);
-    engine.renderer->draw(skybox);
-    engine.renderer->draw(island);
-    engine.renderer->draw(islandAddons);
-    engine.renderer->draw(player.mesh);
+    if (engine->pad.isCrossClicked)
+        printf("FPS:%f\n", engine->fps);
+    camera.update(engine->pad, player.mesh);
+    engine->renderer->draw(skybox);
+    engine->renderer->draw(island);
+    engine->renderer->draw(islandAddons);
+    engine->renderer->draw(player.mesh);
     for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-        engine.renderer->draw(waterFloors[i]);
+        engine->renderer->draw(waterFloors[i]);
 }
 
 void Ari::calcSpiral(int X, int Y)

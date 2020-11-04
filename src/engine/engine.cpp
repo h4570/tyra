@@ -30,13 +30,14 @@ extern u32 VU1Draw3D_CodeEnd __attribute__((section(".vudata")));
 
 Engine::Engine()
 {
-    SifInitRpc(0);
-    srand(time(NULL));
-    VU1::uploadProgram(0, &VU1Draw3D_CodeStart, &VU1Draw3D_CodeEnd);
-    audio.startThread();
-    isInitialized = 0;
-    isScreenInitialized = 0;
-    mainThreadId = GetThreadId();
+    setDefaultScreen();
+    firePS2();
+}
+
+Engine::Engine(const ScreenSettings &t_screen)
+{
+    screen = t_screen;
+    firePS2();
 }
 
 Engine::~Engine() {}
@@ -44,12 +45,6 @@ Engine::~Engine() {}
 // ----
 // Methods
 // ----
-
-void Engine::setScreen(ScreenSettings &t_settings)
-{
-    screen = t_settings;
-    isScreenInitialized = true;
-}
 
 void Engine::setDefaultScreen()
 {
@@ -60,13 +55,10 @@ void Engine::setDefaultScreen()
     screen.aspectRatio = 4.0F / 3.0F;
     screen.width = 640.0F;
     screen.height = 480.0F;
-    isScreenInitialized = true;
 }
 
 void Engine::init(Game *t_game, u32 t_gifPacketSize)
 {
-    if (!isScreenInitialized)
-        setDefaultScreen();
     if (isInitialized)
         PRINT_ERR("Already initialized!");
     else
@@ -86,6 +78,16 @@ void Engine::wakeup(s32 t_alarmId, u16 t_time, void *t_common)
     (void)t_time;
     iWakeupThread(*(int *)t_common);
     ExitHandler();
+}
+
+void Engine::firePS2()
+{
+    SifInitRpc(0);
+    srand(time(NULL));
+    VU1::uploadProgram(0, &VU1Draw3D_CodeStart, &VU1Draw3D_CodeEnd);
+    audio.startThread();
+    isInitialized = 0;
+    mainThreadId = GetThreadId();
 }
 
 void Engine::gameLoop()

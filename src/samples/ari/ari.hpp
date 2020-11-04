@@ -23,13 +23,13 @@ class Ari : public Game
 {
 
 public:
-    Ari(const Engine &t_engine);
+    Ari(Engine *t_engine);
     ~Ari();
 
     void onInit();
     void onUpdate();
 
-    Engine engine;
+    Engine *engine;
 
 private:
     void initBulb();

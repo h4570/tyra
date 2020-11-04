@@ -187,8 +187,8 @@ void Matrix::setPerspective(ScreenSettings &t_screen)
 {
     float fovYdiv2 = Math::HALF_ANG2RAD * t_screen.fov;
     float cotFOV = 1.0F / (Math::sin(fovYdiv2) / Math::cos(fovYdiv2));
-    float w = cotFOV * (t_screen.width / 4096.0F) / t_screen.aspectRatio;
-    float h = cotFOV * (t_screen.height / 4096.0F);
+    float w = cotFOV * (t_screen.width / t_screen.projectionScale) / t_screen.aspectRatio;
+    float h = cotFOV * (t_screen.height / t_screen.projectionScale);
 
     this->data[0] = w;
     this->data[1] = 0.0F;
@@ -253,7 +253,7 @@ void Matrix::lookAt(Vector3 &t_up, Vector3 &t_position, Vector3 &t_target)
     data[15] = 1;
 }
 
-void Matrix::print()
+const void Matrix::print() const
 {
     printf("MATRIX(\n%f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f\n%f, %f, %f, %f\n)\n",
            data[0], data[1], data[2], data[3],
