@@ -105,25 +105,13 @@ Vector3 Vector3::operator-(void)
 Vector3 Vector3::operator*(Vector3 &v)
 {
     Vector3 res;
-    asm volatile(                      // VU0 Macro program
-        "lqc2      vf4, 0x0(%1)  \n\t" // vf4 = this
-        "lqc2      vf5, 0x0(%2)  \n\t" // vf5 = v
-
-        "vmulz.y   vf6, vf4, vf5 \n\t" // vf6.y = vf4.y * vf5.z
-        "vmuly.z   vf6, vf4, vf5 \n\t"
-        "vsubz.y   vf6, vf6, vf6 \n\t" // vf6.y = vf4.y - vf4.z
-        "vaddy.x   vf8, vf0, vf6 \n\t" // res.x = vf4.y * vf5.z - vf4.z * vf5.y
-
-        "vmulx.z   vf6, vf4, vf5 \n\t"
-        "vmulz.x   vf6, vf4, vf5 \n\t"
-        "vsubx.z   vf6, vf6, vf6 \n\t"
-        "vaddz.y   vf8, vf0, vf6 \n\t" // res.y = vf4.z * vf5.x - vf4.x * vf5.z
-
-        "vmuly.x   vf6, vf4, vf5 \n\t"
-        "vmulx.y   vf6, vf4, vf5 \n\t"
-        "vsuby.x   vf6, vf6, vf6 \n\t"
-        "vaddx.z   vf8, vf0, vf6 \n\t" // res.z = vf4.x * vf5.y - vf4.y * vf5.x
-        "sqc2      vf8, 0x0(%0)  \n\t"
+    asm volatile(                                     // VU0 Macro program
+        "lqc2           vf4, 0x0(%1)            \n\t" // vf4 = this
+        "lqc2           vf5, 0x0(%2)            \n\t" // vf5 = v
+        "vopmula.xyz    ACC, vf4,       vf5     \n\t"
+        "vopmsub.xyz    vf8, vf5,       vf4     \n\t"
+        "vsub.w         vf8, vf00,      vf00    \n\t"
+        "sqc2           vf8, 0x0(%0)            \n\t" // vf8 = res
         :
         : "r"(res.xyz), "r"(this->xyz), "r"(v.xyz));
     // result.x = y * v.z - z * v.y;
