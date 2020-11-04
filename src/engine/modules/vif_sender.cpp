@@ -46,7 +46,7 @@ void VifSender::sendMatrices(const RenderData &t_renderData, const Vector3 &t_po
     vu1.sendSingleRefList(0, &localScreen, 4);
 }
 
-void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
+void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, const Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
     // we have to split 3D object into small parts, because of small memory of VU1
     for (u32 i = 0; i < vertCount2;)
@@ -72,7 +72,7 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
 }
 
 /** Draw using PATH1 */
-void VifSender::drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer)
+void VifSender::drawVertices(const Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer)
 {
     const u32 vertCount = t_end - t_start;
     vu1.addListBeginning();
@@ -87,13 +87,13 @@ void VifSender::drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_ver
 
     vu1.add128( // tex -> lod
         GS_SET_TEX1(
-            t_mesh->lod.calculation,
-            t_mesh->lod.max_level,
-            t_mesh->lod.mag_filter,
-            t_mesh->lod.min_filter,
-            t_mesh->lod.mipmap_select,
-            t_mesh->lod.l,
-            (int)(t_mesh->lod.k * 16.0F)),
+            t_mesh.lod.calculation,
+            t_mesh.lod.max_level,
+            t_mesh.lod.mag_filter,
+            t_mesh.lod.min_filter,
+            t_mesh.lod.mipmap_select,
+            t_mesh.lod.l,
+            (int)(t_mesh.lod.k * 16.0F)),
         GS_REG_TEX1);
 
     vu1.add128( // tex -> buff + clut
@@ -105,11 +105,11 @@ void VifSender::drawVertices(Mesh *t_mesh, u32 t_start, u32 t_end, VECTOR *t_ver
             textureBuffer->info.height,
             textureBuffer->info.components,
             textureBuffer->info.function,
-            t_mesh->clut.address >> 6,
-            t_mesh->clut.psm,
-            t_mesh->clut.storage_mode,
-            t_mesh->clut.start,
-            t_mesh->clut.load_method),
+            t_mesh.clut.address >> 6,
+            t_mesh.clut.psm,
+            t_mesh.clut.storage_mode,
+            t_mesh.clut.start,
+            t_mesh.clut.load_method),
         GS_REG_TEX0);
 
     vu1.add128(

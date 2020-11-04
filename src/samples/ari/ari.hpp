@@ -23,19 +23,23 @@ class Ari : public Game
 {
 
 public:
-    Ari();
+    Ari(Engine *t_engine);
     ~Ari();
 
     void onInit();
     void onUpdate();
 
-    Engine engine;
+    Engine *engine;
 
 private:
     void initBulb();
+    void calcSpiral(int X, int Y);
     LightBulb bulb;
-    Player *player;
-    Camera *camera;
+    Player player;
+    Mesh island, islandAddons, skybox;
+    Mesh *waterFloors;
+    Point *spirals;
+    Camera camera;
     TextureRepository *texRepo;
 };
 

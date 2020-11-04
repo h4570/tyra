@@ -44,7 +44,7 @@ void Plane::update(Vector3 &a, Vector3 &b, Vector3 &c)
     this->distance = -this->normal.innerProduct(b);
 }
 
-void Plane::print()
+const void Plane::print() const
 {
     printf("Plane(Vector3(%f, %f, %f), %f)\n", this->normal.x, this->normal.y, this->normal.z, this->distance);
 }

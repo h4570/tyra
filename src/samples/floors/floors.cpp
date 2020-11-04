@@ -14,7 +14,10 @@
 // Constructors/Destructors
 // ----
 
-Floors::Floors() {}
+const u8 FLOORS_COUNT = 64; // Temp change it also in floor_manager.hpp
+
+Floors::Floors(Engine *t_engine)
+    : engine(t_engine), floorManager(FLOORS_COUNT), camera(&t_engine->screen) {}
 
 Floors::~Floors() {}
 
@@ -24,31 +27,30 @@ Floors::~Floors() {}
 
 void Floors::onInit()
 {
-    player = new Player();
-    camera = new Camera(&engine.screen);
-    engine.renderer->setCameraDefinitions(&camera->worldView, &camera->unitCirclePosition, camera->planes);
-    floorManager = new FloorManager(64); // Temp change it also in floor_manager.hpp
-    engine.audio.init(2);
-    engine.audio.addListener(floorManager);
-    engine.audio.addListener(&lightManager);
-    engine.audio.loadSong("NF-CHILL.WAV");
-    engine.audio.play();
-    texRepo = engine.renderer->getTextureRepository();
-    texRepo->addByMesh("warrior/", player->mesh);
-    texRepo->addByMesh("floor/", *floorManager->meshes[0]);
-    for (size_t i = 1; i < floorManager->floorAmount; i++)
-        texRepo->getByMesh(floorManager->meshes[0]->getId(), floorManager->meshes[0]->getMaterial(0).getId())
-            ->addLink(floorManager->meshes[i]->getId(), floorManager->meshes[i]->getMaterial(0).getId());
+    engine->renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
+    engine->audio.init(2);
+    engine->audio.addListener(&floorManager);
+    engine->audio.addListener(&lightManager);
+    engine->audio.loadSong("NF-CHILL.WAV");
+    engine->audio.setVolume(1);
+    engine->audio.play();
+    texRepo = engine->renderer->getTextureRepository();
+    texRepo->addByMesh("warrior/", player.mesh);
+    texRepo->addByMesh("floor/", floorManager.floors[0].mesh);
+    for (u32 i = 1; i < floorManager.floorAmount; i++)
+        texRepo->getByMesh(floorManager.floors[0].mesh.getId(), floorManager.floors[0].mesh.getMaterial(0).getId())
+            ->addLink(floorManager.floors[i].mesh.getId(), floorManager.floors[i].mesh.getMaterial(0).getId());
 }
 
 void Floors::onUpdate()
 {
-    if (engine.pad.isCrossClicked)
-        printf("FPS:%f\n", engine.fps);
+    if (engine->pad.isCrossClicked)
+        printf("FPS:%f\n", engine->fps);
     lightManager.update();
-    camera->update(engine.pad, player->mesh);
-    floorManager->update(*player);
-    player->update(engine.pad, *camera, *floorManager);
-    engine.renderer->draw(&player->mesh);
-    engine.renderer->drawByPath3(floorManager->meshes, floorManager->floorAmount, lightManager.bulbs, lightManager.bulbsCount);
+    camera.update(engine->pad, player.mesh);
+    floorManager.update(player);
+    player.update(engine->pad, camera, floorManager);
+    engine->renderer->draw(player.mesh);
+    for (u8 i = 0; i < FLOORS_COUNT; i++)
+        engine->renderer->drawByPath3(floorManager.floors[i].mesh, lightManager.bulbs, lightManager.bulbsCount);
 }

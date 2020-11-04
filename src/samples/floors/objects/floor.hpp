@@ -29,7 +29,7 @@ public:
     Floor();
     ~Floor();
 
-    void init(Mesh *mother, Point &spiral, u8 &initOffset);
+    void init(const Mesh &mother, const Point &spiral, const u8 &initOffset);
     void animate(Player &player);
 };
 

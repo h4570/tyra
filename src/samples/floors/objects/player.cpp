@@ -80,7 +80,7 @@ void Player::updatePosition(Pad &pad, Camera &camera, FloorManager &floorManager
     this->isCollideFloor = 0;
     Vector3 min = Vector3();
     Vector3 max = Vector3();
-    for (int i = 0; i < floorManager.floorAmount; i++)
+    for (u32 i = 0; i < floorManager.floorAmount; i++)
     {
         getMinMax(&floorManager.floors[i].mesh, &min, &max);
         this->isCollideFloor = this->playerNextPosition.collidesSquare(min, max);
@@ -151,7 +151,7 @@ void Player::updateGravity(Pad &pad, FloorManager &floorManager)
         this->velocity = this->lift;
 
     this->isOnFloor = 0;
-    for (int i = 0; i < floorManager.floorAmount; i++)
+    for (u32 i = 0; i < floorManager.floorAmount; i++)
     {
         getMinMax(&floorManager.floors[i].mesh, &min, &max);
         this->isOnFloor = this->mesh.position.isOnSquare(min, max);

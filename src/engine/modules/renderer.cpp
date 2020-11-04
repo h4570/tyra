@@ -81,10 +81,10 @@ void Renderer::deallocateTextureBuffer()
     }
 }
 
-void Renderer::changeTexture(Mesh *t_mesh, u32 t_materialId)
+void Renderer::changeTexture(const Mesh &t_mesh, u32 t_materialId)
 {
 
-    MeshTexture *tex = textureRepo.getByMesh(t_mesh->getId(), t_materialId);
+    MeshTexture *tex = textureRepo.getByMesh(t_mesh.getId(), t_materialId);
     if (tex != NULL)
     {
         if (tex->getId() != lastTextureId)
@@ -161,31 +161,31 @@ void Renderer::allocateBuffers(float t_screenW, float t_screenH)
 /// --- Draw: PATH3
 
 /** PATH3 Many + lighting */
-void Renderer::drawByPath3(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
+void Renderer::drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     for (u16 i = 0; i < t_amount; i++)
         drawByPath3(t_meshes[i], t_bulbs, t_bulbsCount);
 }
 
 /** PATH3 Single + lighting */
-void Renderer::drawByPath3(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
+void Renderer::drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
-    if (!t_mesh->isDataLoaded())
+    if (!t_mesh.isDataLoaded())
         PRINT_ERR("Can't draw, because no mesh data was loaded!");
-    if (t_mesh->getCurrentAnimationFrame() != t_mesh->getNextAnimationFrame())
-        t_mesh->animate();
-    for (u32 i = 0; i < t_mesh->getMaterialsCount(); i++)
+    if (t_mesh.getCurrentAnimationFrame() != t_mesh.getNextAnimationFrame())
+        t_mesh.animate();
+    for (u32 i = 0; i < t_mesh.getMaterialsCount(); i++)
     {
-        if (t_mesh->shouldBeFrustumCulled && !t_mesh->getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh->position))
+        if (t_mesh.shouldBeFrustumCulled && !t_mesh.getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh.position))
             return;
-        changeTexture(t_mesh, t_mesh->getMaterial(i).getId());
+        changeTexture(t_mesh, t_mesh.getMaterial(i).getId());
         gifSender->initPacket(context);
-        u32 vertCount = t_mesh->getMaterial(i).getFacesCount();
+        u32 vertCount = t_mesh.getMaterial(i).getFacesCount();
         VECTOR *vertices = new VECTOR[vertCount];
         VECTOR *normals = new VECTOR[vertCount];
         VECTOR *coordinates = new VECTOR[vertCount];
-        vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
+        vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
         gifSender->addObject(&renderData, t_mesh, vertCount, vertices, normals, coordinates, t_bulbs, t_bulbsCount, &textureBuffer);
         gifSender->sendPacket();
         delete[] vertices;
@@ -195,40 +195,40 @@ void Renderer::drawByPath3(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 }
 
 /** PATH3 Many */
-void Renderer::drawByPath3(Mesh **t_meshes, u16 t_amount) { drawByPath3(t_meshes, t_amount, NULL, 0); }
+void Renderer::drawByPath3(Mesh *t_meshes, u16 t_amount) { drawByPath3(t_meshes, t_amount, NULL, 0); }
 
 /** PATH3 Single */
-void Renderer::drawByPath3(Mesh *t_mesh) { drawByPath3(t_mesh, NULL, 0); }
+void Renderer::drawByPath3(Mesh &t_mesh) { drawByPath3(t_mesh, NULL, 0); }
 
 /// --- Draw: PATH1
 
 /** PATH1 Many + lighting */
-void Renderer::draw(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
+void Renderer::draw(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     for (u16 i = 0; i < t_amount; i++)
         draw(t_meshes[i], t_bulbs, t_bulbsCount);
 }
 
 /** PATH1 Single + lighting */
-void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
+void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
-    vifSender->sendMatrices(renderData, t_mesh->position, t_mesh->rotation);
-    if (!t_mesh->isDataLoaded())
+    vifSender->sendMatrices(renderData, t_mesh.position, t_mesh.rotation);
+    if (!t_mesh.isDataLoaded())
         PRINT_ERR("Can't draw, because no mesh data was loaded!");
 
-    if (t_mesh->getCurrentAnimationFrame() != t_mesh->getNextAnimationFrame())
-        t_mesh->animate();
-    for (u32 i = 0; i < t_mesh->getMaterialsCount(); i++)
+    if (t_mesh.getCurrentAnimationFrame() != t_mesh.getNextAnimationFrame())
+        t_mesh.animate();
+    for (u32 i = 0; i < t_mesh.getMaterialsCount(); i++)
     {
-        if (t_mesh->shouldBeFrustumCulled && !t_mesh->getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh->position))
+        if (t_mesh.shouldBeFrustumCulled && !t_mesh.getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh.position))
             return;
-        u32 vertCount = t_mesh->getMaterial(i).getFacesCount();
+        u32 vertCount = t_mesh.getMaterial(i).getFacesCount();
         VECTOR *vertices = new VECTOR[vertCount];
         VECTOR *normals = new VECTOR[vertCount];
         VECTOR *coordinates = new VECTOR[vertCount];
-        changeTexture(t_mesh, t_mesh->getMaterial(i).getId());
-        vertCount = t_mesh->getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
+        changeTexture(t_mesh, t_mesh.getMaterial(i).getId());
+        vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
         vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
         delete[] vertices;
         delete[] normals;
@@ -237,10 +237,10 @@ void Renderer::draw(Mesh *t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 }
 
 /** PATH1 Many */
-void Renderer::draw(Mesh **t_objects3D, u16 t_amount) { draw(t_objects3D, t_amount, NULL, 0); }
+void Renderer::draw(Mesh *t_meshes, u16 t_amount) { draw(t_meshes, t_amount, NULL, 0); }
 
 /** PATH1 Single */
-void Renderer::draw(Mesh *t_mesh) { draw(t_mesh, NULL, 0); }
+void Renderer::draw(Mesh &t_mesh) { draw(t_mesh, NULL, 0); }
 
 /// ---
 

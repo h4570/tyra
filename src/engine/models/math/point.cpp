@@ -55,7 +55,7 @@ void Point::set(const Point &v)
     y = v.y;
 }
 
-void Point::print()
+const void Point::print() const
 {
     printf("Point(%f, %f)\n", x, y);
 }

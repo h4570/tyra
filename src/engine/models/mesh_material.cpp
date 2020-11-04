@@ -71,14 +71,15 @@ u8 MeshMaterial::isInFrustum(Plane *t_frustumPlanes, const Vector3 &position)
 {
     Vector3 boxCalcTemp;
     u8 boxResult = 1, boxIn = 0, boxOut = 0;
-    for (int i = 0; i < 6; i++)
+
+    for (u8 i = 0; i < 6; i++)
     {
         boxOut = 0;
         boxIn = 0;
         // for each corner of the box do ...
         // get out of the cycle as soon as a box as corners
         // both inside and out of the frustum
-        for (int y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++)
+        for (u8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++)
         {
             boxCalcTemp.set(
                 boundingBox[y].x + position.x,

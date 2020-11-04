@@ -33,7 +33,7 @@ public:
 
     void set(const float &t_x, const float &t_y);
     void set(const Point &v);
-    void print();
+    const void print() const;
 };
 
 #endif

@@ -24,20 +24,20 @@ class Floors : public Game
 {
 
 public:
-    Floors();
+    Floors(Engine *t_engine);
     ~Floors();
 
     void onInit();
     void onUpdate();
 
-    Engine engine;
+    Engine *engine;
 
 private:
     TextureRepository *texRepo;
     LightManager lightManager;
-    FloorManager *floorManager;
-    Player *player;
-    Camera *camera;
+    FloorManager floorManager;
+    Player player;
+    Camera camera;
 };
 
 #endif
