@@ -33,8 +33,7 @@ Ari::~Ari() {}
 void Ari::onInit()
 {
 
-    engine->renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
-    engine->renderer->disableVSync();
+    engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
     engine->audio.init(0);
     engine->audio.setVolume(40);
     engine->audio.loadSong("MOV-CIRC.WAV");
@@ -49,6 +48,7 @@ void Ari::onInit()
     island.shouldBeFrustumCulled = false;
 
     islandAddons.loadDff("sunnyisl/", "sunnyisl3", 0.1F, false);
+    islandAddons.shouldBeBackfaceCulled = true;
     islandAddons.rotation.x = -1.6F;
     islandAddons.position.set(0.0F, 10.0F, 20.0F);
 

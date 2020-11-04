@@ -218,6 +218,9 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     if (!t_mesh.isDataLoaded())
         PRINT_ERR("Can't draw, because no mesh data was loaded!");
 
+    Vector3 rotatedCamera = Vector3(*renderData.cameraPosition);
+    rotatedCamera.rotate(t_mesh.rotation, true);
+
     if (t_mesh.getCurrentAnimationFrame() != t_mesh.getNextAnimationFrame())
         t_mesh.animate();
     for (u32 i = 0; i < t_mesh.getMaterialsCount(); i++)
@@ -229,7 +232,7 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         VECTOR *normals = new VECTOR[vertCount];
         VECTOR *coordinates = new VECTOR[vertCount];
         changeTexture(t_mesh, t_mesh.getMaterial(i).getId());
-        vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
+        vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, rotatedCamera);
         vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
         delete[] vertices;
         delete[] normals;
