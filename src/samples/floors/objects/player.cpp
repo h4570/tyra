@@ -50,6 +50,11 @@ void Player::update(Pad &pad, Camera &camera, FloorManager &floorManager)
 {
     this->updatePosition(pad, camera, floorManager);
     this->updateGravity(pad, floorManager);
+    if (mesh.position.y < -60.0F)
+    {
+        mesh.position.y = 60.0F;
+        velocity = 0;
+    }
 }
 
 /** Move player when pad move buttons are pressed and is not blocked by any floor side */

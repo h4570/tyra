@@ -14,7 +14,7 @@
 // Constructors/Destructors
 // ----
 
-const u8 FLOORS_COUNT = 64; // Temp change it also in floor_manager.hpp
+const u8 FLOORS_COUNT = 144; // Temp change it also in floor_manager.hpp
 
 Floors::Floors(Engine *t_engine)
     : engine(t_engine), floorManager(FLOORS_COUNT), camera(&t_engine->screen)

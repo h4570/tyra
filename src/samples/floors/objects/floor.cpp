@@ -45,8 +45,8 @@ void Floor::init(const Mesh &mother, const Point &spiral, const u8 &initOffset)
     this->mesh.shouldBeLighted = true;
     this->mesh.shouldBeFrustumCulled = true;
     this->animDirection = 0;
-    this->mesh.position.x = spiral.x * 40.0F;
-    this->mesh.position.z = spiral.y * 40.0F;
+    this->mesh.position.x = spiral.x * 80.0F;
+    this->mesh.position.z = spiral.y * 80.0F;
 }
 
 /** Check and update animation direction and position

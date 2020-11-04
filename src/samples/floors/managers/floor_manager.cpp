@@ -77,7 +77,7 @@ void FloorManager::calcSpiral(int X, int Y)
 void FloorManager::initFloors()
 {
     PRINT_LOG("Initializing floors");
-    floors[0].mesh.loadObj("floor/", "floor", 2.0F, false);
+    floors[0].mesh.loadObj("floor/", "floor", 3.0F, false);
     floors[0].mesh.shouldBeFrustumCulled = true;
     floors[0].mesh.shouldBeLighted = true;
     for (u8 i = 1; i < floorAmount; i++)
