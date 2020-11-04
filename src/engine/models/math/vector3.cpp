@@ -236,11 +236,11 @@ float Vector3::innerProduct(Vector3 &v)
     // return (x * v.x + y * v.y + z * v.z);
 }
 
-void Vector3::set(const float &x, const float &y, const float &z)
+void Vector3::set(const float &t_x, const float &t_y, const float &t_z)
 {
-    this->x = x;
-    this->y = y;
-    this->z = z;
+    x = t_x;
+    y = t_y;
+    z = t_z;
 }
 
 void Vector3::rotate(const Vector3 &v, u8 inversed)
