@@ -22,7 +22,7 @@
  * @param fov (FOV in radians)/2
  * @param ratio Aspect ratio
 */
-CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t_up, Vector3 *t_unitCirclePosition)
+CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t_up)
     : screen(t_screen)
 {
     PRINT_LOG("Initializing frustum");
@@ -33,9 +33,8 @@ CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t
     nearWidth = nearHeight * screen->aspectRatio;
     farHeight = tang * farPlaneDist;
     farWidth = farHeight * screen->aspectRatio;
-    position2 = t_position;
-    up2 = t_up;
-    unitCirclePosition2 = t_unitCirclePosition;
+    p_position = t_position;
+    p_up = t_up;
     PRINT_LOG("CameraBase initialized!");
 }
 
@@ -50,16 +49,16 @@ void CameraBase::updatePlanes(Vector3 t_target)
 {
     Vector3 nearCenter, farCenter, X, Y, Z;
     // compute the Z axis of camera
-    Z = *position2 - t_target;
+    Z = *p_position - t_target;
     Z.normalize();
     // X axis of camera of given "up" vector and Z axis
-    X = *up2 * Z;
+    X = *p_up * Z;
     X.normalize();
     // the real "up" vector is the cross product of Z and X
     Y = Z * X;
     // compute the center of the near and far planes
-    nearCenter = *position2 - Z * nearPlaneDist;
-    farCenter = *position2 - Z * farPlaneDist;
+    nearCenter = *p_position - Z * nearPlaneDist;
+    farCenter = *p_position - Z * farPlaneDist;
     // compute the 8 corners of the frustum
     ntl = nearCenter + Y * nearHeight - X * nearWidth;
     ntr = nearCenter + Y * nearHeight + X * nearWidth;

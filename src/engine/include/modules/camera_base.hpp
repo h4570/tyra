@@ -21,10 +21,9 @@ class CameraBase
 {
 
 public:
-    CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t_up, Vector3 *t_unitCirclePosition);
+    CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t_up);
     virtual ~CameraBase(){};
 
-    void setScreen();
     void updatePlanes(Vector3 t_target);
     Plane planes[6];
     Matrix worldView;
@@ -33,7 +32,7 @@ protected:
     ScreenSettings *screen;
 
 private:
-    Vector3 *position2, *up2, *unitCirclePosition2;
+    Vector3 *p_position, *p_up;
     float farPlaneDist, nearPlaneDist, nearHeight, nearWidth, farHeight, farWidth;
     Vector3 ftl, ftr, fbl, fbr, ntl, ntr, nbl, nbr;
 };
