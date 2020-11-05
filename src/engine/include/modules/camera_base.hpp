@@ -24,12 +24,36 @@ public:
     CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t_up);
     virtual ~CameraBase(){};
 
-    void updatePlanes(Vector3 t_target);
+    /**
+     * Frustum planes.
+     * Set by lookAt() method.
+     */
     Plane planes[6];
+
+    /** 
+     * Projection matrix
+     * Set by lookAt() method.
+     */
     Matrix worldView;
 
 protected:
+    /** Pointer to screen settings */
     ScreenSettings *screen;
+
+    /**
+     * Adaption of OpenGL lookAt camera.
+     * Calculates worldView matrix and update frustum planes
+     * Should be called every frame.
+     */
+    void lookAt(Vector3 &t_target);
+
+    /** 
+     * Do not call this method unless you know what you do. 
+     * Called via lookAt(). 
+     * Calculate and update frustum planes.
+     * http://www.lighthouse3d.com/tutorials/view-frustum-culling/geometric-approach-extracting-the-planes/
+     */
+    void updatePlanes(Vector3 t_target);
 
 private:
     Vector3 *p_position, *p_up;

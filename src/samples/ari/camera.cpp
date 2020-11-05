@@ -39,9 +39,8 @@ void Camera::update(Pad &t_pad, Mesh &t_mesh)
 {
     rotate(t_pad);
     followBy(t_mesh);
-    updatePlanes(t_mesh.position); // TODO move it out
-    Vector3 newPos = Vector3(t_mesh.position.x, t_mesh.position.y + 10.0F, t_mesh.position.z);
-    worldView.lookAt(up, position, newPos);
+    Vector3 lookPos = Vector3(t_mesh.position.x, t_mesh.position.y + 10.0F, t_mesh.position.z);
+    lookAt(lookPos);
 }
 
 /** Set camera rotation by pad right joy and update unit circle

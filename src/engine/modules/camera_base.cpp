@@ -18,10 +18,6 @@
 // Constructors/Destructors
 // ----
 
-/** Initializes vars and calculate width/height of near and far plane 
- * @param fov (FOV in radians)/2
- * @param ratio Aspect ratio
-*/
 CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t_up)
     : screen(t_screen)
 {
@@ -42,9 +38,12 @@ CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t
 // Methods
 // ----
 
-/** Calculates and updates frustum planes
- * http://www.lighthouse3d.com/tutorials/view-frustum-culling/geometric-approach-extracting-the-planes/
- */
+void CameraBase::lookAt(Vector3 &t_target)
+{
+    updatePlanes(t_target);
+    worldView.lookAt(*p_up, *p_position, t_target);
+}
+
 void CameraBase::updatePlanes(Vector3 t_target)
 {
     Vector3 nearCenter, farCenter, X, Y, Z;
