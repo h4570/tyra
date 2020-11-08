@@ -127,7 +127,7 @@ void VU1::addReferenceList(u32 t_offset, void *t_data, u32 t_size, u8 t_useTops)
     *((u64 *)currentBuffer)++ = DMA_REF_TAG((u32)t_data, t_size);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_STCYL, 0, 0x0101);
     *((u32 *)currentBuffer)++ =
-        AddUnpack(V4_32, t_useTops == 1 ? buildList.dmaSize / 16 : t_offset / 16, t_size, t_useTops);
+        AddUnpack(V4_32, t_useTops == 1 ? buildList.dmaSize >> 4 : t_offset >> 4, t_size, t_useTops);
     buildList.dmaSize += t_size * 8;
     buildList.dmaSizeAll += buildList.dmaSize;
 }
@@ -135,7 +135,7 @@ void VU1::addReferenceList(u32 t_offset, void *t_data, u32 t_size, u8 t_useTops)
 /** Start VU1 program */
 void VU1::addStartProgram()
 {
-    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(8 >> 4);
+    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(0);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_MSCAL, 0, 0);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_FLUSH, 0, 0);
     ;
@@ -144,7 +144,7 @@ void VU1::addStartProgram()
 /** Continue VU1 program from "--cont" line */
 void VU1::addContinueProgram()
 {
-    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(8 >> 4);
+    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(0);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_MSCAL, 0, 0);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_FLUSH, 0, 0);
     ;
@@ -156,8 +156,9 @@ void VU1::sendList()
     *((u64 *)currentBuffer)++ = DMA_END_TAG(0);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_NOP, 0, 0);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_NOP, 0, 0);
-    dma_channel_wait(DMA_CHANNEL_VIF1, VU1_DMA_CHAN_TIMEOUT);
+    FlushCache(0);
     dma_channel_send_chain(DMA_CHANNEL_VIF1, buildList.kickBuffer, (u32 *)currentBuffer - (u32 *)buildList.kickBuffer, DMA_FLAG_TRANSFERTAG, 0);
+    dma_channel_wait(DMA_CHANNEL_VIF1, VU1_DMA_CHAN_TIMEOUT);
 }
 
 void VU1::addDoubleBufferSetting()

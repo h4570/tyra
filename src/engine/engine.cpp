@@ -104,7 +104,7 @@ void Engine::gameLoop()
         timer.primeTimer();
         renderer->endFrame(fps);
         /** -6~ FPS */
-        SetAlarm(fps > 49.0F ? 24 : 48, &Engine::wakeup, &mainThreadId);
+        SetAlarm(150, &Engine::wakeup, &mainThreadId);
         SleepThread();
     }
 }

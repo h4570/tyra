@@ -28,7 +28,8 @@ ObjLoader::~ObjLoader() {}
 
 void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_invertT)
 {
-    FILE *file = fopen(t_filename, "rb");
+    char *path = String::createConcatenated("host:", t_filename);
+    FILE *file = fopen(path, "rb");
     if (file == NULL)
         PRINT_ERR("Failed to load .obj file!");
     allocateObjMemory(file, o_result);
@@ -98,6 +99,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
     }
     o_result->calculateBoundingBoxes();
     fclose(file);
+    delete[] path;
 }
 
 /** Calculate how many vertices(v), coordinates(vt), normals(vn) and faces(f) have .obj file */

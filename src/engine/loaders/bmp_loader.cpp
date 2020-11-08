@@ -32,10 +32,12 @@ BmpLoader::~BmpLoader() {}
  */
 void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, char *t_extension)
 {
-    char *t_path_part = String::createConcatenated(t_subfolder, t_name);
-    char *t_path = String::createConcatenated(t_path_part, t_extension);
-    delete[] t_path_part;
-    FILE *file = fopen(t_path, "rb");
+    char *path_part1 = String::createConcatenated(t_subfolder, t_name);
+    char *path_part2 = String::createConcatenated("host:", path_part1);
+    char *path = String::createConcatenated(path_part2, t_extension);
+    delete[] path_part1;
+    delete[] path_part2;
+    FILE *file = fopen(path, "rb");
 
     if (file == NULL)
     {
@@ -46,8 +48,8 @@ void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, ch
     unsigned char header[54];
     fread(header, sizeof(unsigned char), 54, file);
 
-    u32 width = *(u32 *)&header[18];
-    u32 height = *(u32 *)&header[22];
+    u32 width = (u32)header[18];
+    u32 height = (u32)header[22];
     o_texture.setSize(width, height);
     printf("BMPLoader - width: %d | height: %d\n", width, height);
     if (width > 128 || height > 128)
@@ -55,27 +57,21 @@ void BmpLoader::load(MeshTexture &o_texture, char *t_subfolder, char *t_name, ch
 
     u64 rowPadded = (width * 3 + 3) & (~3);
 
-    unsigned char *data = new unsigned char[rowPadded];
-    unsigned char tmp;
+    unsigned char row[rowPadded];
 
     u32 x = 0;
     for (u32 i = 0; i < height; i++)
     {
-        fread(data, sizeof(unsigned char), rowPadded, file);
+        fread(&row, sizeof(unsigned char), rowPadded, file);
         for (u32 j = 0; j < width * 3; j += 3)
         {
             // Convert (B, G, R) to (R, G, B)
-            tmp = data[j];
-            data[j] = data[j + 2];
-            data[j + 2] = tmp;
-
-            o_texture.setData(x, data[j]);
-            o_texture.setData(x + 1, data[j + 1]);
-            o_texture.setData(x + 2, data[j + 2]);
+            o_texture.setData(x, row[j + 2]);
+            o_texture.setData(x + 1, row[j + 1]);
+            o_texture.setData(x + 2, row[j]);
             x += 3;
         }
     }
-    delete[] t_path;
-    delete[] data;
+    delete[] path;
     fclose(file);
 }

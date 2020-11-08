@@ -222,15 +222,12 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         if (t_mesh.shouldBeFrustumCulled && !t_mesh.getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh.position))
             return;
         u32 vertCount = t_mesh.getMaterial(i).getFacesCount();
-        VECTOR *vertices = new VECTOR[vertCount];
-        VECTOR *normals = new VECTOR[vertCount];
-        VECTOR *coordinates = new VECTOR[vertCount];
+        VECTOR __attribute__((aligned(16))) vertices[vertCount];
+        VECTOR __attribute__((aligned(16))) normals[vertCount];
+        VECTOR __attribute__((aligned(16))) coordinates[vertCount];
         changeTexture(t_mesh, t_mesh.getMaterial(i).getId());
         vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, rotatedCamera);
         vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
-        delete[] vertices;
-        delete[] normals;
-        delete[] coordinates;
     }
 }
 

@@ -43,7 +43,7 @@ void VifSender::sendMatrices(const RenderData &t_renderData, const Vector3 &t_po
     vec3ToNative(rotation, t_rotation, 1.0F);
     create_local_world(localWorld, position, rotation);
     create_local_screen(localScreen, localWorld, t_renderData.worldView->data, t_renderData.perspective->data);
-    vu1.sendSingleRefList(0, &localScreen, 4);
+    vu1.sendSingleRefList(0, &localScreen, 8);
 }
 
 void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, const Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)

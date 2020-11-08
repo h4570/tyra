@@ -13,6 +13,7 @@
 #include "../include/utils/math.hpp"
 #include "../include/utils/debug.hpp"
 #include "../include/modules/light.hpp"
+#include <kernel.h>
 #include <dma.h>
 #include <draw.h>
 #include <stdio.h>
@@ -61,6 +62,7 @@ void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
     q++;
     q = draw_texture_wrapping(q, 0, texture.getWrapSettings());
     q = draw_texture_flush(q);
+    FlushCache(0);
     dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
     dma_wait_fast();
     packet_free(packet);
@@ -79,6 +81,7 @@ void GifSender::sendClear(zbuffer_t *t_zBuffer)
     q = draw_enable_tests(q, 0, t_zBuffer);
     q = draw_finish(q);
     DMATAG_END(packet->data, q - packet->data - 1, 0, 0, 0);
+    FlushCache(0);
     dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
     dma_wait_fast();
     packet_free(packet);
@@ -108,8 +111,9 @@ void GifSender::sendPacket()
     }
     q = draw_finish(q);
     DMATAG_END(dmatag, q - dmatag - 1, 0, 0, 0);
-    dma_wait_fast();
+    FlushCache(0);
     dma_channel_send_chain(DMA_CHANNEL_GIF, currentPacket->data, q - currentPacket->data, 0, 0);
+    dma_wait_fast();
 }
 
 /** Adds clear screen to current packet */

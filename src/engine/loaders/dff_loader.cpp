@@ -37,7 +37,8 @@ DffLoader::~DffLoader() {}
 void DffLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_invertT)
 {
     PRINT_LOG("Loading dff file");
-    FILE *file = fopen(t_filename, "rb");
+    char *path = String::createConcatenated("host:", t_filename);
+    FILE *file = fopen(path, "rb");
     if (file == NULL)
         PRINT_ERR("Failed to load .dff file!");
     fseek(file, 0L, SEEK_END);
@@ -48,8 +49,28 @@ void DffLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
     fclose(file);
     serialize(o_result, t_invertT, data, t_scale);
     o_result->calculateBoundingBoxes();
+    delete[] path;
     PRINT_LOG("Dff file loaded!");
 }
+
+// void DffLoader::im_not_used_anywhere(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_invertT)
+// {
+//     PRINT_LOG("Loading dff file");
+//     char *path = String::createConcatenated("host:", t_filename);
+//     FILE *file = fopen(path, "rb");
+//     if (file == NULL)
+//         PRINT_ERR("Failed to load .dff file!");
+//     fseek(file, 0L, SEEK_END);
+//     long fileSize = ftell(file);
+//     u8 data[fileSize];
+//     rewind(file);
+//     fread(&data, sizeof(u8), fileSize, file);
+//     fclose(file);
+//     serialize(o_result, t_invertT, data, t_scale);
+//     o_result->calculateBoundingBoxes();
+//     delete[] path;
+//     PRINT_LOG("Dff file loaded!");
+// }
 
 void DffLoader::serialize(MeshFrame *o_result, u8 t_invertT, u8 *t_data, float t_scale)
 {

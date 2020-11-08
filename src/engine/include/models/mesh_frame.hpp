@@ -147,10 +147,8 @@ private:
         _isBoundingBoxCalculated;
     u32 vertexCount, stsCount, normalsCount, materialsCount;
     MeshMaterial *materials;
-    Point *sts __attribute__((aligned(16)));
-    Vector3
-        *vertices __attribute__((aligned(16))),
-        *normals __attribute__((aligned(16)));
+    Point __attribute__((aligned(16))) * sts;
+    Vector3 __attribute__((aligned(16))) * vertices, *normals;
 };
 
 #endif

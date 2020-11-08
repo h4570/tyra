@@ -22,6 +22,7 @@ public:
     DffLoader();
     ~DffLoader();
 
+    // void im_not_used_anywhere(MeshFrame *o_result, char *t_fileName, float t_scale, u8 t_invertT);
     void load(MeshFrame *o_result, char *t_fileName, float t_scale, u8 t_invertT);
     void serialize(MeshFrame *o_result, u8 t_invertT, u8 *t_data, float t_scale);
 

@@ -46,8 +46,10 @@ MeshFrame *MD2Loader::load(u32 &o_framesCount, char *t_subpath, char *t_nameWith
 {
     PRINT_LOG("Loading new MD2 file");
     char *part1 = String::createConcatenated(t_subpath, t_nameWithoutExtension);
-    char *finalPath = String::createConcatenated(part1, ".md2"); // "folder/object.md2"
+    char *part2 = String::createConcatenated("host:", part1);
+    char *finalPath = String::createConcatenated(part2, ".md2"); // "folder/object.md2"
     delete[] part1;
+    delete[] part2;
     md2_t header;
 
     FILE *file = fopen(finalPath, "rb");

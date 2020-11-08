@@ -32,12 +32,10 @@ Ari::~Ari() {}
 
 void Ari::onInit()
 {
-
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
     engine->audio.init(0);
     engine->audio.setVolume(40);
     engine->audio.loadSong("MOV-CIRC.WAV");
-    engine->audio.play();
 
     texRepo = engine->renderer->getTextureRepository();
 
@@ -52,31 +50,35 @@ void Ari::onInit()
     islandAddons.rotation.x = -1.6F;
     islandAddons.position.set(0.0F, 10.0F, 20.0F);
 
-    skybox.loadObj("skybox/", "skybox", 100.0F, false);
-    skybox.shouldBeFrustumCulled = false;
+    // skybox.loadObj("skybox/", "skybox", 100.0F, false);
+    // skybox.shouldBeFrustumCulled = false;
 
-    waterFloors[0].loadObj("water/", "water", 5.0F, false);
-    waterFloors[0].position.set(0.0F, 8.0F, 0.0F);
-    texRepo->addByMesh("water/", waterFloors[0]);
-    for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-    {
-        spirals[i].x = 1.0F;
-        spirals[i].y = 2.0F;
-    }
-    u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
-    calcSpiral(spiralOffset, spiralOffset);
-    for (u8 i = 1; i < WATER_TILES_COUNT; i++)
-    {
-        waterFloors[i].loadFrom(waterFloors[0]);
-        waterFloors[i].position.set(10.0F * spirals[i].x, 8.0F, 10.0F * spirals[i].y);
-        texRepo->getByMesh(waterFloors[0].getId(), waterFloors[0].getMaterial(0).getId())
-            ->addLink(waterFloors[i].getId(), waterFloors[i].getMaterial(0).getId());
-    }
+    // waterFloors[0].loadObj("water/", "water", 5.0F, false);
+    // waterFloors[0].position.set(0.0F, 8.0F, 0.0F);
+    // texRepo->addByMesh("water/", waterFloors[0]);
+    // for (u8 i = 0; i < WATER_TILES_COUNT; i++)
+    // {
+    //     spirals[i].x = 1.0F;
+    //     spirals[i].y = 2.0F;
+    // }
+    // u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
+    // calcSpiral(spiralOffset, spiralOffset);
+    // for (u8 i = 1; i < WATER_TILES_COUNT; i++)
+    // {
+    //     waterFloors[i].loadFrom(waterFloors[0]);
+    //     waterFloors[i].position.set(10.0F * spirals[i].x, 8.0F, 10.0F * spirals[i].y);
+    //     texRepo->getByMesh(waterFloors[0].getId(), waterFloors[0].getMaterial(0).getId())
+    //         ->addLink(waterFloors[i].getId(), waterFloors[i].getMaterial(0).getId());
+    // }
 
     texRepo->addByMesh("sunnyisl/", island);
-    texRepo->addByMesh("sunnyisl/", islandAddons);
-    texRepo->addByMesh("skybox/", skybox);
-    texRepo->addByMesh("ari/", player.mesh);
+    // texRepo->addByMesh("sunnyisl/", islandAddons);
+
+    // texRepo->addByMesh("skybox/", skybox);
+
+    // texRepo->addByMesh("ari/", player.mesh);
+
+    // engine->audio.play();
 }
 
 void Ari::initBulb()
@@ -90,12 +92,12 @@ void Ari::onUpdate()
     if (engine->pad.isCrossClicked)
         printf("FPS:%f\n", engine->fps);
     camera.update(engine->pad, player.mesh);
-    engine->renderer->draw(skybox);
+    // engine->renderer->draw(skybox);
     engine->renderer->draw(island);
-    engine->renderer->draw(islandAddons);
-    engine->renderer->draw(player.mesh);
-    for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-        engine->renderer->draw(waterFloors[i]);
+    // engine->renderer->draw(islandAddons);
+    // engine->renderer->draw(player.mesh);
+    // for (u8 i = 0; i < WATER_TILES_COUNT; i++)
+    //     engine->renderer->draw(waterFloors[i]);
 }
 
 void Ari::calcSpiral(int X, int Y)

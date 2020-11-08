@@ -52,5 +52,14 @@ all: $(EE_BIN)
 clean:
 	rm -f $(EE_OBJS)
 
+run: $(EE_BIN)
+	killall -v ps2client || true
+	ps2client reset
+	ps2client reset
+	$(EE_STRIP) --strip-all $(EE_BIN)
+	mv $(EE_BIN) bin/$(EE_BIN)
+	rm $(EE_OBJS)
+	cd bin/ && ps2client execee host:$(EE_BIN)
+
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal
