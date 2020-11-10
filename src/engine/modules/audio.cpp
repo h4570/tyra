@@ -178,13 +178,9 @@ void Audio::work()
     {
         if (audsrv_load_adpcm(&adpcmSettings, sample1, adpcmFileSize))
             PRINT_ERR("audsrv_load_adpcm() failed!");
-        wasADPCMLoaded = true;
-        isADPCMLoaded = false;
-    }
-    if (wasADPCMLoaded)
-    {
         if (audsrv_play_adpcm(&adpcmSettings))
             PRINT_ERR("audsrv_play_adpcm() failed!");
+        isADPCMLoaded = false;
     }
     if (!shouldPlay)
         return;
@@ -225,7 +221,7 @@ void Audio::test()
 {
     // audsrv_adpcm_set_volume(100);
 
-    FILE *file = fopen("host:chiller.adpcm", "rb");
+    FILE *file = fopen("host:ziobro.adpcm", "rb");
     fseek(file, 0L, SEEK_END);
     adpcmFileSize = ftell(file);
     sample1 = new u8[adpcmFileSize];

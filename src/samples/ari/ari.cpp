@@ -34,7 +34,7 @@ void Ari::onInit()
 {
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
     engine->audio.init(0);
-    engine->audio.setVolume(30);
+    engine->audio.setVolume(60);
     engine->audio.loadSong("MOV-CIRC.WAV");
     engine->audio.play();
 
@@ -88,11 +88,11 @@ void Ari::onUpdate()
 {
     if (engine->pad.isCrossClicked)
     {
-        // engine->audio.stop();
         engine->audio.test();
-        // engine->audio.unloadSong();
-        // engine->audio.loadSong("nob-else.wav");
-        // engine->audio.play();
+        engine->audio.stop();
+        engine->audio.unloadSong();
+        engine->audio.loadSong("nob-else.wav");
+        engine->audio.play();
 
         printf("FPS:%f\n", engine->fps);
     }

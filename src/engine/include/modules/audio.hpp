@@ -45,7 +45,7 @@ public:
 private:
     void work();
     static void audioThread();
-    u8 isInitialized, shouldPlay, songLoaded, isVolumeSet, latestVolume, isADPCMLoaded, wasADPCMLoaded;
+    u8 isInitialized, shouldPlay, songLoaded, isVolumeSet, latestVolume, isADPCMLoaded;
     audsrv_adpcm_t adpcmSettings;
     ee_thread_t audioThreadAttr;
     u8 audioThreadStack[STACK_SIZE] ALIGNED(16);
