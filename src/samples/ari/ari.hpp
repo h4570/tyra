@@ -12,6 +12,7 @@
 #define _ARI_
 
 #include <tamtypes.h>
+#include <audsrv.h>
 #include <game.hpp>
 #include <engine.hpp>
 #include "objects/player.hpp"
@@ -38,6 +39,7 @@ private:
     Player player;
     Mesh island, islandAddons, skybox;
     Mesh *waterFloors;
+    audsrv_adpcm_t *adpcm;
     Point *spirals;
     Camera camera;
     TextureRepository *texRepo;

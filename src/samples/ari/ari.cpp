@@ -33,10 +33,9 @@ Ari::~Ari() {}
 void Ari::onInit()
 {
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
-    engine->audio.init(0);
-    engine->audio.setVolume(60);
+    engine->audio.setSongVolume(60);
     engine->audio.loadSong("MOV-CIRC.WAV");
-
+    adpcm = engine->audio.loadADPCM("ziobro.adpcm");
     texRepo = engine->renderer->getTextureRepository();
 
     island.loadDff("sunnyisl/", "sunnyisl", 0.1F, false);
@@ -78,7 +77,7 @@ void Ari::onInit()
 
     // texRepo->addByMesh("ari/", player.mesh);
 
-    // engine->audio.play();
+    engine->audio.playSong();
 }
 
 void Ari::initBulb()
@@ -91,12 +90,8 @@ void Ari::onUpdate()
 {
     if (engine->pad.isCrossClicked)
     {
-        engine->audio.test();
-        engine->audio.stop();
-        engine->audio.unloadSong();
         engine->audio.loadSong("nob-else.wav");
-        engine->audio.play();
-
+        engine->audio.playADPCM(adpcm);
         printf("FPS:%f\n", engine->fps);
     }
     camera.update(engine->pad, player.mesh);

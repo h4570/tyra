@@ -9,31 +9,34 @@
 */
 
 #include "../include/modules/audio.hpp"
-
-#include <loadfile.h>
 #include "../include/utils/string.hpp"
 #include "../include/utils/debug.hpp"
-
-#define SONG_NAME "MOV-CIRC.WAV"
-const int AUDSRV_BUFFER_SIZE = 1024 * 4;
+#include <loadfile.h>
+#include <cstdlib>
 
 // ----
 // Constructors/Destructors
 // ----
+
 Audio *audioRef;
 
 Audio::Audio()
 {
-    addedListeners = 0;
-    isInitialized = 0;
-    songLoaded = 0;
-    isVolumeSet = 0;
-    shouldPlay = 0;
-    isADPCMLoaded = false;
+    // We must set it to 0 on songStop();
+    realVolume = 100;
+    volume = 100;
+    chunkReadStatus = 0;
+
+    songLoaded = false;
+    songPlaying = false;
+    songInLoop = false;
+    songFinished = false;
+
     audioRef = this;
     initSema();
     loadModules();
     initAUDSRV();
+    setSongFormat();
 }
 
 Audio::~Audio() {}
@@ -42,247 +45,249 @@ Audio::~Audio() {}
 // Methods
 // ----
 
-/** Initialize audio module
- * 
- * - Initialize threading semaphore
- * - Load modules
- * - Initialize AUDSRV
- * - Load background song
+void Audio::loadSong(char *t_path)
+{
+    if (songLoaded)
+        unloadSong();
+    char *fullFilename = String::createConcatenated("host:", t_path);
+    wav = fopen(fullFilename, "rb");
+    delete[] fullFilename;
+    if (wav == NULL)
+        PRINT_ERR("Failed to open wav file!");
+    else
+    {
+        rewindSongToStart();
+        songLoaded = true;
+        PRINT_LOG("Song loaded!");
+    }
+}
+
+void Audio::playSong()
+{
+    if (!songLoaded)
+        PRINT_ERR("Cant play song because was not loaded!");
+    volume = realVolume;
+    songPlaying = true;
+}
+
+void Audio::stopSong()
+{
+    volume = 0;
+    audsrv_set_volume(volume);
+    songPlaying = false;
+}
+
+void Audio::setSongVolume(const u8 &t_vol)
+{
+    realVolume = t_vol;
+    if (songPlaying)
+        volume = t_vol;
+    audsrv_set_volume(volume);
+}
+
+u32 Audio::addSongListener(AudioListener *t_listener)
+{
+    AudioListenerRef ref;
+    ref.id = rand() % 1000000;
+    ref.listener = t_listener;
+    songListeners.push_back(ref);
+    return ref.id;
+}
+
+void Audio::removeSongListener(const u32 &t_id)
+{
+    s32 index = -1;
+    for (u32 i = 0; i < songListeners.size(); i++)
+        if (songListeners[i].id == t_id)
+        {
+            index = i;
+            break;
+        }
+    if (index == -1)
+        PRINT_ERR("Cant remove listener because given id was not found!");
+    songListeners.erase(songListeners.begin() + index);
+}
+
+// ADPCM
+
+audsrv_adpcm_t *Audio::loadADPCM(char *t_path)
+{
+    char *fullFilename = String::createConcatenated("host:", t_path);
+    FILE *file = fopen(fullFilename, "rb");
+    delete[] fullFilename;
+    fseek(file, 0L, SEEK_END);
+    u32 adpcmFileSize = ftell(file);
+    u8 data[adpcmFileSize];
+    rewind(file);
+    fread(data, sizeof(u8), adpcmFileSize, file);
+    audsrv_adpcm_t *result = new audsrv_adpcm_t();
+    result->size = 0;
+    result->buffer = 0;
+    result->loop = 0;
+    result->pitch = 0;
+    result->channels = 0;
+    if (audsrv_load_adpcm(result, data, adpcmFileSize))
+    {
+        printf("AUDSRV returned error string: %s", audsrv_get_error_string());
+        PRINT_ERR("audsrv_load_adpcm() failed!");
+    }
+    fclose(file);
+    return result;
+}
+
+void Audio::playADPCM(audsrv_adpcm_t *t_adpcm)
+{
+    if (audsrv_play_adpcm(t_adpcm))
+    {
+        printf("AUDSRV returned error string: %s", audsrv_get_error_string());
+        PRINT_ERR("audsrv_play_adpcm() failed!");
+    }
+}
+
+void Audio::playADPCM(audsrv_adpcm_t *t_adpcm, const s8 &t_ch)
+{
+    if (audsrv_ch_play_adpcm(t_ch, t_adpcm))
+    {
+        printf("AUDSRV returned error string: %s", audsrv_get_error_string());
+        PRINT_ERR("audsrv_play_adpcm() failed!");
+    }
+}
+
+// Other
+
+void Audio::startThread()
+{
+    PRINT_LOG("Creating audio thread");
+    extern void *_gp;
+    thread.func = (void *)Audio::audioThread;
+    thread.stack = threadStack;
+    thread.stack_size = getThreadStackSize();
+    thread.gp_reg = (void *)&_gp;
+    thread.initial_priority = 0x17;
+    if ((threadId = CreateThread(&thread)) < 0)
+        PRINT_ERR("Create audio thread failed!");
+    PRINT_LOG("Audio thread created");
+    StartThread(threadId, NULL);
+    PRINT_LOG("Audio thread started");
+}
+
+/** Main thread loop */
+void Audio::threadLoop()
+{
+    if (!songPlaying || !songLoaded)
+        return;
+    if (songFinished)
+    {
+        if (songInLoop)
+        {
+            printf("Audio: Song finished. Running again.\n");
+            for (u32 i = 0; i < getSongListenersCount(); i++)
+                songListeners[i].listener->onAudioFinish();
+            rewindSongToStart();
+        }
+        else
+            return;
+    }
+
+    if (chunkReadStatus > 0)
+    {
+        WaitSema(fillbufferSema); // wait until previous chunk wasn't finished
+        audsrv_play_audio(wavChunk, chunkReadStatus);
+        for (u32 i = 0; i < getSongListenersCount(); i++)
+            songListeners[i].listener->onAudioTick();
+    }
+
+    chunkReadStatus = fread(wavChunk, 1, sizeof(wavChunk), wav);
+
+    if (chunkReadStatus < (s32)sizeof(wavChunk))
+        songFinished = true;
+}
+
+/** 
+ * Close file.
+ * Delete song path from memory.
  */
-void Audio::init(u32 t_listenersAmount)
+void Audio::unloadSong()
 {
-    PRINT_LOG("Initialize audio module started");
-    listenersAmount = t_listenersAmount;
-    listeners = new AudioListener *[t_listenersAmount];
-    isInitialized = true;
-    latestVolume = 100;
-    PRINT_LOG("Audio module initialized!");
+    songLoaded = false;
+    fclose(wav);
 }
 
-void Audio::addListener(AudioListener *t_listener)
+/** Set WAV format to 16bit, 22050Hz, stereo. */
+void Audio::setSongFormat()
 {
-    listeners[addedListeners++] = t_listener;
+    format.bits = 16;
+    format.freq = 22050;
+    format.channels = 2;
+    audsrv_set_format(&format);
 }
 
-/** Initialize threading semaphore */
+/** Fseek on wav. */
+void Audio::rewindSongToStart()
+{
+    if (wav != NULL)
+        fseek(wav, 0x30, SEEK_SET);
+    songFinished = false;
+}
+
+/** Initialize semaphore which will wait until chunk of the song is not finished. */
 void Audio::initSema()
 {
-    PRINT_LOG("Creating semaphore started");
+    PRINT_LOG("Creating audio semaphore");
     sema.init_count = 0;
     sema.max_count = 1;
     sema.option = 0;
     fillbufferSema = CreateSema(&sema);
-    PRINT_LOG("Semaphore created");
+    PRINT_LOG("Audio semaphore created");
 }
 
-/** Load LIBSD and AUDSRV */
+/** Load LIBSD and AUDSRV modules */
 void Audio::loadModules()
 {
     PRINT_LOG("Modules loading started (LIBSD, AUDSRV)");
-    ret = SifLoadModule("rom0:LIBSD", 0, NULL);
+    int ret = SifLoadModule("rom0:LIBSD", 0, NULL);
     if (ret == -203)
         PRINT_ERR("LIBSD loading failed!");
     ret = SifLoadModule("host:AUDSRV.IRX", 0, NULL);
     if (ret == -203)
         PRINT_ERR("AUDSRV.IRX loading failed!");
-    PRINT_LOG("Modules loaded");
+    PRINT_LOG("Audio modules loaded");
 }
 
-/** Initialize AUDSRV and install fillbuffer callback */
+/** 
+ * Initialize AUDSRV main and ADPCM module. 
+ * Install AUDSRV callback.
+ */
 void Audio::initAUDSRV()
 {
-    PRINT_LOG("Initialize AUDSRV started");
-    ret = audsrv_init();
+    PRINT_LOG("Initializing AUDSRV");
+    int ret = audsrv_init();
+    if (ret != 0)
+    {
+        printf("AUDSRV returned error string: %s", audsrv_get_error_string());
+        PRINT_ERR("Failed to initialize AUDSRV!");
+    }
     ret = audsrv_adpcm_init();
     if (ret != 0)
     {
-        PRINT_ERR("Failed to initialize AUDSRV!");
         printf("AUDSRV returned error string: %s", audsrv_get_error_string());
+        PRINT_ERR("Failed to initialize AUDSRV ADPCM!");
     }
-    else
+    ret = audsrv_on_fillbuf(getSongBufferSize(), (audsrv_callback_t)iSignalSema, (void *)fillbufferSema);
+    if (ret != 0)
     {
-        ret = audsrv_on_fillbuf(AUDSRV_BUFFER_SIZE, Audio::fillbuffer, (void *)fillbufferSema);
-        PRINT_LOG("AUDSRV initialized!");
-    }
-}
-
-/** Set audio format, volume and load song */
-void Audio::loadSong(char *t_filename)
-{
-    if (!isInitialized)
-    {
-        PRINT_ERR("Please initialize audio class first!");
-        return;
-    }
-    PRINT_LOG("Song loading started");
-    format.bits = 16;
-    format.freq = 22050;
-    format.channels = 2;
-    char *fullFilename = String::createConcatenated("host:", t_filename);
-    int err = audsrv_set_format(&format);
-    if (err == 0)
-    {
-        PRINT_LOG("Audio format set");
-        if (!isVolumeSet)
-            setVolume(MAX_VOLUME);
-        PRINT_LOG("Opening song file: " SONG_NAME);
-        wav = fopen(fullFilename, "rb");
-        delete[] fullFilename;
-        if (wav == NULL)
-        {
-            PRINT_ERR("Failed to open wav file!");
-            audsrv_quit();
-        }
-        else
-        {
-            fseek(wav, 0x30, SEEK_SET);
-            songLoaded = 1;
-            PRINT_LOG("Song loaded!");
-        }
-    }
-    else
-    {
-        PRINT_ERR("Failed to set audio format!");
         printf("AUDSRV returned error string: %s", audsrv_get_error_string());
+        PRINT_ERR("Failed to initialize AUDSRV fillbuffer!");
     }
+    PRINT_LOG("AUDSRV initialized!");
 }
-
-void Audio::setVolume(u8 t_volume)
-{
-    audsrv_set_volume(t_volume);
-    latestVolume = t_volume;
-    isVolumeSet = true;
-}
-
-/** Create and start audio thread. */
-void Audio::startThread()
-{
-    PRINT_LOG("Creating audio thread");
-    extern void *_gp;
-    audioThreadAttr.func = (void *)Audio::audioThread;
-    audioThreadAttr.stack = audioThreadStack;
-    audioThreadAttr.stack_size = STACK_SIZE;
-    audioThreadAttr.gp_reg = (void *)&_gp;
-    audioThreadAttr.initial_priority = 0x17;
-    if ((audioThreadId = CreateThread(&audioThreadAttr)) < 0)
-        PRINT_ERR("Create audio thread failed!");
-    PRINT_LOG("Audio thread created");
-    StartThread(audioThreadId, NULL);
-    PRINT_LOG("Audio thread started");
-}
-
-/** Play song and run it again on finish */
-void Audio::work()
-{
-    if (isADPCMLoaded)
-    {
-        if (audsrv_load_adpcm(&adpcmSettings, sample1, adpcmFileSize))
-            PRINT_ERR("audsrv_load_adpcm() failed!");
-        if (audsrv_play_adpcm(&adpcmSettings))
-            PRINT_ERR("audsrv_play_adpcm() failed!");
-        isADPCMLoaded = false;
-    }
-    if (!shouldPlay)
-        return;
-    if (!isTrackDone)
-    {
-        ret = fread(chunk, 1, sizeof(chunk), wav);
-        if (ret > 0)
-        {
-            WaitSema(fillbufferSema);
-            audsrv_play_audio(chunk, ret);
-        }
-        if (ret < (int)sizeof(chunk))
-        {
-            isTrackDone = true;
-            return;
-        }
-        for (u32 i = 0; i < addedListeners; i++)
-            listeners[i]->onAudioTick();
-    }
-    else
-    {
-        PRINT_LOG("Song " SONG_NAME " finished. Running again...");
-        for (u32 i = 0; i < addedListeners; i++)
-            listeners[i]->onAudioFinish();
-        fseek(wav, 0x30, SEEK_SET);
-        isTrackDone = false;
-    }
-}
-
-/** Unload audio module by closing file stream and stopping AUDSRV */
-void Audio::unloadSong()
-{
-    PRINT_LOG("Song unloaded");
-    fclose(wav);
-}
-
-void Audio::test()
-{
-    // audsrv_adpcm_set_volume(100);
-
-    FILE *file = fopen("host:ziobro.adpcm", "rb");
-    fseek(file, 0L, SEEK_END);
-    adpcmFileSize = ftell(file);
-    sample1 = new u8[adpcmFileSize];
-    rewind(file);
-    fread(sample1, sizeof(u8), adpcmFileSize, file);
-    fclose(file);
-    adpcmSettings.size = 0;
-    adpcmSettings.buffer = 0;
-    adpcmSettings.loop = 0;
-    adpcmSettings.pitch = 0;
-    adpcmSettings.channels = 0;
-    isADPCMLoaded = true;
-}
-
-void Audio::play()
-{
-    if (!isInitialized)
-    {
-        PRINT_ERR("Please initialize audio class first!");
-        return;
-    }
-    if (!shouldPlay)
-    {
-        shouldPlay = 1;
-        audsrv_set_volume(latestVolume);
-    }
-}
-
-void Audio::stop()
-{
-    if (!isInitialized)
-    {
-        PRINT_ERR("Please initialize audio class first!");
-        return;
-    }
-    if (shouldPlay)
-    {
-        shouldPlay = 0;
-        audsrv_set_volume(0);
-    }
-}
-
-// ---
 
 /** 
  * Do not call this function.
- * This is a audio thread, runned by AudioThread::start()
+ * This is a audio thread, runned by engine
  */
 void Audio::audioThread()
 {
     while (true)
-        audioRef->work();
-}
-
-/** 
- * Do not call this function. 
- * This is a static callback function
- * for AUDSRV fillbuffer (semaphore)
- */
-int Audio::fillbuffer(void *arg)
-{
-    iSignalSema((int)arg);
-    return 0;
+        audioRef->threadLoop();
 }
