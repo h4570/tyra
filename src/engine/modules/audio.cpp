@@ -66,6 +66,8 @@ void Audio::playSong()
 {
     if (!songLoaded)
         PRINT_ERR("Cant play song because was not loaded!");
+    if (songFinished)
+        rewindSongToStart();
     volume = realVolume;
     songPlaying = true;
 }
@@ -178,15 +180,20 @@ void Audio::threadLoop()
         return;
     if (songFinished)
     {
+        printf("Audio: Song finished. ");
         if (songInLoop)
         {
-            printf("Audio: Song finished. Running again.\n");
+            printf("Running again.\n");
             for (u32 i = 0; i < getSongListenersCount(); i++)
                 songListeners[i].listener->onAudioFinish();
             rewindSongToStart();
         }
         else
+        {
+            printf("Stopping song.\n");
+            stopSong();
             return;
+        }
     }
 
     if (chunkReadStatus > 0)

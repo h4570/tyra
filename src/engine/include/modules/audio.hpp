@@ -127,7 +127,11 @@ private:
     std::vector<AudioListenerRef> songListeners;
     FILE *wav;
     audsrv_fmt_t format;
-    char wavChunk[2048];
+    // we have some sema problems here (sound freezing)
+    // this probably should be changed to smth like this:
+    // this thread (A) : play next chunks
+    // other thread (B) : load chunks (fread()) for thread A
+    char wavChunk[2 * 1024] __attribute__((aligned(16)));
     s32 chunkReadStatus;
 
     u8 threadStack[8 * 1024] __attribute__((aligned(16)));
