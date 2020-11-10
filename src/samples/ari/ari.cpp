@@ -34,7 +34,7 @@ void Ari::onInit()
 {
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
     engine->audio.init(0);
-    engine->audio.setVolume(40);
+    engine->audio.setVolume(60);
     engine->audio.loadSong("MOV-CIRC.WAV");
 
     texRepo = engine->renderer->getTextureRepository();
@@ -90,7 +90,15 @@ void Ari::initBulb()
 void Ari::onUpdate()
 {
     if (engine->pad.isCrossClicked)
+    {
+        engine->audio.test();
+        engine->audio.stop();
+        engine->audio.unloadSong();
+        engine->audio.loadSong("nob-else.wav");
+        engine->audio.play();
+
         printf("FPS:%f\n", engine->fps);
+    }
     camera.update(engine->pad, player.mesh);
     // engine->renderer->draw(skybox);
     engine->renderer->draw(island);

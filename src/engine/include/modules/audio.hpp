@@ -35,16 +35,18 @@ public:
     void play();
     void stop();
     void loadSong(char *t_filename);
+    void test();
     void unloadSong();
     void setVolume(u8 t_volume);
     void addListener(AudioListener *t_listener);
     void startThread();
+    const u8 isPlaying() const { return shouldPlay; }
 
 private:
     void work();
     static void audioThread();
-    u8 isInitialized, shouldPlay, songLoaded, isVolumeSet;
-
+    u8 isInitialized, shouldPlay, songLoaded, isVolumeSet, latestVolume, isADPCMLoaded;
+    audsrv_adpcm_t adpcmSettings;
     ee_thread_t audioThreadAttr;
     u8 audioThreadStack[STACK_SIZE] ALIGNED(16);
     int audioThreadId;
@@ -55,6 +57,9 @@ private:
     void initSema();
     void loadModules();
     void initAUDSRV();
+
+    u8 *sample1;
+    u32 adpcmFileSize;
 
     int ret;
     char chunk[2048];

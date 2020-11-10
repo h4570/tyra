@@ -29,6 +29,7 @@ Audio::Audio()
     songLoaded = 0;
     isVolumeSet = 0;
     shouldPlay = 0;
+    isADPCMLoaded = false;
     audioRef = this;
     initSema();
     loadModules();
@@ -54,6 +55,7 @@ void Audio::init(u32 t_listenersAmount)
     listenersAmount = t_listenersAmount;
     listeners = new AudioListener *[t_listenersAmount];
     isInitialized = true;
+    latestVolume = 100;
     PRINT_LOG("Audio module initialized!");
 }
 
@@ -91,6 +93,7 @@ void Audio::initAUDSRV()
 {
     PRINT_LOG("Initialize AUDSRV started");
     ret = audsrv_init();
+    ret = audsrv_adpcm_init();
     if (ret != 0)
     {
         PRINT_ERR("Failed to initialize AUDSRV!");
@@ -147,6 +150,7 @@ void Audio::loadSong(char *t_filename)
 void Audio::setVolume(u8 t_volume)
 {
     audsrv_set_volume(t_volume);
+    latestVolume = t_volume;
     isVolumeSet = true;
 }
 
@@ -167,41 +171,19 @@ void Audio::startThread()
     PRINT_LOG("Audio thread started");
 }
 
-/** Do not call this function.
- * This is a audio thread, runned by AudioThread::start()
-*/
-void Audio::audioThread()
-{
-    while (true)
-    {
-        if (audioRef->shouldPlay)
-            audioRef->work();
-    }
-}
-
-void Audio::play()
-{
-    if (!isInitialized)
-    {
-        PRINT_ERR("Please initialize audio class first!");
-        return;
-    }
-    shouldPlay = 1;
-}
-
-void Audio::stop()
-{
-    if (!isInitialized)
-    {
-        PRINT_ERR("Please initialize audio class first!");
-        return;
-    }
-    shouldPlay = 0;
-}
-
 /** Play song and run it again on finish */
 void Audio::work()
 {
+    if (isADPCMLoaded)
+    {
+        if (audsrv_load_adpcm(&adpcmSettings, sample1, adpcmFileSize))
+            PRINT_ERR("audsrv_load_adpcm() failed!");
+        if (audsrv_play_adpcm(&adpcmSettings))
+            PRINT_ERR("audsrv_play_adpcm() failed!");
+        isADPCMLoaded = false;
+    }
+    if (!shouldPlay)
+        return;
     if (!isTrackDone)
     {
         ret = fread(chunk, 1, sizeof(chunk), wav);
@@ -231,15 +213,71 @@ void Audio::work()
 /** Unload audio module by closing file stream and stopping AUDSRV */
 void Audio::unloadSong()
 {
-    PRINT_LOG("Unloading audio module started");
+    PRINT_LOG("Song unloaded");
     fclose(wav);
-    PRINT_LOG("Song file stream closed");
-    audsrv_quit();
-    PRINT_LOG("AUDSRV stopped");
-    PRINT_LOG("Audio module unloaded");
 }
 
-/** Do not call this function. 
+void Audio::test()
+{
+    // audsrv_adpcm_set_volume(100);
+
+    FILE *file = fopen("host:ziobro.adpcm", "rb");
+    fseek(file, 0L, SEEK_END);
+    adpcmFileSize = ftell(file);
+    sample1 = new u8[adpcmFileSize];
+    rewind(file);
+    fread(sample1, sizeof(u8), adpcmFileSize, file);
+    fclose(file);
+    adpcmSettings.size = 0;
+    adpcmSettings.buffer = 0;
+    adpcmSettings.loop = 0;
+    adpcmSettings.pitch = 0;
+    adpcmSettings.channels = 0;
+    isADPCMLoaded = true;
+}
+
+void Audio::play()
+{
+    if (!isInitialized)
+    {
+        PRINT_ERR("Please initialize audio class first!");
+        return;
+    }
+    if (!shouldPlay)
+    {
+        shouldPlay = 1;
+        audsrv_set_volume(latestVolume);
+    }
+}
+
+void Audio::stop()
+{
+    if (!isInitialized)
+    {
+        PRINT_ERR("Please initialize audio class first!");
+        return;
+    }
+    if (shouldPlay)
+    {
+        shouldPlay = 0;
+        audsrv_set_volume(0);
+    }
+}
+
+// ---
+
+/** 
+ * Do not call this function.
+ * This is a audio thread, runned by AudioThread::start()
+ */
+void Audio::audioThread()
+{
+    while (true)
+        audioRef->work();
+}
+
+/** 
+ * Do not call this function. 
  * This is a static callback function
  * for AUDSRV fillbuffer (semaphore)
  */
