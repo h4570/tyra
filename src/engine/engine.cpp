@@ -85,7 +85,8 @@ void Engine::firePS2()
     SifInitRpc(0);
     srand(time(NULL));
     VU1::uploadProgram(0, &VU1Draw3D_CodeStart, &VU1Draw3D_CodeEnd);
-    audio.startThread();
+    fileService.startThread();
+    audio.startThread(&fileService);
     isInitialized = 0;
     mainThreadId = GetThreadId();
 }

@@ -12,6 +12,7 @@
 #define _TYRA_AUDIO_
 
 #include "../models/audio_listener.hpp"
+#include "./file_service.hpp"
 #include <tamtypes.h>
 #include <stdio.h>
 #include <audsrv.h>
@@ -120,17 +121,15 @@ public:
      * Do not call this method unless you know what you do.
      * Should be called by engine. 
      */
-    void startThread();
+    void startThread(FileService *t_fileService);
 
 private:
     u8 songLoaded, volume, realVolume, songPlaying, songInLoop, songFinished;
     std::vector<AudioListenerRef> songListeners;
     FILE *wav;
     audsrv_fmt_t format;
-    // we have some sema problems here (sound freezing)
-    // this probably should be changed to smth like this:
-    // this thread (A) : play next chunks
-    // other thread (B) : load chunks (fread()) for thread A
+    FileService *fileService;
+
     char wavChunk[2 * 1024] __attribute__((aligned(16)));
     s32 chunkReadStatus;
 
@@ -150,7 +149,7 @@ private:
     void loadModules();
     void initAUDSRV();
     void threadLoop();
-    static void audioThread();
+    static void mainThread();
 };
 
 #endif

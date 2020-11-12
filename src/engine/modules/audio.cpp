@@ -157,11 +157,12 @@ void Audio::playADPCM(audsrv_adpcm_t *t_adpcm, const s8 &t_ch)
 
 // Other
 
-void Audio::startThread()
+void Audio::startThread(FileService *t_fileService)
 {
     PRINT_LOG("Creating audio thread");
+    fileService = t_fileService;
     extern void *_gp;
-    thread.func = (void *)Audio::audioThread;
+    thread.func = (void *)Audio::mainThread;
     thread.stack = threadStack;
     thread.stack_size = getThreadStackSize();
     thread.gp_reg = (void *)&_gp;
@@ -293,7 +294,7 @@ void Audio::initAUDSRV()
  * Do not call this function.
  * This is a audio thread, runned by engine
  */
-void Audio::audioThread()
+void Audio::mainThread()
 {
     while (true)
         audioRef->threadLoop();
