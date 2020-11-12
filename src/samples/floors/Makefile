@@ -11,6 +11,7 @@ EE_OBJS =											\
 	../../engine/models/mesh_texture.o				\
 	../../engine/modules/audio.o					\
 	../../engine/modules/camera_base.o				\
+	../../engine/modules/file_service.o				\
 	../../engine/modules/gif_sender.o				\
 	../../engine/modules/light.o					\
 	../../engine/modules/pad.o						\

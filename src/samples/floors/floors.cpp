@@ -31,11 +31,10 @@ Floors::~Floors() {}
 void Floors::onInit()
 {
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
-    engine->audio.init(1);
-    engine->audio.addListener(this);
+    engine->audio.addSongListener(this);
     engine->audio.loadSong("NF-CHILL.WAV");
-    engine->audio.setVolume(100);
-    engine->audio.play();
+    engine->audio.setSongVolume(100);
+    engine->audio.playSong();
     texRepo = engine->renderer->getTextureRepository();
     texRepo->addByMesh("warrior/", player.mesh);
     texRepo->addByMesh("floor/", floorManager.floors[0].mesh);
@@ -52,7 +51,7 @@ void Floors::onUpdate()
     camera.update(engine->pad, player.mesh);
     floorManager.update(player);
     player.update(engine->pad, camera, floorManager);
-    engine->renderer->draw(player.mesh);
+    // engine->renderer->draw(player.mesh);
     for (u8 i = 0; i < FLOORS_COUNT; i++)
         engine->renderer->drawByPath3(floorManager.floors[i].mesh, lightManager.bulbs, lightManager.bulbsCount);
 }
