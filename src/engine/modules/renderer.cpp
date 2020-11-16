@@ -40,7 +40,7 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     isVSyncEnabled = true;
     isFrameEmpty = false;
     lastTextureId = 0;
-    flipPacket = packet_init(3, PACKET_UCAB); // Uncached accelerated
+    flipPacket = spacket_create(4, SPACKET_UNCACHED_ACCL);
     allocateBuffers(t_screen->width, t_screen->height);
     initDrawingEnv(t_screen->width, t_screen->height);
     setPrim();
@@ -104,17 +104,14 @@ void Renderer::changeTexture(const Mesh &t_mesh, u32 t_materialId)
 void Renderer::initDrawingEnv(float t_screenW, float t_screenH)
 {
     PRINT_LOG("Initializing drawing environment");
-    packet_t *packet = packet_init(20, PACKET_NORMAL);
     u16 halfW = (u16)t_screenW / 2;
     u16 halfH = (u16)t_screenH / 2;
-    qword_t *q = packet->data; // Generic qword pointer.
-    q = draw_setup_environment(q, 0, frameBuffers, &(zBuffer));
-    q = draw_primitive_xyoffset(q, 0, (2048 - halfW), (2048 - halfH));
-    q = draw_finish(q);
-    // Now send the packet, no need to wait since it's the first.
-    dma_channel_send_normal(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
-    dma_wait_fast();
-    packet_free(packet);
+    spacket_t *spacket = spacket_create(20, SPACKET_NORMAL);
+    spacket_update(spacket, draw_setup_environment(spacket->base, 0, frameBuffers, &(zBuffer)));
+    spacket_update(spacket, draw_primitive_xyoffset(spacket->next, 0, (2048 - halfW), (2048 - halfH)));
+    spacket_update(spacket, draw_finish(spacket->next));
+    spacket_send(spacket, DMA_CHANNEL_GIF, true);
+    spacket_free(spacket);
     PRINT_LOG("Drawing environment initialized!");
 }
 
@@ -277,10 +274,8 @@ void Renderer::flipBuffers()
         0);
     context ^= 1;
     isFrameEmpty = 1;
-    qword_t *q = flipPacket->data;
-    q = draw_framebuffer(q, 0, &frameBuffers[context]);
-    q = draw_finish(q);
-    dma_wait_fast();
-    dma_channel_send_normal_ucab(DMA_CHANNEL_GIF, flipPacket->data, q - flipPacket->data, 0);
+    spacket_update(flipPacket, draw_framebuffer(flipPacket->base, 0, &frameBuffers[context]));
+    spacket_update(flipPacket, draw_finish(flipPacket->next));
+    spacket_send(flipPacket, DMA_CHANNEL_GIF, false);
     draw_wait_finish();
 }
