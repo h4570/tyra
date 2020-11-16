@@ -54,37 +54,38 @@ GifSender::~GifSender()
 /** Send texture via GIF */
 void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
 {
-    const u16 packetSize = 40;
-    packet_t *packet = packet_init(packetSize, PACKET_NORMAL);
-    qword_t *q = packet->data;
-    q = draw_texture_transfer(q, texture.getData(), texture.getWidth(), texture.getHeight(), GS_PSM_24, t_texBuffer->address, t_texBuffer->width);
-    DMATAG_CNT(q, 2, 0, 0, 0);
-    q++;
-    q = draw_texture_wrapping(q, 0, texture.getWrapSettings());
-    q = draw_texture_flush(q);
-    FlushCache(0);
-    dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
-    dma_wait_fast();
-    packet_free(packet);
+    spacket_t *spacket = spacket_create(15, SPACKET_NORMAL);
+    spacket_update(
+        spacket,
+        draw_texture_transfer(
+            spacket->base,
+            texture.getData(),
+            texture.getWidth(),
+            texture.getHeight(), GS_PSM_24,
+            t_texBuffer->address,
+            t_texBuffer->width));
+    spacket_chain_open_cnt(spacket, 0, 0, 0);
+    spacket_update(spacket, draw_texture_wrapping(spacket->next, 0, texture.getWrapSettings()));
+    spacket_chain_close_tag(spacket);
+    spacket_update(spacket, draw_texture_flush(spacket->next));
+    spacket_send_chain(spacket, DMA_CHANNEL_GIF, true, true);
+    spacket_free(spacket);
 }
 
 void GifSender::sendClear(zbuffer_t *t_zBuffer)
 {
-    packet_t *packet = packet_init(100, PACKET_NORMAL);
-    qword_t *q = packet->data;
-    q++;
-    q = draw_disable_tests(q, 0, t_zBuffer);
-    q = draw_clear(q, 0,
-                   2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
-                   screen->width, screen->height,
-                   0x10, 0x10, 0x10);
-    q = draw_enable_tests(q, 0, t_zBuffer);
-    q = draw_finish(q);
-    DMATAG_END(packet->data, q - packet->data - 1, 0, 0, 0);
-    FlushCache(0);
-    dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
-    dma_wait_fast();
-    packet_free(packet);
+    spacket_t *spacket = spacket_create(36, SPACKET_NORMAL);
+    spacket_chain_open_end(spacket, 0, 0);
+    spacket_update(spacket, draw_disable_tests(spacket->next, 0, t_zBuffer));
+    spacket_update(spacket, draw_clear(spacket->next, 0,
+                                       2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
+                                       screen->width, screen->height,
+                                       0x10, 0x10, 0x10));
+    spacket_update(spacket, draw_enable_tests(spacket->next, 0, t_zBuffer));
+    spacket_update(spacket, draw_finish(spacket->next));
+    spacket_chain_close_tag(spacket);
+    spacket_send_chain(spacket, DMA_CHANNEL_GIF, true, true);
+    spacket_free(spacket);
 }
 
 /** Used in game loop.

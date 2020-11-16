@@ -17,6 +17,7 @@
 #include <draw_primitives.h>
 #include <math3d.h>
 #include <packet.h>
+#include <spacket.h>
 #include "../models/mesh.hpp"
 #include "../models/math/matrix.hpp"
 #include "../models/screen_settings.hpp"
