@@ -33,7 +33,7 @@ Ari::~Ari() {}
 void Ari::onInit()
 {
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
-    engine->audio.setSongVolume(60);
+    engine->audio.setSongVolume(40);
     engine->audio.loadSong("MOV-CIRC.WAV");
     adpcm = engine->audio.loadADPCM("ziobro.adpcm");
     texRepo = engine->renderer->getTextureRepository();
@@ -52,23 +52,23 @@ void Ari::onInit()
     // skybox.loadObj("skybox/", "skybox", 100.0F, false);
     // skybox.shouldBeFrustumCulled = false;
 
-    // waterFloors[0].loadObj("water/", "water", 5.0F, false);
-    // waterFloors[0].position.set(0.0F, 8.0F, 0.0F);
-    // texRepo->addByMesh("water/", waterFloors[0]);
-    // for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-    // {
-    //     spirals[i].x = 1.0F;
-    //     spirals[i].y = 2.0F;
-    // }
-    // u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
-    // calcSpiral(spiralOffset, spiralOffset);
-    // for (u8 i = 1; i < WATER_TILES_COUNT; i++)
-    // {
-    //     waterFloors[i].loadFrom(waterFloors[0]);
-    //     waterFloors[i].position.set(10.0F * spirals[i].x, 8.0F, 10.0F * spirals[i].y);
-    //     texRepo->getByMesh(waterFloors[0].getId(), waterFloors[0].getMaterial(0).getId())
-    //         ->addLink(waterFloors[i].getId(), waterFloors[i].getMaterial(0).getId());
-    // }
+    waterFloors[0].loadObj("water/", "water", 5.0F, false);
+    waterFloors[0].position.set(0.0F, 8.0F, 0.0F);
+    texRepo->addByMesh("water/", waterFloors[0]);
+    for (u8 i = 0; i < WATER_TILES_COUNT; i++)
+    {
+        spirals[i].x = 1.0F;
+        spirals[i].y = 2.0F;
+    }
+    u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
+    calcSpiral(spiralOffset, spiralOffset);
+    for (u8 i = 1; i < WATER_TILES_COUNT; i++)
+    {
+        waterFloors[i].loadFrom(waterFloors[0]);
+        waterFloors[i].position.set(10.0F * spirals[i].x, 8.0F, 10.0F * spirals[i].y);
+        texRepo->getByMesh(waterFloors[0].getId(), waterFloors[0].getMaterial(0).getId())
+            ->addLink(waterFloors[i].getId(), waterFloors[i].getMaterial(0).getId());
+    }
 
     texRepo->addByMesh("sunnyisl/", island);
     // texRepo->addByMesh("sunnyisl/", islandAddons);
@@ -91,7 +91,7 @@ void Ari::onUpdate()
     if (engine->pad.isCrossClicked)
     {
         engine->audio.loadSong("nob-else.wav");
-        engine->audio.playADPCM(adpcm);
+        // engine->audio.playADPCM(adpcm);
         printf("FPS:%f\n", engine->fps);
     }
     camera.update(engine->pad, player.mesh);
@@ -99,8 +99,8 @@ void Ari::onUpdate()
     engine->renderer->draw(island);
     // engine->renderer->draw(islandAddons);
     // engine->renderer->draw(player.mesh);
-    // for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-    //     engine->renderer->draw(waterFloors[i]);
+    for (u8 i = 0; i < WATER_TILES_COUNT; i++)
+        engine->renderer->drawByPath3(waterFloors[i]);
 }
 
 void Ari::calcSpiral(int X, int Y)

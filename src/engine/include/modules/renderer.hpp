@@ -13,7 +13,6 @@
 
 #include <draw_buffers.h>
 #include <draw_primitives.h>
-#include <packet.h>
 #include <spacket.h>
 #include "gif_sender.hpp"
 #include "vif_sender.hpp"

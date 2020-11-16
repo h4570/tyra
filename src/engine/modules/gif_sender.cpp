@@ -32,16 +32,16 @@ GifSender::GifSender(u32 t_packetSize, ScreenSettings *t_screen) : screen(t_scre
 {
     PRINT_LOG("Initializing GifSender");
     packetSize = t_packetSize;
-    packets[0] = packet_init(t_packetSize, PACKET_NORMAL);
-    packets[1] = packet_init(t_packetSize, PACKET_NORMAL);
+    packets[0] = spacket_create(t_packetSize, SPACKET_NORMAL);
+    packets[1] = spacket_create(t_packetSize, SPACKET_NORMAL);
     PRINT_LOG("GifSender initialized!");
 }
 
 /** Releases packets memory */
 GifSender::~GifSender()
 {
-    packet_free(packets[0]);
-    packet_free(packets[1]);
+    spacket_free(packets[0]);
+    spacket_free(packets[1]);
 }
 
 // ----
@@ -94,12 +94,8 @@ void GifSender::sendClear(zbuffer_t *t_zBuffer)
 void GifSender::initPacket(u8 t_context)
 {
     currentPacket = packets[t_context];
-    if (currentPacket->qwords > (u32)packetSize || currentPacket->qwords < 0)
-        PRINT_ERR("GifSender packet size error. Please consider to change packet size!\n");
-    q = currentPacket->data;
-    dmatag = q;
-    q++;
-    isAnyObjectAdded = 0;
+    spacket_reset(currentPacket, false);
+    isAnyObjectAdded = false;
 }
 
 /** Sends packet to GIF. */
@@ -107,25 +103,24 @@ void GifSender::sendPacket()
 {
     if (isAnyObjectAdded)
     {
-        dmatag = q;
-        q++;
+        spacket_chain_open_end(currentPacket, 0, 0);
+        spacket_update(currentPacket, draw_finish(currentPacket->next));
+        spacket_chain_close_tag(currentPacket);
     }
-    q = draw_finish(q);
-    DMATAG_END(dmatag, q - dmatag - 1, 0, 0, 0);
-    FlushCache(0);
-    dma_channel_send_chain(DMA_CHANNEL_GIF, currentPacket->data, q - currentPacket->data, 0, 0);
-    dma_wait_fast();
+    spacket_send_chain(currentPacket, DMA_CHANNEL_GIF, true, true);
 }
 
 /** Adds clear screen to current packet */
 void GifSender::addClear(zbuffer_t *t_zBuffer)
 {
-    q = draw_disable_tests(q, 0, t_zBuffer);
-    q = draw_clear(q, 0,
-                   2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
-                   screen->width, screen->height,
-                   0x10, 0x10, 0x10);
-    q = draw_enable_tests(q, 0, t_zBuffer);
+    spacket_chain_open_cnt(currentPacket, 0, 0, 0);
+    spacket_update(currentPacket, draw_disable_tests(currentPacket->next, 0, t_zBuffer));
+    spacket_update(currentPacket, draw_clear(currentPacket->next, 0,
+                                             2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
+                                             screen->width, screen->height,
+                                             0x10, 0x10, 0x10));
+    spacket_update(currentPacket, draw_enable_tests(currentPacket->next, 0, t_zBuffer));
+    spacket_chain_close_tag(currentPacket);
 }
 
 /** Adds 3D objects to current packet
@@ -136,19 +131,10 @@ void GifSender::addClear(zbuffer_t *t_zBuffer)
  */
 void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
-    if (!isAnyObjectAdded)
-    {
-        isAnyObjectAdded = true;
-        DMATAG_CNT(dmatag, q - dmatag - 1, 0, 0, 0); // init tag (before first 3d obj)
-    }
-    qword_t *tempDMATag;
-    tempDMATag = q;
-    q++;
-
-    q = draw_texture_sampling(q, 0, &t_mesh.lod);
-    q = draw_texturebuffer(q, 0, textureBuffer, &t_mesh.clut);
-    dw = (u64 *)draw_prim_start(q, 0, t_renderData->prim, &t_mesh.color);
-
+    spacket_chain_open_cnt(currentPacket, 0, 0, 0);
+    spacket_update(currentPacket, draw_texture_sampling(currentPacket->next, 0, &t_mesh.lod));
+    spacket_update(currentPacket, draw_texturebuffer(currentPacket->next, 0, textureBuffer, &t_mesh.clut));
+    spacket_update(currentPacket, draw_prim_start(currentPacket->next, 0, t_renderData->prim, &t_mesh.color));
     xyz = new xyz_t[vertexCount];
     rgbaq = new color_t[vertexCount];
     st = new texel_t[vertexCount];
@@ -157,13 +143,8 @@ void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCoun
     delete[] xyz;
     delete[] rgbaq;
     delete[] st;
-
-    if ((u32)dw % 16) // if we are in the middle of qw, switch packet
-        *dw++ = 0;
-
-    q = draw_prim_end((qword_t *)dw, 3, DRAW_STQ_REGLIST);
-
-    DMATAG_CNT(tempDMATag, q - tempDMATag - 1, 0, 0, 0);
+    spacket_update(currentPacket, draw_prim_end(currentPacket->next, 3, DRAW_STQ_REGLIST));
+    spacket_chain_close_tag(currentPacket);
 }
 
 /** Calculates 3D object data into xyz, rgbq, st
@@ -267,8 +248,9 @@ void GifSender::addCurrentCalcs(u32 &t_vertexCount)
 {
     for (u32 i = 0; i < t_vertexCount; i++)
     {
-        *dw++ = rgbaq[i].rgbaq;
-        *dw++ = st[i].uv;
-        *dw++ = xyz[i].xyz;
+        spacket_add_dword(currentPacket, rgbaq[i].rgbaq);
+        spacket_add_dword(currentPacket, st[i].uv);
+        spacket_add_dword(currentPacket, xyz[i].xyz);
     }
+    spacket_align_to_qw(currentPacket);
 }
