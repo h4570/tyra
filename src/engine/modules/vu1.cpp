@@ -52,22 +52,16 @@ void VU1::createList()
  */
 void VU1::sendSingleRefList(int t_destAddress, void *t_data, int t_quadSize)
 {
-    checkDataAlignment(t_data);
-
-    u8 tempBuffer[32] __attribute__((aligned(16)));
-    void *chain = (u64 *)&tempBuffer; // uncached
-
-    *((u64 *)chain)++ = DMA_REF_TAG((u32)t_data, t_quadSize);
-    *((u32 *)chain)++ = VIF_CODE(VIF_STCYL, 0, 0x0101);
-    *((u32 *)chain)++ = VIF_CODE(VIF_UNPACK_V4_32, t_quadSize, t_destAddress);
-
-    *((u64 *)chain)++ = DMA_END_TAG(0);
-    *((u32 *)chain)++ = VIF_CODE(VIF_NOP, 0, 0);
-    *((u32 *)chain)++ = VIF_CODE(VIF_NOP, 0, 0);
-
-    FlushCache(0);
-    dma_channel_send_chain(DMA_CHANNEL_VIF1, tempBuffer, 0, DMA_FLAG_TRANSFERTAG, 0);
-    dma_channel_wait(DMA_CHANNEL_VIF1, VU1_DMA_CHAN_TIMEOUT);
+    spacket_t *spacket = spacket_create(2, SPACKET_NORMAL);
+    spacket_ref(spacket, t_data, t_quadSize, 0, 0, 0, true);
+    spacket_vif_stcycl(spacket, 0, 0x0101, 0);
+    spacket_open_unpack(spacket, VIF_UNPACK_V4_32, t_destAddress, 0, 0, 0, 0);
+    spacket_close_unpack(spacket, t_quadSize);
+    spacket_chain_close_tag(spacket);
+    spacket_chain_open_end(spacket, 0, 0, true);
+    spacket_vif_nop(spacket, 0);
+    spacket_vif_nop(spacket, 0);
+    spacket_send_chain(spacket, DMA_CHANNEL_VIF1, true, true, true);
 }
 
 /** Add list beginning, set's double buffer if not set  */
