@@ -60,10 +60,9 @@ private:
     u8 isDoubleBufferSet;
     void checkDataAlignment(void *data);
     VU1BuildList buildList;
-    char dmaBuffer1[VIF_BUFFER_SIZE] __attribute__((aligned(16)));
-    char dmaBuffer2[VIF_BUFFER_SIZE] __attribute__((aligned(16)));
-    void *currentBuffer;
-    u32 switchBuffer;
+    spacket_t *spackets[2] __attribute__((aligned(16)));
+    spacket_t *currPacket;
+    u8 switchPacket;
     static u32 countProgramSize(u32 *t_start, u32 *t_end);
     void checkList();
     inline s32 AddUnpack(int format, int addr, int num, int usetops = 0, int nosign = 1, int masking = 0)

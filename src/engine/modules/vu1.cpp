@@ -22,8 +22,10 @@
 VU1::VU1()
 {
     PRINT_LOG("Initializing VU1");
-    currentBuffer = 0;
-    switchBuffer = 0;
+    currPacket = 0;
+    switchPacket = 0;
+    spackets[0] = spacket_create(3072, SPACKET_NORMAL);
+    spackets[1] = spacket_create(3072, SPACKET_NORMAL);
     PRINT_LOG("VU1 initialized!");
 }
 
@@ -36,14 +38,15 @@ VU1::~VU1() {}
 /** Create dynamic list */
 void VU1::createList()
 {
-    switchBuffer = !switchBuffer;
+    switchPacket = !switchPacket;
     memset((char *)&buildList, 0, sizeof(buildList));
 
-    if (switchBuffer)
-        currentBuffer = (char *)&dmaBuffer1;
+    if (switchPacket)
+        currPacket = spackets[0];
     else
-        currentBuffer = (char *)&dmaBuffer2;
-    buildList.kickBuffer = currentBuffer;
+        currPacket = spackets[1];
+    spacket_reset(currPacket, false);
+    buildList.kickBuffer = currPacket;
 }
 
 /** Add reference list and send via VIF1 
@@ -57,10 +60,10 @@ void VU1::sendSingleRefList(int t_destAddress, void *t_data, int t_quadSize)
     spacket_vif_stcycl(spacket, 0, 0x0101, 0);
     spacket_open_unpack(spacket, VIF_UNPACK_V4_32, t_destAddress, 0, 0, 0, 0);
     spacket_close_unpack(spacket, t_quadSize);
-    spacket_chain_close_tag(spacket);
     spacket_chain_open_end(spacket, 0, 0, true);
     spacket_vif_nop(spacket, 0);
     spacket_vif_nop(spacket, 0);
+    spacket_chain_close_tag(spacket);
     spacket_send_chain(spacket, DMA_CHANNEL_VIF1, true, true, true);
 }
 
@@ -77,10 +80,10 @@ void VU1::addListBeginning()
 
     buildList.dmaSizeAll += buildList.dmaSize;
     buildList.dmaSize = 0;
-    buildList.offset = currentBuffer;
-    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(0);                   // placeholder
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_STCYL, 0, 0x0101);   // placeholder
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_UNPACK_V4_32, 0, 0); // placeholder
+    buildList.offset = currPacket;
+    spacket_chain_open_cnt(currPacket, 0, 0, 0, true);
+    spacket_vif_stcycl(currPacket, 0, 0x0101, 0);
+    spacket_open_unpack(currPacket, V4_32, 0, 1, 0, 0, 0);
     buildList.isBuilding = 1;
 }
 
@@ -92,17 +95,9 @@ void VU1::addListEnding()
         PRINT_ERR("Please add list beginning first. Nothing to end!");
         return;
     }
-
-    while ((buildList.dmaSize & 0xF))
-    {
-        *((u32 *)currentBuffer)++ = 0;
-        buildList.dmaSize += 4;
-    }
-
-    *((u64 *)buildList.offset)++ = DMA_CNT_TAG(buildList.dmaSize >> 4);
-    *((u32 *)buildList.offset)++ = VIF_CODE(VIF_STCYL, 0, 0x0101);
-    *((u32 *)buildList.offset)++ = AddUnpack(V4_32, 0, buildList.dmaSize >> 4, 1);
-
+    spacket_align_to_qw(currPacket);
+    spacket_chain_close_tag(currPacket);
+    spacket_close_unpack(currPacket, ((u32)currPacket->next - (u32)currPacket->unpackOpenedAt) >> 4);
     buildList.isBuilding = 0;
 }
 
@@ -118,10 +113,10 @@ void VU1::addReferenceList(u32 t_offset, void *t_data, u32 t_size, u8 t_useTops)
     checkDataAlignment(t_data);
     if (buildList.isBuilding == 1)
         PRINT_ERR("Please end current list list before adding new one!");
-    *((u64 *)currentBuffer)++ = DMA_REF_TAG((u32)t_data, t_size);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_STCYL, 0, 0x0101);
-    *((u32 *)currentBuffer)++ =
-        AddUnpack(V4_32, t_useTops == 1 ? buildList.dmaSize >> 4 : t_offset >> 4, t_size, t_useTops);
+    spacket_ref(currPacket, t_data, t_size, 0, 0, 0, 1);
+    spacket_vif_stcycl(currPacket, 0, 0x0101, 0);
+    spacket_open_unpack(currPacket, V4_32, 0, t_useTops, 0, 0, 0);
+    spacket_close_unpack(currPacket, t_useTops ? ((u32)currPacket->next - (u32)currPacket->unpackOpenedAt) >> 4 : t_offset >> 4);
     buildList.dmaSize += t_size * 8;
     buildList.dmaSizeAll += buildList.dmaSize;
 }
@@ -129,45 +124,47 @@ void VU1::addReferenceList(u32 t_offset, void *t_data, u32 t_size, u8 t_useTops)
 /** Start VU1 program */
 void VU1::addStartProgram()
 {
-    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(0);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_MSCAL, 0, 0);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_FLUSH, 0, 0);
-    ;
+    spacket_chain_open_cnt(currPacket, 0, 0, 0, 1);
+    spacket_vif_mscal(currPacket, 0, 0);
+    spacket_vif_flush(currPacket, 0);
+    spacket_chain_close_tag(currPacket);
 }
 
 /** Continue VU1 program from "--cont" line */
 void VU1::addContinueProgram()
 {
-    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(0);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_MSCAL, 0, 0);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_FLUSH, 0, 0);
-    ;
+    spacket_chain_open_cnt(currPacket, 0, 0, 0, 1);
+    spacket_vif_mscnt(currPacket, 0);
+    spacket_vif_flush(currPacket, 0);
+    spacket_chain_close_tag(currPacket);
 }
 
 /** Add end tag and send packet via VIF1 */
 void VU1::sendList()
 {
-    *((u64 *)currentBuffer)++ = DMA_END_TAG(0);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_NOP, 0, 0);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_NOP, 0, 0);
-    FlushCache(0);
-    dma_channel_send_chain(DMA_CHANNEL_VIF1, buildList.kickBuffer, (u32 *)currentBuffer - (u32 *)buildList.kickBuffer, DMA_FLAG_TRANSFERTAG, 0);
-    dma_channel_wait(DMA_CHANNEL_VIF1, VU1_DMA_CHAN_TIMEOUT);
+    spacket_chain_open_end(currPacket, 0, 0, 1);
+    spacket_vif_nop(currPacket, 0);
+    spacket_vif_nop(currPacket, 0);
+    spacket_chain_close_tag(currPacket);
+    printf("QWS:%d\n", spacket_get_qw_count(currPacket));
+    spacket_send_chain(currPacket, DMA_CHANNEL_VIF1, true, true, true);
 }
 
 void VU1::addDoubleBufferSetting()
 {
-    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(0);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_BASE, 0, 8);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_OFFSET, 0, 496);
+    spacket_chain_open_cnt(currPacket, 0, 0, 0, 1);
+    spacket_vif_base(currPacket, 8, 0);
+    spacket_vif_offset(currPacket, 496, 0);
     isDoubleBufferSet = 1;
+    spacket_chain_close_tag(currPacket);
 }
 
 void VU1::addFlush()
 {
-    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(0);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_NOP, 0, 0);
-    *((u32 *)currentBuffer)++ = VIF_CODE(VIF_FLUSH, 0, 0);
+    spacket_chain_open_cnt(currPacket, 0, 0, 0, 1);
+    spacket_vif_nop(currPacket, 0);
+    spacket_vif_flush(currPacket, 0);
+    spacket_chain_close_tag(currPacket);
 }
 
 void VU1::checkDataAlignment(void *t_data)
@@ -183,29 +180,29 @@ void VU1::checkDataAlignment(void *t_data)
 void VU1::add128(u64 v1, u64 v2)
 {
     checkList();
-    *((u64 *)currentBuffer)++ = v1;
-    *((u64 *)currentBuffer)++ = v2;
+    spacket_add_u64(currPacket, v1);
+    spacket_add_u64(currPacket, v2);
     buildList.dmaSize += 16;
 }
 
 void VU1::add64(u64 v)
 {
     checkList();
-    *((u64 *)currentBuffer)++ = v;
+    spacket_add_u64(currPacket, v);
     buildList.dmaSize += 8;
 }
 
 void VU1::add32(u32 v)
 {
     checkList();
-    *((u32 *)currentBuffer)++ = v;
+    spacket_add_u32(currPacket, v);
     buildList.dmaSize += 4;
 }
 
 void VU1::addFloat(float v)
 {
     checkList();
-    *((float *)currentBuffer)++ = v;
+    spacket_add_float(currPacket, v);
     buildList.dmaSize += 4;
 }
 
@@ -213,8 +210,8 @@ void VU1::checkList()
 {
     if (buildList.isBuilding == 0)
         PRINT_ERR("Please add list beginning before adding data!");
-    if (buildList.dmaSizeAll > VIF_BUFFER_SIZE)
-        PRINT_ERR("Buffer size exceed!");
+    // if (buildList.dmaSizeAll > VIF_BUFFER_SIZE)
+    //     PRINT_ERR("Buffer size exceed!");
 }
 
 // ----
