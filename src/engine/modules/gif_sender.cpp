@@ -248,9 +248,9 @@ void GifSender::addCurrentCalcs(u32 &t_vertexCount)
 {
     for (u32 i = 0; i < t_vertexCount; i++)
     {
-        spacket_add_dword(currentPacket, rgbaq[i].rgbaq);
-        spacket_add_dword(currentPacket, st[i].uv);
-        spacket_add_dword(currentPacket, xyz[i].xyz);
+        spacket_add_u64(currentPacket, rgbaq[i].rgbaq);
+        spacket_add_u64(currentPacket, st[i].uv);
+        spacket_add_u64(currentPacket, xyz[i].xyz);
     }
     spacket_align_to_qw(currentPacket);
 }
