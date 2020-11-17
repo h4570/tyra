@@ -130,7 +130,7 @@ void VifSender::drawVertices(const Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR 
                 t_prim->mapping_type,
                 0, // context
                 t_prim->colorfix),
-            GS_GIFTAG_PACKED,
+            0,  // GIFTAG_PACKED
             3), // STQ + RGBA + XYZ
         DRAW_R_STQ_REGLIST);
 
@@ -180,7 +180,7 @@ void VifSender::drawVertices(const Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR 
     //// Clipping tests end
 
     vu1.addListEnding();
-    vu1.addReferenceList(0, t_vertices + t_start, 2 * vertCount, 1);
-    vu1.addReferenceList(0, t_coordinates + t_start, 2 * vertCount, 1);
+    vu1.addReferenceList(t_vertices + t_start, 2 * vertCount, 1);
+    vu1.addReferenceList(t_coordinates + t_start, 2 * vertCount, 1);
     vu1.addStartProgram();
 }

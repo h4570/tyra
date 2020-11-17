@@ -39,14 +39,12 @@ VU1::~VU1() {}
 void VU1::createList()
 {
     switchPacket = !switchPacket;
-    memset((char *)&buildList, 0, sizeof(buildList));
-
+    qwordsInsertedToVU1 = 0;
     if (switchPacket)
         currPacket = spackets[0];
     else
         currPacket = spackets[1];
     spacket_reset(currPacket, false);
-    buildList.kickBuffer = currPacket;
 }
 
 /** Add reference list and send via VIF1 
@@ -58,7 +56,7 @@ void VU1::sendSingleRefList(int t_destAddress, void *t_data, int t_quadSize)
     spacket_t *spacket = spacket_create(2, SPACKET_NORMAL);
     spacket_ref(spacket, t_data, t_quadSize, 0, 0, 0, true);
     spacket_vif_stcycl(spacket, 0, 0x0101, 0);
-    spacket_open_unpack(spacket, VIF_UNPACK_V4_32, t_destAddress, 0, 0, 0, 0);
+    spacket_open_unpack(spacket, V4_32, t_destAddress, 0, 0, 0, 0);
     spacket_close_unpack(spacket, t_quadSize);
     spacket_chain_open_end(spacket, 0, 0, true);
     spacket_vif_nop(spacket, 0);
@@ -70,7 +68,7 @@ void VU1::sendSingleRefList(int t_destAddress, void *t_data, int t_quadSize)
 /** Add list beginning, set's double buffer if not set  */
 void VU1::addListBeginning()
 {
-    if (buildList.isBuilding == 1)
+    if (isBuilding)
         PRINT_ERR("Please end current list list before adding new one!");
 
     if (isDoubleBufferSet == 0)
@@ -78,47 +76,43 @@ void VU1::addListBeginning()
     else
         addFlush();
 
-    buildList.dmaSizeAll += buildList.dmaSize;
-    buildList.dmaSize = 0;
-    buildList.offset = currPacket;
+    qwordsInsertedToVU1 = 0;
     spacket_chain_open_cnt(currPacket, 0, 0, 0, true);
     spacket_vif_stcycl(currPacket, 0, 0x0101, 0);
-    spacket_open_unpack(currPacket, V4_32, 0, 1, 0, 0, 0);
-    buildList.isBuilding = 1;
+    spacket_open_unpack(currPacket, V4_32, 0, 1, 0, 1, 0);
+    isBuilding = true;
 }
 
 /** Add list ending and fix unpack size */
 void VU1::addListEnding()
 {
-    if (buildList.isBuilding == 0)
+    if (!isBuilding)
     {
         PRINT_ERR("Please add list beginning first. Nothing to end!");
         return;
     }
     spacket_align_to_qw(currPacket);
     spacket_chain_close_tag(currPacket);
-    spacket_close_unpack(currPacket, ((u32)currPacket->next - (u32)currPacket->unpackOpenedAt) >> 4);
-    buildList.isBuilding = 0;
+    spacket_close_unpack(currPacket, qwordsInsertedToVU1 >> 4);
+    isBuilding = 0;
 }
 
 /** Add list which will load data from given pointer
  * A lot faster than standard list.
- * @param offset offset before data in quadwords
+ * @param offset offset before data in quadwords.
  * @param data data pointer
  * @param size in quadwords
  * @param useTops when true, data will be loaded at the beginning of buffer (BASE+OFFSET)
  */
-void VU1::addReferenceList(u32 t_offset, void *t_data, u32 t_size, u8 t_useTops)
+void VU1::addReferenceList(void *t_data, u32 t_size, u8 t_useTops)
 {
-    checkDataAlignment(t_data);
-    if (buildList.isBuilding == 1)
+    if (isBuilding)
         PRINT_ERR("Please end current list list before adding new one!");
     spacket_ref(currPacket, t_data, t_size, 0, 0, 0, 1);
     spacket_vif_stcycl(currPacket, 0, 0x0101, 0);
-    spacket_open_unpack(currPacket, V4_32, 0, t_useTops, 0, 0, 0);
-    spacket_close_unpack(currPacket, t_useTops ? ((u32)currPacket->next - (u32)currPacket->unpackOpenedAt) >> 4 : t_offset >> 4);
-    buildList.dmaSize += t_size * 8;
-    buildList.dmaSizeAll += buildList.dmaSize;
+    spacket_open_unpack(currPacket, V4_32, qwordsInsertedToVU1 >> 4, t_useTops, 0, 1, 0);
+    spacket_close_unpack(currPacket, t_size);
+    qwordsInsertedToVU1 += t_size * 8;
 }
 
 /** Start VU1 program */
@@ -146,7 +140,6 @@ void VU1::sendList()
     spacket_vif_nop(currPacket, 0);
     spacket_vif_nop(currPacket, 0);
     spacket_chain_close_tag(currPacket);
-    printf("QWS:%d\n", spacket_get_qw_count(currPacket));
     spacket_send_chain(currPacket, DMA_CHANNEL_VIF1, true, true, true);
 }
 
@@ -167,51 +160,33 @@ void VU1::addFlush()
     spacket_chain_close_tag(currPacket);
 }
 
-void VU1::checkDataAlignment(void *t_data)
-{
-    if (((u32)t_data & 0xF))
-        PRINT_ERR("data is not 16 byte aligned!");
-}
-
 // ----
 // List adding
 // ----
 
 void VU1::add128(u64 v1, u64 v2)
 {
-    checkList();
     spacket_add_u64(currPacket, v1);
     spacket_add_u64(currPacket, v2);
-    buildList.dmaSize += 16;
+    qwordsInsertedToVU1 += 16;
 }
 
 void VU1::add64(u64 v)
 {
-    checkList();
     spacket_add_u64(currPacket, v);
-    buildList.dmaSize += 8;
+    qwordsInsertedToVU1 += 8;
 }
 
 void VU1::add32(u32 v)
 {
-    checkList();
     spacket_add_u32(currPacket, v);
-    buildList.dmaSize += 4;
+    qwordsInsertedToVU1 += 4;
 }
 
 void VU1::addFloat(float v)
 {
-    checkList();
     spacket_add_float(currPacket, v);
-    buildList.dmaSize += 4;
-}
-
-void VU1::checkList()
-{
-    if (buildList.isBuilding == 0)
-        PRINT_ERR("Please add list beginning before adding data!");
-    // if (buildList.dmaSizeAll > VIF_BUFFER_SIZE)
-    //     PRINT_ERR("Buffer size exceed!");
+    qwordsInsertedToVU1 += 4;
 }
 
 // ----
