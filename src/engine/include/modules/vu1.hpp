@@ -16,6 +16,7 @@
 #include <tamtypes.h>
 #include <draw_primitives.h>
 #include <packet.h>
+#include <spacket.h>
 #include <math3d.h>
 
 const u32 VIF_BUFFER_SIZE = 48 * 1024;

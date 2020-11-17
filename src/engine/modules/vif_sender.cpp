@@ -29,6 +29,9 @@ VifSender::VifSender()
 {
     PRINT_LOG("Initializing VifSender");
     PRINT_LOG("VifSender initialized!");
+
+    dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
+    dma_channel_fast_waits(DMA_CHANNEL_VIF1);
 }
 
 VifSender::~VifSender() {}

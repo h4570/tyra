@@ -163,7 +163,7 @@ void VU1::sendList()
 
 void VU1::addDoubleBufferSetting()
 {
-    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(8 >> 4);
+    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(0);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_BASE, 0, 8);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_OFFSET, 0, 496);
     isDoubleBufferSet = 1;
@@ -171,7 +171,7 @@ void VU1::addDoubleBufferSetting()
 
 void VU1::addFlush()
 {
-    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(8 >> 4);
+    *((u64 *)currentBuffer)++ = DMA_CNT_TAG(0);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_NOP, 0, 0);
     *((u32 *)currentBuffer)++ = VIF_CODE(VIF_FLUSH, 0, 0);
 }
@@ -227,44 +227,28 @@ void VU1::checkList()
 // Static
 // ----
 
-u8 IS_DMA_VIF1_INITIALIZED = 0;
 /** TODO */
 void VU1::uploadProgram(int t_dest, u32 *t_start, u32 *t_end)
 {
-    if (!IS_DMA_VIF1_INITIALIZED)
-    {
-        IS_DMA_VIF1_INITIALIZED = 1;
-        dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
-        dma_channel_fast_waits(DMA_CHANNEL_VIF1);
-    }
-
-    int count = 0;
-    u8 tempBuffer[512] __attribute__((aligned(16)));
-    void *chain = (u64 *)&tempBuffer; // uncached
-
     // get the size of the code as we can only send 256 instructions in each MPGtag
-    count = VU1::countProgramSize(t_start, t_end);
+    int count = VU1::countProgramSize(t_start, t_end);
+    spacket_t *spacket = spacket_create(20, SPACKET_NORMAL);
+
     while (count > 0)
     {
         u32 currentCount = count > 256 ? 256 : count;
-
-        *((u64 *)chain)++ = DMA_REF_TAG((u32)t_start, currentCount / 2);
-        *((u32 *)chain)++ = VIF_CODE(VIF_NOP, 0, 0);
-        *((u32 *)chain)++ = VIF_CODE(VIF_MPG, currentCount & 0xFF, t_dest);
-
+        spacket_ref(spacket, t_start, currentCount / 2, 0, 0, 0, 1);
+        spacket_vif_nop(spacket, 0);
+        spacket_vif_mpg(spacket, currentCount & 0xFF, t_dest, 0);
         t_start += currentCount * 2;
         count -= currentCount;
         t_dest += currentCount;
     }
-
-    *((u64 *)chain)++ = DMA_END_TAG(0);
-    *((u32 *)chain)++ = VIF_CODE(VIF_NOP, 0, 0);
-    *((u32 *)chain)++ = VIF_CODE(VIF_NOP, 0, 0);
-
-    // Send it to vif1
-    FlushCache(0);
-    dma_channel_send_chain(DMA_CHANNEL_VIF1, tempBuffer, 0, DMA_FLAG_TRANSFERTAG, 0);
-    dma_channel_wait(DMA_CHANNEL_VIF1, VU1_DMA_CHAN_TIMEOUT); // synchronize immediately.
+    spacket_chain_open_end(spacket, 0, 0, true);
+    spacket_vif_nop(spacket, 0);
+    spacket_vif_nop(spacket, 0);
+    spacket_chain_close_tag(spacket);
+    spacket_send_chain(spacket, DMA_CHANNEL_VIF1, true, true, true);
 }
 
 u32 VU1::countProgramSize(u32 *t_start, u32 *t_end)

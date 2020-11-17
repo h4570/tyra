@@ -64,18 +64,18 @@ void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
             texture.getHeight(), GS_PSM_24,
             t_texBuffer->address,
             t_texBuffer->width));
-    spacket_chain_open_cnt(spacket, 0, 0, 0);
+    spacket_chain_open_cnt(spacket, 0, 0, 0, false);
     spacket_update(spacket, draw_texture_wrapping(spacket->next, 0, texture.getWrapSettings()));
     spacket_chain_close_tag(spacket);
     spacket_update(spacket, draw_texture_flush(spacket->next));
-    spacket_send_chain(spacket, DMA_CHANNEL_GIF, true, true);
+    spacket_send_chain(spacket, DMA_CHANNEL_GIF, true, true, false);
     spacket_free(spacket);
 }
 
 void GifSender::sendClear(zbuffer_t *t_zBuffer)
 {
     spacket_t *spacket = spacket_create(36, SPACKET_NORMAL);
-    spacket_chain_open_end(spacket, 0, 0);
+    spacket_chain_open_end(spacket, 0, 0, false);
     spacket_update(spacket, draw_disable_tests(spacket->next, 0, t_zBuffer));
     spacket_update(spacket, draw_clear(spacket->next, 0,
                                        2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
@@ -84,7 +84,7 @@ void GifSender::sendClear(zbuffer_t *t_zBuffer)
     spacket_update(spacket, draw_enable_tests(spacket->next, 0, t_zBuffer));
     spacket_update(spacket, draw_finish(spacket->next));
     spacket_chain_close_tag(spacket);
-    spacket_send_chain(spacket, DMA_CHANNEL_GIF, true, true);
+    spacket_send_chain(spacket, DMA_CHANNEL_GIF, true, true, false);
     spacket_free(spacket);
 }
 
@@ -103,17 +103,17 @@ void GifSender::sendPacket()
 {
     if (isAnyObjectAdded)
     {
-        spacket_chain_open_end(currentPacket, 0, 0);
+        spacket_chain_open_end(currentPacket, 0, 0, false);
         spacket_update(currentPacket, draw_finish(currentPacket->next));
         spacket_chain_close_tag(currentPacket);
     }
-    spacket_send_chain(currentPacket, DMA_CHANNEL_GIF, true, true);
+    spacket_send_chain(currentPacket, DMA_CHANNEL_GIF, true, true, false);
 }
 
 /** Adds clear screen to current packet */
 void GifSender::addClear(zbuffer_t *t_zBuffer)
 {
-    spacket_chain_open_cnt(currentPacket, 0, 0, 0);
+    spacket_chain_open_cnt(currentPacket, 0, 0, 0, false);
     spacket_update(currentPacket, draw_disable_tests(currentPacket->next, 0, t_zBuffer));
     spacket_update(currentPacket, draw_clear(currentPacket->next, 0,
                                              2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
@@ -131,7 +131,7 @@ void GifSender::addClear(zbuffer_t *t_zBuffer)
  */
 void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
-    spacket_chain_open_cnt(currentPacket, 0, 0, 0);
+    spacket_chain_open_cnt(currentPacket, 0, 0, 0, false);
     spacket_update(currentPacket, draw_texture_sampling(currentPacket->next, 0, &t_mesh.lod));
     spacket_update(currentPacket, draw_texturebuffer(currentPacket->next, 0, textureBuffer, &t_mesh.clut));
     spacket_update(currentPacket, draw_prim_start(currentPacket->next, 0, t_renderData->prim, &t_mesh.color));

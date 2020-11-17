@@ -77,7 +77,7 @@ void Ari::onInit()
 
     // texRepo->addByMesh("ari/", player.mesh);
 
-    engine->audio.playSong();
+    // engine->audio.playSong();
 }
 
 void Ari::initBulb()
