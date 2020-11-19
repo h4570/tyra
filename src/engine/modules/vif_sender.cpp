@@ -16,10 +16,9 @@
 #include "../include/utils/math.hpp"
 #include "../include/utils/debug.hpp"
 
-// Similiar set is in PS2SDK, but for VU1 we have to switch ST with RGBAQ, because VU1 must know Q before sending RGBAQ
-#define DRAW_R_STQ_REGLIST ((u64)GIF_REG_ST) << 0 | ((u64)GIF_REG_RGBAQ) << 4 | ((u64)GIF_REG_XYZ2) << 8
 const u32 VU1_PACKAGE_VERTS_PER_BUFF = 96; // Remember to modify buffer size in vu1 also
 const u32 VU1_PACKAGES_PER_PACKET = 6;
+const u32 VU1_PACKET_SIZE = 128;
 
 // ----
 // Constructors/Destructors
@@ -29,12 +28,19 @@ VifSender::VifSender()
 {
     PRINT_LOG("Initializing VifSender");
     PRINT_LOG("VifSender initialized!");
-
-    dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
-    dma_channel_fast_waits(DMA_CHANNEL_VIF1);
+    packets[0] = packet2_create_chain(VU1_PACKET_SIZE, P2_TYPE_NORMAL, true);
+    packets[1] = packet2_create_chain(VU1_PACKET_SIZE, P2_TYPE_NORMAL, true);
+    matricesPacket = packet2_create_chain(4, P2_TYPE_NORMAL, true);
+    context = 0;
+    setDoubleBuffer();
 }
 
-VifSender::~VifSender() {}
+VifSender::~VifSender()
+{
+    packet2_free(packets[0]);
+    packet2_free(packets[1]);
+    packet2_free(matricesPacket);
+}
 
 // ----
 // Methods
@@ -46,15 +52,21 @@ void VifSender::sendMatrices(const RenderData &t_renderData, const Vector3 &t_po
     vec3ToNative(rotation, t_rotation, 1.0F);
     create_local_world(localWorld, position, rotation);
     create_local_screen(localScreen, localWorld, t_renderData.worldView->data, t_renderData.perspective->data);
-    vu1.sendSingleRefList(0, &localScreen, 8);
+    packet2_reset(matricesPacket, false);
+    vu_add_unpack_data(matricesPacket, 0, &localScreen, 8, 0);
+    vu_add_end_tag(matricesPacket);
+    dma_channel_send_packet2(matricesPacket, DMA_CHANNEL_VIF1, 1);
+    dma_channel_wait(DMA_CHANNEL_VIF1, 0);
 }
 
-void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, const Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
+void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
     // we have to split 3D object into small parts, because of small memory of VU1
+
     for (u32 i = 0; i < vertCount2;)
     {
-        vu1.createList();
+        currPacket = packets[context];
+        packet2_reset(currPacket, false);
         for (u8 j = 0; j < VU1_PACKAGES_PER_PACKET; j++) // how many "packages" per one packet
         {
             if (i != 0) // we have to go back to avoid the visual artifacts
@@ -70,72 +82,40 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
             i += (VU1_PACKAGE_VERTS_PER_BUFF - 1);
             i++;
         }
-        vu1.sendList();
+        vu_add_end_tag(currPacket);
+        dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+        dma_channel_send_packet2(currPacket, DMA_CHANNEL_VIF1, 1);
+        context = !context;
     }
 }
 
+void VifSender::setDoubleBuffer()
+{
+    packet2_t *settings = packet2_create_chain(2, P2_TYPE_NORMAL, true);
+    vu_add_double_buffer_settings(settings, 8, 496);
+    vu_add_end_tag(settings);
+    dma_channel_send_packet2(settings, DMA_CHANNEL_VIF1, 1);
+    dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+    packet2_free(settings);
+}
+
 /** Draw using PATH1 */
-void VifSender::drawVertices(const Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer)
+void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer)
 {
     const u32 vertCount = t_end - t_start;
-    vu1.addListBeginning();
-
+    vu_open_unpack(currPacket);
     // TODO get this via screensettings
-    vu1.addFloat(2048.0F);                   // scale
-    vu1.addFloat(2048.0F);                   // scale
-    vu1.addFloat(((float)0xFFFFFF) / 32.0F); // scale
-    vu1.add32(vertCount);                    // vertex count
-
-    vu1.add128(GIF_SET_TAG(1, 0, 0, 0, GIF_FLG_PACKED, 1), GIF_REG_AD); // 1x set tag
-
-    vu1.add128( // tex -> lod
-        GS_SET_TEX1(
-            t_mesh.lod.calculation,
-            t_mesh.lod.max_level,
-            t_mesh.lod.mag_filter,
-            t_mesh.lod.min_filter,
-            t_mesh.lod.mipmap_select,
-            t_mesh.lod.l,
-            (int)(t_mesh.lod.k * 16.0F)),
-        GS_REG_TEX1);
-
-    vu1.add128( // tex -> buff + clut
-        GS_SET_TEX0(
-            textureBuffer->address >> 6,
-            textureBuffer->width >> 6,
-            textureBuffer->psm,
-            textureBuffer->info.width,
-            textureBuffer->info.height,
-            textureBuffer->info.components,
-            textureBuffer->info.function,
-            t_mesh.clut.address >> 6,
-            t_mesh.clut.psm,
-            t_mesh.clut.storage_mode,
-            t_mesh.clut.start,
-            t_mesh.clut.load_method),
-        GS_REG_TEX0);
-
-    vu1.add128(
-        GS_GIFTAG(
-            vertCount, // amount of loops
-            1,
-            1,
-            GS_PRIM(
-                t_prim->type,
-                t_prim->shading,
-                t_prim->mapping,
-                t_prim->fogging,
-                t_prim->blending,
-                t_prim->antialiasing,
-                t_prim->mapping_type,
-                0, // context
-                t_prim->colorfix),
-            0,  // GIFTAG_PACKED
-            3), // STQ + RGBA + XYZ
-        DRAW_R_STQ_REGLIST);
+    vu_unpack_add_float(currPacket, 2048.0F);                   // scale
+    vu_unpack_add_float(currPacket, 2048.0F);                   // scale
+    vu_unpack_add_float(currPacket, ((float)0xFFFFFF) / 32.0F); // scale
+    vu_unpack_add_u32(currPacket, vertCount);                   // vertex count
+    vu_unpack_add_set(currPacket, 1);
+    vu_unpack_add_lod(currPacket, &t_mesh.lod);
+    vu_unpack_add_texbuff_clut(currPacket, textureBuffer, &t_mesh.clut);
+    vu_unpack_add_prim_giftag(currPacket, t_prim, vertCount, DRAW_STQ2_REGLIST, 3, 0);
 
     for (u8 j = 0; j < 4; j++)
-        vu1.add32(128);
+        vu_unpack_add_u32(currPacket, 128);
 
     //// Clipping tests start
 
@@ -172,15 +152,14 @@ void VifSender::drawVertices(const Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR 
     // // vu1.addFloat(1.0F);
     // // vu1.addFloat(500.0F); // far
 
-    vu1.addFloat(0.0F);
-    vu1.addFloat(0.0F);
-    vu1.addFloat(0.0F);
-    vu1.addFloat(0.0F);
+    vu_unpack_add_float(currPacket, 0.0F);
+    vu_unpack_add_float(currPacket, 0.0F);
+    vu_unpack_add_float(currPacket, 0.0F);
+    vu_unpack_add_float(currPacket, 0.0F);
 
     //// Clipping tests end
-
-    vu1.addListEnding();
-    vu1.addReferenceList(t_vertices + t_start, 2 * vertCount, 1);
-    vu1.addReferenceList(t_coordinates + t_start, 2 * vertCount, 1);
-    vu1.addStartProgram();
+    vu_close_unpack(currPacket);
+    vu_add_unpack_data(currPacket, 0, t_vertices + t_start, 2 * vertCount, 1);
+    vu_add_unpack_data(currPacket, 0, t_coordinates + t_start, 2 * vertCount, 1);
+    vu_add_start_program(currPacket, 0);
 }

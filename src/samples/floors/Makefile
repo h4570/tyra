@@ -19,7 +19,6 @@ EE_OBJS =											\
 	../../engine/modules/texture_repository.o		\
 	../../engine/modules/timer.o					\
 	../../engine/modules/vif_sender.o				\
-	../../engine/modules/vu1.o						\
 	../../engine/utils/math.o						\
 	../../engine/utils/string.o						\
 	../../engine/loaders/bmp_loader.o				\
@@ -37,7 +36,7 @@ EE_OBJS =											\
 	floors.o										\
 	main.o
 
-EE_LIBS = -ldraw -lgraph -lmath3d -lpacket -ldma -lpad -laudsrv -lc -lstdc++
+EE_LIBS = -ldraw -lgraph -lmath3d -lpacket -ldma -lpad -lpacket2 -lvu -laudsrv -lc -lstdc++
 EE_INCS := -I./../../engine/include $(EE_INCS)
 EE_DVP = dvp-as
 EE_VCL = openvcl

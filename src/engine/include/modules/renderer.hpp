@@ -13,7 +13,7 @@
 
 #include <draw_buffers.h>
 #include <draw_primitives.h>
-#include <spacket.h>
+#include <packet2.h>
 #include "gif_sender.hpp"
 #include "vif_sender.hpp"
 #include "../models/math/plane.hpp"
@@ -118,7 +118,7 @@ private:
     TextureRepository textureRepo;
     GifSender *gifSender;
     VifSender *vifSender;
-    spacket_t *flipPacket;
+    packet2_t *flipPacket;
     void allocateBuffers(float t_screenW, float t_screenH);
     void initDrawingEnv(float t_screenW, float t_screenH);
     void setPrim();

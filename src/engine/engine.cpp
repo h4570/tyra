@@ -15,8 +15,8 @@
 #include <sifrpc.h>
 #include <time.h>
 #include <cstdlib>
-
-#include "include/modules/vu1.hpp"
+#include <vu.h>
+#include <dma.h>
 #include "include/utils/debug.hpp"
 
 // VU1 micro program
@@ -84,7 +84,9 @@ void Engine::firePS2()
 {
     SifInitRpc(0);
     srand(time(NULL));
-    VU1::uploadProgram(0, &VU1Draw3D_CodeStart, &VU1Draw3D_CodeEnd);
+    dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
+    dma_channel_fast_waits(DMA_CHANNEL_VIF1);
+    vu_upload_program(0, &VU1Draw3D_CodeStart, &VU1Draw3D_CodeEnd, DMA_CHANNEL_VIF1);
     fileService.startThread();
     audio.startThread(&fileService);
     isInitialized = 0;

@@ -37,7 +37,7 @@ void Ari::onInit()
     engine->audio.loadSong("MOV-CIRC.WAV");
     adpcm = engine->audio.loadADPCM("ziobro.adpcm");
     texRepo = engine->renderer->getTextureRepository();
-
+    engine->renderer->disableVSync();
     island.loadDff("sunnyisl/", "sunnyisl", 0.1F, false);
     island.rotation.x = -1.6F;
     island.position.set(0.0F, 10.0F, 20.0F);
@@ -49,8 +49,8 @@ void Ari::onInit()
     islandAddons.rotation.x = -1.6F;
     islandAddons.position.set(0.0F, 10.0F, 20.0F);
 
-    // skybox.loadObj("skybox/", "skybox", 100.0F, false);
-    // skybox.shouldBeFrustumCulled = false;
+    skybox.loadObj("skybox/", "skybox", 100.0F, false);
+    skybox.shouldBeFrustumCulled = false;
 
     waterFloors[0].loadObj("water/", "water", 5.0F, false);
     waterFloors[0].position.set(0.0F, 8.0F, 0.0F);
@@ -71,13 +71,13 @@ void Ari::onInit()
     }
 
     texRepo->addByMesh("sunnyisl/", island);
-    // texRepo->addByMesh("sunnyisl/", islandAddons);
+    texRepo->addByMesh("sunnyisl/", islandAddons);
 
-    // texRepo->addByMesh("skybox/", skybox);
+    texRepo->addByMesh("skybox/", skybox);
 
-    // texRepo->addByMesh("ari/", player.mesh);
+    texRepo->addByMesh("ari/", player.mesh);
 
-    // engine->audio.playSong();
+    engine->audio.playSong();
 }
 
 void Ari::initBulb()
@@ -91,14 +91,14 @@ void Ari::onUpdate()
     if (engine->pad.isCrossClicked)
     {
         engine->audio.loadSong("nob-else.wav");
-        // engine->audio.playADPCM(adpcm);
+        engine->audio.playADPCM(adpcm);
         printf("FPS:%f\n", engine->fps);
     }
     camera.update(engine->pad, player.mesh);
-    // engine->renderer->draw(skybox);
+    engine->renderer->draw(skybox);
     engine->renderer->draw(island);
-    // engine->renderer->draw(islandAddons);
-    // engine->renderer->draw(player.mesh);
+    engine->renderer->draw(islandAddons);
+    engine->renderer->draw(player.mesh);
     for (u8 i = 0; i < WATER_TILES_COUNT; i++)
         engine->renderer->drawByPath3(waterFloors[i]);
 }

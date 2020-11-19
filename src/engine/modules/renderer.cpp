@@ -40,7 +40,7 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     isVSyncEnabled = true;
     isFrameEmpty = false;
     lastTextureId = 0;
-    flipPacket = spacket_create(4, SPACKET_UNCACHED_ACCL);
+    flipPacket = packet2_create_normal(4, P2_TYPE_UNCACHED_ACCL);
     allocateBuffers(t_screen->width, t_screen->height);
     initDrawingEnv(t_screen->width, t_screen->height);
     setPrim();
@@ -106,12 +106,13 @@ void Renderer::initDrawingEnv(float t_screenW, float t_screenH)
     PRINT_LOG("Initializing drawing environment");
     u16 halfW = (u16)t_screenW / 2;
     u16 halfH = (u16)t_screenH / 2;
-    spacket_t *spacket = spacket_create(20, SPACKET_NORMAL);
-    spacket_update(spacket, draw_setup_environment(spacket->base, 0, frameBuffers, &(zBuffer)));
-    spacket_update(spacket, draw_primitive_xyoffset(spacket->next, 0, (2048 - halfW), (2048 - halfH)));
-    spacket_update(spacket, draw_finish(spacket->next));
-    spacket_send(spacket, DMA_CHANNEL_GIF, true);
-    spacket_free(spacket);
+    packet2_t *packet2 = packet2_create_normal(20, P2_TYPE_NORMAL);
+    packet2_update(packet2, draw_setup_environment(packet2->base, 0, frameBuffers, &(zBuffer)));
+    packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0, (2048 - halfW), (2048 - halfH)));
+    packet2_update(packet2, draw_finish(packet2->next));
+    dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
+    dma_channel_wait(DMA_CHANNEL_GIF, 0);
+    packet2_free(packet2);
     PRINT_LOG("Drawing environment initialized!");
 }
 
@@ -274,8 +275,8 @@ void Renderer::flipBuffers()
         0);
     context ^= 1;
     isFrameEmpty = 1;
-    spacket_update(flipPacket, draw_framebuffer(flipPacket->base, 0, &frameBuffers[context]));
-    spacket_update(flipPacket, draw_finish(flipPacket->next));
-    spacket_send(flipPacket, DMA_CHANNEL_GIF, false);
+    packet2_update(flipPacket, draw_framebuffer(flipPacket->base, 0, &frameBuffers[context]));
+    packet2_update(flipPacket, draw_finish(flipPacket->next));
+    dma_channel_send_packet2(flipPacket, DMA_CHANNEL_GIF, true);
     draw_wait_finish();
 }
