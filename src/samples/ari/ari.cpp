@@ -34,8 +34,12 @@ void Ari::onInit()
 {
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
     engine->audio.setSongVolume(40);
-    engine->audio.loadSong("MOV-CIRC.WAV");
-    adpcm = engine->audio.loadADPCM("ziobro.adpcm");
+    // engine->audio.loadSong("MOV-CIRC.WAV");
+    engine->audio.loadSong("nob-else.wav");
+
+    adpcm1 = engine->audio.loadADPCM("ziobro1.adpcm");
+    adpcm2 = engine->audio.loadADPCM("ziobro2.adpcm");
+
     texRepo = engine->renderer->getTextureRepository();
     engine->renderer->disableVSync();
     island.loadDff("sunnyisl/", "sunnyisl", 0.1F, false);
@@ -72,11 +76,8 @@ void Ari::onInit()
 
     texRepo->addByMesh("sunnyisl/", island);
     texRepo->addByMesh("sunnyisl/", islandAddons);
-
     texRepo->addByMesh("skybox/", skybox);
-
     texRepo->addByMesh("ari/", player.mesh);
-
     engine->audio.playSong();
 }
 
@@ -90,17 +91,19 @@ void Ari::onUpdate()
 {
     if (engine->pad.isCrossClicked)
     {
-        engine->audio.loadSong("nob-else.wav");
-        engine->audio.playADPCM(adpcm);
+        // engine->audio.loadSong("nob-else.wav");
+        engine->audio.playADPCM(adpcm1);
         printf("FPS:%f\n", engine->fps);
     }
+    if (engine->pad.isCircleClicked)
+        engine->audio.playADPCM(adpcm2);
     camera.update(engine->pad, player.mesh);
     engine->renderer->draw(skybox);
     engine->renderer->draw(island);
     engine->renderer->draw(islandAddons);
     engine->renderer->draw(player.mesh);
     for (u8 i = 0; i < WATER_TILES_COUNT; i++)
-        engine->renderer->drawByPath3(waterFloors[i]);
+        engine->renderer->draw(waterFloors[i]);
 }
 
 void Ari::calcSpiral(int X, int Y)

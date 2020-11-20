@@ -83,8 +83,8 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
             i++;
         }
         vu_add_end_tag(currPacket);
-        dma_channel_wait(DMA_CHANNEL_VIF1, 0);
         dma_channel_send_packet2(currPacket, DMA_CHANNEL_VIF1, 1);
+        dma_channel_wait(DMA_CHANNEL_VIF1, 0);
         context = !context;
     }
 }
@@ -117,7 +117,7 @@ void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_ver
     for (u8 j = 0; j < 4; j++)
         vu_unpack_add_u32(currPacket, 128);
 
-    //// Clipping tests start
+    // Clipping tests start
 
     // // const float minZ = 1;
     // // const float maxZ = 65535;
