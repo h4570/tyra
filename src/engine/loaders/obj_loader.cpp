@@ -147,7 +147,10 @@ void ObjLoader::allocateObjMemory(FILE *t_file, MeshFrame *o_result)
             if (strcmp(lineHeader, "usemtl") == 0)
             {
                 if (currentMatI >= 0) // Skip -1
+                {
                     o_result->getMaterial(currentMatI).allocateFaces(facesCounter);
+                    facesCounter = 0;
+                }
                 currentMatI++;
             }
             else if (strcmp(lineHeader, "f") == 0)
