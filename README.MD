@@ -43,8 +43,8 @@
 <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.1.0/tyra.gif" alt="sample" width="600" height="auto">
 
 ### Samples
-* [Floors](https://github.com/ps2-tyra/tyra/tree/master/src/samples/floors) 
-* [Ari (WIP)](https://github.com/ps2-tyra/tyra/tree/master/src/samples/ari) 
+* [Floors](https://github.com/h4570/tyra/tree/master/src/samples/floors) 
+* [Ari (WIP)](https://github.com/h4570/tyra/tree/master/src/samples/ari) 
 
 ### Contributors wanted
 #### I will be grateful for any help, Discord: Sandro#3402  
@@ -113,10 +113,10 @@ make
 ## Roadmap  
 
 ### Roadmap moved to github kanban:  
-[https://github.com/ps2-tyra/tyra/projects/1](https://github.com/ps2-tyra/tyra/projects/1)  
+[https://github.com/h4570/tyra/projects/1](https://github.com/ps2-tyra/tyra/projects/1)  
 
 
-See the [open issues](https://github.com/ps2-tyra/tyra/issues) for a list of proposed features (and known issues). 
+See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
 
 ## Contributing 
 
@@ -147,7 +147,7 @@ Without these guys, everything would be harder:
 * Whole PS2SDK/PS2Scene team
 * And so many other guys. Thanks!
 
-Project Link: [https://github.com/ps2-tyra/tyra](https://github.com/ps2-tyra/tyra)  
+Project Link: [https://github.com/h4570/tyra](https://github.com/h4570/tyra)  
 
 [contributors-shield]: https://img.shields.io/github/contributors/ps2-tyra/tyra.svg?style=flat-square  
 [contributors-url]: https://github.com/ps2-tyra/tyra/graphs/contributors 
