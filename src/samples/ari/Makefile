@@ -32,7 +32,7 @@ EE_OBJS =											\
 	ari.o											\
 	main.o
 
-EE_LIBS = -ldraw -lgraph -lmath3d -lpacket -ldma -lpacket2 -lvu -lpad -laudsrv -lc -lstdc++
+EE_LIBS = -ldraw -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++
 EE_INCS := -I./../../engine/include $(EE_INCS)
 EE_DVP = dvp-as
 EE_VCL = vcl

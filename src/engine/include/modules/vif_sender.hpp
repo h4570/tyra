@@ -12,7 +12,7 @@
 #define _TYRA_VIF_SENDER_
 
 #include <tamtypes.h>
-#include <vu.h>
+#include <packet2_vu.h>
 #include "../models/render_data.hpp"
 #include "../models/light_bulb.hpp"
 #include "../models/mesh.hpp"
@@ -32,6 +32,7 @@ public:
     void sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation);
 
 private:
+    void uploadMicroProgram();
     void setDoubleBuffer();
     void drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer);
     packet2_t *packets[2] __attribute__((aligned(64)));

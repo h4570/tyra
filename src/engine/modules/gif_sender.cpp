@@ -32,8 +32,8 @@ GifSender::GifSender(u32 t_packetSize, ScreenSettings *t_screen) : screen(t_scre
 {
     PRINT_LOG("Initializing GifSender");
     packetSize = t_packetSize;
-    packets[0] = packet2_create_chain(t_packetSize, P2_TYPE_NORMAL, false);
-    packets[1] = packet2_create_chain(t_packetSize, P2_TYPE_NORMAL, false);
+    packets[0] = packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
+    packets[1] = packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
     PRINT_LOG("GifSender initialized!");
 }
 
@@ -54,7 +54,7 @@ GifSender::~GifSender()
 /** Send texture via GIF */
 void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
 {
-    packet2_t *packet2 = packet2_create_chain(15, P2_TYPE_NORMAL, false);
+    packet2_t *packet2 = packet2_create(15, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
     packet2_update(
         packet2,
         draw_texture_transfer(
@@ -75,7 +75,7 @@ void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
 
 void GifSender::sendClear(zbuffer_t *t_zBuffer)
 {
-    packet2_t *packet2 = packet2_create_chain(36, P2_TYPE_NORMAL, false);
+    packet2_t *packet2 = packet2_create(36, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
     packet2_chain_open_end(packet2, 0, 0);
     packet2_update(packet2, draw_disable_tests(packet2->next, 0, t_zBuffer));
     packet2_update(packet2, draw_clear(packet2->next, 0,
