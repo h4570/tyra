@@ -3,7 +3,7 @@
 
 <br />
 <p align="center">
-  <a href="https://github.com/ps2-tyra/tyra">
+  <a href="https://github.com/h4570/tyra">
     <img src="http://allvectorlogo.com/img/2016/05/ps2-logo.png" alt="Logo" width="230" height="125">
   </a>
 
@@ -15,9 +15,9 @@
     <a href="https://www.youtube.com/"><strong>View Demo (soon) »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/ps2-tyra/tyra/issues">Report Bug</a>
+    <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
     ·
-    <a href="https://github.com/ps2-tyra/tyra/issues">Request Feature</a>
+    <a href="https://github.com/h4570/tyra/issues">Request Feature</a>
   </p>
 </p>  
 
