@@ -10,7 +10,7 @@
   <h3 align="center">Tyra alpha 1.1.0</h3>
 
   <p align="center">
-    First open source renderer and game engine for PS2 (PlayStation 2™).
+    Open source renderer and game engine for PS2 (PlayStation 2™).
     <br />
     <a href="https://www.youtube.com/"><strong>View Demo (soon) »</strong></a>
     <br />
