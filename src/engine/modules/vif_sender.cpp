@@ -63,8 +63,8 @@ void VifSender::uploadMicroProgram()
         1);
     packet2_vu_add_micro_program(packet2, 0, &VU1Draw3D_CodeStart, &VU1Draw3D_CodeEnd);
     packet2_vu_add_end_tag(packet2);
-    dma_channel_send_packet2(packet2, DMA_CHANNEL_VIF1, 1);
     dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+    dma_channel_send_packet2(packet2, DMA_CHANNEL_VIF1, 1);
     packet2_free(packet2);
 }
 
@@ -77,8 +77,8 @@ void VifSender::sendMatrices(const RenderData &t_renderData, const Vector3 &t_po
     packet2_reset(matricesPacket, false);
     packet2_vu_add_unpack_data(matricesPacket, 0, &localScreen, 8, 0);
     packet2_vu_add_end_tag(matricesPacket);
-    dma_channel_send_packet2(matricesPacket, DMA_CHANNEL_VIF1, 1);
     dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+    dma_channel_send_packet2(matricesPacket, DMA_CHANNEL_VIF1, 1);
 }
 
 void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)

@@ -68,6 +68,7 @@ void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
     packet2_update(packet2, draw_texture_wrapping(packet2->next, 0, texture.getWrapSettings()));
     packet2_chain_close_tag(packet2);
     packet2_update(packet2, draw_texture_flush(packet2->next));
+    dma_channel_wait(DMA_CHANNEL_GIF, 0);
     dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
     dma_channel_wait(DMA_CHANNEL_GIF, 0);
     packet2_free(packet2);
@@ -109,8 +110,8 @@ void GifSender::sendPacket()
         packet2_update(currentPacket, draw_finish(currentPacket->next));
         packet2_chain_close_tag(currentPacket);
     }
-    dma_channel_send_packet2(currentPacket, DMA_CHANNEL_GIF, true);
     dma_channel_wait(DMA_CHANNEL_GIF, 0);
+    dma_channel_send_packet2(currentPacket, DMA_CHANNEL_GIF, true);
 }
 
 /** Adds clear screen to current packet */
