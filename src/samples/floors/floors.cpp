@@ -53,7 +53,7 @@ void Floors::onUpdate()
     player.update(engine->pad, camera, floorManager);
     engine->renderer->draw(player.mesh);
     for (u8 i = 0; i < FLOORS_COUNT; i++)
-        engine->renderer->draw(floorManager.floors[i].mesh, lightManager.bulbs, lightManager.bulbsCount);
+        engine->renderer->drawByPath3(floorManager.floors[i].mesh, lightManager.bulbs, lightManager.bulbsCount);
 }
 
 void Floors::onAudioTick()

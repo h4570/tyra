@@ -14,7 +14,7 @@ int main()
 {
     Engine engine = Engine();
     Ari game = Ari(&engine);
-    game.engine->init(&game, 40000);
+    game.engine->init(&game, 128);
     SleepThread();
     return 0;
 }

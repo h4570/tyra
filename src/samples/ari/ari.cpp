@@ -78,7 +78,7 @@ void Ari::onInit()
     texRepo->addByMesh("sunnyisl/", islandAddons);
     texRepo->addByMesh("skybox/", skybox);
     texRepo->addByMesh("ari/", player.mesh);
-    engine->audio.playSong();
+    // engine->audio.playSong();
 }
 
 void Ari::initBulb()
