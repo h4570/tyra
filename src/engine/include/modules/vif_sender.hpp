@@ -12,7 +12,7 @@
 #define _TYRA_VIF_SENDER_
 
 #include <tamtypes.h>
-#include <packet2_vu.h>
+#include <packet2_utils.h>
 #include "../models/render_data.hpp"
 #include "../models/light_bulb.hpp"
 #include "../models/mesh.hpp"
