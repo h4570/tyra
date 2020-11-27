@@ -1,5 +1,6 @@
-[![Contributors][contributors-shield]][contributors-url]  
-[![MIT License][license-shield]][license-url] 
+[![Contributors][contributors-shield]][contributors-url]
+[![MIT License][license-shield]][license-url]
+[![Discord](https://img.shields.io/discord/652861436992946216?logo=discord)](https://discord.gg/7dCr6ThSN5)
 
 <br />
 <p align="center">
@@ -47,7 +48,7 @@
 * [Ari (WIP)](https://github.com/h4570/tyra/tree/master/src/samples/ari) 
 
 ### Contributors wanted
-#### I will be grateful for any help, Discord: Sandro#3402  
+#### I will be grateful for any help, Discord: h4570#3402  
   
 ### About project
 Goal of Tyra project is to provide simple API for PS2 (PlayStation 2™) game creation. So you can just run PS2 emulator, grab your .obj file, and put it into live in a seconds. Project is on early stage, so a lot of stuff is changing from release to release.  
