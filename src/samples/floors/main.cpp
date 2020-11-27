@@ -14,7 +14,7 @@ int main()
 {
     Engine engine = Engine();
     Floors game = Floors(&engine);
-    game.engine->init(&game, 40000);
+    game.engine->init(&game, 128);
     SleepThread();
     return 0;
 }

@@ -39,7 +39,7 @@ private:
     Player player;
     Mesh island, islandAddons, skybox;
     Mesh *waterFloors;
-    audsrv_adpcm_t *adpcm;
+    audsrv_adpcm_t *adpcm1, *adpcm2;
     Point *spirals;
     Camera camera;
     TextureRepository *texRepo;

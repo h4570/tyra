@@ -16,7 +16,7 @@
 #include <draw_types.h>
 #include <draw_primitives.h>
 #include <math3d.h>
-#include <packet.h>
+#include <packet2.h>
 #include "../models/mesh.hpp"
 #include "../models/math/matrix.hpp"
 #include "../models/screen_settings.hpp"
@@ -45,10 +45,8 @@ private:
     texel_t *st;
     u8 isAnyObjectAdded;
     ScreenSettings *screen;
-    u64 *dw;
-    qword_t *q, *dmatag;
-    packet_t *packets[2];
-    packet_t *currentPacket;
+    packet2_t *packets[2];
+    packet2_t *currentPacket;
     u8 packetsCount;
     int packetSize;
     float halfScreenW, halfScreenH;

@@ -117,7 +117,7 @@ audsrv_adpcm_t *Audio::loadADPCM(char *t_path)
     char *fullFilename = String::createConcatenated("host:", t_path);
     FILE *file = fopen(fullFilename, "rb");
     delete[] fullFilename;
-    fseek(file, 0L, SEEK_END);
+    fseek(file, 0, SEEK_END);
     u32 adpcmFileSize = ftell(file);
     u8 data[adpcmFileSize];
     rewind(file);

@@ -19,7 +19,6 @@ EE_OBJS =											\
 	../../engine/modules/texture_repository.o		\
 	../../engine/modules/timer.o					\
 	../../engine/modules/vif_sender.o				\
-	../../engine/modules/vu1.o						\
 	../../engine/utils/math.o						\
 	../../engine/utils/string.o						\
 	../../engine/loaders/bmp_loader.o				\
@@ -37,7 +36,7 @@ EE_OBJS =											\
 	floors.o										\
 	main.o
 
-EE_LIBS = -ldraw -lgraph -lmath3d -lpacket -ldma -lpad -laudsrv -lc -lstdc++
+EE_LIBS = -ldraw -lgraph -lmath3d -lpacket -ldma -lpad -lpacket2 -laudsrv -lc -lstdc++
 EE_INCS := -I./../../engine/include $(EE_INCS)
 EE_DVP = dvp-as
 EE_VCL = openvcl
@@ -55,6 +54,15 @@ all: $(EE_BIN)
 
 clean:
 	rm -f $(EE_BIN) $(EE_OBJS)
+
+run: $(EE_BIN)
+	killall -v ps2client || true
+	ps2client reset
+	ps2client reset
+	$(EE_STRIP) --strip-all $(EE_BIN)
+	mv $(EE_BIN) bin/$(EE_BIN)
+	rm $(EE_OBJS)
+	cd bin/ && ps2client execee host:$(EE_BIN)
 
 include $(PS2SDK)/samples/Makefile.pref
 include $(PS2SDK)/samples/Makefile.eeglobal

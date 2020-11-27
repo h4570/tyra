@@ -32,16 +32,16 @@ GifSender::GifSender(u32 t_packetSize, ScreenSettings *t_screen) : screen(t_scre
 {
     PRINT_LOG("Initializing GifSender");
     packetSize = t_packetSize;
-    packets[0] = packet_init(t_packetSize, PACKET_NORMAL);
-    packets[1] = packet_init(t_packetSize, PACKET_NORMAL);
+    packets[0] = packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
+    packets[1] = packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
     PRINT_LOG("GifSender initialized!");
 }
 
 /** Releases packets memory */
 GifSender::~GifSender()
 {
-    packet_free(packets[0]);
-    packet_free(packets[1]);
+    packet2_free(packets[0]);
+    packet2_free(packets[1]);
 }
 
 // ----
@@ -54,37 +54,41 @@ GifSender::~GifSender()
 /** Send texture via GIF */
 void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
 {
-    const u16 packetSize = 40;
-    packet_t *packet = packet_init(packetSize, PACKET_NORMAL);
-    qword_t *q = packet->data;
-    q = draw_texture_transfer(q, texture.getData(), texture.getWidth(), texture.getHeight(), GS_PSM_24, t_texBuffer->address, t_texBuffer->width);
-    DMATAG_CNT(q, 2, 0, 0, 0);
-    q++;
-    q = draw_texture_wrapping(q, 0, texture.getWrapSettings());
-    q = draw_texture_flush(q);
-    FlushCache(0);
-    dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
-    dma_wait_fast();
-    packet_free(packet);
+    packet2_t *packet2 = packet2_create(15, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
+    packet2_update(
+        packet2,
+        draw_texture_transfer(
+            packet2->base,
+            texture.getData(),
+            texture.getWidth(),
+            texture.getHeight(), GS_PSM_24,
+            t_texBuffer->address,
+            t_texBuffer->width));
+    packet2_chain_open_cnt(packet2, 0, 0, 0);
+    packet2_update(packet2, draw_texture_wrapping(packet2->next, 0, texture.getWrapSettings()));
+    packet2_chain_close_tag(packet2);
+    packet2_update(packet2, draw_texture_flush(packet2->next));
+    dma_channel_wait(DMA_CHANNEL_GIF, 0);
+    dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
+    dma_channel_wait(DMA_CHANNEL_GIF, 0);
+    packet2_free(packet2);
 }
 
 void GifSender::sendClear(zbuffer_t *t_zBuffer)
 {
-    packet_t *packet = packet_init(100, PACKET_NORMAL);
-    qword_t *q = packet->data;
-    q++;
-    q = draw_disable_tests(q, 0, t_zBuffer);
-    q = draw_clear(q, 0,
-                   2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
-                   screen->width, screen->height,
-                   0x10, 0x10, 0x10);
-    q = draw_enable_tests(q, 0, t_zBuffer);
-    q = draw_finish(q);
-    DMATAG_END(packet->data, q - packet->data - 1, 0, 0, 0);
-    FlushCache(0);
-    dma_channel_send_chain(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
-    dma_wait_fast();
-    packet_free(packet);
+    packet2_t *packet2 = packet2_create(36, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
+    packet2_chain_open_end(packet2, 0, 0);
+    packet2_update(packet2, draw_disable_tests(packet2->next, 0, t_zBuffer));
+    packet2_update(packet2, draw_clear(packet2->next, 0,
+                                       2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
+                                       screen->width, screen->height,
+                                       0x10, 0x10, 0x10));
+    packet2_update(packet2, draw_enable_tests(packet2->next, 0, t_zBuffer));
+    packet2_update(packet2, draw_finish(packet2->next));
+    packet2_chain_close_tag(packet2);
+    dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
+    dma_channel_wait(DMA_CHANNEL_GIF, 0);
+    packet2_free(packet2);
 }
 
 /** Used in game loop.
@@ -93,12 +97,8 @@ void GifSender::sendClear(zbuffer_t *t_zBuffer)
 void GifSender::initPacket(u8 t_context)
 {
     currentPacket = packets[t_context];
-    if (currentPacket->qwords > (u32)packetSize || currentPacket->qwords < 0)
-        PRINT_ERR("GifSender packet size error. Please consider to change packet size!\n");
-    q = currentPacket->data;
-    dmatag = q;
-    q++;
-    isAnyObjectAdded = 0;
+    packet2_reset(currentPacket, false);
+    isAnyObjectAdded = false;
 }
 
 /** Sends packet to GIF. */
@@ -106,25 +106,25 @@ void GifSender::sendPacket()
 {
     if (isAnyObjectAdded)
     {
-        dmatag = q;
-        q++;
+        packet2_chain_open_end(currentPacket, 0, 0);
+        packet2_update(currentPacket, draw_finish(currentPacket->next));
+        packet2_chain_close_tag(currentPacket);
     }
-    q = draw_finish(q);
-    DMATAG_END(dmatag, q - dmatag - 1, 0, 0, 0);
-    FlushCache(0);
-    dma_channel_send_chain(DMA_CHANNEL_GIF, currentPacket->data, q - currentPacket->data, 0, 0);
-    dma_wait_fast();
+    dma_channel_wait(DMA_CHANNEL_GIF, 0);
+    dma_channel_send_packet2(currentPacket, DMA_CHANNEL_GIF, true);
 }
 
 /** Adds clear screen to current packet */
 void GifSender::addClear(zbuffer_t *t_zBuffer)
 {
-    q = draw_disable_tests(q, 0, t_zBuffer);
-    q = draw_clear(q, 0,
-                   2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
-                   screen->width, screen->height,
-                   0x10, 0x10, 0x10);
-    q = draw_enable_tests(q, 0, t_zBuffer);
+    packet2_chain_open_cnt(currentPacket, 0, 0, 0);
+    packet2_update(currentPacket, draw_disable_tests(currentPacket->next, 0, t_zBuffer));
+    packet2_update(currentPacket, draw_clear(currentPacket->next, 0,
+                                             2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
+                                             screen->width, screen->height,
+                                             0x10, 0x10, 0x10));
+    packet2_update(currentPacket, draw_enable_tests(currentPacket->next, 0, t_zBuffer));
+    packet2_chain_close_tag(currentPacket);
 }
 
 /** Adds 3D objects to current packet
@@ -135,19 +135,10 @@ void GifSender::addClear(zbuffer_t *t_zBuffer)
  */
 void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
-    if (!isAnyObjectAdded)
-    {
-        isAnyObjectAdded = true;
-        DMATAG_CNT(dmatag, q - dmatag - 1, 0, 0, 0); // init tag (before first 3d obj)
-    }
-    qword_t *tempDMATag;
-    tempDMATag = q;
-    q++;
-
-    q = draw_texture_sampling(q, 0, &t_mesh.lod);
-    q = draw_texturebuffer(q, 0, textureBuffer, &t_mesh.clut);
-    dw = (u64 *)draw_prim_start(q, 0, t_renderData->prim, &t_mesh.color);
-
+    packet2_chain_open_cnt(currentPacket, 0, 0, 0);
+    packet2_update(currentPacket, draw_texture_sampling(currentPacket->next, 0, &t_mesh.lod));
+    packet2_update(currentPacket, draw_texturebuffer(currentPacket->next, 0, textureBuffer, &t_mesh.clut));
+    packet2_update(currentPacket, draw_prim_start(currentPacket->next, 0, t_renderData->prim, &t_mesh.color));
     xyz = new xyz_t[vertexCount];
     rgbaq = new color_t[vertexCount];
     st = new texel_t[vertexCount];
@@ -156,13 +147,8 @@ void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCoun
     delete[] xyz;
     delete[] rgbaq;
     delete[] st;
-
-    if ((u32)dw % 16) // if we are in the middle of qw, switch packet
-        *dw++ = 0;
-
-    q = draw_prim_end((qword_t *)dw, 3, DRAW_STQ_REGLIST);
-
-    DMATAG_CNT(tempDMATag, q - tempDMATag - 1, 0, 0, 0);
+    packet2_update(currentPacket, draw_prim_end(currentPacket->next, 3, DRAW_STQ_REGLIST));
+    packet2_chain_close_tag(currentPacket);
 }
 
 /** Calculates 3D object data into xyz, rgbq, st
@@ -266,8 +252,9 @@ void GifSender::addCurrentCalcs(u32 &t_vertexCount)
 {
     for (u32 i = 0; i < t_vertexCount; i++)
     {
-        *dw++ = rgbaq[i].rgbaq;
-        *dw++ = st[i].uv;
-        *dw++ = xyz[i].xyz;
+        packet2_add_u64(currentPacket, rgbaq[i].rgbaq);
+        packet2_add_u64(currentPacket, st[i].uv);
+        packet2_add_u64(currentPacket, xyz[i].xyz);
     }
+    packet2_align_to_qword(currentPacket);
 }

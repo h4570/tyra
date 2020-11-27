@@ -40,7 +40,7 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     isVSyncEnabled = true;
     isFrameEmpty = false;
     lastTextureId = 0;
-    flipPacket = packet_init(3, PACKET_UCAB); // Uncached accelerated
+    flipPacket = packet2_create(4, P2_TYPE_UNCACHED_ACCL, P2_MODE_NORMAL, 0);
     allocateBuffers(t_screen->width, t_screen->height);
     initDrawingEnv(t_screen->width, t_screen->height);
     setPrim();
@@ -104,17 +104,15 @@ void Renderer::changeTexture(const Mesh &t_mesh, u32 t_materialId)
 void Renderer::initDrawingEnv(float t_screenW, float t_screenH)
 {
     PRINT_LOG("Initializing drawing environment");
-    packet_t *packet = packet_init(20, PACKET_NORMAL);
     u16 halfW = (u16)t_screenW / 2;
     u16 halfH = (u16)t_screenH / 2;
-    qword_t *q = packet->data; // Generic qword pointer.
-    q = draw_setup_environment(q, 0, frameBuffers, &(zBuffer));
-    q = draw_primitive_xyoffset(q, 0, (2048 - halfW), (2048 - halfH));
-    q = draw_finish(q);
-    // Now send the packet, no need to wait since it's the first.
-    dma_channel_send_normal(DMA_CHANNEL_GIF, packet->data, q - packet->data, 0, 0);
-    dma_wait_fast();
-    packet_free(packet);
+    packet2_t *packet2 = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
+    packet2_update(packet2, draw_setup_environment(packet2->base, 0, frameBuffers, &(zBuffer)));
+    packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0, (2048 - halfW), (2048 - halfH)));
+    packet2_update(packet2, draw_finish(packet2->next));
+    dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
+    dma_channel_wait(DMA_CHANNEL_GIF, 0);
+    packet2_free(packet2);
     PRINT_LOG("Drawing environment initialized!");
 }
 
@@ -277,10 +275,8 @@ void Renderer::flipBuffers()
         0);
     context ^= 1;
     isFrameEmpty = 1;
-    qword_t *q = flipPacket->data;
-    q = draw_framebuffer(q, 0, &frameBuffers[context]);
-    q = draw_finish(q);
-    dma_wait_fast();
-    dma_channel_send_normal_ucab(DMA_CHANNEL_GIF, flipPacket->data, q - flipPacket->data, 0);
+    packet2_update(flipPacket, draw_framebuffer(flipPacket->base, 0, &frameBuffers[context]));
+    packet2_update(flipPacket, draw_finish(flipPacket->next));
+    dma_channel_send_packet2(flipPacket, DMA_CHANNEL_GIF, true);
     draw_wait_finish();
 }

@@ -15,14 +15,7 @@
 #include <sifrpc.h>
 #include <time.h>
 #include <cstdlib>
-
-#include "include/modules/vu1.hpp"
 #include "include/utils/debug.hpp"
-
-// VU1 micro program
-extern u32 VU1Draw3D_CodeStart __attribute__((section(".vudata")));
-extern u32 VU1Draw3D_CodeEnd __attribute__((section(".vudata")));
-//
 
 // ----
 // Constructors/Destructors
@@ -84,7 +77,6 @@ void Engine::firePS2()
 {
     SifInitRpc(0);
     srand(time(NULL));
-    VU1::uploadProgram(0, &VU1Draw3D_CodeStart, &VU1Draw3D_CodeEnd);
     fileService.startThread();
     audio.startThread(&fileService);
     isInitialized = 0;
