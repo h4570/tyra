@@ -44,6 +44,7 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     allocateBuffers(t_screen->width, t_screen->height);
     initDrawingEnv(t_screen->width, t_screen->height);
     setPrim();
+    screen = t_screen;
     gifSender = new GifSender(t_packetSize, t_screen);
     vifSender = new VifSender();
     perspective.setPerspective(*t_screen);
@@ -98,6 +99,40 @@ void Renderer::changeTexture(const Mesh &t_mesh, u32 t_materialId)
     }
     else
         PRINT_ERR("Texture was not found in texture repository!");
+}
+
+void Renderer::drawRectangle()
+{
+    beginFrameIfNeeded();
+    packet2_t *packet2 = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
+    packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0, 2048, 2048));
+
+    int loop0 = 10;
+
+    packet2_add_s64(packet2, GIF_SET_TAG(4, 0, 0, 0, GIF_FLG_PACKED, 1));
+    packet2_add_s64(packet2, GIF_REG_AD);
+
+    packet2_add_s64(packet2, GIF_SET_PRIM(6, 0, 0, 0, 0, 0, 0, 0, 0));
+    packet2_add_s64(packet2, GIF_REG_PRIM);
+
+    packet2_add_s64(packet2, GIF_SET_RGBAQ((loop0 * 10), 0, 255 - (loop0 * 10), 0x80, 0x3F800000));
+    packet2_add_s64(packet2, GIF_REG_RGBAQ);
+
+    packet2_add_s64(packet2, GIF_SET_XYZ(((loop0 * 20) << 4) + (2048 << 4), ((loop0 * 10) << 4) + (2048 << 4), -128));
+    packet2_add_s64(packet2, GIF_REG_XYZ2);
+
+    packet2_add_s64(packet2, GIF_SET_XYZ((((loop0 * 20) + 100) << 4) + (2048 << 4), (((loop0 * 10) + 100) << 4) + (2048 << 4), -128));
+    packet2_add_s64(packet2, GIF_REG_XYZ2);
+
+    packet2_update(packet2,
+                   draw_primitive_xyoffset(
+                       packet2->next,
+                       0,
+                       (2048 - (screen->width / 2)), (2048 - (screen->height / 2))));
+    packet2_update(packet2, draw_finish(packet2->next));
+    dma_channel_wait(DMA_CHANNEL_GIF, 0);
+    dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
+    packet2_free(packet2);
 }
 
 /** Initializes drawing environment (1st app packet) */

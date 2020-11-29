@@ -103,6 +103,8 @@ public:
 
     TextureRepository *getTextureRepository() { return &textureRepo; };
 
+    void drawRectangle();
+
 private:
     void changeTexture(const Mesh &t_mesh, u32 t_materialId);
     u32 lastTextureId;
@@ -116,6 +118,7 @@ private:
     Matrix perspective;
     RenderData renderData;
     TextureRepository textureRepo;
+    ScreenSettings *screen;
     GifSender *gifSender;
     VifSender *vifSender;
     packet2_t *flipPacket;
