@@ -108,7 +108,7 @@ public:
     // ----
 
     /** 
-     * Load mesh data from .obj files. Animation not supported.
+     * Load mesh data from .obj files. Animation supported.
      * Be aware that texture names will be grabbed from material name.
      * So no .mtl file is needed. Please check if material names in .obj file
      * are equal to texture file names.
@@ -124,7 +124,7 @@ public:
     void loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT);
 
     /** 
-     * Load mesh data from .obj file. Animation supported.
+     * Load mesh data from .obj file. Animation not supported.
      * Be aware that texture names will be grabbed from material name.
      * So no .mtl file is needed. Please check if material names in .obj file
      * are equal to texture file names.

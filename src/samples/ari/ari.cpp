@@ -78,7 +78,7 @@ void Ari::onInit()
     texRepo->addByMesh("sunnyisl/", islandAddons);
     texRepo->addByMesh("skybox/", skybox);
     texRepo->addByMesh("ari/", player.mesh);
-    // engine->audio.playSong();
+    engine->audio.playSong();
 }
 
 void Ari::initBulb()
@@ -98,6 +98,7 @@ void Ari::onUpdate()
     if (engine->pad.isCircleClicked)
         engine->audio.playADPCM(adpcm2);
     camera.update(engine->pad, player.mesh);
+    engine->renderer->drawRectangle();
     engine->renderer->draw(skybox);
     engine->renderer->draw(island);
     engine->renderer->draw(islandAddons);

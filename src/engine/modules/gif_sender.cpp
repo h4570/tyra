@@ -86,6 +86,7 @@ void GifSender::sendClear(zbuffer_t *t_zBuffer)
     packet2_update(packet2, draw_enable_tests(packet2->next, 0, t_zBuffer));
     packet2_update(packet2, draw_finish(packet2->next));
     packet2_chain_close_tag(packet2);
+    dma_channel_wait(DMA_CHANNEL_GIF, 0);
     dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
     dma_channel_wait(DMA_CHANNEL_GIF, 0);
     packet2_free(packet2);
