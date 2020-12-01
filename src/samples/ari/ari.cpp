@@ -34,8 +34,8 @@ void Ari::onInit()
 {
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
     engine->audio.setSongVolume(40);
-    // engine->audio.loadSong("MOV-CIRC.WAV");
-    engine->audio.loadSong("nob-else.wav");
+    engine->audio.loadSong("MOV-CIRC.WAV");
+    //engine->audio.loadSong("nob-else.wav");
 
     adpcm1 = engine->audio.loadADPCM("ziobro1.adpcm");
     adpcm2 = engine->audio.loadADPCM("ziobro2.adpcm");
