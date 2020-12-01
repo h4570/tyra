@@ -125,7 +125,7 @@ void VifSender::setDoubleBuffer()
 void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer)
 {
     const u32 vertCount = t_end - t_start;
-    currPacket->vif_added_bytes = 0;
+    u32 vif_added_bytes = 0;
     packet2_utils_vu_open_unpack(currPacket, 0, 1);
     // TODO get this via screensettings
     packet2_add_float(currPacket, 2048.0F);                   // scale
@@ -181,8 +181,10 @@ void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_ver
     packet2_add_float(currPacket, 0.0F);
 
     //// Clipping tests end
-    packet2_utils_vu_close_unpack(currPacket);
-    packet2_utils_vu_add_unpack_data(currPacket, packet2_get_vif_added_qws(currPacket), t_vertices + t_start, vertCount, 1);
-    packet2_utils_vu_add_unpack_data(currPacket, packet2_get_vif_added_qws(currPacket), t_coordinates + t_start, vertCount, 1);
+    vif_added_bytes += packet2_utils_vu_close_unpack(currPacket);
+    packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_vertices + t_start, vertCount, 1);
+    vif_added_bytes += vertCount;
+    packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_coordinates + t_start, vertCount, 1);
+    vif_added_bytes += vertCount;
     packet2_utils_vu_add_start_program(currPacket, 0);
 }

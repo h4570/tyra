@@ -13,6 +13,7 @@
 #include "../include/utils/math.hpp"
 #include "../include/utils/debug.hpp"
 #include "../include/modules/light.hpp"
+#include <packet2_chain.h>
 #include <kernel.h>
 #include <dma.h>
 #include <draw.h>
@@ -61,7 +62,8 @@ void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
             packet2->base,
             texture.getData(),
             texture.getWidth(),
-            texture.getHeight(), GS_PSM_24,
+            texture.getHeight(),
+            texture.getType(),
             t_texBuffer->address,
             t_texBuffer->width));
     packet2_chain_open_cnt(packet2, 0, 0, 0);
@@ -257,5 +259,5 @@ void GifSender::addCurrentCalcs(u32 &t_vertexCount)
         packet2_add_u64(currentPacket, st[i].uv);
         packet2_add_u64(currentPacket, xyz[i].xyz);
     }
-    packet2_align_to_qword(currentPacket);
+    packet2_pad128(currentPacket, 0);
 }
