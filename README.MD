@@ -1,6 +1,6 @@
 [![Contributors][contributors-shield]][contributors-url]
-[![MIT License][license-shield]][license-url]
-[![Discord](https://img.shields.io/discord/652861436992946216?logo=discord)](https://discord.gg/7dCr6ThSN5)
+[![MIT License][license-shield]][license-url]  
+PS2-Scene [![Discord](https://img.shields.io/discord/652861436992946216?logo=discord)](https://discord.gg/7dCr6ThSN5)
 
 <br />
 <p align="center">
