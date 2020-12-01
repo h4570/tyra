@@ -39,15 +39,18 @@ MeshTexture::~MeshTexture()
 // Methods
 // ----
 
-void MeshTexture::setSize(const u8 &t_width, const u8 &t_height)
+void MeshTexture::setSize(const u8 &t_width, const u8 &t_height, const TextureType &t_type)
 {
     if (_isSizeSet)
     {
         PRINT_ERR("Can't set size, because was already set!");
         return;
     }
+    if (t_width > 256 || t_height > 256)
+        PRINT_ERR("Given texture can be too big for PS2. Please strict to 256x256 max. Prefer 128x128.");
     width = t_width;
     height = t_height;
+    _type = t_type;
     data = new unsigned char[getDataSize()];
     _isSizeSet = true;
 }
@@ -84,5 +87,13 @@ void MeshTexture::addLink(const u32 &t_meshId, const u32 &t_materialId)
     TextureLink link;
     link.materialId = t_materialId;
     link.meshId = t_meshId;
+    texLinks.push_back(link);
+}
+
+void MeshTexture::addLink(const u32 &t_spriteId)
+{
+    TextureLink link;
+    link.materialId = 0;
+    link.meshId = t_spriteId;
     texLinks.push_back(link);
 }

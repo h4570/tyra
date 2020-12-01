@@ -8,6 +8,7 @@ EE_OBJS =											\
 	../../engine/models/mesh_frame.o				\
 	../../engine/models/mesh_material.o				\
 	../../engine/models/mesh.o						\
+	../../engine/models/sprite.o					\
 	../../engine/models/mesh_texture.o				\
 	../../engine/modules/audio.o					\
 	../../engine/modules/camera_base.o				\
@@ -25,6 +26,7 @@ EE_OBJS =											\
 	../../engine/loaders/dff_loader.o				\
 	../../engine/loaders/md2_loader.o				\
 	../../engine/loaders/obj_loader.o				\
+	../../engine/loaders/png_loader.o				\
 	../../engine/vu1_progs/draw3D.o					\
 	../../engine/engine.o							\
 	managers/light_manager.o						\
@@ -36,10 +38,14 @@ EE_OBJS =											\
 	floors.o										\
 	main.o
 
-EE_LIBS = -ldraw -lgraph -lmath3d -lpacket -ldma -lpad -lpacket2 -laudsrv -lc -lstdc++
-EE_INCS := -I./../../engine/include $(EE_INCS)
+EE_LIBS = -ldraw -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++ -lpng -lz
+EE_INCS := -I./../../engine/include -I$(PS2SDK)/ports/include $(EE_INCS)
+EE_LDFLAGS := -L$(PS2SDK)/ports/lib $(EE_LDFLAGS)
+EE_CFLAGS := -DHAVE_LIBPNG -DHAVE_ZLIB $(EE_CFLAGS)
+EE_CXXFLAGS := -DHAVE_LIBPNG -DHAVE_ZLIB $(EE_CXXFLAGS)
 EE_DVP = dvp-as
-EE_VCL = openvcl
+EE_VCL = vcl
+
 
 all: $(EE_BIN)
 	$(EE_STRIP) --strip-all $(EE_BIN)

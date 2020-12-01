@@ -9,6 +9,7 @@
 */
 
 #include "../../include/models/math/point.hpp"
+#include "../../include/utils/math.hpp"
 
 #include <stdio.h>
 
@@ -53,6 +54,21 @@ void Point::set(const Point &v)
 {
     x = v.x;
     y = v.y;
+}
+
+void Point::rotate(const float &t_angle, const float &t_x, const float &t_y)
+{
+    float s = Math::sin(t_angle);
+    float c = Math::cos(t_angle);
+
+    x -= t_x;
+    y -= t_y;
+
+    float xnew = x * c - y * s;
+    float ynew = x * s + y * c;
+
+    x = xnew + t_x;
+    y = ynew + t_y;
 }
 
 const void Point::print() const

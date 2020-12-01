@@ -17,6 +17,13 @@
 #include "../models/mesh.hpp"
 #include "../models/mesh_frame.hpp"
 #include "../loaders/bmp_loader.hpp"
+#include "../loaders/png_loader.hpp"
+
+enum TextureFormat
+{
+    BMP,
+    PNG
+};
 
 /** Class responsible for intializing draw env, textures and buffers */
 class TextureRepository
@@ -34,6 +41,18 @@ public:
     std::vector<MeshTexture *> *getAll() { return &textures; }
 
     u32 getTexturesCount() const { return static_cast<u32>(textures.size()); };
+
+    /** 
+     * Returns single texture.
+     * NULL if not found.
+     */
+    MeshTexture *getBySprite(const u32 &t_spriteId)
+    {
+        for (u32 i = 0; i < textures.size(); i++)
+            if (textures[i]->isLinkedWith(t_spriteId))
+                return textures[i];
+        return NULL;
+    }
 
     /** 
      * Returns single texture.
@@ -79,20 +98,22 @@ public:
     //  Other
     // ----
 
-    /** Add unlinked texture.
-     * NOTICE: BMP (RGB 888 24bit, without color information) is suppored only!
+    /** 
+     * Add unlinked texture.
      * @param t_subfolder Relative path. Ex.: "textures/"
      * @param t_name Filename without extension. Ex.: "water"
-     * 
+     * @param t_format if you want to use BMP, be sure that you have 
+     * BMP with RGB 888 24bit, without color information.
      */
-    MeshTexture *add(char *t_subfolder, char *t_name);
+    MeshTexture *add(char *t_subfolder, char *t_name, TextureFormat t_format);
 
     /** 
      * Add linked textures in given subpath for mesh material names.
-     * NOTICE: BMP (RGB 888 24bit, without color information) is suppored only!
-     * @param t_path Relative path where textures should be searched
+     * @param t_path Relative path where textures should be searched.
+     * @param t_format if you want to use BMP, be sure that you have 
+     * BMP with RGB 888 24bit, without color information.
      */
-    void addByMesh(char *t_path, Mesh &mesh);
+    void addByMesh(char *t_path, Mesh &mesh, TextureFormat t_format);
 
     /** 
      * Remove texture from repository.
@@ -115,7 +136,8 @@ public:
 
 private:
     std::vector<MeshTexture *> textures;
-    BmpLoader loader;
+    BmpLoader bmpLoader;
+    PngLoader pngLoader;
 };
 
 #endif

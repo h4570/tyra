@@ -32,6 +32,7 @@ public:
     ~Point();
 
     void set(const float &t_x, const float &t_y);
+    void rotate(const float &t_angle, const float &t_x, const float &t_y);
     void set(const Point &v);
     const void print() const;
 };

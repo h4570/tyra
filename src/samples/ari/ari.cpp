@@ -48,6 +48,10 @@ void Ari::onInit()
     island.shouldBeBackfaceCulled = true;
     island.shouldBeFrustumCulled = false;
 
+    fist.size.set(100.0F, 100.0F);
+    MeshTexture *fistTex = texRepo->add("2d/", "fist", PNG);
+    fistTex->addLink(fist.getId());
+
     islandAddons.loadDff("sunnyisl/", "sunnyisl3", 0.1F, false);
     islandAddons.shouldBeBackfaceCulled = true;
     islandAddons.rotation.x = -1.6F;
@@ -58,7 +62,7 @@ void Ari::onInit()
 
     waterFloors[0].loadObj("water/", "water", 5.0F, false);
     waterFloors[0].position.set(0.0F, 8.0F, 0.0F);
-    texRepo->addByMesh("water/", waterFloors[0]);
+    texRepo->addByMesh("water/", waterFloors[0], BMP);
     for (u8 i = 0; i < WATER_TILES_COUNT; i++)
     {
         spirals[i].x = 1.0F;
@@ -74,11 +78,11 @@ void Ari::onInit()
             ->addLink(waterFloors[i].getId(), waterFloors[i].getMaterial(0).getId());
     }
 
-    texRepo->addByMesh("sunnyisl/", island);
-    texRepo->addByMesh("sunnyisl/", islandAddons);
-    texRepo->addByMesh("skybox/", skybox);
-    texRepo->addByMesh("ari/", player.mesh);
-    engine->audio.playSong();
+    texRepo->addByMesh("sunnyisl/", island, BMP);
+    texRepo->addByMesh("sunnyisl/", islandAddons, BMP);
+    texRepo->addByMesh("skybox/", skybox, BMP);
+    texRepo->addByMesh("ari/", player.mesh, BMP);
+    // engine->audio.playSong();
 }
 
 void Ari::initBulb()
@@ -98,8 +102,8 @@ void Ari::onUpdate()
     if (engine->pad.isCircleClicked)
         engine->audio.playADPCM(adpcm2);
     camera.update(engine->pad, player.mesh);
-    engine->renderer->drawRectangle();
     engine->renderer->draw(skybox);
+    engine->renderer->draw(fist);
     engine->renderer->draw(island);
     engine->renderer->draw(islandAddons);
     engine->renderer->draw(player.mesh);
