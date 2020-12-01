@@ -8,8 +8,8 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#ifndef _TYRA_MESH_TEXTURE_
-#define _TYRA_MESH_TEXTURE_
+#ifndef _TYRA_TEXTURE_
+#define _TYRA_TEXTURE_
 
 #include <tamtypes.h>
 #include <draw_sampling.h>
@@ -27,15 +27,15 @@ enum TextureType
 
 /** 
  * Class which contains texture data.
- * Textures are paired with meshes via addLink() and 
- * removeLink() functions which use meshId and materialId.
+ * Textures are paired with meshes/sprites via addLink() and 
+ * removeLink() functions which use meshId/spriteId and materialId (for mesh).
  */
-class MeshTexture
+class Texture
 {
 
 public:
-    MeshTexture();
-    ~MeshTexture();
+    Texture();
+    ~Texture();
 
     // ----
     // Getters
@@ -87,7 +87,7 @@ public:
     const s32 getIndexOfLink(const u32 &t_meshId, const u32 &t_materialId) const
     {
         for (u32 i = 0; i < texLinks.size(); i++)
-            if (texLinks[i].materialId == t_materialId && texLinks[i].meshId == t_meshId)
+            if (texLinks[i].materialId == t_materialId && texLinks[i].meshOrSpriteId == t_meshId)
                 return i;
         return -1;
     };

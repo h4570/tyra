@@ -107,11 +107,11 @@ public:
     TextureRepository *getTextureRepository() { return &textureRepo; };
 
 private:
-    void changeTexture(MeshTexture *t_tex);
+    void changeTexture(Texture *t_tex);
     u32 lastTextureId;
     texbuffer_t textureBuffer;
     u8 isTextureVRAMAllocated, isVSyncEnabled;
-    void allocateTextureBuffer(MeshTexture *t_texture);
+    void allocateTextureBuffer(Texture *t_texture);
     void deallocateTextureBuffer();
     void flipBuffers();
     void beginFrameIfNeeded();

@@ -38,7 +38,7 @@ public:
     // ----
 
     /** Returns all repository textures. */
-    std::vector<MeshTexture *> *getAll() { return &textures; }
+    std::vector<Texture *> *getAll() { return &textures; }
 
     u32 getTexturesCount() const { return static_cast<u32>(textures.size()); };
 
@@ -46,7 +46,7 @@ public:
      * Returns single texture.
      * NULL if not found.
      */
-    MeshTexture *getBySprite(const u32 &t_spriteId)
+    Texture *getBySprite(const u32 &t_spriteId)
     {
         for (u32 i = 0; i < textures.size(); i++)
             if (textures[i]->isLinkedWith(t_spriteId))
@@ -58,7 +58,7 @@ public:
      * Returns single texture.
      * NULL if not found.
      */
-    MeshTexture *getByMesh(const u32 &t_meshId, const u32 &t_materialId)
+    Texture *getByMesh(const u32 &t_meshId, const u32 &t_materialId)
     {
         for (u32 i = 0; i < textures.size(); i++)
             if (textures[i]->isLinkedWith(t_meshId, t_materialId))
@@ -70,7 +70,7 @@ public:
      * Returns single texture.
      * NULL if not found.
      */
-    MeshTexture *getByTextureId(const u32 &t_id) const
+    Texture *getByTextureId(const u32 &t_id) const
     {
         for (u32 i = 0; i < textures.size(); i++)
             if (t_id == textures[i]->getId())
@@ -105,7 +105,7 @@ public:
      * @param t_format if you want to use BMP, be sure that you have 
      * BMP with RGB 888 24bit, without color information.
      */
-    MeshTexture *add(char *t_subfolder, char *t_name, TextureFormat t_format);
+    Texture *add(char *t_subfolder, char *t_name, TextureFormat t_format);
 
     /** 
      * Add linked textures in given subpath for mesh material names.
@@ -135,7 +135,7 @@ public:
     }
 
 private:
-    std::vector<MeshTexture *> textures;
+    std::vector<Texture *> textures;
     BmpLoader bmpLoader;
     PngLoader pngLoader;
 };

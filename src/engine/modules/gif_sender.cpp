@@ -53,7 +53,7 @@ GifSender::~GifSender()
 #include <gs_gp.h>
 
 /** Send texture via GIF */
-void GifSender::sendTexture(MeshTexture &texture, texbuffer_t *t_texBuffer)
+void GifSender::sendTexture(Texture &texture, texbuffer_t *t_texBuffer)
 {
     packet2_t *packet2 = packet2_create(15, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
     packet2_update(

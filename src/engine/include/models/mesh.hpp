@@ -13,7 +13,7 @@
 
 #include "math/vector3.hpp"
 #include "math/plane.hpp"
-#include "./mesh_texture.hpp"
+#include "./texture.hpp"
 #include "./mesh_frame.hpp"
 #include <tamtypes.h>
 #include <draw_types.h>

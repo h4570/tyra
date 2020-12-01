@@ -59,7 +59,7 @@ Renderer::~Renderer() {}
 // ----
 
 /** Configure and allocate vRAM for texture buffer */
-void Renderer::allocateTextureBuffer(MeshTexture *t_texture)
+void Renderer::allocateTextureBuffer(Texture *t_texture)
 {
     textureBuffer.width = t_texture->getWidth();
     textureBuffer.psm = t_texture->getType();
@@ -83,7 +83,7 @@ void Renderer::deallocateTextureBuffer()
     }
 }
 
-void Renderer::changeTexture(MeshTexture *t_tex)
+void Renderer::changeTexture(Texture *t_tex)
 {
     if (t_tex != NULL)
     {
@@ -211,7 +211,7 @@ void Renderer::drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     {
         if (t_mesh.shouldBeFrustumCulled && !t_mesh.getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh.position))
             return;
-        MeshTexture *tex = textureRepo.getByMesh(t_mesh.getId(), t_mesh.getMaterial(i).getId());
+        Texture *tex = textureRepo.getByMesh(t_mesh.getId(), t_mesh.getMaterial(i).getId());
         changeTexture(tex);
         gifSender->initPacket(context);
         u32 vertCount = t_mesh.getMaterial(i).getFacesCount();
@@ -259,7 +259,7 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         VECTOR __attribute__((aligned(16))) vertices[vertCount];
         VECTOR __attribute__((aligned(16))) normals[vertCount];
         VECTOR __attribute__((aligned(16))) coordinates[vertCount];
-        MeshTexture *tex = textureRepo.getByMesh(t_mesh.getId(), t_mesh.getMaterial(i).getId());
+        Texture *tex = textureRepo.getByMesh(t_mesh.getId(), t_mesh.getMaterial(i).getId());
         changeTexture(tex);
         vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, rotatedCamera);
         vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);

@@ -9,7 +9,7 @@ EE_OBJS =								\
 	models/mesh_material.o				\
 	models/mesh.o						\
 	models/sprite.o						\
-	models/mesh_texture.o				\
+	models/texture.o					\
 	modules/audio.o						\
 	modules/camera_base.o				\
 	modules/file_service.o				\

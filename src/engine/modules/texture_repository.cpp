@@ -35,9 +35,9 @@ TextureRepository::~TextureRepository()
 // Methods
 // ----
 
-MeshTexture *TextureRepository::add(char *t_subfolder, char *t_name, TextureFormat t_format)
+Texture *TextureRepository::add(char *t_subfolder, char *t_name, TextureFormat t_format)
 {
-    MeshTexture *texture = new MeshTexture();
+    Texture *texture = new Texture();
     if (t_format == BMP)
         bmpLoader.load(*texture, t_subfolder, t_name, ".bmp");
     else
@@ -51,7 +51,7 @@ void TextureRepository::addByMesh(char *t_path, Mesh &mesh, TextureFormat t_form
 {
     for (u32 i = 0; i < mesh.getMaterialsCount(); i++)
     {
-        MeshTexture *texture = new MeshTexture();
+        Texture *texture = new Texture();
         if (t_format == BMP)
             bmpLoader.load(*texture, t_path, mesh.getMaterial(i).getName(), ".bmp");
         else

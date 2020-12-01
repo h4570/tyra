@@ -49,7 +49,7 @@ void Ari::onInit()
     island.shouldBeFrustumCulled = false;
 
     fist.size.set(100.0F, 100.0F);
-    MeshTexture *fistTex = texRepo->add("2d/", "fist", PNG);
+    Texture *fistTex = texRepo->add("2d/", "fist", PNG);
     fistTex->addLink(fist.getId());
 
     islandAddons.loadDff("sunnyisl/", "sunnyisl3", 0.1F, false);
