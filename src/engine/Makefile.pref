@@ -1,0 +1,11 @@
+EE_LIBS := $(EE_LIBS) -ldraw -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++ -lpng -lz
+EE_INCS := -I$(TYRA_DIR)/include -I$(PS2SDK)/ports/include $(EE_INCS)
+EE_LDFLAGS := -L$(PS2SDK)/ports/lib -L$(TYRA_DIR) $(EE_LDFLAGS)
+EE_CFLAGS := -DHAVE_LIBPNG -DHAVE_ZLIB $(EE_CFLAGS)
+EE_CXXFLAGS := -DHAVE_LIBPNG -DHAVE_ZLIB $(EE_CXXFLAGS)
+EE_DVP = dvp-as
+EE_VCL = vcl
+LIB_NAME = libtyra.a
+
+include $(PS2SDK)/samples/Makefile.pref
+include $(PS2SDK)/samples/Makefile.eeglobal
