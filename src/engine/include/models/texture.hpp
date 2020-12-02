@@ -8,8 +8,8 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#ifndef _TYRA_MESH_TEXTURE_
-#define _TYRA_MESH_TEXTURE_
+#ifndef _TYRA_TEXTURE_
+#define _TYRA_TEXTURE_
 
 #include <tamtypes.h>
 #include <draw_sampling.h>
@@ -17,18 +17,25 @@
 #include "./texture_link.hpp"
 #include "../include/utils/debug.hpp"
 #include <vector>
+#include <gs_psm.h>
+
+enum TextureType
+{
+    TEX_TYPE_RGB = GS_PSM_24, // BMP
+    TEX_TYPE_RGBA = GS_PSM_32 // PNG
+};
 
 /** 
  * Class which contains texture data.
- * Textures are paired with meshes via addLink() and 
- * removeLink() functions which use meshId and materialId.
+ * Textures are paired with meshes/sprites via addLink() and 
+ * removeLink() functions which use meshId/spriteId and materialId (for mesh).
  */
-class MeshTexture
+class Texture
 {
 
 public:
-    MeshTexture();
-    ~MeshTexture();
+    Texture();
+    ~Texture();
 
     // ----
     // Getters
@@ -46,15 +53,17 @@ public:
 
     const u8 &getHeight() const { return height; };
 
+    const TextureType &getType() const { return _type; };
+
     u32 getTextureLinksCount() const { return static_cast<u32>(texLinks.size()); };
 
     texwrap_t *getWrapSettings() { return &wrapSettings; };
 
     /** 
-     * Returns always width * width * 3.
-     * 3 because of RGB
+     * Returns always width * width * 3/4. 
+     * 3 for RGB, 4 for RGBA.
      */
-    u32 getDataSize() const { return width * height * 3; };
+    u32 getDataSize() const { return _type == TEX_TYPE_RGB ? width * height * 3 : width * height * 4; };
 
     /** 
      * Texture data, used by renderer.
@@ -78,10 +87,16 @@ public:
     const s32 getIndexOfLink(const u32 &t_meshId, const u32 &t_materialId) const
     {
         for (u32 i = 0; i < texLinks.size(); i++)
-            if (texLinks[i].materialId == t_materialId && texLinks[i].meshId == t_meshId)
+            if (texLinks[i].materialId == t_materialId && texLinks[i].meshOrSpriteId == t_meshId)
                 return i;
         return -1;
     };
+
+    /** 
+     * Returns index of link.
+     * -1 if not found.
+     */
+    inline const s32 getIndexOfLink(const u32 &t_spriteId) const { return getIndexOfLink(t_spriteId, 0); };
 
     // ----
     //  Setters
@@ -92,7 +107,7 @@ public:
      * Do not call this method unless you know what you do.
      * Should be called by data loader. 
      */
-    void setSize(const u8 &t_width, const u8 &t_height);
+    void setSize(const u8 &t_width, const u8 &t_height, const TextureType &t_type);
 
     /** 
      * Do not call this method unless you know what you do.
@@ -101,8 +116,8 @@ public:
     void setHeight(const u8 &t_val) { height = t_val; }
 
     /** 
-     * Set texture name. 
-     * Should be the file name without extension
+     * Do not call this method unless you know what you do.
+     * Should be called by data loader. 
      */
     void setData(const u32 &t_index, const unsigned char &t_val) { data[t_index] = t_val; }
 
@@ -119,8 +134,11 @@ public:
     //  Other
     // ----
 
-    /** Assign texture to mesh and mesh material */
+    /** Assign texture to mesh and mesh material. */
     void addLink(const u32 &t_meshId, const u32 &t_materialId);
+
+    /** Assign texture to sprite. */
+    void addLink(const u32 &t_spriteId);
 
     const u8 &isNameSet() const { return _isNameSet; };
 
@@ -135,13 +153,31 @@ public:
             return false;
     };
 
-    void removeLink(const u32 &t_index) { texLinks.erase(texLinks.begin() + t_index); }
+    const u8 isLinkedWith(const u32 &t_spriteId) const
+    {
+        s32 index = getIndexOfLink(t_spriteId);
+        if (index != -1)
+            return true;
+        else
+            return false;
+    };
 
-    void removeLink(const u32 &t_meshId, const u32 &t_materialId)
+    void removeLinkByIndex(const u32 &t_index) { texLinks.erase(texLinks.begin() + t_index); }
+
+    void removeLinkBySprite(const u32 &t_spriteId)
+    {
+        s32 index = getIndexOfLink(t_spriteId);
+        if (index != -1)
+            removeLinkByIndex(index);
+        else
+            PRINT_ERR("Cant remove link, because it was not found!");
+    }
+
+    void removeLinkByMesh(const u32 &t_meshId, const u32 &t_materialId)
     {
         s32 index = getIndexOfLink(t_meshId, t_materialId);
         if (index != -1)
-            removeLink(index);
+            removeLinkByIndex(index);
         else
             PRINT_ERR("Cant remove link, because it was not found!");
     }
@@ -150,6 +186,7 @@ private:
     void setDefaultWrapSettings();
     texwrap_t wrapSettings;
     char *name;
+    TextureType _type;
     std::vector<TextureLink> texLinks;
     u32 id;
     u8 width, height, _isNameSet, _isSizeSet;

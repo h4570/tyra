@@ -92,7 +92,7 @@ YouTube tutorials soon!
 
 This is an example of how to list things you need to use the software and how to install them.  
 * PS2 DEV environment - [PS2DEV](https://github.com/ps2dev/ps2dev)  
-* At least #1a4587d PS2SDK - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
+* At least #674b6f4 PS2SDK (01.12.2020) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
 * PS2 Emulator. For example [PCSX2](https://pcsx2.net/) 
 
 ### Installation  

@@ -17,6 +17,7 @@
 #include "gif_sender.hpp"
 #include "vif_sender.hpp"
 #include "../models/math/plane.hpp"
+#include "../models/sprite.hpp"
 #include "../models/screen_settings.hpp"
 #include "../models/render_data.hpp"
 #include "./texture_repository.hpp"
@@ -38,6 +39,8 @@ public:
     void disableVSync() { isVSyncEnabled = false; }
 
     /// --- Draw: PATH3
+
+    void draw(Sprite &t_sprite);
 
     /** 
      * Draw many meshes with lighting information.
@@ -103,14 +106,12 @@ public:
 
     TextureRepository *getTextureRepository() { return &textureRepo; };
 
-    void drawRectangle();
-
 private:
-    void changeTexture(const Mesh &t_mesh, u32 t_materialId);
+    void changeTexture(Texture *t_tex);
     u32 lastTextureId;
     texbuffer_t textureBuffer;
     u8 isTextureVRAMAllocated, isVSyncEnabled;
-    void allocateTextureBuffer(u16 t_width, u16 t_height);
+    void allocateTextureBuffer(Texture *t_texture);
     void deallocateTextureBuffer();
     void flipBuffers();
     void beginFrameIfNeeded();

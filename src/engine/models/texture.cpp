@@ -8,7 +8,7 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "../include/models/mesh_texture.hpp"
+#include "../include/models/texture.hpp"
 #include "../include/utils/string.hpp"
 #include <cstdlib>
 #include <draw_sampling.h>
@@ -17,7 +17,7 @@
 // Constructors/Destructors
 // ----
 
-MeshTexture::MeshTexture()
+Texture::Texture()
 {
     id = rand() % 1000000;
     _isSizeSet = false;
@@ -25,7 +25,7 @@ MeshTexture::MeshTexture()
     setDefaultWrapSettings();
 }
 
-MeshTexture::~MeshTexture()
+Texture::~Texture()
 {
     if (getTextureLinksCount() > 0)
         texLinks.clear();
@@ -39,20 +39,23 @@ MeshTexture::~MeshTexture()
 // Methods
 // ----
 
-void MeshTexture::setSize(const u8 &t_width, const u8 &t_height)
+void Texture::setSize(const u8 &t_width, const u8 &t_height, const TextureType &t_type)
 {
     if (_isSizeSet)
     {
         PRINT_ERR("Can't set size, because was already set!");
         return;
     }
+    if (t_width > 256 || t_height > 256)
+        PRINT_ERR("Given texture can be too big for PS2. Please strict to 256x256 max. Prefer 128x128.");
     width = t_width;
     height = t_height;
+    _type = t_type;
     data = new unsigned char[getDataSize()];
     _isSizeSet = true;
 }
 
-void MeshTexture::setName(char *t_val)
+void Texture::setName(char *t_val)
 {
     if (_isNameSet)
     {
@@ -63,7 +66,7 @@ void MeshTexture::setName(char *t_val)
     _isNameSet = true;
 }
 
-void MeshTexture::setDefaultWrapSettings()
+void Texture::setDefaultWrapSettings()
 {
     wrapSettings.horizontal = WRAP_REPEAT;
     wrapSettings.vertical = WRAP_REPEAT;
@@ -73,16 +76,24 @@ void MeshTexture::setDefaultWrapSettings()
     wrapSettings.minv = 0;
 }
 
-void MeshTexture::setWrapSettings(const WrapSettings t_horizontal, const WrapSettings t_vertical)
+void Texture::setWrapSettings(const WrapSettings t_horizontal, const WrapSettings t_vertical)
 {
     wrapSettings.horizontal = t_horizontal;
     wrapSettings.vertical = t_vertical;
 }
 
-void MeshTexture::addLink(const u32 &t_meshId, const u32 &t_materialId)
+void Texture::addLink(const u32 &t_meshId, const u32 &t_materialId)
 {
     TextureLink link;
     link.materialId = t_materialId;
-    link.meshId = t_meshId;
+    link.meshOrSpriteId = t_meshId;
+    texLinks.push_back(link);
+}
+
+void Texture::addLink(const u32 &t_spriteId)
+{
+    TextureLink link;
+    link.materialId = 0;
+    link.meshOrSpriteId = t_spriteId;
     texLinks.push_back(link);
 }

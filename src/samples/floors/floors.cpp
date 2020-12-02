@@ -36,8 +36,8 @@ void Floors::onInit()
     engine->audio.setSongVolume(100);
     engine->audio.playSong();
     texRepo = engine->renderer->getTextureRepository();
-    texRepo->addByMesh("warrior/", player.mesh);
-    texRepo->addByMesh("floor/", floorManager.floors[0].mesh);
+    texRepo->addByMesh("warrior/", player.mesh, BMP);
+    texRepo->addByMesh("floor/", floorManager.floors[0].mesh, BMP);
     for (u32 i = 1; i < floorManager.floorAmount; i++)
         texRepo->getByMesh(floorManager.floors[0].mesh.getId(), floorManager.floors[0].mesh.getMaterial(0).getId())
             ->addLink(floorManager.floors[i].mesh.getId(), floorManager.floors[i].mesh.getMaterial(0).getId());

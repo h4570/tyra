@@ -17,6 +17,7 @@
 #include <engine.hpp>
 #include "objects/player.hpp"
 #include <models/light_bulb.hpp>
+#include <models/sprite.hpp>
 #include <modules/texture_repository.hpp>
 #include "./camera.hpp"
 
@@ -39,6 +40,7 @@ private:
     Player player;
     Mesh island, islandAddons, skybox;
     Mesh *waterFloors;
+    Sprite fist;
     audsrv_adpcm_t *adpcm1, *adpcm2;
     Point *spirals;
     Camera camera;

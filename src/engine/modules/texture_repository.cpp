@@ -35,21 +35,27 @@ TextureRepository::~TextureRepository()
 // Methods
 // ----
 
-MeshTexture *TextureRepository::add(char *t_subfolder, char *t_name)
+Texture *TextureRepository::add(char *t_subfolder, char *t_name, TextureFormat t_format)
 {
-    MeshTexture *texture = new MeshTexture();
-    loader.load(*texture, t_subfolder, t_name, ".bmp");
+    Texture *texture = new Texture();
+    if (t_format == BMP)
+        bmpLoader.load(*texture, t_subfolder, t_name, ".bmp");
+    else
+        pngLoader.load(*texture, t_subfolder, t_name, ".png");
     texture->setName(t_name);
     textures.push_back(texture);
     return texture;
 }
 
-void TextureRepository::addByMesh(char *t_path, Mesh &mesh)
+void TextureRepository::addByMesh(char *t_path, Mesh &mesh, TextureFormat t_format)
 {
     for (u32 i = 0; i < mesh.getMaterialsCount(); i++)
     {
-        MeshTexture *texture = new MeshTexture();
-        loader.load(*texture, t_path, mesh.getMaterial(i).getName(), ".bmp");
+        Texture *texture = new Texture();
+        if (t_format == BMP)
+            bmpLoader.load(*texture, t_path, mesh.getMaterial(i).getName(), ".bmp");
+        else
+            pngLoader.load(*texture, t_path, mesh.getMaterial(i).getName(), ".png");
         texture->setName(mesh.getMaterial(i).getName());
         texture->addLink(mesh.getId(), mesh.getMaterial(i).getId());
         textures.push_back(texture);

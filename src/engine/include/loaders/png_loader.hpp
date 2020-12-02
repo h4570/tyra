@@ -8,17 +8,22 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#ifndef _TYRA_TEXTURE_USAGE_
-#define _TYRA_TEXTURE_USAGE_
+#ifndef _TYRA_PNG_LOADER_
+#define _TYRA_BMP_LOADER_
 
+#include <stdio.h>
 #include <tamtypes.h>
+#include "../models/texture.hpp"
 
-struct TextureLink
+/** Class responsible for loading images in bmp format */
+class PngLoader
 {
-    /** Mesh id or sprite id */
-    u32 meshOrSpriteId;
-    /** Mesh material id or 0 if is sprite */
-    u32 materialId;
+
+public:
+    PngLoader();
+    ~PngLoader();
+
+    void load(Texture &o_texture, char *t_subfolder, char *t_name, char *t_extension);
 };
 
 #endif

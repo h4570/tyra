@@ -13,7 +13,7 @@
 #include "../include/loaders/md2_loader.hpp"
 #include "../include/loaders/dff_loader.hpp"
 #include "../include/loaders/bmp_loader.hpp"
-#include "../include/models/mesh_texture.hpp"
+#include "../include/models/texture.hpp"
 #include "../include/utils/debug.hpp"
 #include "../include/utils/string.hpp"
 #include <cstdlib>

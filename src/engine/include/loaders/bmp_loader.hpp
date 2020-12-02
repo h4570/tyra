@@ -13,7 +13,7 @@
 
 #include <stdio.h>
 #include <tamtypes.h>
-#include "../models/mesh_texture.hpp"
+#include "../models/texture.hpp"
 
 /** Class responsible for loading images in bmp format */
 class BmpLoader
@@ -23,7 +23,7 @@ public:
     BmpLoader();
     ~BmpLoader();
 
-    void load(MeshTexture &o_texture, char *t_subfolder, char *t_name, char *t_extension);
+    void load(Texture &o_texture, char *t_subfolder, char *t_name, char *t_extension);
 };
 
 #endif

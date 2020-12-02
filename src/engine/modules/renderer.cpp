@@ -59,16 +59,16 @@ Renderer::~Renderer() {}
 // ----
 
 /** Configure and allocate vRAM for texture buffer */
-void Renderer::allocateTextureBuffer(u16 t_width, u16 t_height)
+void Renderer::allocateTextureBuffer(Texture *t_texture)
 {
-    textureBuffer.width = t_width;
-    textureBuffer.psm = GS_PSM_24;
-    textureBuffer.address = graph_vram_allocate(t_width, t_height, GS_PSM_24, GRAPH_ALIGN_BLOCK);
+    textureBuffer.width = t_texture->getWidth();
+    textureBuffer.psm = t_texture->getType();
+    textureBuffer.info.components = textureBuffer.psm == TEX_TYPE_RGBA ? TEXTURE_COMPONENTS_RGBA : TEXTURE_COMPONENTS_RGB;
+    textureBuffer.address = graph_vram_allocate(t_texture->getWidth(), t_texture->getHeight(), textureBuffer.psm, GRAPH_ALIGN_BLOCK);
     if (textureBuffer.address <= 1)
         PRINT_ERR("Texture buffer allocation error. No memory!");
-    textureBuffer.info.width = draw_log2(t_width);
-    textureBuffer.info.height = draw_log2(t_height);
-    textureBuffer.info.components = TEXTURE_COMPONENTS_RGB;
+    textureBuffer.info.width = draw_log2(t_texture->getWidth());
+    textureBuffer.info.height = draw_log2(t_texture->getHeight());
     textureBuffer.info.function = TEXTURE_FUNCTION_MODULATE;
     isTextureVRAMAllocated = true;
 }
@@ -83,47 +83,47 @@ void Renderer::deallocateTextureBuffer()
     }
 }
 
-void Renderer::changeTexture(const Mesh &t_mesh, u32 t_materialId)
+void Renderer::changeTexture(Texture *t_tex)
 {
-
-    MeshTexture *tex = textureRepo.getByMesh(t_mesh.getId(), t_materialId);
-    if (tex != NULL)
+    if (t_tex != NULL)
     {
-        if (tex->getId() != lastTextureId)
+        if (t_tex->getId() != lastTextureId)
         {
-            lastTextureId = tex->getId();
+            lastTextureId = t_tex->getId();
             deallocateTextureBuffer();
-            allocateTextureBuffer(tex->getWidth(), tex->getHeight());
-            GifSender::sendTexture(*tex, &textureBuffer);
+            allocateTextureBuffer(t_tex);
+            GifSender::sendTexture(*t_tex, &textureBuffer);
         }
     }
     else
         PRINT_ERR("Texture was not found in texture repository!");
 }
 
-void Renderer::drawRectangle()
+void Renderer::draw(Sprite &t_sprite)
 {
+    texrect_t rect;
+    rect.t0.s = t_sprite.isFlippedHorizontally() ? 128.0F : 0.0F;
+    rect.t0.t = t_sprite.isFlippedVertically() ? 128.0F : 0.0F;
+    rect.t1.s = t_sprite.isFlippedHorizontally() ? 0.0F : 128.0F;
+    rect.t1.t = t_sprite.isFlippedVertically() ? 0.0F : 128.0F;
+    rect.color.r = t_sprite.color.r;
+    rect.color.g = t_sprite.color.g;
+    rect.color.b = t_sprite.color.b;
+    rect.color.a = t_sprite.color.a;
+    rect.color.q = 0;
+    rect.v0.x = t_sprite.position.x;
+    rect.v0.y = t_sprite.position.y;
+    rect.v0.z = (u32)-1;
+    rect.v1.x = (t_sprite.size.x * t_sprite.scale) + t_sprite.position.x;
+    rect.v1.y = (t_sprite.size.y * t_sprite.scale) + t_sprite.position.y;
+    rect.v1.z = (u32)-1;
     beginFrameIfNeeded();
-    packet2_t *packet2 = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
+    changeTexture(textureRepo.getBySprite(t_sprite.getId()));
+    packet2_t *packet2 = packet2_create(12, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
     packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0, 2048, 2048));
-
-    int loop0 = 10;
-
-    packet2_add_s64(packet2, GIF_SET_TAG(4, 0, 0, 0, GIF_FLG_PACKED, 1));
-    packet2_add_s64(packet2, GIF_REG_AD);
-
-    packet2_add_s64(packet2, GIF_SET_PRIM(6, 0, 0, 0, 0, 0, 0, 0, 0));
-    packet2_add_s64(packet2, GIF_REG_PRIM);
-
-    packet2_add_s64(packet2, GIF_SET_RGBAQ((loop0 * 10), 0, 255 - (loop0 * 10), 0x80, 0x3F800000));
-    packet2_add_s64(packet2, GIF_REG_RGBAQ);
-
-    packet2_add_s64(packet2, GIF_SET_XYZ(((loop0 * 20) << 4) + (2048 << 4), ((loop0 * 10) << 4) + (2048 << 4), -128));
-    packet2_add_s64(packet2, GIF_REG_XYZ2);
-
-    packet2_add_s64(packet2, GIF_SET_XYZ((((loop0 * 20) + 100) << 4) + (2048 << 4), (((loop0 * 10) + 100) << 4) + (2048 << 4), -128));
-    packet2_add_s64(packet2, GIF_REG_XYZ2);
-
+    packet2_utils_gif_add_set(packet2, 1);
+    packet2_utils_gs_add_texbuff_clut(packet2, &textureBuffer, &t_sprite.clut);
+    packet2_update(packet2, draw_rect_textured(packet2->next, 0, &rect));
     packet2_update(packet2,
                    draw_primitive_xyoffset(
                        packet2->next,
@@ -211,7 +211,8 @@ void Renderer::drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     {
         if (t_mesh.shouldBeFrustumCulled && !t_mesh.getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh.position))
             return;
-        changeTexture(t_mesh, t_mesh.getMaterial(i).getId());
+        Texture *tex = textureRepo.getByMesh(t_mesh.getId(), t_mesh.getMaterial(i).getId());
+        changeTexture(tex);
         gifSender->initPacket(context);
         u32 vertCount = t_mesh.getMaterial(i).getFacesCount();
         VECTOR *vertices = new VECTOR[vertCount];
@@ -258,7 +259,8 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         VECTOR __attribute__((aligned(16))) vertices[vertCount];
         VECTOR __attribute__((aligned(16))) normals[vertCount];
         VECTOR __attribute__((aligned(16))) coordinates[vertCount];
-        changeTexture(t_mesh, t_mesh.getMaterial(i).getId());
+        Texture *tex = textureRepo.getByMesh(t_mesh.getId(), t_mesh.getMaterial(i).getId());
+        changeTexture(tex);
         vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, rotatedCamera);
         vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
     }
