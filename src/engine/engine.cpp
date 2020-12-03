@@ -94,7 +94,7 @@ void Engine::gameLoop()
             fps = timer.getFPS();
             fpsDelayer = 0;
         }
-        timer.primeTimer();
+        timer.prime();
         renderer->endFrame(fps);
         /** -6~ FPS */
         SetAlarm(150, &Engine::wakeup, &mainThreadId);
