@@ -44,8 +44,8 @@ public:
     Vector3 operator-(void);
 
     static u8 shouldBeBackfaceCulled(const Vector3 *t_cameraPos, const Vector3 *v0, const Vector3 *v1, const Vector3 *v2);
-    u8 collidesSquare(Vector3 &t_min, Vector3 &t_max);
-    u8 isOnSquare(Vector3 &t_min, Vector3 &t_max);
+    u8 collidesSquare(const Vector3 &t_min, const Vector3 &t_max) const;
+    u8 isOnSquare(const Vector3 &t_min, const Vector3 &t_max) const;
     float length();
     void normalize();
     void setByLerp(const Vector3 &v1, const Vector3 &v2, const float &t_interp, const float &t_scale);

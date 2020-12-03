@@ -170,13 +170,13 @@ u8 Vector3::shouldBeBackfaceCulled(const Vector3 *t_cameraPos, const Vector3 *v0
 }
 
 /** Checks intersection with given square */
-u8 Vector3::collidesSquare(Vector3 &t_min, Vector3 &t_max)
+u8 Vector3::collidesSquare(const Vector3 &t_min, const Vector3 &t_max) const
 {
     return ((this->x <= t_max.x && this->x >= t_min.x) && (this->y < t_max.y && this->y >= t_min.y) && (this->z <= t_max.z && this->z >= t_min.z)) ? 1 : 0;
 }
 
 /** Checks is this vector is on given square */
-u8 Vector3::isOnSquare(Vector3 &t_min, Vector3 &t_max)
+u8 Vector3::isOnSquare(const Vector3 &t_min, const Vector3 &t_max) const
 {
     return ((this->x <= t_max.x && this->x >= t_min.x) && (this->y >= t_max.y) && (this->z <= t_max.z && this->z >= t_min.z)) ? 1 : 0;
 }
