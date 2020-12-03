@@ -11,6 +11,8 @@
 #ifndef _PLAYER_
 #define _PLAYER_
 
+#define WATER_LEVEL -5.0F
+
 #include "../camera.hpp"
 #include <modules/pad.hpp>
 #include <tamtypes.h>
@@ -19,14 +21,15 @@ class Player
 {
 
 public:
-    float gravity, velocity;
+    float gravity, velocity, lift;
     Mesh mesh;
     Player();
     ~Player();
     void update(Pad &t_pad);
-private:
-    Vector3 playerNextPosition;
 
+private:
+    u8 isJumping;
+    Vector3 playerNextPosition;
 };
 
 #endif

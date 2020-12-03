@@ -8,14 +8,13 @@
 # Michał Mostowik <mostek3pl@gmail.com>
 */
 
-#include "driver.hpp"
+#include "dolphin.hpp"
 
 int main()
 {
     Engine engine = Engine();
-    Driver game = Driver(&engine);
-    game.engine->init(&game,128);
+    Dolphin game = Dolphin(&engine);
+    game.engine->init(&game, 128);
     SleepThread();
     return 0;
-    
 }

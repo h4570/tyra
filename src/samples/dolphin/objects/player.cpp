@@ -18,35 +18,71 @@
 
 Player::Player()
 {
-    mesh.loadMD2("dolphin/","dolphin",0.05F,true);
+    mesh.loadMD2("dolphin/", "dolphin", 0.025F, true);
     mesh.shouldBeFrustumCulled = false;
-    mesh.position.set(0.0F,20.0F,-10.0f);
+    mesh.position.set(0.0F, 0.0F, 10.0f);
     mesh.rotation.x = -1.6F;
     mesh.setAnimSpeed(0.05F);
+    isJumping = false;
 }
 
 Player::~Player()
 {
-
 }
 
-void Player::update(Pad& t_pad)
+void Player::update(Pad &t_pad)
 {
-    velocity=0;
-    if(t_pad.lJoyV <= 100)
-        velocity=1;
-    else if(t_pad.lJoyV >= 200)
-        velocity=-1;
+    if (lift > 0.0F)
+        lift -= 0.05F;
+    if (lift < 0.0F)
+        lift += 0.05F;
+    if (lift < 0.1F && lift > -0.1F)
+        lift = 0;
+    velocity = 0;
+    if (t_pad.lJoyV <= 100)
+        velocity = 1;
+    else if (t_pad.lJoyV >= 200)
+        velocity = -1;
 
-    if(t_pad.lJoyH >= 200)
-        mesh.rotation.z-=0.1;
-    else if(t_pad.lJoyH <= 100)
-        mesh.rotation.z+=0.1;
+    if (t_pad.lJoyH >= 200)
+        mesh.rotation.z -= 0.1;
+    else if (t_pad.lJoyH <= 100)
+        mesh.rotation.z += 0.1;
 
-    if(velocity>0 && mesh.getCurrentAnimationFrame()==0)
-        mesh.playAnimation(0, 14);
+    if (t_pad.rJoyV >= 200 && lift <= 1)
+        lift += 0.2F;
+    else if (t_pad.rJoyV <= 100 && lift >= -1)
+        lift -= 0.2F;
 
-    mesh.position.z+=Math::cos(mesh.rotation.z)*velocity;
-    mesh.position.x+=Math::sin(mesh.rotation.z)*velocity;
+    if (t_pad.isCrossClicked && mesh.getCurrentAnimationFrame() <= 14 && WATER_LEVEL - 15 < mesh.position.y)
+    {
+        printf("Cross\n");
+        mesh.setAnimSpeed(0.8F);
+        mesh.playAnimation(14, 58, 0);
+    }
 
+    if (mesh.getCurrentAnimationFrame() > 25 && mesh.getCurrentAnimationFrame() < 47)
+        isJumping = true;
+    else
+        isJumping = false;
+
+    if (lift < 0)
+        mesh.rotation.y = 1;
+    else if (lift > 0)
+        mesh.rotation.y = -1;
+    else
+        mesh.rotation.y = 0;
+
+    if (velocity > 0 && mesh.getCurrentAnimationFrame() == 0)
+    {
+        mesh.setAnimSpeed(0.05F);
+        printf("Swim animation\n");
+        mesh.playAnimation(1, 14, 0);
+    }
+
+    mesh.position.z +=
+        Math::cos(mesh.rotation.z) * velocity * (isJumping + 1);
+    mesh.position.x +=
+        Math::sin(mesh.rotation.z) * velocity * (isJumping + 1);
+    mesh.position.y += lift;
 }
