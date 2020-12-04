@@ -123,12 +123,14 @@ void Renderer::draw(Sprite &t_sprite)
     packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0, 2048, 2048));
     packet2_utils_gif_add_set(packet2, 1);
     packet2_utils_gs_add_texbuff_clut(packet2, &textureBuffer, &t_sprite.clut);
+    draw_enable_blending();
     packet2_update(packet2, draw_rect_textured(packet2->next, 0, &rect));
     packet2_update(packet2,
                    draw_primitive_xyoffset(
                        packet2->next,
                        0,
                        (2048 - (screen->width / 2)), (2048 - (screen->height / 2))));
+    draw_disable_blending();
     packet2_update(packet2, draw_finish(packet2->next));
     dma_channel_wait(DMA_CHANNEL_GIF, 0);
     dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);

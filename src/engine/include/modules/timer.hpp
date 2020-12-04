@@ -12,6 +12,7 @@
 #define _TYRA_TIMER_
 
 #include <tamtypes.h>
+#include <timer.h>
 
 /** Class responsible for fps counting */
 class Timer
@@ -22,7 +23,7 @@ public:
     ~Timer();
 
     u32 getTimeDelta();
-    void primeTimer();
+    inline void prime() { lastTime = *T3_COUNT; }
     float getFPS();
 
 private:

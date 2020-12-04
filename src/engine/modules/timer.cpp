@@ -10,16 +10,11 @@
 
 #include "../include/modules/timer.hpp"
 
-#include <timer.h>
-
 // ----
 // Constructors/Destructors
 // ----
 
-Timer::Timer()
-{
-    this->lastTime = *T3_COUNT;
-}
+Timer::Timer() { prime(); }
 
 Timer::~Timer() {}
 
@@ -29,20 +24,13 @@ Timer::~Timer() {}
 
 u32 Timer::getTimeDelta()
 {
-    this->time = *T3_COUNT;
+    time = *T3_COUNT;
 
-    if (this->time < this->lastTime) // The counter has wrapped
-        this->change = this->time + (65536 - this->lastTime);
+    if (time < lastTime) // The counter has wrapped
+        change = time + (65536 - lastTime);
     else
-        this->change = this->time - this->lastTime;
-
-    this->lastTime = this->time;
-    return this->change;
-}
-
-void Timer::primeTimer()
-{
-    lastTime = *T3_COUNT;
+        change = time - lastTime;
+    return change;
 }
 
 float Timer::getFPS()
