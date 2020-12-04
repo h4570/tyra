@@ -99,7 +99,7 @@ This is an example of how to list things you need to use the software and how to
 
 1. Clone the repo 
 ```sh
-git clone https://github.com/ps2-tyra/tyra.git
+git clone https://github.com/h4570/tyra.git
 ```
 2. Get into src folder and compile it!  
 ```sh
@@ -114,7 +114,7 @@ make
 ## Roadmap  
 
 ### Roadmap moved to github kanban:  
-[https://github.com/h4570/tyra/projects/1](https://github.com/ps2-tyra/tyra/projects/1)  
+[https://github.com/h4570/tyra/projects/1](https://github.com/h4570/tyra/projects/1)  
 
 
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
@@ -150,9 +150,9 @@ Without these guys, everything would be harder:
 
 Project Link: [https://github.com/h4570/tyra](https://github.com/h4570/tyra)  
 
-[contributors-shield]: https://img.shields.io/github/contributors/ps2-tyra/tyra.svg?style=flat-square  
-[contributors-url]: https://github.com/ps2-tyra/tyra/graphs/contributors 
+[contributors-shield]: https://img.shields.io/github/contributors/h4570/tyra.svg?style=flat-square  
+[contributors-url]: https://github.com/h4570/tyra/graphs/contributors 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555  
 [linkedin-url]: https://linkedin.com/in/sandro-sobczyński-28820b15a/  
-[license-shield]: https://img.shields.io/github/license/ps2-tyra/tyra.svg?style=flat-square  
-[license-url]: https://github.com/ps2-tyra/tyra/blob/master/LICENSE  
+[license-shield]: https://img.shields.io/github/license/h4570/tyra.svg?style=flat-square  
+[license-url]: https://github.com/h4570/tyra/blob/master/LICENSE  
