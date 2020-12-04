@@ -29,15 +29,15 @@ void Dolphin::onInit()
     engine->renderer->disableVSync();
 
     printf("loading island..\n");
-    island.loadDff("sunnyisl/", "sunnyisl", 1.0F, false);
+    island.loadDff("sunnyisl/", "sunnyisl", 5.0F, false);
     printf("Loaded..\n");
     island.rotation.x = -1.6F;
-    island.position.set(0.0F, 10.0F, 20.0F);
+    island.position.set(0.0F, 60.0F, 20.0F);
     island.shouldBeBackfaceCulled = true;
     island.shouldBeFrustumCulled = false;
 
     printf("Loading water overlay...\n");
-    waterOverlay.size.set(100.0F, 100.0F);
+    waterOverlay.size.set(640.0F, 480.0F);
     Texture *watOverlayTex = texRepo->add("2d/", "underwater_overlay", PNG);
     watOverlayTex->addLink(waterOverlay.getId());
     printf("Loaded.\n");
@@ -98,6 +98,6 @@ void Dolphin::onUpdate()
     engine->renderer->draw(skybox);
     engine->renderer->draw(waterbox);
     engine->renderer->draw(player.mesh);
-    //if (player.mesh.position.y < WATER_LEVEL)
-    //engine->renderer->draw(waterOverlay);
+    if (camera.position.y < WATER_LEVEL)
+        engine->renderer->draw(waterOverlay);
 }

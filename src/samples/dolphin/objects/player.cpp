@@ -65,13 +65,14 @@ void Player::update(Pad &t_pad)
         isJumping = true;
     else
         isJumping = false;
-
+    /*
     if (lift < 0)
         mesh.rotation.y = 1;
     else if (lift > 0)
         mesh.rotation.y = -1;
     else
         mesh.rotation.y = 0;
+        */
 
     if (velocity > 0 && mesh.getCurrentAnimationFrame() == 0)
     {
