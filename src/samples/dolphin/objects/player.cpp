@@ -87,3 +87,8 @@ void Player::update(Pad &t_pad)
         Math::sin(mesh.rotation.z) * velocity * (isJumping + 1);
     mesh.position.y += lift;
 }
+
+u8 Player::getIsJumping()
+{
+    return isJumping;
+}

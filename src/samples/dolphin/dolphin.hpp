@@ -11,7 +11,6 @@
 #ifndef _DRIVER_
 #define _DRIVER_
 
-
 #include <tamtypes.h>
 #include <audsrv.h>
 #include <game.hpp>
@@ -21,6 +20,7 @@
 #include <modules/texture_repository.hpp>
 #include "./camera.hpp"
 #include "./objects/player.hpp"
+#include "./objects/collectible.hpp"
 
 class Dolphin : public Game
 {
@@ -39,6 +39,7 @@ private:
     Player player;
     Camera camera;
     Mesh island, skybox, water, waterbox;
+    Collectible *oysters;
     TextureRepository *texRepo;
     Sprite waterOverlay;
 };

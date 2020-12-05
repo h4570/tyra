@@ -14,8 +14,11 @@
 const u8 WATER_TILE_SCALE = 5.0F;
 const u8 WATER_SIZE = 100.0F;
 
+const u8 OYSTERS_COUNT = 15.0F;
+
 Dolphin::Dolphin(Engine *t_engine) : engine(t_engine), camera(&engine->screen)
 {
+    oysters = new Collectible[OYSTERS_COUNT];
 }
 
 Dolphin::~Dolphin() {}
@@ -58,6 +61,26 @@ void Dolphin::onInit()
     waterbox.rotation.x = Math::PI;
     waterbox.position.y = -100.F;
 
+    printf("Loading oyster dff\n");
+    //oysters[0].loadDff("oyster/", "oyster", 1.F, false);
+    oysters[0].mesh.loadObj("oyster/", "oyster", 10.F, false);
+    printf("Loaded.");
+    oysters[0].mesh.shouldBeBackfaceCulled = false;
+    oysters[0].mesh.shouldBeFrustumCulled = false;
+    oysters[0].mesh.position.set(15, 0, 15);
+    texRepo->addByMesh("oyster/", oysters[0].mesh, BMP);
+    printf("Adding oyster texture.\n");
+    for (int i = 1; i < OYSTERS_COUNT; i++)
+    {
+        printf("Processing oyster %d\n", i);
+        oysters[i].mesh.loadFrom(oysters[0].mesh);
+        oysters[i].mesh.shouldBeBackfaceCulled = false;
+        oysters[i].mesh.shouldBeFrustumCulled = false;
+        texRepo->getByMesh(oysters[0].mesh.getId(), oysters[0].mesh.getMaterial(0).getId())
+            ->addLink(oysters[i].mesh.getId(), oysters[i].mesh.getMaterial(0).getId());
+        oysters[i].mesh.position.set(i * -100, 5.0F, i * -100);
+    }
+
     texRepo->addByMesh("dolphin/", player.mesh, BMP);
     texRepo->addByMesh("sunnyisl/", island, BMP);
     texRepo->addByMesh("skybox/", skybox, BMP);
@@ -86,6 +109,17 @@ void Dolphin::onUpdate()
         water.position.z = (player.mesh.position.z / WATER_SIZE) * WATER_SIZE;
     }
 
+    for (int i = 0; i < OYSTERS_COUNT; i++)
+    {
+        Vector3 vecDist = oysters[i].mesh.position - player.mesh.position;
+        float dist = Math::sqrt(vecDist.x + vecDist.y + vecDist.z);
+        if (dist < 2 && player.getIsJumping() && oysters[i].isActive())
+        {
+            printf("Pickup %d Dist %d\n", i, dist);
+            oysters[i].setActive(false);
+        }
+    }
+
     if (player.mesh.position.y > WATER_LEVEL - 5)
         player.mesh.position.y = WATER_LEVEL - 5;
 
@@ -97,6 +131,13 @@ void Dolphin::onUpdate()
     engine->renderer->draw(water);
     engine->renderer->draw(skybox);
     engine->renderer->draw(waterbox);
+    for (u8 i = 0; i < OYSTERS_COUNT; i++)
+    {
+        if (oysters[i].isActive())
+        {
+            engine->renderer->draw(oysters[i].mesh);
+        }
+    }
     engine->renderer->draw(player.mesh);
     if (camera.position.y < WATER_LEVEL)
         engine->renderer->draw(waterOverlay);
