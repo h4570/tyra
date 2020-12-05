@@ -102,12 +102,13 @@ void Renderer::changeTexture(Texture *t_tex)
 void Renderer::draw(Sprite &t_sprite)
 {
     texrect_t rect;
-    float texS = 128.0F;
-    float texT = 128.0F;
+    float texMax = t_sprite.size.x > t_sprite.size.y ? t_sprite.size.x : t_sprite.size.y;
+    float texS = texMax;
+    float texT = texMax;
     if (t_sprite.size.x > t_sprite.size.y)
-        texT = 128.0F / (t_sprite.size.x / t_sprite.size.y);
+        texT = texMax / (t_sprite.size.x / t_sprite.size.y);
     else if (t_sprite.size.y > t_sprite.size.x)
-        texS = 128.0F / (t_sprite.size.y / t_sprite.size.x);
+        texS = texMax / (t_sprite.size.y / t_sprite.size.x);
     rect.t0.s = t_sprite.isFlippedHorizontally() ? texS : 0.0F;
     rect.t0.t = t_sprite.isFlippedVertically() ? texT : 0.0F;
     rect.t1.s = t_sprite.isFlippedHorizontally() ? 0.0F : texS;
