@@ -54,7 +54,7 @@ public:
     void rotate(const Vector3 &v, u8 inversed = false);
     void set(const float &t_x, const float &t_y, const float &t_z);
     void copy(Vector3 &v);
-    float distanceTo(Vector3 &v);
+    float distanceTo(const Vector3 &v) const;
     const void print() const;
 };
 
