@@ -43,7 +43,7 @@ void Floors::onInit()
     texRepo = engine->renderer->getTextureRepository();
     enemy = new Enemy(texRepo);
     ui = new Ui(texRepo);
-    engine->audio.setSongVolume(80);
+    engine->audio.setSongVolume(20);
 
     texRepo->addByMesh("warrior/", player.mesh, BMP);
     texRepo->addByMesh("floor/", floorManager.floors[0].mesh, BMP);
