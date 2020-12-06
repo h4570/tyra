@@ -17,7 +17,7 @@
 struct LightBulb
 {
     Vector3 position;
-    u16 intensity;
+    u8 intensity;
 };
 
 #endif

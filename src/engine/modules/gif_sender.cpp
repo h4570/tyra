@@ -188,16 +188,16 @@ void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount
         VECTOR *lights = new VECTOR[vertexCount];
         calculate_normals(normals, vertexCount, normals, localLight);
 
-        Light::calculateLight(lightDirections, lightColors, lightTypes, t_bulbs, t_bulbsCount, t_mesh.position);
+        Light::calculateLight(lightDirections, lightColors, lightTypes, t_bulbs, lightsCount, t_mesh.position);
 
         calculate_lights(lights, vertexCount, normals, lightDirections, lightColors, lightTypes, lightsCount);
 
         for (u32 i = 0; i < vertexCount; i++)
         {
             // Apply the light value to the colour.
-            colors[i][0] = (t_mesh.color.r * lights[i][0] / 128.0F);
-            colors[i][1] = (t_mesh.color.g * lights[i][1] / 128.0F);
-            colors[i][2] = (t_mesh.color.b * lights[i][2] / 128.0F);
+            colors[i][0] = (t_mesh.color.r * lights[i][0]);
+            colors[i][1] = (t_mesh.color.g * lights[i][1]);
+            colors[i][2] = (t_mesh.color.b * lights[i][2]);
             vector_clamp(colors[i], colors[i], 0.00F, 1.99F);
         }
 
