@@ -298,7 +298,7 @@ void Vector3::copy(Vector3 &v)
         : "$6");
 }
 
-float Vector3::distanceTo(Vector3 &v)
+float Vector3::distanceTo(const Vector3 &v) const
 {
     register float result;
     asm volatile( // VU0 Macro program
