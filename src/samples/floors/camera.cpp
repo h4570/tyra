@@ -51,7 +51,7 @@ void Camera::rotate(Pad &t_pad)
     if (t_pad.rJoyH <= 50)
         horizontalLevel -= 0.08;
     else if (t_pad.rJoyH >= 200)
-        horizontalLevel += 0.04;
+        horizontalLevel += 0.08;
     if (t_pad.rJoyV <= 50 && verticalLevel > 25.0F)
         verticalLevel -= 0.9F;
     else if (t_pad.rJoyV >= 200 && verticalLevel < 80.0F)
