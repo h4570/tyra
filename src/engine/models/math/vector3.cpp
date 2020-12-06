@@ -45,8 +45,7 @@ void Vector3::setByLerp(const Vector3 &v1, const Vector3 &v2, const float &t_int
         "vadd.xyz  vf9, vf8, vf4 \n\t" // vf9 = vf8 + vf4
         "sqc2      vf9, 0x0(%0)  \n\t" // v0  = vf9
         :
-        : "r"(&this->xyz), "r"(&v1.xyz), "r"(&v2.xyz), "f"(t_interp)
-        : "$8");
+        : "r"(&this->xyz), "r"(&v1.xyz), "r"(&v2.xyz), "f"(t_interp));
     x *= t_scale;
     y *= t_scale;
     z *= t_scale;
@@ -120,7 +119,7 @@ Vector3 Vector3::operator*(Vector3 &v)
     return res;
 }
 
-Vector3 Vector3::operator*(float t)
+Vector3 Vector3::operator*(const float &t)
 {
     Vector3 result;
     asm volatile(
@@ -130,9 +129,20 @@ Vector3 Vector3::operator*(float t)
         "vmulx.xyz  vf6, vf4, vf5 \n\t"
         "sqc2       vf6, 0x0(%0)  \n\t"
         :
-        : "r"(result.xyz), "r"(this->xyz), "f"(t)
-        : "$8");
+        : "r"(result.xyz), "r"(this->xyz), "f"(t));
     return result;
+}
+
+void Vector3::operator*=(const float &t)
+{
+    asm volatile(
+        "lqc2       vf4, 0x0(%0)  \n\t"
+        "mfc1       $8,  %1       \n\t"
+        "qmtc2      $8,  vf5      \n\t"
+        "vmulx.xyz  vf4, vf4, vf5 \n\t"
+        "sqc2       vf4, 0x0(%0)  \n\t"
+        :
+        : "r"(this->xyz), "f"(t));
 }
 
 Vector3 Vector3::operator/(float t)
@@ -164,8 +174,7 @@ u8 Vector3::shouldBeBackfaceCulled(const Vector3 *t_cameraPos, const Vector3 *v0
         "qmfc2       $2,  vf5      \n\t" // store result on `dot` variable
         "mtc1        $2,  %0       \n\t"
         : "=f"(dot)
-        : "r"(t_cameraPos->xyz), "r"(v0->xyz), "r"(v1->xyz), "r"(v2->xyz)
-        : "$2");
+        : "r"(t_cameraPos->xyz), "r"(v0->xyz), "r"(v1->xyz), "r"(v2->xyz));
     return dot <= 0.0F;
 }
 
@@ -190,12 +199,12 @@ float Vector3::length()
         "vaddy.x  vf5, vf5, vf5 \n\t"
         "vaddz.x  vf5, vf5, vf5 \n\t"
         "vsqrt    Q  , vf5x     \n\t"
+        "vwaitq                 \n\t"
         "vaddq.x  vf8, vf0, Q   \n\t"
         "qmfc2    $2,  vf8      \n\t"
         "mtc1     $2,  %0       \n\t"
         : "=f"(result)
-        : "r"(this->xyz)
-        : "$2");
+        : "r"(this->xyz));
     return result;
     // return Math::sqrt(x * x + y * y + z * z);
 }
@@ -208,6 +217,7 @@ void Vector3::normalize()
         "vaddy.x    vf5, vf5,  vf5  \n\t"
         "vaddz.x    vf5, vf5,  vf5  \n\t"
         "vrsqrt     Q,   vf0w, vf5x \n\t"
+        "vwaitq                     \n\t"
         "vsub.xyz   vf6, vf0,  vf0  \n\t"
         "vaddw.xyz  vf6, vf6,  vf4  \n\t"
         "vwaitq                     \n\t"
@@ -230,8 +240,7 @@ float Vector3::innerProduct(Vector3 &v)
         "qmfc2    $2,  vf6      \n\t"
         "mtc1     $2,  %0       \n\t"
         : "=f"(result)
-        : "r"(this->xyz), "r"(v.xyz)
-        : "$2");
+        : "r"(this->xyz), "r"(v.xyz));
     return result;
     // return (x * v.x + y * v.y + z * v.z);
 }
@@ -294,8 +303,7 @@ void Vector3::copy(Vector3 &v)
         "lq $6, 0x0(%1) \n\t"
         "sq $6, 0x0(%0) \n\t"
         :
-        : "r"(v.xyz), "r"(this->xyz)
-        : "$6");
+        : "r"(v.xyz), "r"(this->xyz));
 }
 
 float Vector3::distanceTo(const Vector3 &v) const
@@ -309,16 +317,16 @@ float Vector3::distanceTo(const Vector3 &v) const
         "vaddy.x  vf7, vf7, vf7 \n\t"
         "vaddz.x  vf7, vf7, vf7 \n\t"
         "vsqrt    Q  , vf7x     \n\t"
+        "vwaitq                 \n\t"
         "vaddq.x  vf8, vf0, Q   \n\t"
         "qmfc2    $2,  vf8      \n\t"
         "mtc1     $2,  %0       \n\t"
         : "=f"(result)
-        : "r"(this->xyz), "r"(v.xyz)
-        : "$2");
+        : "r"(this->xyz), "r"(v.xyz));
     return result;
-    // return Math::sqrt((this->x - another.x) * (this->x - another.x) +
-    //                   (this->y - another.y) * (this->y - another.y) +
-    //                   (this->z - another.z) * (this->z - another.z));
+    // return Math::sqrt((this->x - v.x) * (this->x - v.x) +
+    //                   (this->y - v.y) * (this->y - v.y) +
+    //                   (this->z - v.z) * (this->z - v.z));
 }
 
 const void Vector3::print() const
