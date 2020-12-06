@@ -39,7 +39,8 @@ public:
     Vector3 operator+(Vector3 v);
     Vector3 operator-(const Vector3 &v);
     Vector3 operator*(Vector3 &v);
-    Vector3 operator*(float t);
+    Vector3 operator*(const float &t);
+    void operator*=(const float &t);
     Vector3 operator/(float t);
     Vector3 operator-(void);
 
