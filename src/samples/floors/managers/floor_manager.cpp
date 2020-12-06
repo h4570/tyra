@@ -96,7 +96,7 @@ void FloorManager::update(Player &t_player)
     {
         floors[i].animate(t_player);
 
-        if (floors[i].isByAudioTriggered == true)
+        if (floors[i].isByAudioTriggered)
             floors[i].mesh.color.a = 0x20;
         else
             floors[i].mesh.color.a = 0x80;
