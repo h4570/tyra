@@ -80,7 +80,7 @@ void FloorManager::initFloors()
     floors[0].mesh.loadObj("floor/", "floor", 3.0F, false);
     floors[0].mesh.shouldBeFrustumCulled = true;
     floors[0].mesh.shouldBeLighted = true;
-    for (u8 i = 1; i < floorAmount; i++)
+    for (u16 i = 1; i < floorAmount; i++)
         floors[i].init(floors[0].mesh, spirals[i], i);
     PRINT_LOG("Floors initialized!");
 }
@@ -92,7 +92,7 @@ void FloorManager::initFloors()
  */
 void FloorManager::update(Player &t_player)
 {
-    for (u8 i = 0; i < floorAmount; i++)
+    for (u16 i = 0; i < floorAmount; i++)
     {
         floors[i].animate(t_player);
 
@@ -106,11 +106,11 @@ void FloorManager::update(Player &t_player)
 /** Called by audio thread */
 void FloorManager::onAudioTick()
 {
-    if (audioTick++ > 16)
+    if (audioTick++ > 13)
     {
         if (audioMode == 0)
         {
-            for (u8 i = 0; i < floorAmount; i++)
+            for (u16 i = 0; i < floorAmount; i++)
             {
                 if ((i + audioOffset) % 2 == 0)
                     floors[i].isByAudioTriggered = true;
@@ -125,7 +125,7 @@ void FloorManager::onAudioTick()
         }
         else if (audioMode == 1)
         {
-            for (u8 i = 0; i < floorAmount; i++)
+            for (u16 i = 0; i < floorAmount; i++)
             {
                 if (i < floorAmount / (audioOffset + 1))
                     floors[i].isByAudioTriggered = true;
@@ -140,7 +140,7 @@ void FloorManager::onAudioTick()
         }
         else if (audioMode == 2)
         {
-            for (u8 i = 0; i < floorAmount; i++)
+            for (u16 i = 0; i < floorAmount; i++)
             {
                 if ((i + audioOffset) % 4 == 0)
                     floors[i].isByAudioTriggered = true;
@@ -155,9 +155,9 @@ void FloorManager::onAudioTick()
         }
         else if (audioMode == 3)
         {
-            for (u8 i = 0; i < floorAmount; i++)
+            for (u16 i = 0; i < floorAmount; i++)
             {
-                if (u8(i + 1) > floorAmount / (audioOffset + 1))
+                if (u16(i + 1) > floorAmount / (audioOffset + 1))
                     floors[i].isByAudioTriggered = true;
                 else
                     floors[i].isByAudioTriggered = false;

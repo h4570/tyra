@@ -14,15 +14,21 @@
 // Constructors/Destructors
 // ----
 
-const u8 FLOORS_COUNT = 144; // Temp change it also in floor_manager.hpp
+const u16 FLOORS_COUNT = 144; // Temp change it also in floor_manager.hpp
 
 Floors::Floors(Engine *t_engine)
-    : engine(t_engine), floorManager(FLOORS_COUNT), camera(&t_engine->screen)
+    : engine(t_engine), floorManager(FLOORS_COUNT),
+      player(&t_engine->audio), camera(&t_engine->screen)
 {
     audioTicks = 0;
+    skip1Beat = 0;
 }
 
-Floors::~Floors() {}
+Floors::~Floors()
+{
+    delete enemy;
+    delete ui;
+}
 
 // ----
 // Methods
@@ -32,10 +38,13 @@ void Floors::onInit()
 {
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
     engine->audio.addSongListener(this);
-    engine->audio.loadSong("NF-CHILL.WAV");
-    engine->audio.setSongVolume(100);
+    engine->audio.loadSong("nob-else.wav");
     engine->audio.playSong();
     texRepo = engine->renderer->getTextureRepository();
+    enemy = new Enemy(texRepo);
+    ui = new Ui(texRepo);
+    engine->audio.setSongVolume(80);
+
     texRepo->addByMesh("warrior/", player.mesh, BMP);
     texRepo->addByMesh("floor/", floorManager.floors[0].mesh, BMP);
     for (u32 i = 1; i < floorManager.floorAmount; i++)
@@ -45,23 +54,26 @@ void Floors::onInit()
 
 void Floors::onUpdate()
 {
-    if (engine->pad.isCrossClicked)
-        printf("FPS:%f\n", engine->fps);
+    ui->update(player);
     lightManager.update();
     camera.update(engine->pad, player.mesh);
     floorManager.update(player);
-    player.update(engine->pad, camera, floorManager);
+    player.update(engine->pad, camera, floorManager, *enemy);
     engine->renderer->draw(player.mesh);
-    for (u8 i = 0; i < FLOORS_COUNT; i++)
+    engine->renderer->draw(enemy->getMeshes(), enemy->getMeshesCount());
+    for (u16 i = 0; i < FLOORS_COUNT; i++)
         engine->renderer->drawByPath3(floorManager.floors[i].mesh, lightManager.bulbs, lightManager.bulbsCount);
+    ui->render(engine->renderer); // 2D rendering ist LAST step, because layers gonna play there.
 }
 
 void Floors::onAudioTick()
 {
-    if ((++audioTicks + 20) % 41 == 0)
+    if ((++audioTicks + 20) % 28 == 0)
     {
-        floorManager.onAudioTick();
+        if (skip1Beat)
+            floorManager.onAudioTick();
         lightManager.onAudioTick();
+        skip1Beat = !skip1Beat;
     }
     if (audioTicks > 10000)
         audioTicks = 0;

@@ -18,7 +18,9 @@
 #include "managers/light_manager.hpp"
 #include "modules/texture_repository.hpp"
 #include "objects/player.hpp"
+#include "objects/enemy.hpp"
 #include "./camera.hpp"
+#include "./ui.hpp"
 
 class Floors : public Game, AudioListener
 {
@@ -36,11 +38,14 @@ public:
 
 private:
     u32 audioTicks;
+    u8 skip1Beat;
     TextureRepository *texRepo;
     LightManager lightManager;
     FloorManager floorManager;
     Player player;
     Camera camera;
+    Ui *ui;
+    Enemy *enemy;
 };
 
 #endif

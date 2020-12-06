@@ -23,7 +23,7 @@ class Floor
 
 public:
     u16 animTimer;
-    u8 animDirection, initOffset, isByAudioTriggered;
+    s16 animDirection, initOffset, isByAudioTriggered;
     Mesh mesh;
 
     Floor();

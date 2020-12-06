@@ -27,7 +27,7 @@ public:
     FloorManager(int t_floorAmount);
     ~FloorManager();
     Floor floors[144]; // Temp change it also in floors.cpp
-    u32 floorAmount;
+    u16 floorAmount;
     void update(Player &t_player);
     void onAudioTick();
 
