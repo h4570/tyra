@@ -102,10 +102,17 @@ void Renderer::changeTexture(Texture *t_tex)
 void Renderer::draw(Sprite &t_sprite)
 {
     texrect_t rect;
-    rect.t0.s = t_sprite.isFlippedHorizontally() ? 128.0F : 0.0F;
-    rect.t0.t = t_sprite.isFlippedVertically() ? 128.0F : 0.0F;
-    rect.t1.s = t_sprite.isFlippedHorizontally() ? 0.0F : 128.0F;
-    rect.t1.t = t_sprite.isFlippedVertically() ? 0.0F : 128.0F;
+    float texMax = t_sprite.size.x > t_sprite.size.y ? t_sprite.size.x : t_sprite.size.y;
+    float texS = texMax;
+    float texT = texMax;
+    if (t_sprite.size.x > t_sprite.size.y)
+        texT = texMax / (t_sprite.size.x / t_sprite.size.y);
+    else if (t_sprite.size.y > t_sprite.size.x)
+        texS = texMax / (t_sprite.size.y / t_sprite.size.x);
+    rect.t0.s = t_sprite.isFlippedHorizontally() ? texS : 0.0F;
+    rect.t0.t = t_sprite.isFlippedVertically() ? texT : 0.0F;
+    rect.t1.s = t_sprite.isFlippedHorizontally() ? 0.0F : texS;
+    rect.t1.t = t_sprite.isFlippedVertically() ? 0.0F : texT;
     rect.color.r = t_sprite.color.r;
     rect.color.g = t_sprite.color.g;
     rect.color.b = t_sprite.color.b;
