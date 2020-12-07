@@ -16,6 +16,7 @@
 #include <packet2.h>
 #include "gif_sender.hpp"
 #include "vif_sender.hpp"
+#include "light.hpp"
 #include "../models/math/plane.hpp"
 #include "../models/sprite.hpp"
 #include "../models/screen_settings.hpp"
@@ -102,11 +103,19 @@ public:
 
     void setCameraDefinitions(Matrix *t_worldView, Vector3 *t_cameraPos, Plane *t_planes);
 
+    void setWorldColor(const color_t &t_rgb);
+
     void endFrame(float fps);
 
-    TextureRepository *getTextureRepository() { return &textureRepo; };
+    void setAmbientLight(const Vector3 &t_rgb) { light.setAmbientLight(t_rgb); }
+
+    TextureRepository *getTextureRepository()
+    {
+        return &textureRepo;
+    };
 
 private:
+    // We have some GCC bug here. Just try to reorder declarations. For example move worldColor up - game will crash.
     void changeTexture(Texture *t_tex);
     u32 lastTextureId;
     texbuffer_t textureBuffer;
@@ -117,12 +126,14 @@ private:
     void beginFrameIfNeeded();
     u8 isFrameEmpty;
     Matrix perspective;
+    Light light;
     RenderData renderData;
     TextureRepository textureRepo;
     ScreenSettings *screen;
     GifSender *gifSender;
     VifSender *vifSender;
     packet2_t *flipPacket;
+    color_t worldColor;
     void allocateBuffers(float t_screenW, float t_screenH);
     void initDrawingEnv(float t_screenW, float t_screenH);
     void setPrim();

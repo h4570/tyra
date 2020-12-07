@@ -44,9 +44,12 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     allocateBuffers(t_screen->width, t_screen->height);
     initDrawingEnv(t_screen->width, t_screen->height);
     setPrim();
+    worldColor.r = 0x10;
+    worldColor.g = 0x10;
+    worldColor.b = 0x10;
     screen = t_screen;
-    gifSender = new GifSender(t_packetSize, t_screen);
-    vifSender = new VifSender();
+    gifSender = new GifSender(t_packetSize, t_screen, &light);
+    vifSender = new VifSender(&light);
     perspective.setPerspective(*t_screen);
     renderData.perspective = &perspective;
     PRINT_LOG("Renderer initialized!");
@@ -187,6 +190,13 @@ void Renderer::setPrim()
     PRINT_LOG("Prim set!");
 }
 
+void Renderer::setWorldColor(const color_t &t_rgb)
+{
+    worldColor.r = t_rgb.r;
+    worldColor.g = t_rgb.g;
+    worldColor.b = t_rgb.b;
+}
+
 /** Defines and allocates framebuffers and zbuffer */
 void Renderer::allocateBuffers(float t_screenW, float t_screenH)
 {
@@ -305,7 +315,7 @@ void Renderer::beginFrameIfNeeded()
     if (isFrameEmpty)
     {
         isFrameEmpty = false;
-        gifSender->sendClear(&zBuffer);
+        gifSender->sendClear(&zBuffer, &worldColor);
     }
 }
 
