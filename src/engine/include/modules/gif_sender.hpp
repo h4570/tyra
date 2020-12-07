@@ -35,9 +35,9 @@ public:
 
     void initPacket(u8 context);
     void addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer);
-    void addClear(zbuffer_t *t_zBuffer, color_t *rgb);
+    void addClear(zbuffer_t *t_zBuffer, color_t *t_rgb);
     void sendPacket();
-    void sendClear(zbuffer_t *t_zBuffer, color_t *rgb);
+    void sendClear(zbuffer_t *t_zBuffer, color_t *t_rgb);
     static void sendTexture(Texture &texture, texbuffer_t *t_texBuffer);
 
 private:

@@ -76,7 +76,7 @@ void GifSender::sendTexture(Texture &texture, texbuffer_t *t_texBuffer)
     packet2_free(packet2);
 }
 
-void GifSender::sendClear(zbuffer_t *t_zBuffer, color_t *rgb)
+void GifSender::sendClear(zbuffer_t *t_zBuffer, color_t *t_rgb)
 {
     packet2_t *packet2 = packet2_create(36, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
     packet2_chain_open_end(packet2, 0, 0);
@@ -84,7 +84,7 @@ void GifSender::sendClear(zbuffer_t *t_zBuffer, color_t *rgb)
     packet2_update(packet2, draw_clear(packet2->next, 0,
                                        2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
                                        screen->width, screen->height,
-                                       rgb->r, rgb->g, rgb->b));
+                                       t_rgb->r, t_rgb->g, t_rgb->b));
     packet2_update(packet2, draw_enable_tests(packet2->next, 0, t_zBuffer));
     packet2_update(packet2, draw_finish(packet2->next));
     packet2_chain_close_tag(packet2);
@@ -118,14 +118,14 @@ void GifSender::sendPacket()
 }
 
 /** Adds clear screen to current packet */
-void GifSender::addClear(zbuffer_t *t_zBuffer, color_t *rgb)
+void GifSender::addClear(zbuffer_t *t_zBuffer, color_t *t_rgb)
 {
     packet2_chain_open_cnt(currentPacket, 0, 0, 0);
     packet2_update(currentPacket, draw_disable_tests(currentPacket->next, 0, t_zBuffer));
     packet2_update(currentPacket, draw_clear(currentPacket->next, 0,
                                              2048.0F - (screen->width / 2), 2048.0F - (screen->height / 2),
                                              screen->width, screen->height,
-                                             rgb->r, rgb->g, rgb->b));
+                                             t_rgb->r, t_rgb->g, t_rgb->b));
     packet2_update(currentPacket, draw_enable_tests(currentPacket->next, 0, t_zBuffer));
     packet2_chain_close_tag(currentPacket);
 }
