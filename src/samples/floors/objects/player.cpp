@@ -21,9 +21,10 @@
 // Constructors/Destructors
 // ----
 
-Player::Player(Audio *t_audio)
+Player::Player(Audio *t_audio, TextureRepository *t_texRepo)
 {
     PRINT_LOG("Creating player object");
+    texRepo = t_texRepo;
     audio = t_audio;
     gravity = 0.1F;
     lift = -1.0F;
@@ -44,6 +45,8 @@ Player::Player(Audio *t_audio)
     mesh.shouldBeFrustumCulled = false;
     mesh.setAnimSpeed(0.17F);
     mesh.playAnimation(0, 0);
+
+    texRepo->addByMesh("meshes/player/", mesh, BMP);
 
     walkAdpcm = audio->loadADPCM("sounds/walk.adpcm");
     jumpAdpcm = audio->loadADPCM("sounds/jump.adpcm");

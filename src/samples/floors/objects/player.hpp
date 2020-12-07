@@ -33,7 +33,7 @@ public:
     float gravity, velocity, lift;
     Mesh mesh;
     s16 indexOfCurrentFloor;
-    Player(Audio *t_audio);
+    Player(Audio *t_audio, TextureRepository *t_texRepo);
     ~Player();
 
     void update(const Pad &t_pad, const Camera &t_camera, const FloorManager &t_floorManager, Enemy &enemy);
@@ -43,6 +43,7 @@ public:
     inline const Vector3 &getPosition() const { return mesh.position; }
 
 private:
+    TextureRepository *texRepo;
     u32 jumpCounter, killedEnemies;
     Vector3 *getNextPosition(const Pad &t_pad, const Camera &t_camera);
     FloorsCheck *checkFloors(const FloorManager &t_floorManager, const Vector3 &t_nextPos);

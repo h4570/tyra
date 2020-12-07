@@ -20,8 +20,9 @@
 /** Calculate square spiral offsets and initialize floors
  * @param floorAmount must be a number from square root table
  */
-FloorManager::FloorManager(int t_floorAmount)
+FloorManager::FloorManager(int t_floorAmount, TextureRepository *t_texRepo)
 {
+    texRepo = t_texRepo;
     floorAmount = t_floorAmount;
     spirals = new Point[t_floorAmount];
     int floorSpiralMaxOffset = (int)Math::sqrt(t_floorAmount);
@@ -84,8 +85,13 @@ void FloorManager::initFloors()
     floors[0].mesh.loadObj("meshes/floor/", "floor", 3.0F, false);
     floors[0].mesh.shouldBeFrustumCulled = true;
     floors[0].mesh.shouldBeLighted = true;
+    texRepo->addByMesh("meshes/floor/", floors[0].mesh, BMP);
     for (u16 i = 1; i < floorAmount; i++)
+    {
         floors[i].init(floors[0].mesh, spirals[i], i);
+        texRepo->getByMesh(floors[0].mesh.getId(), floors[0].mesh.getMaterial(0).getId())
+            ->addLink(floors[i].mesh.getId(), floors[i].mesh.getMaterial(0).getId());
+    }
     PRINT_LOG("Floors initialized!");
 }
 

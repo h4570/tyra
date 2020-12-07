@@ -42,8 +42,8 @@ private:
     u8 skip1Beat;
     TextureRepository *texRepo;
     LightManager lightManager;
-    FloorManager floorManager;
-    Player player;
+    FloorManager *floorManager;
+    Player *player;
     Camera camera;
     Ui *ui;
     Enemy *enemy;
