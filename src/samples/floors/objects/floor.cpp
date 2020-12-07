@@ -37,11 +37,6 @@ Floor::~Floor() {}
 // Methods
 // ----
 
-/** Init floor position and animation timer position
- * @param spec pointer to 3D object specification
- * @param spiral Spiral position
- * @param initOffset Number of floor (index)
- */
 void Floor::init(const Mesh &mother, const Point &spiral, const u8 &initOffset)
 {
     this->mesh.position.set(0.00F, -10.00F, 0.00F);

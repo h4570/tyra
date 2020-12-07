@@ -64,7 +64,6 @@ Player::~Player()
 // Methods
 // ----
 
-/** Update player position and control gravity */
 void Player::update(const Pad &t_pad, const Camera &t_camera, const FloorManager &floorManager, Enemy &enemy)
 {
     Vector3 *nextPos = getNextPosition(t_pad, t_camera);
@@ -106,7 +105,6 @@ Vector3 *Player::getNextPosition(const Pad &t_pad, const Camera &t_camera)
     return result;
 }
 
-/** Move player when pad move buttons are pressed and is not blocked by any floor side */
 void Player::updatePosition(const Pad &t_pad, const Camera &t_camera, const FloorManager &t_floorManager, const FloorsCheck &t_floorsCheck, const Vector3 &t_nextPos, Enemy &enemy)
 {
     if (t_pad.rJoyH >= 200)
@@ -202,10 +200,6 @@ void Player::updateGravity(FloorsCheck *t_floorsCheck)
         this->velocity = 0;
     }
 }
-
-// ---
-// Private
-// ---
 
 FloorsCheck *Player::checkFloors(const FloorManager &t_floorManager, const Vector3 &t_nextPos)
 {

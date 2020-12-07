@@ -67,15 +67,4 @@ void Camera::followBy(Mesh &t_mesh)
     position.x = unitCirclePosition.x + t_mesh.position.x;
     position.y = unitCirclePosition.y + t_mesh.position.y;
     position.z = unitCirclePosition.z + t_mesh.position.z;
-
-    if (position.x > (-0.04F * verticalLevel) &&
-        position.x < 0.0F &&
-        position.z > (0.998F * verticalLevel))
-    {
-        // TODO
-        // position.x = 0.0F;
-        // position.y = 0.0F;
-        // position.z = 0.0F;
-        // horizontalLevel = 0.0F;
-    }
 }
