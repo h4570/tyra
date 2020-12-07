@@ -36,7 +36,7 @@ Player::Player(Audio *t_audio)
     isJumpingAnimationSet = false;
     isFightingAnimationSet = false;
 
-    mesh.loadMD2("warrior/", "warrior", 0.2F, true);
+    mesh.loadMD2("meshes/player/", "warrior", 0.2F, true);
     mesh.position.set(0.00F, 40.00F, 0.00F);
     mesh.rotation.x = -1.566F;
     mesh.rotation.z = 1.566F;
@@ -45,9 +45,9 @@ Player::Player(Audio *t_audio)
     mesh.setAnimSpeed(0.17F);
     mesh.playAnimation(0, 0);
 
-    walkAdpcm = audio->loadADPCM("walk.adpcm");
-    jumpAdpcm = audio->loadADPCM("jump.adpcm");
-    boomAdpcm = audio->loadADPCM("boom.adpcm");
+    walkAdpcm = audio->loadADPCM("sounds/walk.adpcm");
+    jumpAdpcm = audio->loadADPCM("sounds/jump.adpcm");
+    boomAdpcm = audio->loadADPCM("sounds/boom.adpcm");
     audio->setADPCMVolume(70, 0);
 
     PRINT_LOG("Player object created!");

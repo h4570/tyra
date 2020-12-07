@@ -39,15 +39,15 @@ void Floors::onInit()
     setBgColorAndAmbientColor();
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
     engine->audio.addSongListener(this);
-    engine->audio.loadSong("mafikizolo-loot.wav");
+    engine->audio.loadSong("sounds/mafikizolo-loot.wav");
     engine->audio.playSong();
     texRepo = engine->renderer->getTextureRepository();
     enemy = new Enemy(texRepo);
     ui = new Ui(texRepo);
     engine->audio.setSongVolume(80);
 
-    texRepo->addByMesh("warrior/", player.mesh, BMP);
-    texRepo->addByMesh("floor/", floorManager.floors[0].mesh, BMP);
+    texRepo->addByMesh("meshes/player/", player.mesh, BMP);
+    texRepo->addByMesh("meshes/floor/", floorManager.floors[0].mesh, BMP);
     for (u32 i = 1; i < floorManager.floorAmount; i++)
         texRepo->getByMesh(floorManager.floors[0].mesh.getId(), floorManager.floors[0].mesh.getMaterial(0).getId())
             ->addLink(floorManager.floors[i].mesh.getId(), floorManager.floors[i].mesh.getMaterial(0).getId());

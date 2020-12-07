@@ -27,24 +27,24 @@ Enemy::Enemy(TextureRepository *t_texRepo)
 
     meshes = new Mesh[getMeshesCount()];
 
-    meshes[0].loadMD2("poss/", "poss_head", 0.3F, false);
+    meshes[0].loadMD2("meshes/enemy/", "poss_head", 0.3F, false);
     meshes[0].rotation.x = -1.566F;
     meshes[0].rotation.z = 1.566F;
 
-    meshes[1].loadMD2("poss/", "poss_body", 0.3F, false);
+    meshes[1].loadMD2("meshes/enemy/", "poss_body", 0.3F, false);
     meshes[1].rotation.x = -1.566F;
     meshes[1].rotation.z = 1.566F;
 
-    meshes[2].loadMD2("poss/", "poss_weapon", 0.3F, false);
+    meshes[2].loadMD2("meshes/enemy/", "poss_weapon", 0.3F, false);
     meshes[2].rotation.x = -1.566F;
     meshes[2].rotation.z = 1.566F;
 
     Vector3 initPos = Vector3(0.00F, 40.00F, 0.00F);
     setPosition(initPos);
 
-    t_texRepo->addByMesh("poss/", meshes[0], PNG);
-    t_texRepo->addByMesh("poss/", meshes[1], PNG);
-    t_texRepo->addByMesh("poss/", meshes[2], PNG);
+    t_texRepo->addByMesh("meshes/enemy/", meshes[0], PNG);
+    t_texRepo->addByMesh("meshes/enemy/", meshes[1], PNG);
+    t_texRepo->addByMesh("meshes/enemy/", meshes[2], PNG);
 
     meshes[0].playAnimation(1, 6);
     meshes[1].playAnimation(1, 6);

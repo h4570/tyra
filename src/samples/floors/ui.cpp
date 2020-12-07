@@ -42,12 +42,12 @@ Ui::Ui(TextureRepository *t_texRepo)
     task2Checkbox.size.set(32.0F, 32.0F);
     task2Checkbox.position.set(460.0F, 50.0F);
 
-    t_texRepo->add("2d/", "reward", BMP)->addLink(reward.getId());
-    t_texRepo->add("2d/", "info_text", PNG)->addLink(info.getId());
-    t_texRepo->add("2d/", "check1_text", PNG)->addLink(task1.getId());
-    t_texRepo->add("2d/", "check2_text", PNG)->addLink(task2.getId());
-    grayCheckboxTex = t_texRepo->add("2d/", "gray_checkmark", PNG);
-    blueCheckboxTex = t_texRepo->add("2d/", "blue_checkmark", PNG);
+    t_texRepo->add("ui/", "reward", BMP)->addLink(reward.getId());
+    t_texRepo->add("ui/", "info-text", PNG)->addLink(info.getId());
+    t_texRepo->add("ui/", "check1-text", PNG)->addLink(task1.getId());
+    t_texRepo->add("ui/", "check2-text", PNG)->addLink(task2.getId());
+    grayCheckboxTex = t_texRepo->add("ui/", "gray-checkmark", PNG);
+    blueCheckboxTex = t_texRepo->add("ui/", "blue-checkmark", PNG);
 
     grayCheckboxTex->addLink(task1Checkbox.getId());
     grayCheckboxTex->addLink(task2Checkbox.getId());
