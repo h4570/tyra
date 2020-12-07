@@ -160,7 +160,7 @@ void FloorManager::doTheTrick()
 /** Called by audio thread */
 void FloorManager::onAudioTick()
 {
-    if (audioTick++ > 13)
+    if (audioTick++ > 19)
     {
         if (audioMode == 0)
         {

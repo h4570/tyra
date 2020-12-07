@@ -48,7 +48,7 @@ Player::Player(Audio *t_audio)
     walkAdpcm = audio->loadADPCM("walk.adpcm");
     jumpAdpcm = audio->loadADPCM("jump.adpcm");
     boomAdpcm = audio->loadADPCM("boom.adpcm");
-    audio->setADPCMVolume(60, 0);
+    audio->setADPCMVolume(70, 0);
 
     PRINT_LOG("Player object created!");
 }
