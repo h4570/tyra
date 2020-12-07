@@ -34,8 +34,13 @@ public:
 private:
     u8 audioOffset, audioMode;
     u32 audioTick;
+    float trick;
+    u8 isTimeForChangeTriggerColor, isTimeForChangeDefaultColor;
+    color_t trigColor, defaultColor;
+    u8 trickMode;
     Point *spirals;
     void calcSpiral(int X, int Y);
+    void doTheTrick();
     void initFloors();
 };
 

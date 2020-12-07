@@ -27,6 +27,10 @@ FloorManager::FloorManager(int t_floorAmount)
     int floorSpiralMaxOffset = (int)Math::sqrt(t_floorAmount);
     calcSpiral(floorSpiralMaxOffset, floorSpiralMaxOffset);
     initFloors();
+    trick = 0.0F;
+    trickMode = 0;
+    isTimeForChangeTriggerColor = true;
+    isTimeForChangeDefaultColor = true;
     audioOffset = audioMode = audioTick = 0;
 }
 
@@ -92,15 +96,65 @@ void FloorManager::initFloors()
  */
 void FloorManager::update(Player &t_player)
 {
+    if (isTimeForChangeTriggerColor)
+    {
+        isTimeForChangeTriggerColor = false;
+        trigColor.r = rand() % (128 - 64 + 1) + 64;
+        trigColor.g = rand() % (128 - 64 + 1) + 64;
+        trigColor.b = rand() % (128 - 64 + 1) + 64;
+    }
+    if (isTimeForChangeDefaultColor)
+    {
+        isTimeForChangeDefaultColor = false;
+        defaultColor.r = rand() % (64 + 1);
+        defaultColor.g = rand() % (64 + 1);
+        defaultColor.b = rand() % (64 + 1);
+    }
+    doTheTrick();
     for (u16 i = 0; i < floorAmount; i++)
     {
         floors[i].animate(t_player);
 
         if (floors[i].isByAudioTriggered)
-            floors[i].mesh.color.a = 0x20;
+        {
+            floors[i].mesh.color.r = trigColor.r;
+            floors[i].mesh.color.g = trigColor.g;
+            floors[i].mesh.color.b = trigColor.b;
+        }
         else
-            floors[i].mesh.color.a = 0x80;
+        {
+            floors[i].mesh.color.r = defaultColor.r;
+            floors[i].mesh.color.g = defaultColor.g;
+            floors[i].mesh.color.b = defaultColor.b;
+        }
     }
+}
+
+void FloorManager::doTheTrick()
+{
+    if (trickMode == 0)
+    {
+        if (trick > 3.0F)
+        {
+            isTimeForChangeTriggerColor = true;
+            trickMode = 1;
+        }
+        trick += 0.01F;
+    }
+    else if (trickMode == 1)
+    {
+        if (trick <= 0.1F)
+        {
+            isTimeForChangeTriggerColor = true;
+            trickMode = 0;
+        }
+        trick -= 0.01F;
+    }
+    floors[0].mesh.getFrames()[0].getST(1).set(trick, trick);
+    floors[0].mesh.getFrames()[0].getST(4).set(trick, trick);
+    floors[0].mesh.getFrames()[0].getST(7).set(trick, trick);
+    floors[0].mesh.getFrames()[0].getST(10).set(trick, trick);
+    floors[0].mesh.getFrames()[0].getST(13).set(trick, trick);
 }
 
 /** Called by audio thread */
@@ -120,6 +174,7 @@ void FloorManager::onAudioTick()
             if (++audioOffset > 3)
             {
                 audioOffset = 0;
+                isTimeForChangeDefaultColor = true;
                 audioMode = 1;
             }
         }
@@ -135,6 +190,7 @@ void FloorManager::onAudioTick()
             if (++audioOffset > 3)
             {
                 audioOffset = 0;
+                isTimeForChangeDefaultColor = true;
                 audioMode = 2;
             }
         }
@@ -150,6 +206,7 @@ void FloorManager::onAudioTick()
             if (++audioOffset > 3)
             {
                 audioOffset = 0;
+                isTimeForChangeDefaultColor = true;
                 audioMode = 3;
             }
         }
@@ -165,6 +222,7 @@ void FloorManager::onAudioTick()
             if (++audioOffset > 3)
             {
                 audioOffset = 0;
+                isTimeForChangeDefaultColor = true;
                 audioMode = 0;
             }
         }

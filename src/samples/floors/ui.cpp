@@ -60,6 +60,12 @@ void Ui::update(const Player &player)
         grayCheckboxTex->removeLinkBySprite(task1Checkbox.getId());
         blueCheckboxTex->addLink(task1Checkbox.getId());
     }
+    if (!isTask2Done && player.getKilledEnemiesCount() >= 10)
+    {
+        isTask2Done = true;
+        grayCheckboxTex->removeLinkBySprite(task2Checkbox.getId());
+        blueCheckboxTex->addLink(task2Checkbox.getId());
+    }
 }
 
 void Ui::render(Renderer *t_renderer)

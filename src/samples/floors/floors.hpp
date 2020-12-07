@@ -37,6 +37,7 @@ public:
     Engine *engine;
 
 private:
+    void setBgColorAndAmbientColor();
     u32 audioTicks;
     u8 skip1Beat;
     TextureRepository *texRepo;

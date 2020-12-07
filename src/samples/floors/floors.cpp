@@ -36,14 +36,15 @@ Floors::~Floors()
 
 void Floors::onInit()
 {
+    setBgColorAndAmbientColor();
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.unitCirclePosition, camera.planes);
     engine->audio.addSongListener(this);
-    engine->audio.loadSong("nob-else.wav");
+    engine->audio.loadSong("mafikizolo-loot.wav");
     engine->audio.playSong();
     texRepo = engine->renderer->getTextureRepository();
     enemy = new Enemy(texRepo);
     ui = new Ui(texRepo);
-    engine->audio.setSongVolume(20);
+    engine->audio.setSongVolume(80);
 
     texRepo->addByMesh("warrior/", player.mesh, BMP);
     texRepo->addByMesh("floor/", floorManager.floors[0].mesh, BMP);
@@ -55,6 +56,7 @@ void Floors::onInit()
 void Floors::onUpdate()
 {
     ui->update(player);
+    enemy->update(floorManager);
     lightManager.update();
     camera.update(engine->pad, player.mesh);
     floorManager.update(player);
@@ -68,7 +70,7 @@ void Floors::onUpdate()
 
 void Floors::onAudioTick()
 {
-    if ((++audioTicks + 20) % 28 == 0)
+    if ((++audioTicks + 20) % 21 == 0)
     {
         if (skip1Beat)
             floorManager.onAudioTick();
@@ -77,6 +79,17 @@ void Floors::onAudioTick()
     }
     if (audioTicks > 10000)
         audioTicks = 0;
+}
+
+void Floors::setBgColorAndAmbientColor()
+{
+    color_t bgColor;
+    bgColor.r = 0x20;
+    bgColor.g = 0x20;
+    bgColor.b = 0x20;
+    engine->renderer->setWorldColor(bgColor);
+    Vector3 ambient = Vector3(0.003F, 0.003F, 0.003F);
+    engine->renderer->setAmbientLight(ambient);
 }
 
 void Floors::onAudioFinish()

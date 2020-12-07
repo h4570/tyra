@@ -9,6 +9,7 @@
 */
 
 #include "player.hpp"
+#include "../utils.hpp"
 
 #include <loaders/md2_loader.hpp>
 #include <loaders/bmp_loader.hpp>
@@ -27,6 +28,7 @@ Player::Player(Audio *t_audio)
     gravity = 0.1F;
     lift = -1.0F;
     jumpCounter = 0;
+    speed = 1.0F;
     killedEnemies = 0;
     isWalking = false;
     isFighting = false;
@@ -45,6 +47,7 @@ Player::Player(Audio *t_audio)
 
     walkAdpcm = audio->loadADPCM("walk.adpcm");
     jumpAdpcm = audio->loadADPCM("jump.adpcm");
+    boomAdpcm = audio->loadADPCM("boom.adpcm");
     audio->setADPCMVolume(60, 0);
 
     PRINT_LOG("Player object created!");
@@ -59,7 +62,7 @@ Player::~Player()
 // ----
 
 /** Update player position and control gravity */
-void Player::update(const Pad &t_pad, const Camera &t_camera, const FloorManager &floorManager, const Enemy &enemy)
+void Player::update(const Pad &t_pad, const Camera &t_camera, const FloorManager &floorManager, Enemy &enemy)
 {
     Vector3 *nextPos = getNextPosition(t_pad, t_camera);
     FloorsCheck *floorsCheck = checkFloors(floorManager, *nextPos);
@@ -76,6 +79,7 @@ Vector3 *Player::getNextPosition(const Pad &t_pad, const Camera &t_camera)
     Vector3 *result = new Vector3(mesh.position);
     Vector3 normalizedCamera = Vector3(t_camera.unitCirclePosition);
     normalizedCamera.normalize();
+    normalizedCamera *= speed;
     if (t_pad.lJoyV <= 100)
     {
         result->x += -normalizedCamera.x;
@@ -100,7 +104,7 @@ Vector3 *Player::getNextPosition(const Pad &t_pad, const Camera &t_camera)
 }
 
 /** Move player when pad move buttons are pressed and is not blocked by any floor side */
-void Player::updatePosition(const Pad &t_pad, const Camera &t_camera, const FloorManager &t_floorManager, const FloorsCheck &t_floorsCheck, const Vector3 &t_nextPos, const Enemy &enemy)
+void Player::updatePosition(const Pad &t_pad, const Camera &t_camera, const FloorManager &t_floorManager, const FloorsCheck &t_floorsCheck, const Vector3 &t_nextPos, Enemy &enemy)
 {
     if (t_pad.rJoyH >= 200)
         mesh.rotation.z += 0.08;
@@ -121,9 +125,11 @@ void Player::updatePosition(const Pad &t_pad, const Camera &t_camera, const Floo
         if (fightTimer.getTimeDelta() > 25000)
         { // end of fighting
             float distance = getPosition().distanceTo(enemy.getPosition());
-            if (12.0F > distance)
+            if (16.0F > distance)
             {
                 enemy.kill(*this);
+                audio->playADPCM(boomAdpcm);
+                speed += .5F;
                 killedEnemies++;
             }
             isFightingAnimationSet = false;
@@ -207,7 +213,7 @@ FloorsCheck *Player::checkFloors(const FloorManager &t_floorManager, const Vecto
     Vector3 max = Vector3();
     for (u32 i = 0; i < t_floorManager.floorAmount; i++)
     {
-        getMinMax(t_floorManager.floors[i].mesh, min, max);
+        Utils::getMinMax(t_floorManager.floors[i].mesh, min, max);
         if (result->currentFloor == NULL && this->mesh.position.isOnSquare(min, max))
         {
             result->currentFloor = &t_floorManager.floors[i];
@@ -224,40 +230,4 @@ FloorsCheck *Player::checkFloors(const FloorManager &t_floorManager, const Vecto
             break;
     }
     return result;
-}
-
-/** Calculates minimum and maximum X, Y, Z of mesh vertices + current position */
-void Player::getMinMax(const Mesh &t_mesh, Vector3 &t_min, Vector3 &t_max)
-{
-    Vector3 calc = Vector3();
-    u8 isInitialized = 0;
-    Vector3 *boundingBox = t_mesh.getCurrentBoundingBox();
-    for (u32 i = 0; i < 8; i++)
-    {
-        calc.set(
-            boundingBox[i].x + t_mesh.position.x,
-            boundingBox[i].y + t_mesh.position.y,
-            boundingBox[i].z + t_mesh.position.z);
-        if (isInitialized == 0)
-        {
-            isInitialized = 1;
-            t_min.set(calc);
-            t_max.set(calc);
-        }
-
-        if (t_min.x > calc.x)
-            t_min.x = calc.x;
-        if (calc.x > t_max.x)
-            t_max.x = calc.x;
-
-        if (t_min.y > calc.y)
-            t_min.y = calc.y;
-        if (calc.y > t_max.y)
-            t_max.y = calc.y;
-
-        if (t_min.z > calc.z)
-            t_min.z = calc.z;
-        if (calc.z > t_max.z)
-            t_max.z = calc.z;
-    }
 }

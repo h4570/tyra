@@ -26,13 +26,19 @@ public:
 
     inline Mesh *getMeshes() const { return meshes; }
     inline u8 getMeshesCount() const { return 3; }
-    inline Vector3 &getPosition() const { return meshes[1].position; }
-    void kill(const Player &player) const;
+    inline Vector3 getPosition() const { return position; }
+    void setPosition(const Vector3 &t_vec);
+    void setPosition(const float &t_y);
+    void kill(const Player &player);
     void update(const FloorManager &t_floorManager);
 
 private:
     /** 0 - head, 1 - body, 2 - weapon */
     Mesh *meshes;
+    const Floor *currentFloor;
+    Vector3 position, currFloorMin, currFloorMax;
+    u8 isKilled;
+    void updateGravity();
 };
 
 #endif

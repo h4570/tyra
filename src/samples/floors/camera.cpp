@@ -48,7 +48,7 @@ void Camera::update(Pad &t_pad, Mesh &t_mesh)
  */
 void Camera::rotate(Pad &t_pad)
 {
-    if (t_pad.rJoyH <= 50)
+    if (t_pad.rJoyH <= 100)
         horizontalLevel -= 0.08;
     else if (t_pad.rJoyH >= 200)
         horizontalLevel += 0.08;
