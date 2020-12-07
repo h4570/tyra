@@ -45,9 +45,9 @@ void Player::update(Pad &t_pad)
         velocity = -1;
 
     if (t_pad.lJoyH >= 200)
-        mesh.rotation.z -= 0.1;
+        mesh.rotation.z -= 0.05;
     else if (t_pad.lJoyH <= 100)
-        mesh.rotation.z += 0.1;
+        mesh.rotation.z += 0.05;
 
     if (t_pad.rJoyV >= 200 && lift <= 1)
         lift += 0.2F;
