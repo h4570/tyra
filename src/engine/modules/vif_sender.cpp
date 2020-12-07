@@ -29,8 +29,9 @@ extern u32 VU1Draw3D_CodeStart __attribute__((section(".vudata")));
 extern u32 VU1Draw3D_CodeEnd __attribute__((section(".vudata")));
 //
 
-VifSender::VifSender()
+VifSender::VifSender(Light *t_light)
 {
+    light = t_light;
     PRINT_LOG("Initializing VifSender");
     PRINT_LOG("VifSender initialized!");
     dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);

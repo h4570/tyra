@@ -14,6 +14,7 @@
 #include <tamtypes.h>
 #include <packet2_utils.h>
 #include "../models/render_data.hpp"
+#include "./light.hpp"
 #include "../models/light_bulb.hpp"
 #include "../models/mesh.hpp"
 #include "../models/math/matrix.hpp"
@@ -24,7 +25,7 @@ class VifSender
 {
 
 public:
-    VifSender();
+    VifSender(Light *t_light);
     ~VifSender();
 
     // TODO refactor
@@ -32,6 +33,7 @@ public:
     void sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation);
 
 private:
+    Light *light;
     void uploadMicroProgram();
     void setDoubleBuffer();
     void drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer);
