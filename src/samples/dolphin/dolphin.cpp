@@ -113,7 +113,7 @@ void Dolphin::onUpdate()
     {
         Vector3 vecDist = oysters[i].mesh.position - player.mesh.position;
         float dist = Math::sqrt(vecDist.x + vecDist.y + vecDist.z);
-        if (dist < 2 && player.getIsJumping() && oysters[i].isActive())
+        if (dist < 2.5F && player.getIsJumping() && oysters[i].isActive())
         {
             printf("Pickup %d Dist %d\n", i, dist);
             oysters[i].setActive(false);
