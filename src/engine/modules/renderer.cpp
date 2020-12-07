@@ -101,14 +101,26 @@ void Renderer::changeTexture(Texture *t_tex)
 
 void Renderer::draw(Sprite &t_sprite)
 {
+    Texture *texture = textureRepo.getBySprite(t_sprite.getId());
     texrect_t rect;
-    float texMax = t_sprite.size.x > t_sprite.size.y ? t_sprite.size.x : t_sprite.size.y;
-    float texS = texMax;
-    float texT = texMax;
-    if (t_sprite.size.x > t_sprite.size.y)
-        texT = texMax / (t_sprite.size.x / t_sprite.size.y);
-    else if (t_sprite.size.y > t_sprite.size.x)
-        texS = texMax / (t_sprite.size.y / t_sprite.size.x);
+    float sizeX, sizeY;
+    if (t_sprite.getMode() == MODE_REPEAT)
+    {
+        sizeX = t_sprite.size.x;
+        sizeY = t_sprite.size.y;
+    }
+    else
+    {
+        sizeX = (float)texture->getWidth();
+        sizeY = (float)texture->getHeight();
+    }
+
+    float texS, texT;
+    float texMax = texT = texS = sizeX > sizeY ? sizeX : sizeY;
+    if (sizeX > sizeY)
+        texT = texMax / (sizeX / sizeY);
+    else if (sizeY > sizeX)
+        texS = texMax / (sizeY / sizeX);
     rect.t0.s = t_sprite.isFlippedHorizontally() ? texS : 0.0F;
     rect.t0.t = t_sprite.isFlippedVertically() ? texT : 0.0F;
     rect.t1.s = t_sprite.isFlippedHorizontally() ? 0.0F : texS;
@@ -125,7 +137,7 @@ void Renderer::draw(Sprite &t_sprite)
     rect.v1.y = (t_sprite.size.y * t_sprite.scale) + t_sprite.position.y;
     rect.v1.z = (u32)-1;
     beginFrameIfNeeded();
-    changeTexture(textureRepo.getBySprite(t_sprite.getId()));
+    changeTexture(texture);
     packet2_t *packet2 = packet2_create(12, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
     packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0, 2048, 2048));
     packet2_utils_gif_add_set(packet2, 1);
