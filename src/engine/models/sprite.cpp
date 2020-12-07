@@ -24,6 +24,7 @@ Sprite::Sprite()
     _flipH = false;
     _flipV = false;
     scale = 1.0F;
+    mode = MODE_REPEAT;
     setDefaultColor();
     setDefaultLODAndClut();
 }
