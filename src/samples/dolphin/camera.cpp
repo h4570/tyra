@@ -26,6 +26,10 @@ Camera::~Camera() {}
 
 void Camera::update(Pad &t_pad, Mesh &t_mesh)
 {
+    float cameraRot = (t_mesh.rotation.z * 180 / Math::PI) - (horizontalLevel * 180 / Math::PI);
+    cameraRot += 180;
+    cameraRot /= 15;
+    horizontalLevel += cameraRot / (180 / Math::PI);
     rotate(t_pad);
     followBy(t_mesh);
     Vector3 lookPos = Vector3(t_mesh.position.x, t_mesh.position.y + 10.0F, t_mesh.position.z);
@@ -35,10 +39,10 @@ void Camera::update(Pad &t_pad, Mesh &t_mesh)
 void Camera::rotate(Pad &t_pad)
 {
 
-    if (t_pad.rJoyH <= 50)
+    if (t_pad.rJoyH <= 100)
         horizontalLevel -= 0.08;
     else if (t_pad.rJoyH >= 200)
-        horizontalLevel += 0.04;
+        horizontalLevel += 0.08;
     /*
     if (t_pad.rJoyV <= 50 && verticalLevel > 25.0F)
         verticalLevel -= 0.9F;
