@@ -23,6 +23,9 @@ Ui::Ui(TextureRepository *t_texRepo)
     isTask1Done = false;
     isTask2Done = false;
 
+    info.size.set(128.0F, 32.0F);
+    info.position.set(500.0F, 430.0F);
+
     task1.size.set(128.0F, 32.0F);
     task1.position.set(500.0F, 10.0F);
 
@@ -35,6 +38,7 @@ Ui::Ui(TextureRepository *t_texRepo)
     task2Checkbox.size.set(32.0F, 32.0F);
     task2Checkbox.position.set(460.0F, 50.0F);
 
+    t_texRepo->add("2d/", "info_text", PNG)->addLink(info.getId());
     t_texRepo->add("2d/", "check1_text", PNG)->addLink(task1.getId());
     t_texRepo->add("2d/", "check2_text", PNG)->addLink(task2.getId());
     grayCheckboxTex = t_texRepo->add("2d/", "gray_checkmark", PNG);
@@ -70,6 +74,7 @@ void Ui::update(const Player &player)
 
 void Ui::render(Renderer *t_renderer)
 {
+    t_renderer->draw(info);
     t_renderer->draw(task1);
     t_renderer->draw(task2);
     t_renderer->draw(task1Checkbox);

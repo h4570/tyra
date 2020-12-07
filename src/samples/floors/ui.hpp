@@ -28,7 +28,7 @@ public:
 
 private:
     u8 isTask1Done, isTask2Done;
-    Sprite task1, task2, task1Checkbox, task2Checkbox;
+    Sprite task1, task2, task1Checkbox, task2Checkbox, info;
     Texture *grayCheckboxTex, *blueCheckboxTex;
 };
 
