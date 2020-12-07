@@ -22,6 +22,7 @@ Collectible::Collectible()
     mesh.shouldBeFrustumCulled = false;
     mesh.position.set(0.0F, 0.0F, 0.0f);
     bActive = true;
+    bDisappearing = false;
 }
 
 Collectible::~Collectible()
@@ -33,7 +34,28 @@ void Collectible::setActive(u8 b)
     bActive = b;
 }
 
+void Collectible::disappear()
+{
+    bDisappearing = true;
+    lift = 10;
+}
+
 u8 Collectible::isActive()
 {
     return bActive;
+}
+
+void Collectible::update()
+{
+    mesh.rotation.y += 0.08F;
+    if (bDisappearing)
+    {
+        mesh.position.y += lift;
+        lift = lift > 0 ? lift / 2 : 0;
+        if (lift < 1)
+        {
+            setActive(false);
+            bDisappearing = false;
+        }
+    }
 }

@@ -23,11 +23,13 @@ public:
     Collectible();
     ~Collectible();
     void update();
+    void disappear();
     void setActive(u8 b);
     u8 isActive();
 
 private:
-    u8 bActive;
+    u8 bActive, bDisappearing;
+    u8 lift;
 };
 
 #endif
