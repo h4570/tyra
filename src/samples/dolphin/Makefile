@@ -5,6 +5,7 @@ TYRA_DIR = ./../../engine
 EE_OBJS =											\
 	camera.o										\
 	objects/player.o								\
+	objects/collectible.o							\
 	dolphin.o										\
 	main.o
 

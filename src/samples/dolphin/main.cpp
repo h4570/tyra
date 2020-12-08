@@ -13,6 +13,7 @@
 int main()
 {
     Engine engine = Engine();
+    engine.screen.fov = 75.F;
     Dolphin game = Dolphin(&engine);
     game.engine->init(&game, 128);
     SleepThread();

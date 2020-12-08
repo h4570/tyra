@@ -8,29 +8,28 @@
 # Michał Mostowik <mostek3pl@gmail.com>
 */
 
-#ifndef _PLAYER_
-#define _PLAYER_
-
-#define WATER_LEVEL -5.0F
+#ifndef _COLLECTIBLE_
+#define _COLLECTIBLE_
 
 #include "../camera.hpp"
-#include <modules/pad.hpp>
 #include <tamtypes.h>
 
-class Player
+class Collectible
 {
 
 public:
-    float gravity, velocity, lift;
+    float rotation;
     Mesh mesh;
-    Player();
-    ~Player();
-    void update(Pad &t_pad);
-    const u8 &isJumping() { return bIsJumping; }
+    Collectible();
+    ~Collectible();
+    void update();
+    void disappear();
+    void setActive(const u8 &b) { bActive = b; }
+    u8 isActive() { return bActive; }
 
 private:
-    u8 bIsJumping;
-    Vector3 playerNextPosition;
+    u8 bActive, bDisappearing;
+    u8 lift;
 };
 
 #endif
