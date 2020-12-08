@@ -16,6 +16,8 @@ const u8 WATER_SIZE = 100;
 
 const u8 OYSTERS_COUNT = 15;
 
+float Dolphin::engineFPS = 60.F;
+
 Dolphin::Dolphin(Engine *t_engine) : engine(t_engine), camera(&engine->screen)
 {
     oysters = new Collectible[OYSTERS_COUNT];
@@ -93,8 +95,9 @@ void Dolphin::onInit()
 
 void Dolphin::onUpdate()
 {
+    Dolphin::engineFPS = engine->fps;
     if (engine->pad.isCrossClicked)
-        printf("PlayerPos (%f,%f), FPS:%f\n", player.mesh.position.x, player.mesh.position.z, this->engine->fps);
+        printf("Delta multiplier: %f\n", 60.0F / engine->fps);
 
     float xDist = player.mesh.position.x - water.position.x;
     float zDist = player.mesh.position.z - water.position.z;

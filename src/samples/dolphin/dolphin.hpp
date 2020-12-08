@@ -33,6 +33,7 @@ public:
     void onUpdate();
 
     Engine *engine;
+    static float engineFPS;
 
 private:
     LightBulb bulb;

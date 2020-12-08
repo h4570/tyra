@@ -9,6 +9,7 @@
 */
 
 #include "player.hpp"
+#include "dolphin.hpp"
 
 #include <loaders/obj_loader.hpp>
 #include <loaders/bmp_loader.hpp>
@@ -38,7 +39,6 @@ void Player::update(Pad &t_pad)
         lift += 0.05F;
     if (lift < 0.1F && lift > -0.1F)
         lift = 0;
-    velocity = 0;
     if (t_pad.lJoyV <= 100)
         velocity = 1;
     else if (t_pad.lJoyV >= 200)
@@ -81,9 +81,12 @@ void Player::update(Pad &t_pad)
         mesh.playAnimation(1, 14, 0);
     }
 
+    velocity *= 60.0F / Dolphin::engineFPS; //Moving by deltatime of last frame.
     mesh.position.z +=
         Math::cos(mesh.rotation.z) * velocity * (bIsJumping + 1);
     mesh.position.x +=
         Math::sin(mesh.rotation.z) * velocity * (bIsJumping + 1);
     mesh.position.y += lift;
+
+    velocity = 0;
 }
