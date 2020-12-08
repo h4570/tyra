@@ -48,10 +48,10 @@ void Camera::update(Pad &t_pad, Mesh &t_mesh)
  */
 void Camera::rotate(Pad &t_pad)
 {
-    if (t_pad.rJoyH <= 50)
+    if (t_pad.rJoyH <= 100)
         horizontalLevel -= 0.08;
     else if (t_pad.rJoyH >= 200)
-        horizontalLevel += 0.04;
+        horizontalLevel += 0.08;
     if (t_pad.rJoyV <= 50 && verticalLevel > 25.0F)
         verticalLevel -= 0.9F;
     else if (t_pad.rJoyV >= 200 && verticalLevel < 80.0F)
@@ -67,15 +67,4 @@ void Camera::followBy(Mesh &t_mesh)
     position.x = unitCirclePosition.x + t_mesh.position.x;
     position.y = unitCirclePosition.y + t_mesh.position.y;
     position.z = unitCirclePosition.z + t_mesh.position.z;
-
-    if (position.x > (-0.04F * verticalLevel) &&
-        position.x < 0.0F &&
-        position.z > (0.998F * verticalLevel))
-    {
-        // TODO
-        // position.x = 0.0F;
-        // position.y = 0.0F;
-        // position.z = 0.0F;
-        // horizontalLevel = 0.0F;
-    }
 }

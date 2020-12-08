@@ -6,8 +6,10 @@ EE_OBJS =											\
 	managers/light_manager.o						\
 	managers/floor_manager.o						\
 	camera.o										\
+	objects/enemy.o									\
 	objects/floor.o									\
 	objects/player.o								\
+	ui.o											\
 	utils.o											\
 	floors.o										\
 	main.o

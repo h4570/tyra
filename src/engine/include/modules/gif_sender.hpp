@@ -17,6 +17,7 @@
 #include <draw_primitives.h>
 #include <math3d.h>
 #include <packet2.h>
+#include "./light.hpp"
 #include "../models/mesh.hpp"
 #include "../models/math/matrix.hpp"
 #include "../models/screen_settings.hpp"
@@ -29,17 +30,18 @@ class GifSender
 {
 
 public:
-    GifSender(u32 t_packetSize, ScreenSettings *t_screen);
+    GifSender(u32 t_packetSize, ScreenSettings *t_screen, Light *t_light);
     ~GifSender();
 
     void initPacket(u8 context);
     void addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer);
-    void addClear(zbuffer_t *t_zBuffer);
+    void addClear(zbuffer_t *t_zBuffer, color_t *t_rgb);
     void sendPacket();
-    void sendClear(zbuffer_t *t_zBuffer);
+    void sendClear(zbuffer_t *t_zBuffer, color_t *t_rgb);
     static void sendTexture(Texture &texture, texbuffer_t *t_texBuffer);
 
 private:
+    Light *light;
     xyz_t *xyz;
     color_t *rgbaq;
     texel_t *st;

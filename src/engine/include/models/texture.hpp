@@ -47,38 +47,38 @@ public:
      * again texture in renderer, when last sent texture id
      * by renderer will be equal to this id.
      */
-    const u32 &getId() const { return id; };
+    inline const u32 getId() const { return id; };
 
-    const u8 &getWidth() const { return width; };
+    inline const u16 getWidth() const { return width; };
 
-    const u8 &getHeight() const { return height; };
+    inline const u16 getHeight() const { return height; };
 
-    const TextureType &getType() const { return _type; };
+    inline const TextureType getType() const { return _type; };
 
-    u32 getTextureLinksCount() const { return static_cast<u32>(texLinks.size()); };
+    inline u32 getTextureLinksCount() const { return static_cast<u32>(texLinks.size()); };
 
-    texwrap_t *getWrapSettings() { return &wrapSettings; };
+    inline texwrap_t *getWrapSettings() { return &wrapSettings; };
 
     /** 
      * Returns always width * width * 3/4. 
      * 3 for RGB, 4 for RGBA.
      */
-    u32 getDataSize() const { return _type == TEX_TYPE_RGB ? width * height * 3 : width * height * 4; };
+    inline u32 getDataSize() const { return _type == TEX_TYPE_RGB ? width * height * 3 : width * height * 4; };
 
     /** 
      * Texture data, used by renderer.
      * Array of size getDataSize().
      */
-    unsigned char *getData() const { return data; };
+    inline unsigned char *getData() const { return data; };
 
     /** 
      * Get texture name.
      * For "textures/abc.bmp" result will be: "abc"
      */
-    char *getName() const { return name; };
+    inline char *getName() const { return name; };
 
     /** Array of texture links. Size of getTextureLinksCount() */
-    const std::vector<TextureLink> &getTextureLinks() const { return texLinks; };
+    inline const std::vector<TextureLink> &getTextureLinks() const { return texLinks; };
 
     /** 
      * Returns index of link.

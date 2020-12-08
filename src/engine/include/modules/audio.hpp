@@ -87,7 +87,8 @@ public:
     // ADPCM
 
     /** 
-     * Load ADPCM sample.
+     * Load ADPCM sample. ADPCM sample is an output from
+     * "adpenc" tool, shipped with PS2SDK.
      * @param t_path Example: "hit.adpcm" or "folder/jump.adpcm"
      */
     audsrv_adpcm_t *loadADPCM(char *t_path);

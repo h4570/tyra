@@ -142,7 +142,7 @@ void LightManager::onAudioTick()
     }
     else
     {
-        bulbs[0].intensity += 6;
-        bulbs[1].intensity += 6;
+        bulbs[0].intensity += 9;
+        bulbs[1].intensity += 9;
     }
 }

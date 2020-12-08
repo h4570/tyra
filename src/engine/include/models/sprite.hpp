@@ -15,6 +15,12 @@
 #include <draw_types.h>
 #include <draw_buffers.h>
 
+enum SpriteMode
+{
+    MODE_STRETCH,
+    MODE_REPEAT
+};
+
 /** 
  * Class which have contain 2D image data.
  */
@@ -37,9 +43,15 @@ public:
     /** Auto generated unique Id. */
     inline const u32 &getId() const { return id; };
 
+    /** Get sprite drawing mode. */
+    inline const SpriteMode &getMode() const { return mode; };
+
     // ----
     //  Setters
     // ----
+
+    /** Set sprite drawing mode. */
+    void setMode(const SpriteMode &t_val) { mode = t_val; }
 
     // ----
     //  Other
@@ -59,6 +71,7 @@ public:
 
 private:
     u32 id;
+    SpriteMode mode;
     u8 _isSizeSet, _flipH, _flipV;
     void setDefaultColor();
     void setDefaultLODAndClut();

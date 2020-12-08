@@ -26,6 +26,8 @@ const u8 ADDITIONAL_LIGHTS = 1; // Ambient
 const float LIGHT_MAX = 255.0F;
 const float LIGHT_DIS_MOD = 4.0F;
 
+void Light::setAmbientLight(const Vector3 &t_rgb) { ambientLight.set(t_rgb); }
+
 u16 Light::getLightsCount(u32 t_bulbsCount) { return t_bulbsCount + ADDITIONAL_LIGHTS; }
 
 /** Calculates lighting. Used in gifSender in object 3D calculations */
@@ -40,9 +42,9 @@ void Light::calculateLight(VECTOR *t_lightDirections, VECTOR *t_lightColors, int
     t_lightDirections[0][2] = 0.0F;
     t_lightDirections[0][3] = 1.0F;
 
-    t_lightColors[0][0] = 0.0F;
-    t_lightColors[0][1] = 0.0F;
-    t_lightColors[0][2] = 0.0F;
+    t_lightColors[0][0] = ambientLight.x;
+    t_lightColors[0][1] = ambientLight.y;
+    t_lightColors[0][2] = ambientLight.z;
     t_lightColors[0][3] = 1.0F;
 
     // ---
