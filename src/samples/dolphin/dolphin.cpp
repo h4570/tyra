@@ -11,10 +11,10 @@
 #include "dolphin.hpp"
 #include "utils/math.hpp"
 
-const u8 WATER_TILE_SCALE = 5.0F;
-const u8 WATER_SIZE = 100.0F;
+const u8 WATER_TILE_SCALE = 5;
+const u8 WATER_SIZE = 100;
 
-const u8 OYSTERS_COUNT = 15.0F;
+const u8 OYSTERS_COUNT = 15;
 
 Dolphin::Dolphin(Engine *t_engine) : engine(t_engine), camera(&engine->screen)
 {
