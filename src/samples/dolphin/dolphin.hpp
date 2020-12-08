@@ -49,6 +49,7 @@ private:
     Sprite waterOverlay;
     Mesh water;
     Mesh waterbox;
+    Sprite lifeSprites[3];
 };
 
 #endif

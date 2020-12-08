@@ -25,6 +25,7 @@ Player::Player()
     mesh.rotation.x = -1.6F;
     mesh.setAnimSpeed(0.05F);
     bIsJumping = false;
+    lifes = 3;
 }
 
 Player::~Player()

@@ -91,6 +91,16 @@ void Dolphin::onInit()
         oysters[i].mesh.position.set(i * -100, 5.0F, i * -100);
     }
 
+    Texture *pLifeTex = texRepo->add("2d/", "life", PNG);
+    //pLifeTex->addLink(lifeSprites[0].getId());
+    for (int i = 0; i < 3; i++)
+    {
+        lifeSprites[i].size.set(64.0F, 64.0F);
+        lifeSprites[i].setMode(MODE_STRETCH);
+        lifeSprites[i].position.set(395 + (64 * i), 0);
+        pLifeTex->addLink(lifeSprites[i].getId());
+    }
+
     texRepo->addByMesh("dolphin/", player.mesh, BMP);
     texRepo->addByMesh("sunnyisl/", island, BMP);
     texRepo->addByMesh("skybox/", skybox, BMP);
@@ -151,6 +161,10 @@ void Dolphin::onUpdate()
         {
             engine->renderer->draw(oysters[i].mesh);
         }
+    }
+    for (u8 i = 0; i < player.getLifes(); i++)
+    {
+        engine->renderer->draw(lifeSprites[i]);
     }
     engine->renderer->draw(player.mesh);
     if (camera.position.y < WATER_LEVEL)

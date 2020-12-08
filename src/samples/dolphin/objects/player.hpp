@@ -27,10 +27,12 @@ public:
     ~Player();
     void update(Pad &t_pad);
     const u8 &isJumping() { return bIsJumping; }
+    const u8 &getLifes() { return lifes; }
 
 private:
     u8 bIsJumping;
     Vector3 playerNextPosition;
+    u8 lifes;
 };
 
 #endif
