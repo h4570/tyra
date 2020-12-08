@@ -36,13 +36,19 @@ public:
     static float engineFPS;
 
 private:
+    /*DO NOT TOUCH ORDER OF DECLARATION!
+    GCC BUG CAUSES RENDERING TO FAIL IN ANY OTHER ORDER OF DECLARATION!*/
+    Mesh seabed;
+    Mesh island;
+    Mesh skybox;
     LightBulb bulb;
     Player player;
     Camera camera;
-    Mesh island, skybox, water, waterbox;
     Collectible *oysters;
     TextureRepository *texRepo;
     Sprite waterOverlay;
+    Mesh water;
+    Mesh waterbox;
 };
 
 #endif

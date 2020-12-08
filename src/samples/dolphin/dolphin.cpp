@@ -55,6 +55,13 @@ void Dolphin::onInit()
     water.shouldBeFrustumCulled = false;
     water.shouldBeBackfaceCulled = false;
 
+    printf("Loading seabed...\n");
+    seabed.loadObj("seabed/", "seabed", 10.0F, false);
+    seabed.position.set(0, -250.0F, 0);
+    texRepo->addByMesh("seabed/", seabed, BMP);
+    seabed.shouldBeBackfaceCulled = false;
+    seabed.shouldBeFrustumCulled = false;
+
     skybox.loadObj("skybox/", "skybox", 400.0F, false);
     skybox.shouldBeFrustumCulled = false;
 
@@ -137,6 +144,7 @@ void Dolphin::onUpdate()
     engine->renderer->draw(water);
     engine->renderer->draw(skybox);
     engine->renderer->draw(waterbox);
+    engine->renderer->draw(seabed);
     for (u8 i = 0; i < OYSTERS_COUNT; i++)
     {
         if (oysters[i].isActive())
