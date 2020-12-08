@@ -138,8 +138,10 @@ void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_ver
     packet2_utils_gs_add_texbuff_clut(currPacket, textureBuffer, &t_mesh.clut);
     packet2_utils_gs_add_prim_giftag(currPacket, t_prim, vertCount, DRAW_STQ2_REGLIST, 3, 0);
 
-    for (u8 j = 0; j < 4; j++)
-        packet2_add_u32(currPacket, 128);
+    packet2_add_u32(currPacket, t_mesh.color.r);
+    packet2_add_u32(currPacket, t_mesh.color.g);
+    packet2_add_u32(currPacket, t_mesh.color.b);
+    packet2_add_u32(currPacket, t_mesh.color.a);
 
     // Clipping tests start
 
