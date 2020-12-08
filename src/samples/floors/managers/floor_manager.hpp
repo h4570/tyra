@@ -14,6 +14,7 @@
 class Player; // Forward definition
 
 #include <models/math/point.hpp>
+#include <modules/texture_repository.hpp>
 #include <modules/camera_base.hpp>
 #include <models/audio_listener.hpp>
 
@@ -24,18 +25,24 @@ class FloorManager
 {
 
 public:
-    FloorManager(int t_floorAmount);
+    FloorManager(int t_floorAmount, TextureRepository *t_texRepo);
     ~FloorManager();
     Floor floors[144]; // Temp change it also in floors.cpp
-    u32 floorAmount;
+    u16 floorAmount;
     void update(Player &t_player);
     void onAudioTick();
 
 private:
+    TextureRepository *texRepo;
     u8 audioOffset, audioMode;
     u32 audioTick;
+    float trick;
+    u8 isTimeForChangeTriggerColor, isTimeForChangeDefaultColor;
+    color_t trigColor, defaultColor;
+    u8 trickMode;
     Point *spirals;
     void calcSpiral(int X, int Y);
+    void doTheTrick();
     void initFloors();
 };
 
