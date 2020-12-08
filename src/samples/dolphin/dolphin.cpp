@@ -44,6 +44,7 @@ void Dolphin::onInit()
     printf("Loading water overlay...\n");
     waterOverlay.size.set(640.0F, 480.0F);
     Texture *watOverlayTex = texRepo->add("2d/", "underwater_overlay", PNG);
+    waterOverlay.setMode(MODE_STRETCH);
     watOverlayTex->addLink(waterOverlay.getId());
     printf("Loaded.\n");
 
