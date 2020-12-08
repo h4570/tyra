@@ -29,20 +29,10 @@ Collectible::~Collectible()
 {
 }
 
-void Collectible::setActive(u8 b)
-{
-    bActive = b;
-}
-
 void Collectible::disappear()
 {
     bDisappearing = true;
     lift = 10;
-}
-
-u8 Collectible::isActive()
-{
-    return bActive;
 }
 
 void Collectible::update()

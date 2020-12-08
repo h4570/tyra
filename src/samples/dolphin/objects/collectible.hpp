@@ -24,8 +24,8 @@ public:
     ~Collectible();
     void update();
     void disappear();
-    void setActive(u8 b);
-    u8 isActive();
+    void setActive(const u8 &b) { bActive = b; }
+    u8 isActive() { return bActive; }
 
 private:
     u8 bActive, bDisappearing;

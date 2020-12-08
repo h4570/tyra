@@ -23,7 +23,7 @@ Player::Player()
     mesh.position.set(0.0F, 0.0F, 10.0f);
     mesh.rotation.x = -1.6F;
     mesh.setAnimSpeed(0.05F);
-    isJumping = false;
+    bIsJumping = false;
 }
 
 Player::~Player()
@@ -62,9 +62,9 @@ void Player::update(Pad &t_pad)
     }
 
     if (mesh.getCurrentAnimationFrame() > 25 && mesh.getCurrentAnimationFrame() < 47)
-        isJumping = true;
+        bIsJumping = true;
     else
-        isJumping = false;
+        bIsJumping = false;
     /*
     if (lift < 0)
         mesh.rotation.y = 1;
@@ -82,13 +82,8 @@ void Player::update(Pad &t_pad)
     }
 
     mesh.position.z +=
-        Math::cos(mesh.rotation.z) * velocity * (isJumping + 1);
+        Math::cos(mesh.rotation.z) * velocity * (bIsJumping + 1);
     mesh.position.x +=
-        Math::sin(mesh.rotation.z) * velocity * (isJumping + 1);
+        Math::sin(mesh.rotation.z) * velocity * (bIsJumping + 1);
     mesh.position.y += lift;
-}
-
-u8 Player::getIsJumping()
-{
-    return isJumping;
 }

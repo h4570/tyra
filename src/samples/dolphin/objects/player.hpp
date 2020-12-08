@@ -26,10 +26,10 @@ public:
     Player();
     ~Player();
     void update(Pad &t_pad);
-    u8 getIsJumping();
+    const u8 &isJumping() { return bIsJumping; }
 
 private:
-    u8 isJumping;
+    u8 bIsJumping;
     Vector3 playerNextPosition;
 };
 
