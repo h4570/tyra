@@ -189,7 +189,8 @@ private:
     TextureType _type;
     std::vector<TextureLink> texLinks;
     u32 id;
-    u8 width, height, _isNameSet, _isSizeSet;
+    u16 width, height;
+    u8 _isNameSet, _isSizeSet;
     unsigned char *data;
 };
 
