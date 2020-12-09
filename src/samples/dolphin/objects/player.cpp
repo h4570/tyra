@@ -32,6 +32,12 @@ Player::~Player()
 {
 }
 
+void Player::init(Engine *t_engine)
+{
+    pEngine = t_engine;
+    waterImpact = t_engine->audio.loadADPCM("sound/water_impact.sad");
+}
+
 void Player::update(Pad &t_pad)
 {
     if (lift > 0.0F)
@@ -80,6 +86,19 @@ void Player::update(Pad &t_pad)
         mesh.setAnimSpeed(0.05F);
         printf("Swim animation\n");
         mesh.playAnimation(1, 14, 0);
+    }
+    if (mesh.getCurrentAnimationFrame() == 42)
+    {
+        if (!bIsImpactingWater)
+        {
+            pEngine->audio.setADPCMVolume(50, 2);
+            pEngine->audio.playADPCM(waterImpact, 2);
+        }
+        bIsImpactingWater = true;
+    }
+    else if (bIsImpactingWater)
+    {
+        bIsImpactingWater = false;
     }
 
     velocity *= 60.0F / Dolphin::engineFPS; //Moving by deltatime of last frame.

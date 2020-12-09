@@ -50,6 +50,8 @@ private:
     Mesh water;
     Mesh waterbox;
     Sprite lifeSprites[3];
+    audsrv_adpcm_t *underwaterAmbient, *surfaceAmbient;
+    audsrv_adpcm_t *pickupSound;
 };
 
 #endif

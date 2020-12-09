@@ -27,7 +27,19 @@ Dolphin::~Dolphin() {}
 
 void Dolphin::onInit()
 {
+    player.init(engine);
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
+
+    engine->audio.loadSong("sound/dirediredocks.wav");
+    engine->audio.playSong();
+    engine->audio.setSongVolume(60);
+
+    surfaceAmbient = engine->audio.loadADPCM("sound/surface.sad");
+    underwaterAmbient = engine->audio.loadADPCM("sound/underwater.sad");
+    pickupSound = engine->audio.loadADPCM("sound/pickup.sad");
+
+    engine->audio.playADPCM(surfaceAmbient, 0);
+    engine->audio.playADPCM(underwaterAmbient, 1);
 
     texRepo = engine->renderer->getTextureRepository();
 
@@ -138,8 +150,9 @@ void Dolphin::onUpdate()
         if (dist < 2.5F && player.isJumping() && oysters[i].isActive())
         {
             printf("Pickup %d Dist %d\n", i, dist);
-            //oysters[i].setActive(false);
             oysters[i].disappear();
+            engine->audio.setADPCMVolume(30, 3);
+            engine->audio.playADPCM(pickupSound, 3);
         }
     }
 
@@ -168,5 +181,14 @@ void Dolphin::onUpdate()
     }
     engine->renderer->draw(player.mesh);
     if (camera.position.y < WATER_LEVEL)
+    {
         engine->renderer->draw(waterOverlay);
+        engine->audio.setADPCMVolume(0, 0);  //Surface ambient
+        engine->audio.setADPCMVolume(65, 1); //Underwater ambient
+    }
+    else
+    {
+        engine->audio.setADPCMVolume(50, 0); //Surface ambient
+        engine->audio.setADPCMVolume(0, 1);  //Underwater ambient
+    }
 }
