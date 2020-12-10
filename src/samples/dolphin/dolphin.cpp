@@ -25,7 +25,11 @@ Dolphin::Dolphin(Engine *t_engine) : engine(t_engine), camera(&engine->screen)
     mines = new Mine[MINES_COUNT];
 }
 
-Dolphin::~Dolphin() {}
+Dolphin::~Dolphin()
+{
+    delete[] oysters;
+    delete[] mines;
+}
 
 void Dolphin::onInit()
 {
@@ -181,8 +185,8 @@ void Dolphin::onUpdate()
     {
         oysters[i].update();
         Vector3 vecDist = oysters[i].mesh.position - player.mesh.position;
-        float dist = Math::sqrt(vecDist.x + vecDist.y + vecDist.z);
-        if (dist < 2.5F && player.isJumping() && oysters[i].isActive())
+        float dist = vecDist.length();
+        if (dist < 20.F && player.isJumping() && oysters[i].isActive())
         {
             printf("Pickup %d Dist %d\n", i, dist);
             oysters[i].disappear();
@@ -196,9 +200,8 @@ void Dolphin::onUpdate()
     {
         mines[i].update();
         Vector3 vecDist = mines[i].mesh.position - player.mesh.position;
-        float dist = Math::sqrt((vecDist.x * vecDist.x) +
-                                (vecDist.y * vecDist.y) +
-                                (vecDist.z * vecDist.z));
+        float dist = vecDist.length();
+
         if (dist < 20.F && !mines[i].getExplosionTicks())
         {
             printf("Vecdist %f,%f,%f\n", vecDist.x, vecDist.y, vecDist.z);
