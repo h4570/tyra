@@ -23,7 +23,7 @@ Player::Player()
     mesh.shouldBeFrustumCulled = false;
     mesh.position.set(0.0F, 0.0F, 10.0f);
     mesh.rotation.x = -1.6F;
-    mesh.setAnimSpeed(0.05F);
+    mesh.setAnimSpeed(0.04F);
     bIsJumping = false;
     lifes = 3;
 }
