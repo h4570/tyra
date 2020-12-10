@@ -16,6 +16,8 @@ const u8 WATER_SIZE = 100;
 
 const u8 OYSTERS_COUNT = 15;
 
+float Dolphin::engineFPS = 60.F;
+
 Dolphin::Dolphin(Engine *t_engine) : engine(t_engine), camera(&engine->screen)
 {
     oysters = new Collectible[OYSTERS_COUNT];
@@ -25,7 +27,19 @@ Dolphin::~Dolphin() {}
 
 void Dolphin::onInit()
 {
+    player.init(engine);
     engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
+
+    engine->audio.loadSong("sound/dirediredocks.wav");
+    engine->audio.playSong();
+    engine->audio.setSongVolume(60);
+
+    surfaceAmbient = engine->audio.loadADPCM("sound/surface.sad");
+    underwaterAmbient = engine->audio.loadADPCM("sound/underwater.sad");
+    pickupSound = engine->audio.loadADPCM("sound/pickup.sad");
+
+    engine->audio.playADPCM(surfaceAmbient, 0);
+    engine->audio.playADPCM(underwaterAmbient, 1);
 
     texRepo = engine->renderer->getTextureRepository();
 
@@ -42,6 +56,7 @@ void Dolphin::onInit()
     printf("Loading water overlay...\n");
     waterOverlay.size.set(640.0F, 480.0F);
     Texture *watOverlayTex = texRepo->add("2d/", "underwater_overlay", PNG);
+    waterOverlay.setMode(MODE_STRETCH);
     watOverlayTex->addLink(waterOverlay.getId());
     printf("Loaded.\n");
 
@@ -51,6 +66,13 @@ void Dolphin::onInit()
     texRepo->addByMesh("water/", water, BMP);
     water.shouldBeFrustumCulled = false;
     water.shouldBeBackfaceCulled = false;
+
+    printf("Loading seabed...\n");
+    seabed.loadObj("seabed/", "seabed", 10.0F, false);
+    seabed.position.set(0, -250.0F, 0);
+    texRepo->addByMesh("seabed/", seabed, BMP);
+    seabed.shouldBeBackfaceCulled = false;
+    seabed.shouldBeFrustumCulled = false;
 
     skybox.loadObj("skybox/", "skybox", 400.0F, false);
     skybox.shouldBeFrustumCulled = false;
@@ -81,6 +103,16 @@ void Dolphin::onInit()
         oysters[i].mesh.position.set(i * -100, 5.0F, i * -100);
     }
 
+    Texture *pLifeTex = texRepo->add("2d/", "life", PNG);
+    //pLifeTex->addLink(lifeSprites[0].getId());
+    for (int i = 0; i < 3; i++)
+    {
+        lifeSprites[i].size.set(64.0F, 64.0F);
+        lifeSprites[i].setMode(MODE_STRETCH);
+        lifeSprites[i].position.set(395 + (64 * i), 0);
+        pLifeTex->addLink(lifeSprites[i].getId());
+    }
+
     texRepo->addByMesh("dolphin/", player.mesh, BMP);
     texRepo->addByMesh("sunnyisl/", island, BMP);
     texRepo->addByMesh("skybox/", skybox, BMP);
@@ -93,8 +125,9 @@ void Dolphin::onInit()
 
 void Dolphin::onUpdate()
 {
+    Dolphin::engineFPS = engine->fps;
     if (engine->pad.isCrossClicked)
-        printf("PlayerPos (%f,%f), FPS:%f\n", player.mesh.position.x, player.mesh.position.z, this->engine->fps);
+        printf("Delta multiplier: %f\n", 60.0F / engine->fps);
 
     float xDist = player.mesh.position.x - water.position.x;
     float zDist = player.mesh.position.z - water.position.z;
@@ -117,8 +150,9 @@ void Dolphin::onUpdate()
         if (dist < 2.5F && player.isJumping() && oysters[i].isActive())
         {
             printf("Pickup %d Dist %d\n", i, dist);
-            //oysters[i].setActive(false);
             oysters[i].disappear();
+            engine->audio.setADPCMVolume(30, 3);
+            engine->audio.playADPCM(pickupSound, 3);
         }
     }
 
@@ -133,6 +167,7 @@ void Dolphin::onUpdate()
     engine->renderer->draw(water);
     engine->renderer->draw(skybox);
     engine->renderer->draw(waterbox);
+    engine->renderer->draw(seabed);
     for (u8 i = 0; i < OYSTERS_COUNT; i++)
     {
         if (oysters[i].isActive())
@@ -140,7 +175,20 @@ void Dolphin::onUpdate()
             engine->renderer->draw(oysters[i].mesh);
         }
     }
+    for (u8 i = 0; i < player.getLifes(); i++)
+    {
+        engine->renderer->draw(lifeSprites[i]);
+    }
     engine->renderer->draw(player.mesh);
     if (camera.position.y < WATER_LEVEL)
+    {
         engine->renderer->draw(waterOverlay);
+        engine->audio.setADPCMVolume(0, 0);  //Surface ambient
+        engine->audio.setADPCMVolume(65, 1); //Underwater ambient
+    }
+    else
+    {
+        engine->audio.setADPCMVolume(50, 0); //Surface ambient
+        engine->audio.setADPCMVolume(0, 1);  //Underwater ambient
+    }
 }
