@@ -30,6 +30,7 @@ public:
     void update(Pad &t_pad);
     const u8 &isJumping() { return bIsJumping; }
     const u8 &getLifes() { return lifes; }
+    void setLife(const u8 &l) { lifes = lifes = l < 4 ? l : 3; }
 
 private:
     u8 bIsJumping;
