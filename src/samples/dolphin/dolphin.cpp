@@ -56,6 +56,11 @@ void Dolphin::onInit()
     island.shouldBeBackfaceCulled = true;
     island.shouldBeFrustumCulled = false;
 
+    gameOver.size.set(640.0F, 480.0F);
+    Texture *gameOverTex = texRepo->add("2d/", "gameover", PNG);
+    gameOver.setMode(MODE_STRETCH);
+    gameOverTex->addLink(gameOver.getId());
+
     printf("Loading water overlay...\n");
     waterOverlay.size.set(640.0F, 480.0F);
     Texture *watOverlayTex = texRepo->add("2d/", "underwater_overlay", PNG);
@@ -147,7 +152,14 @@ void Dolphin::onInit()
 
 void Dolphin::onUpdate()
 {
-
+    if (player.getLifes() <= 0)
+    {
+        engine->audio.stopSong();
+        engine->audio.setADPCMVolume(0, 0);
+        engine->audio.setADPCMVolume(75, 1);
+        engine->renderer->draw(gameOver);
+        return;
+    }
     Dolphin::engineFPS = engine->fps;
     if (engine->pad.isCrossClicked)
         printf("Delta multiplier: %f\n", 60.0F / engine->fps);
