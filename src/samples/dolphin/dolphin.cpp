@@ -74,6 +74,10 @@ void Dolphin::onInit()
     seabed.shouldBeBackfaceCulled = false;
     seabed.shouldBeFrustumCulled = false;
 
+    mine.loadObj("mine/", "mine", 5.0F, false);
+    mine.position.set(0, 0, 0);
+    texRepo->addByMesh("mine/", mine, BMP);
+
     skybox.loadObj("skybox/", "skybox", 400.0F, false);
     skybox.shouldBeFrustumCulled = false;
 
@@ -168,6 +172,7 @@ void Dolphin::onUpdate()
     engine->renderer->draw(skybox);
     engine->renderer->draw(waterbox);
     engine->renderer->draw(seabed);
+    engine->renderer->draw(mine);
     for (u8 i = 0; i < OYSTERS_COUNT; i++)
     {
         if (oysters[i].isActive())

@@ -41,6 +41,7 @@ private:
     Mesh seabed;
     Mesh island;
     Mesh skybox;
+    Mesh mine;
     LightBulb bulb;
     Player player;
     Camera camera;
