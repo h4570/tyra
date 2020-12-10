@@ -14,7 +14,6 @@ u8 Mine::lastSoundBuffer = 4;
 
 Mine::Mine()
 {
-    //mesh.loadObj("mine/", "mine", 10.F, false);
     mesh.position.set(0.0F, 0.0F, 0.0F);
 
     bExploding = false;
