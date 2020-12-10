@@ -21,6 +21,7 @@
 #include "./camera.hpp"
 #include "./objects/player.hpp"
 #include "./objects/collectible.hpp"
+#include "./objects/mine.hpp"
 
 class Dolphin : public Game
 {
@@ -41,6 +42,7 @@ private:
     Mesh seabed;
     Mesh island;
     Mesh skybox;
+    Mesh mine;
     LightBulb bulb;
     Player player;
     Camera camera;
@@ -50,8 +52,11 @@ private:
     Mesh water;
     Mesh waterbox;
     Sprite lifeSprites[3];
+    Sprite gameOver;
     audsrv_adpcm_t *underwaterAmbient, *surfaceAmbient;
     audsrv_adpcm_t *pickupSound;
+    audsrv_adpcm_t *boomSound;
+    Mine *mines;
 };
 
 #endif

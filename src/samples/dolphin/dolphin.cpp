@@ -14,16 +14,22 @@
 const u8 WATER_TILE_SCALE = 5;
 const u8 WATER_SIZE = 100;
 
-const u8 OYSTERS_COUNT = 15;
+const u8 MINES_COUNT = 15;
+const u8 OYSTERS_COUNT = 5;
 
 float Dolphin::engineFPS = 60.F;
 
 Dolphin::Dolphin(Engine *t_engine) : engine(t_engine), camera(&engine->screen)
 {
     oysters = new Collectible[OYSTERS_COUNT];
+    mines = new Mine[MINES_COUNT];
 }
 
-Dolphin::~Dolphin() {}
+Dolphin::~Dolphin()
+{
+    delete[] oysters;
+    delete[] mines;
+}
 
 void Dolphin::onInit()
 {
@@ -37,6 +43,7 @@ void Dolphin::onInit()
     surfaceAmbient = engine->audio.loadADPCM("sound/surface.sad");
     underwaterAmbient = engine->audio.loadADPCM("sound/underwater.sad");
     pickupSound = engine->audio.loadADPCM("sound/pickup.sad");
+    boomSound = engine->audio.loadADPCM("sound/boom.sad");
 
     engine->audio.playADPCM(surfaceAmbient, 0);
     engine->audio.playADPCM(underwaterAmbient, 1);
@@ -52,6 +59,11 @@ void Dolphin::onInit()
     island.position.set(0.0F, 60.0F, 20.0F);
     island.shouldBeBackfaceCulled = true;
     island.shouldBeFrustumCulled = false;
+
+    gameOver.size.set(640.0F, 480.0F);
+    Texture *gameOverTex = texRepo->add("2d/", "gameover", PNG);
+    gameOver.setMode(MODE_STRETCH);
+    gameOverTex->addLink(gameOver.getId());
 
     printf("Loading water overlay...\n");
     waterOverlay.size.set(640.0F, 480.0F);
@@ -103,6 +115,25 @@ void Dolphin::onInit()
         oysters[i].mesh.position.set(i * -100, 5.0F, i * -100);
     }
 
+    printf("Loading mine .obj\n");
+    mines[0].mesh.loadObj("mine/", "mine", 10.F, false);
+    printf("Loaded.");
+    mines[0].mesh.shouldBeBackfaceCulled = false;
+    mines[0].mesh.shouldBeFrustumCulled = false;
+    mines[0].mesh.position.set(5, -15, 32);
+    texRepo->addByMesh("mine/", mines[0].mesh, BMP);
+    printf("Adding mine texture.\n");
+    for (int i = 1; i < MINES_COUNT; i++)
+    {
+        printf("Processing mine %d\n", i);
+        mines[i].mesh.loadFrom(mines[0].mesh);
+        mines[i].mesh.shouldBeBackfaceCulled = false;
+        mines[i].mesh.shouldBeFrustumCulled = false;
+        texRepo->getByMesh(mines[0].mesh.getId(), mines[0].mesh.getMaterial(0).getId())
+            ->addLink(mines[i].mesh.getId(), mines[i].mesh.getMaterial(0).getId());
+        mines[i].mesh.position.set(i * -10, 0.0F, i * -68);
+    }
+
     Texture *pLifeTex = texRepo->add("2d/", "life", PNG);
     //pLifeTex->addLink(lifeSprites[0].getId());
     for (int i = 0; i < 3; i++)
@@ -125,6 +156,14 @@ void Dolphin::onInit()
 
 void Dolphin::onUpdate()
 {
+    if (player.getLifes() <= 0)
+    {
+        engine->audio.stopSong();
+        engine->audio.setADPCMVolume(0, 0);
+        engine->audio.setADPCMVolume(75, 1);
+        engine->renderer->draw(gameOver);
+        return;
+    }
     Dolphin::engineFPS = engine->fps;
     if (engine->pad.isCrossClicked)
         printf("Delta multiplier: %f\n", 60.0F / engine->fps);
@@ -146,13 +185,33 @@ void Dolphin::onUpdate()
     {
         oysters[i].update();
         Vector3 vecDist = oysters[i].mesh.position - player.mesh.position;
-        float dist = Math::sqrt(vecDist.x + vecDist.y + vecDist.z);
-        if (dist < 2.5F && player.isJumping() && oysters[i].isActive())
+        float dist = vecDist.length();
+        if (dist < 20.F && player.isJumping() && oysters[i].isActive())
         {
             printf("Pickup %d Dist %d\n", i, dist);
             oysters[i].disappear();
+            player.setLife(player.getLifes() + 1);
             engine->audio.setADPCMVolume(30, 3);
             engine->audio.playADPCM(pickupSound, 3);
+        }
+    }
+
+    for (int i = 0; i < MINES_COUNT; i++)
+    {
+        mines[i].update();
+        Vector3 vecDist = mines[i].mesh.position - player.mesh.position;
+        float dist = vecDist.length();
+
+        if (dist < 20.F && !mines[i].getExplosionTicks())
+        {
+            printf("Vecdist %f,%f,%f\n", vecDist.x, vecDist.y, vecDist.z);
+            printf("Explode %d Dist %d\n", i, dist);
+            mines[i].explode();
+            player.setLife(player.getLifes() - 1);
+            //Buffer switching to prevent playing two sounds on one buffer
+            engine->audio.setADPCMVolume(65, Mine::lastSoundBuffer);
+            engine->audio.playADPCM(boomSound, Mine::lastSoundBuffer);
+            Mine::lastSoundBuffer = Mine::lastSoundBuffer == 4 ? 5 : 4;
         }
     }
 
@@ -174,6 +233,11 @@ void Dolphin::onUpdate()
         {
             engine->renderer->draw(oysters[i].mesh);
         }
+    }
+    for (u8 i = 0; i < MINES_COUNT; i++)
+    {
+        if (mines[i].getExplosionTicks() < MINE_EXPLOSION_TICKS)
+            engine->renderer->draw(mines[i].mesh);
     }
     for (u8 i = 0; i < player.getLifes(); i++)
     {
