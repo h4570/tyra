@@ -100,7 +100,7 @@ void manyVec3ToNative(VECTOR *o_result, Vector3 *t_vec, int t_amount, float t_fo
         vec3ToNative(o_result[i], t_vec[i], t_fourthVal);
 }
 
-static float asin(float x)
+float Math::asin(float x)
 {
     float r;
     asm volatile(
@@ -159,7 +159,7 @@ static float asin(float x)
     return r;
 }
 
-static float mod(float x, float y)
+float Math::mod(float x, float y)
 {
     /*
      * Portable fmod(x,y) implementation for systems
