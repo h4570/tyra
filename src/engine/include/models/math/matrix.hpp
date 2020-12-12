@@ -26,14 +26,64 @@ public:
            float m31, float m32, float m33, float m34,
            float m41, float m42, float m43, float m44);
     Matrix(const Matrix &v);
-    Matrix operator*(Matrix &v);
+    Matrix operator*(const Matrix &v);
+    void operator*=(const Matrix &v);
     Matrix();
     ~Matrix();
 
     void lookAt(Vector3 &t_up, Vector3 &t_position, Vector3 &t_target);
     void identity();
-    void makeZRotation(float t_radians);
-    void translate(float t_x, float t_y, float t_z);
+    inline void unit() { identity(); };
+
+    // Translation
+
+    void translate(const Vector3 &t_val);
+
+    inline void translation(const Vector3 &t_val)
+    {
+        identity();
+        translate(t_val);
+    }
+
+    // Rotation
+
+    void rotateX(const float &t_radians);
+    void rotateY(const float &t_radians);
+    void rotateZ(const float &t_radians);
+
+    inline void rotationX(const float &t_radians)
+    {
+        identity();
+        rotateX(t_radians);
+    }
+
+    inline void rotationY(const float &t_radians)
+    {
+        identity();
+        rotateY(t_radians);
+    }
+
+    inline void rotationZ(const float &t_radians)
+    {
+        identity();
+        rotateZ(t_radians);
+    }
+
+    inline void rotate(const Vector3 &t_val)
+    {
+        rotateX(t_val.x);
+        rotateY(t_val.y);
+        rotateX(t_val.z);
+    }
+
+    inline void rotation(const Vector3 &t_val)
+    {
+        identity();
+        rotate(t_val);
+    }
+
+    //
+
     void setPerspective(ScreenSettings &screen);
     const void print() const;
 };

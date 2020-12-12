@@ -28,6 +28,8 @@ public:
     const static float PI = 3.1415926535897932384626433832795F;
     const static float HALF_PI = 1.5707963267948966192313216916398F;
     static float cos(float x);
+    static float asin(float x);
+    static float mod(float x, float y);
     static inline float sin(float x) { return cos(x - HALF_PI); };
     static float sqrt(float x);
     static float invSqrt(float x);
