@@ -41,7 +41,6 @@ private:
     packet2_t *currPacket;
     u8 context;
     packet2_t *matricesPacket __attribute__((aligned(64)));
-    MATRIX localWorld, localScreen;
     VECTOR position, rotation;
     u32 vertCount;
 };
