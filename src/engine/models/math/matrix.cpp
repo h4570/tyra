@@ -84,6 +84,15 @@ void Matrix::identity()
         : "r"(this->data));
 }
 
+void Matrix::setScale(const Vector3 &t_val)
+{
+    this->identity();
+    this->data[0] = t_val.x;
+    this->data[5] = t_val.y;
+    this->data[10] = t_val.z;
+    this->data[15] = 1.0F;
+}
+
 void Matrix::translate(const Vector3 &t_val)
 {
     this->data[12] += t_val.x; // 3,0
@@ -130,75 +139,79 @@ void Matrix::rotateZ(const float &t_radians)
 Matrix Matrix::operator*(const Matrix &t)
 {
     Matrix result;
-    asm volatile(
-        "lqc2         vf1, 0x00(%1) \n\t"
-        "lqc2         vf2, 0x10(%1) \n\t"
-        "lqc2         vf3, 0x20(%1) \n\t"
-        "lqc2         vf4, 0x30(%1) \n\t"
-        "lqc2         vf5, 0x00(%2) \n\t"
-        "lqc2         vf6, 0x10(%2) \n\t"
-        "lqc2         vf7, 0x20(%2) \n\t"
-        "lqc2         vf8, 0x30(%2) \n\t"
-        "vmulax.xyzw  ACC, vf5, vf1 \n\t"
-        "vmadday.xyzw ACC, vf6, vf1 \n\t"
-        "vmaddaz.xyzw ACC, vf7, vf1 \n\t"
-        "vmaddw.xyzw  vf1, vf8, vf1 \n\t"
-        "vmulax.xyzw  ACC, vf5, vf2 \n\t"
-        "vmadday.xyzw ACC, vf6, vf2 \n\t"
-        "vmaddaz.xyzw ACC, vf7, vf2 \n\t"
-        "vmaddw.xyzw  vf2, vf8, vf2 \n\t"
-        "vmulax.xyzw  ACC, vf5, vf3 \n\t"
-        "vmadday.xyzw ACC, vf6, vf3 \n\t"
-        "vmaddaz.xyzw ACC, vf7, vf3 \n\t"
-        "vmaddw.xyzw  vf3, vf8, vf3 \n\t"
-        "vmulax.xyzw  ACC, vf5, vf4 \n\t"
-        "vmadday.xyzw ACC, vf6, vf4 \n\t"
-        "vmaddaz.xyzw ACC, vf7, vf4 \n\t"
-        "vmaddw.xyzw  vf4, vf8, vf4 \n\t"
-        "sqc2         vf1, 0x00(%0) \n\t"
-        "sqc2         vf2, 0x10(%0) \n\t"
-        "sqc2         vf3, 0x20(%0) \n\t"
-        "sqc2         vf4, 0x30(%0) \n\t"
+    asm __volatile__(
+        "lqc2			vf4, 0x00(%1) \n\t"
+        "lqc2			vf5, 0x10(%1) \n\t"
+        "lqc2			vf6, 0x20(%1) \n\t"
+        "lqc2			vf7, 0x30(%1) \n\t"
+
+        "lqc2			vf8, 0x00(%2) \n\t"
+        "lqc2			vf9, 0x10(%2) \n\t"
+        "lqc2			vf10, 0x20(%2) \n\t"
+        "lqc2			vf11, 0x30(%2) \n\t"
+
+        "vmulax.xyzw		ACC, vf4, vf8 \n\t"
+        "vmadday.xyzw	ACC, vf5, vf8 \n\t"
+        "vmaddaz.xyzw	ACC, vf6, vf8 \n\t"
+        "vmaddw.xyzw		vf12, vf7, vf8 \n\t"
+        "vmulax.xyzw		ACC, vf4, vf9 \n\t"
+        "vmadday.xyzw	ACC, vf5, vf9 \n\t"
+        "vmaddaz.xyzw	ACC, vf6, vf9 \n\t"
+        "vmaddw.xyzw		vf13, vf7, vf9 \n\t"
+        "vmulax.xyzw		ACC, vf4, vf10 \n\t"
+        "vmadday.xyzw	ACC, vf5, vf10 \n\t"
+        "vmaddaz.xyzw	ACC, vf6, vf10 \n\t"
+        "vmaddw.xyzw		vf14, vf7, vf10 \n\t"
+        "vmulax.xyzw		ACC, vf4, vf11 \n\t"
+        "vmadday.xyzw	ACC, vf5, vf11 \n\t"
+        "vmaddaz.xyzw	ACC, vf6, vf11 \n\t"
+        "vmaddw.xyzw		vf15, vf7, vf11 \n\t"
+
+        "sqc2			vf12, 0x00(%0) \n\t"
+        "sqc2			vf13, 0x10(%0) \n\t"
+        "sqc2			vf14, 0x20(%0) \n\t"
+        "sqc2			vf15, 0x30(%0) \n\t"
         :
-        : "r"(result.data), "r"(this->data), "r"(t.data)
-        : "memory");
+        : "r"(result.data), "r"(this->data), "r"(t.data));
     return result;
 }
 
 void Matrix::operator*=(const Matrix &t)
 {
     asm volatile(
-        "lqc2         vf1, 0x00(%1) \n\t"
-        "lqc2         vf2, 0x10(%1) \n\t"
-        "lqc2         vf3, 0x20(%1) \n\t"
-        "lqc2         vf4, 0x30(%1) \n\t"
-        "lqc2         vf5, 0x00(%2) \n\t"
-        "lqc2         vf6, 0x10(%2) \n\t"
-        "lqc2         vf7, 0x20(%2) \n\t"
-        "lqc2         vf8, 0x30(%2) \n\t"
-        "vmulax.xyzw  ACC, vf5, vf1 \n\t"
-        "vmadday.xyzw ACC, vf6, vf1 \n\t"
-        "vmaddaz.xyzw ACC, vf7, vf1 \n\t"
-        "vmaddw.xyzw  vf1, vf8, vf1 \n\t"
-        "vmulax.xyzw  ACC, vf5, vf2 \n\t"
-        "vmadday.xyzw ACC, vf6, vf2 \n\t"
-        "vmaddaz.xyzw ACC, vf7, vf2 \n\t"
-        "vmaddw.xyzw  vf2, vf8, vf2 \n\t"
-        "vmulax.xyzw  ACC, vf5, vf3 \n\t"
-        "vmadday.xyzw ACC, vf6, vf3 \n\t"
-        "vmaddaz.xyzw ACC, vf7, vf3 \n\t"
-        "vmaddw.xyzw  vf3, vf8, vf3 \n\t"
-        "vmulax.xyzw  ACC, vf5, vf4 \n\t"
-        "vmadday.xyzw ACC, vf6, vf4 \n\t"
-        "vmaddaz.xyzw ACC, vf7, vf4 \n\t"
-        "vmaddw.xyzw  vf4, vf8, vf4 \n\t"
-        "sqc2         vf1, 0x00(%0) \n\t"
-        "sqc2         vf2, 0x10(%0) \n\t"
-        "sqc2         vf3, 0x20(%0) \n\t"
-        "sqc2         vf4, 0x30(%0) \n\t"
+        "lqc2			vf4, 0x00(%1) \n\t"
+        "lqc2			vf5, 0x10(%1) \n\t"
+        "lqc2			vf6, 0x20(%1) \n\t"
+        "lqc2			vf7, 0x30(%1) \n\t"
+
+        "lqc2			vf8, 0x00(%2) \n\t"
+        "lqc2			vf9, 0x10(%2) \n\t"
+        "lqc2			vf10, 0x20(%2) \n\t"
+        "lqc2			vf11, 0x30(%2) \n\t"
+
+        "vmulax.xyzw		ACC, vf4, vf8 \n\t"
+        "vmadday.xyzw	ACC, vf5, vf8 \n\t"
+        "vmaddaz.xyzw	ACC, vf6, vf8 \n\t"
+        "vmaddw.xyzw		vf12, vf7, vf8 \n\t"
+        "vmulax.xyzw		ACC, vf4, vf9 \n\t"
+        "vmadday.xyzw	ACC, vf5, vf9 \n\t"
+        "vmaddaz.xyzw	ACC, vf6, vf9 \n\t"
+        "vmaddw.xyzw		vf13, vf7, vf9 \n\t"
+        "vmulax.xyzw		ACC, vf4, vf10 \n\t"
+        "vmadday.xyzw	ACC, vf5, vf10 \n\t"
+        "vmaddaz.xyzw	ACC, vf6, vf10 \n\t"
+        "vmaddw.xyzw		vf14, vf7, vf10 \n\t"
+        "vmulax.xyzw		ACC, vf4, vf11 \n\t"
+        "vmadday.xyzw	ACC, vf5, vf11 \n\t"
+        "vmaddaz.xyzw	ACC, vf6, vf11 \n\t"
+        "vmaddw.xyzw		vf15, vf7, vf11 \n\t"
+
+        "sqc2			vf12, 0x00(%0) \n\t"
+        "sqc2			vf13, 0x10(%0) \n\t"
+        "sqc2			vf14, 0x20(%0) \n\t"
+        "sqc2			vf15, 0x30(%0) \n\t"
         :
-        : "r"(this->data), "r"(this->data), "r"(t.data)
-        : "memory");
+        : "r"(this->data), "r"(this->data), "r"(t.data));
 }
 
 /** Create empty matrix */
@@ -273,6 +286,38 @@ void Matrix::setPerspective(ScreenSettings &t_screen)
         (2.0F * t_screen.farPlaneDist * t_screen.nearPlaneDist) /
         (t_screen.farPlaneDist - t_screen.nearPlaneDist);
     this->data[15] = 0.0F;
+}
+
+void Matrix::rotationByAngle(const float &t_angle, const Vector3 &t_axis)
+{
+    Vector3 localAxis = Vector3(t_axis);
+    localAxis.normalize();
+    float x = localAxis.x;
+    float y = localAxis.y;
+    float z = localAxis.z;
+
+    float c = Math::cos(t_angle);
+    float s = Math::sin(t_angle);
+
+    this->data[0] = x * x * (1 - c) + c;
+    this->data[1] = y * x * (1 - c) + z * s;
+    this->data[2] = x * z * (1 - c) - y * s;
+    this->data[3] = 0.0F;
+
+    this->data[4] = x * y * (1 - c) - z * s;
+    this->data[5] = y * y * (1 - c) + c;
+    this->data[6] = y * z * (1 - c) + x * s;
+    this->data[7] = 0.0F;
+
+    this->data[8] = x * z * (1 - c) + y * s;
+    this->data[9] = y * z * (1 - c) - x * s;
+    this->data[10] = z * z * (1 - c) + c;
+    this->data[11] = 0.0F;
+
+    this->data[12] = 0.0F;
+    this->data[13] = 0.0F;
+    this->data[14] = 0.0F;
+    this->data[15] = 1.0F;
 }
 
 /** Create a view matrix that transforms coordinates in

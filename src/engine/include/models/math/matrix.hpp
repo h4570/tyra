@@ -82,8 +82,10 @@ public:
         rotate(t_val);
     }
 
-    //
+    void rotationByAngle(const float &t_angle, const Vector3 &t_axis);
 
+    //
+    void setScale(const Vector3 &t_val);
     void setPerspective(ScreenSettings &screen);
     const void print() const;
 };
