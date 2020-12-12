@@ -6,6 +6,7 @@ EE_OBJS =											\
 	camera.o										\
 	objects/player.o								\
 	objects/collectible.o							\
+	objects/mine.o									\
 	dolphin.o										\
 	main.o
 
