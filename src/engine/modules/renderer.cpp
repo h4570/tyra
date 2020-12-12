@@ -203,19 +203,19 @@ void Renderer::allocateBuffers(float t_screenW, float t_screenH)
     frameBuffers[0].width = (u16)t_screenW;
     frameBuffers[0].height = (u16)t_screenH;
     frameBuffers[0].mask = 0;
-    frameBuffers[0].psm = GS_PSM_32;
+    frameBuffers[0].psm = GS_PSM_24;
     frameBuffers[0].address = graph_vram_allocate((u16)t_screenW, (u16)t_screenH, frameBuffers[0].psm, GRAPH_ALIGN_PAGE);
 
     frameBuffers[1].width = (u16)t_screenW;
     frameBuffers[1].height = (u16)t_screenH;
     frameBuffers[1].mask = 0;
-    frameBuffers[1].psm = GS_PSM_32;
+    frameBuffers[1].psm = GS_PSM_24;
     frameBuffers[1].address = graph_vram_allocate((u16)t_screenW, (u16)t_screenH, frameBuffers[1].psm, GRAPH_ALIGN_PAGE);
 
     zBuffer.enable = DRAW_ENABLE;
     zBuffer.mask = 0;
     zBuffer.method = ZTEST_METHOD_GREATER_EQUAL;
-    zBuffer.zsm = GS_ZBUF_32;
+    zBuffer.zsm = GS_ZBUF_24;
     zBuffer.address = graph_vram_allocate((u16)t_screenW, (u16)t_screenH, zBuffer.zsm, GRAPH_ALIGN_PAGE);
     PRINT_LOG("Framebuffers, zBuffer set and allocated!");
 

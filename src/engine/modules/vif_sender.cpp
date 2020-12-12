@@ -71,12 +71,12 @@ void VifSender::uploadMicroProgram()
 
 void VifSender::sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation)
 {
-    vec3ToNative(position, t_position, 1.0F);
-    vec3ToNative(rotation, t_rotation, 1.0F);
-    create_local_world(localWorld, position, rotation);
-    create_local_screen(localScreen, localWorld, t_renderData.worldView->data, t_renderData.perspective->data);
+    Matrix viewProj = Matrix();
+    viewProj.rotation(t_rotation);                                   // model matrix
+    viewProj.translate(t_position);                                  // model matrix
+    viewProj *= *t_renderData.worldView * *t_renderData.perspective; // viewproj = model * (view * projection)
     packet2_reset(matricesPacket, false);
-    packet2_utils_vu_add_unpack_data(matricesPacket, 0, &localScreen, 8, 0);
+    packet2_utils_vu_add_unpack_data(matricesPacket, 0, &viewProj.data, 8, 0);
     packet2_utils_vu_add_end_tag(matricesPacket);
     dma_channel_wait(DMA_CHANNEL_VIF1, 0);
     dma_channel_send_packet2(matricesPacket, DMA_CHANNEL_VIF1, 1);
