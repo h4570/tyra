@@ -84,17 +84,41 @@ void Matrix::identity()
         : "r"(this->data));
 }
 
-void Matrix::translate(float x, float y, float z)
+void Matrix::translate(const Vector3 &t_val)
 {
-    this->identity();
-    this->data[(3 << 2) + 0] = x; // 3,0
-    this->data[(3 << 2) + 1] = y; // 3,1
-    this->data[(3 << 2) + 2] = z; // 3,2
+    this->data[12] += t_val.x; // 3,0
+    this->data[13] += t_val.y; // 3,1
+    this->data[14] += t_val.z; // 3,2
 }
 
-void Matrix::makeZRotation(float t_radians)
+void Matrix::rotateX(const float &t_radians)
 {
-    this->identity();
+    Matrix temp = Matrix();
+    temp.identity();
+    float c = Math::cos(t_radians);
+    float s = Math::sin(t_radians);
+    this->data[5] = c;  // 1,1
+    this->data[6] = s;  // 1,2
+    this->data[9] = -s; // 2,1
+    this->data[10] = c; // 2,2
+}
+
+void Matrix::rotateY(const float &t_radians)
+{
+    Matrix temp = Matrix();
+    temp.identity();
+    float c = Math::cos(t_radians);
+    float s = Math::sin(t_radians);
+    this->data[0] = c;  // 0,0
+    this->data[2] = -s; // 0,3
+    this->data[8] = s;  // 2,0
+    this->data[10] = c; // 2,2
+}
+
+void Matrix::rotateZ(const float &t_radians)
+{
+    Matrix temp = Matrix();
+    temp.identity();
     float c = Math::cos(t_radians);
     float s = Math::sin(t_radians);
     this->data[0] = c;  // 0,0
@@ -103,7 +127,7 @@ void Matrix::makeZRotation(float t_radians)
     this->data[5] = c;  // 1,1
 }
 
-Matrix Matrix::operator*(Matrix &t)
+Matrix Matrix::operator*(const Matrix &t)
 {
     Matrix result;
     asm volatile(
@@ -139,6 +163,42 @@ Matrix Matrix::operator*(Matrix &t)
         : "r"(result.data), "r"(this->data), "r"(t.data)
         : "memory");
     return result;
+}
+
+void Matrix::operator*=(const Matrix &t)
+{
+    asm volatile(
+        "lqc2         vf1, 0x00(%1) \n\t"
+        "lqc2         vf2, 0x10(%1) \n\t"
+        "lqc2         vf3, 0x20(%1) \n\t"
+        "lqc2         vf4, 0x30(%1) \n\t"
+        "lqc2         vf5, 0x00(%2) \n\t"
+        "lqc2         vf6, 0x10(%2) \n\t"
+        "lqc2         vf7, 0x20(%2) \n\t"
+        "lqc2         vf8, 0x30(%2) \n\t"
+        "vmulax.xyzw  ACC, vf5, vf1 \n\t"
+        "vmadday.xyzw ACC, vf6, vf1 \n\t"
+        "vmaddaz.xyzw ACC, vf7, vf1 \n\t"
+        "vmaddw.xyzw  vf1, vf8, vf1 \n\t"
+        "vmulax.xyzw  ACC, vf5, vf2 \n\t"
+        "vmadday.xyzw ACC, vf6, vf2 \n\t"
+        "vmaddaz.xyzw ACC, vf7, vf2 \n\t"
+        "vmaddw.xyzw  vf2, vf8, vf2 \n\t"
+        "vmulax.xyzw  ACC, vf5, vf3 \n\t"
+        "vmadday.xyzw ACC, vf6, vf3 \n\t"
+        "vmaddaz.xyzw ACC, vf7, vf3 \n\t"
+        "vmaddw.xyzw  vf3, vf8, vf3 \n\t"
+        "vmulax.xyzw  ACC, vf5, vf4 \n\t"
+        "vmadday.xyzw ACC, vf6, vf4 \n\t"
+        "vmaddaz.xyzw ACC, vf7, vf4 \n\t"
+        "vmaddw.xyzw  vf4, vf8, vf4 \n\t"
+        "sqc2         vf1, 0x00(%0) \n\t"
+        "sqc2         vf2, 0x10(%0) \n\t"
+        "sqc2         vf3, 0x20(%0) \n\t"
+        "sqc2         vf4, 0x30(%0) \n\t"
+        :
+        : "r"(this->data), "r"(this->data), "r"(t.data)
+        : "memory");
 }
 
 /** Create empty matrix */

@@ -24,13 +24,23 @@ class Math
 {
 
 public:
-    const static float HALF_ANG2RAD = 3.14159265358979323846 / 360.0;
+    const static float HALF_ANG2RAD = 3.14159265358979323846F / 360.0F;
+    const static float ANG2RAD = 3.14159265358979323846F / 180.0F;
     const static float PI = 3.1415926535897932384626433832795F;
     const static float HALF_PI = 1.5707963267948966192313216916398F;
     static float cos(float x);
+    static float asin(float x);
+    static float mod(float x, float y);
     static inline float sin(float x) { return cos(x - HALF_PI); };
+    static inline float tan(float x) { return sin(x) / cos(x); }
     static float sqrt(float x);
     static float invSqrt(float x);
+    static inline u32 max(u32 a, u32 b) { return (a > b) ? a : b; }
+    static inline s32 max(s32 a, s32 b) { return (a > b) ? a : b; }
+    static inline float max(float a, float b) { return (a > b) ? a : b; }
+    static inline u32 min(u32 a, u32 b) { return (a < b) ? a : b; }
+    static inline s32 min(s32 a, s32 b) { return (a < b) ? a : b; }
+    static inline float min(float a, float b) { return (a < b) ? a : b; }
 
 private:
     Math();
