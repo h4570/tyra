@@ -79,6 +79,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                 fsetpos(file, &start);
                 int newerMatches = 0;
 
+                //return;
                 switch (matches)
                 {
                 /** Vs, VTs and VNs all set */
@@ -129,6 +130,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                             PRINT_ERR("Unknown .obj face for .obj file!");
                         }
                     }
+                    break;
                 }
                 default:
                     PRINT_ERR("Unknown faces format in .obj file!");
