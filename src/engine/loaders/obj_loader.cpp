@@ -127,13 +127,11 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                         {
                             /*Unknown configuration.*/
                             PRINT_ERR("Unknown .obj face for .obj file!");
-                            printf("Obj file mentioned: \"%s\"\n", path);
                         }
                     }
                 }
                 default:
                     PRINT_ERR("Unknown faces format in .obj file!");
-                    printf(" \"%s\"\n", path);
                     break;
                 }
                 /*                if(ferror(file))
