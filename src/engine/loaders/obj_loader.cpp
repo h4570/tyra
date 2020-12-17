@@ -79,7 +79,6 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                 fsetpos(file, &start);
                 int newerMatches = 0;
 
-                //return;
                 switch (matches)
                 {
                 /** Vs, VTs and VNs all set */
