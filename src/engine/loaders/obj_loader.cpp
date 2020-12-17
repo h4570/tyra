@@ -135,17 +135,22 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                     break;
                 }
 
-                if (matches == 9)
+                if (matches == 9 || matches == 2 || matches == 1)
                 {
                     o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
                     o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
                     o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
-
+                }
+                if (matches == 9 || matches == 2)
+                {
                     o_result->getMaterial(materialsI).setSTFace(faceI, coordIndex[0] - 1);
                     o_result->getMaterial(materialsI).setSTFace(faceI + 1, coordIndex[1] - 1);
                     o_result->getMaterial(materialsI).setSTFace(faceI + 2, coordIndex[2] - 1);
                     o_result->setSTsPresent(true);
+                }
 
+                if (matches == 9)
+                {
                     o_result->getMaterial(materialsI).setNormalFace(faceI, normalIndex[0] - 1);
                     o_result->getMaterial(materialsI).setNormalFace(faceI + 1, normalIndex[1] - 1);
                     o_result->getMaterial(materialsI).setNormalFace(faceI + 2, normalIndex[2] - 1);
@@ -154,31 +159,16 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                 }
                 else if (matches == 2)
                 {
-                    o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
-                    o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
-                    o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
-
-                    o_result->getMaterial(materialsI).setSTFace(faceI, coordIndex[0] - 1);
-                    o_result->getMaterial(materialsI).setSTFace(faceI + 1, coordIndex[1] - 1);
-                    o_result->getMaterial(materialsI).setSTFace(faceI + 2, coordIndex[2] - 1);
-                    o_result->setSTsPresent(true);
                     faceI += 2;
                 }
                 else if (matches == 1)
                 {
                     if (newerMatches == 3)
                     {
-                        o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
-                        o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
-                        o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
                         faceI += 1;
                     }
                     else if (newerMatches == 6)
                     {
-                        o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
-                        o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
-                        o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
-
                         o_result->getMaterial(materialsI).setNormalFace(faceI, normalIndex[0] - 1);
                         o_result->getMaterial(materialsI).setNormalFace(faceI + 1, normalIndex[1] - 1);
                         o_result->getMaterial(materialsI).setNormalFace(faceI + 2, normalIndex[2] - 1);
