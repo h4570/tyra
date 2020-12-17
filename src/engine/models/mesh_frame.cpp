@@ -25,6 +25,8 @@ MeshFrame::MeshFrame()
     _areVerticesAllocated = false;
     _areNormalsAllocated = false;
     _areMaterialsAllocated = false;
+    _areSTsPresent = false;
+    _areNormalsPresent = false;
 }
 
 MeshFrame::~MeshFrame()
