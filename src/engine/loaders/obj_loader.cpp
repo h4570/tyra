@@ -84,7 +84,6 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                     /* Vs, VTs and VNs all set */
                     case 9:
                     {
-                        printf("Case 9\n\n");
                         fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
                                             &vertexIndex[0], &coordIndex[0], &normalIndex[0],
                                             &vertexIndex[1], &coordIndex[1], &normalIndex[1],
@@ -95,7 +94,6 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                     /* Loaded only two digits (V, VT) succesfuly. Not setting VN. */
                     case 2:
                     {
-                        printf("Case 2\n");
                         fscanf(file, "%d/%d/ %d/%d/ %d/%d/\n",
                                             &vertexIndex[0], &coordIndex[0],
                                             &vertexIndex[1], &coordIndex[1],
@@ -106,7 +104,6 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                     /* Only V set. Checking for existance of VT or VN. */
                     case 1:
                     {
-                        printf("Case 1\n");
                         /* Check for existance of V/// configuration.. */
                         newerMatches = fscanf(file, "%d/// %d/// %d///\n",x,x,x);
                         fsetpos(file,&start);
