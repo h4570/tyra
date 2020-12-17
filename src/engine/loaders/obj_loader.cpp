@@ -134,17 +134,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                     PRINT_ERR("Unknown faces format in .obj file!");
                     break;
                 }
-                /*                if(ferror(file))
-                    PRINT_ERR("Failed to load .obj file \"%s\".");
-                else
-                {
-                    int result=0;
-                    char line [128]={'\0'};
-                    fgets(line,128,file);
-                    
-                    //if(fscanf
 
-                }*/
                 if (matches == 9)
                 {
                     o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
