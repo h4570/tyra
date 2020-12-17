@@ -119,6 +119,9 @@ public:
     const u8 &areMaterialsAllocated() const { return _areMaterialsAllocated; };
     const u8 &isBoundingBoxCalculated() const { return _isBoundingBoxCalculated; };
 
+    const u8 &areSTsPresent() const { return _areSTsPresent; };
+    const u8 &areNormalsPresent() const { return _areNormalsPresent; };
+
     /** Set STs count and allocate memory. */
     void allocateSTs(const u32 &t_val);
 
@@ -130,6 +133,9 @@ public:
 
     /** Set materials count and allocate memory. */
     void allocateMaterials(const u32 &t_val);
+
+    void setSTsPresent(const u8 &b) { _areSTsPresent = b; };
+    void setNormalsPresent(const u8 &b) { _areNormalsPresent = b; };
 
     /** 
      * Calculates bounding box (AABB) for frame and for materiaals.
@@ -144,6 +150,8 @@ private:
         _areVerticesAllocated,
         _areNormalsAllocated,
         _areMaterialsAllocated,
+        _areSTsPresent,
+        _areNormalsPresent,
         _isBoundingBoxCalculated;
     u32 vertexCount, stsCount, normalsCount, materialsCount;
     MeshMaterial *materials;
