@@ -71,143 +71,31 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
             }
             else if (strcmp(lineHeader, "f") == 0)
             {
-
-                int* x;
-                fpos_t start;
-                fgetpos(file,&start);
-                        int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",x,x,x,x,x,x,x,x,x);
-                fsetpos(file,&start);
-                int newerMatches =0;
-
-                switch(matches)
-                {
-                    /* Vs, VTs and VNs all set */
-                    case 9:
-                    {
-                        printf("Case 9\n\n");
-                        fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
-                                            &vertexIndex[0], &coordIndex[0], &normalIndex[0],
-                                            &vertexIndex[1], &coordIndex[1], &normalIndex[1],
-                                            &vertexIndex[2], &coordIndex[2], &normalIndex[2]);
-
-                    }
-                    break;
-                    /* Loaded only two digits (V, VT) succesfuly. Not setting VN. */
-                    case 2:
-                    {
-                        printf("Case 2\n");
-                        fscanf(file, "%d/%d/ %d/%d/ %d/%d/\n",
-                                            &vertexIndex[0], &coordIndex[0],
-                                            &vertexIndex[1], &coordIndex[1],
-                                            &vertexIndex[2], &coordIndex[2]);
-                        
-                    }
-                    break;
-                    /* Only V set. Checking for existance of VT or VN. */
-                    case 1:
-                    {
-                        printf("Case 1\n");
-                        /* Check for existance of V/// configuration.. */
-                        newerMatches = fscanf(file, "%d/// %d/// %d///\n",x,x,x);
-                        fsetpos(file,&start);
-                        if(newerMatches==3){
-                            /* Configuration confirmed. */
-                            fscanf(file, "%d/// %d/// %d///\n",&vertexIndex[0],&vertexIndex[1],&vertexIndex[2]);
-
-                        }else
-                        {
-                            /* Failed, checking configuration V//VN */
-                            newerMatches = fscanf(file, "%d//%d %d//%d %d//%d",x,x,x,x,x,x);
-                            fsetpos(file,&start);
-                            if(newerMatches==6){
-                                /* Configuration confirmed. */
-                                newerMatches = fscanf(file, "%d//%d %d//%d %d//%d",
-                                        &vertexIndex[0], &normalIndex[0],
-                                        &vertexIndex[1], &normalIndex[1],
-                                        &vertexIndex[2], &normalIndex[2]);
-                            }
-                            else{
-                                /*Unknown configuration.*/
-                                PRINT_ERR("Unknown .obj face for .obj file!");
-                                printf("Obj file mentioned: \"%s\"\n",path);
-                            }
-                        }
-                    }
-                    default:
-                    PRINT_ERR("Unknown faces format in .obj file!");
-                    printf(" \"%s\"\n",path);
-                    break;
-
-                }
-/*                if(ferror(file))
-                    PRINT_ERR("Failed to load .obj file \"%s\".");
+                int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
+                                     &vertexIndex[0], &coordIndex[0], &normalIndex[0],
+                                     &vertexIndex[1], &coordIndex[1], &normalIndex[1],
+                                     &vertexIndex[2], &coordIndex[2], &normalIndex[2]);
+                if (matches != 9)
+                    PRINT_ERR(".obj can't be read by this simple parser. Try exporting with other options");
                 else
                 {
-                    int result=0;
-                    char line [128]={'\0'};
-                    fgets(line,128,file);
-                    
-                    //if(fscanf
+                    o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
+                    o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
+                    o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
 
-                }*/
-                switch(matches)
-                {
-                    case 9:
-                    {
-                        o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
-                        o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
-                        o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
+                    o_result->getMaterial(materialsI).setSTFace(faceI, coordIndex[0] - 1);
+                    o_result->getMaterial(materialsI).setSTFace(faceI + 1, coordIndex[1] - 1);
+                    o_result->getMaterial(materialsI).setSTFace(faceI + 2, coordIndex[2] - 1);
 
-                        o_result->getMaterial(materialsI).setSTFace(faceI, coordIndex[0] - 1);
-                        o_result->getMaterial(materialsI).setSTFace(faceI + 1, coordIndex[1] - 1);
-                        o_result->getMaterial(materialsI).setSTFace(faceI + 2, coordIndex[2] - 1);
-
-                        o_result->getMaterial(materialsI).setNormalFace(faceI, normalIndex[0] - 1);
-                        o_result->getMaterial(materialsI).setNormalFace(faceI + 1, normalIndex[1] - 1);
-                        o_result->getMaterial(materialsI).setNormalFace(faceI + 2, normalIndex[2] - 1);
-                        faceI += 3;
-                        break;
-                    }
-                    case 2:
-                    {
-                        o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
-                        o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
-                        o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
-
-                        o_result->getMaterial(materialsI).setSTFace(faceI, coordIndex[0] - 1);
-                        o_result->getMaterial(materialsI).setSTFace(faceI + 1, coordIndex[1] - 1);
-                        o_result->getMaterial(materialsI).setSTFace(faceI + 2, coordIndex[2] - 1);
-
-                        break;
-                    }
-                    case 1:
-                    {
-                        if(newerMatches==3)
-                        {
-                            o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
-                            o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
-                            o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
-                        }
-                        else if(newerMatches==6)
-                        {
-                            o_result->getMaterial(materialsI).setVertexFace(faceI, vertexIndex[0] - 1);
-                            o_result->getMaterial(materialsI).setVertexFace(faceI + 1, vertexIndex[1] - 1);
-                            o_result->getMaterial(materialsI).setVertexFace(faceI + 2, vertexIndex[2] - 1);
-
-                            o_result->getMaterial(materialsI).setNormalFace(faceI, normalIndex[0] - 1);
-                            o_result->getMaterial(materialsI).setNormalFace(faceI + 1, normalIndex[1] - 1);
-                            o_result->getMaterial(materialsI).setNormalFace(faceI + 2, normalIndex[2] - 1);
-
-                        }
-                        break;
-                    }
-
+                    o_result->getMaterial(materialsI).setNormalFace(faceI, normalIndex[0] - 1);
+                    o_result->getMaterial(materialsI).setNormalFace(faceI + 1, normalIndex[1] - 1);
+                    o_result->getMaterial(materialsI).setNormalFace(faceI + 2, normalIndex[2] - 1);
+                    faceI += 3;
                 }
             }
         }
         else
             break;
-            
     }
     o_result->calculateBoundingBoxes();
     fclose(file);
