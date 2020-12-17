@@ -81,7 +81,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
 
                 switch (matches)
                 {
-                /* Vs, VTs and VNs all set */
+                /** Vs, VTs and VNs all set */
                 case 9:
                 {
                     fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n",
@@ -90,7 +90,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                            &vertexIndex[2], &coordIndex[2], &normalIndex[2]);
                 }
                 break;
-                /* Loaded only two digits (V, VT) succesfuly. Not setting VN. */
+                /** Loaded only two digits (V, VT) succesfuly. Not setting VN. */
                 case 2:
                 {
                     fscanf(file, "%d/%d/ %d/%d/ %d/%d/\n",
@@ -99,25 +99,25 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                            &vertexIndex[2], &coordIndex[2]);
                 }
                 break;
-                /* Only V set. Checking for existance of VT or VN. */
+                /** Only V set. Checking for existance of VT or VN. */
                 case 1:
                 {
-                    /* Check for existance of V/// configuration.. */
+                    /** Check for existance of V/// configuration.. */
                     newerMatches = fscanf(file, "%d/// %d/// %d///\n", x, x, x);
                     fsetpos(file, &start);
                     if (newerMatches == 3)
                     {
-                        /* Configuration confirmed. */
+                        /** Configuration confirmed. */
                         fscanf(file, "%d/// %d/// %d///\n", &vertexIndex[0], &vertexIndex[1], &vertexIndex[2]);
                     }
                     else
                     {
-                        /* Failed, checking configuration V//VN */
+                        /** Failed, checking configuration V//VN */
                         newerMatches = fscanf(file, "%d//%d %d//%d %d//%d", x, x, x, x, x, x);
                         fsetpos(file, &start);
                         if (newerMatches == 6)
                         {
-                            /* Configuration confirmed. */
+                            /** Configuration confirmed. */
                             newerMatches = fscanf(file, "%d//%d %d//%d %d//%d",
                                                   &vertexIndex[0], &normalIndex[0],
                                                   &vertexIndex[1], &normalIndex[1],
@@ -125,7 +125,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                         }
                         else
                         {
-                            /*Unknown configuration.*/
+                            /**Unknown configuration.*/
                             PRINT_ERR("Unknown .obj face for .obj file!");
                         }
                     }
