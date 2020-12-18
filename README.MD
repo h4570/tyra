@@ -154,6 +154,7 @@ Without these guys, everything would be harder:
 * Guilherme Lampert - for code sources
 * Jesper Svennevid, Daniel Collin - for openvcl's code samples
 * Whole PS2DEV team
+* Manieq - for nice splash screens!
 * And so many other guys. Thanks!
 
 Project Link: [https://github.com/h4570/tyra](https://github.com/h4570/tyra)  
