@@ -1,19 +1,20 @@
 [![Contributors][contributors-shield]][contributors-url]
-[![MIT License][license-shield]][license-url]  
-PS2-Scene [![Discord](https://img.shields.io/discord/652861436992946216?logo=discord)](https://discord.gg/7dCr6ThSN5)
+[![MIT License][license-shield]][license-url]
+[![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)
+[![Discord](https://img.shields.io/badge/discord-PS2--Scene-brightgreen?logo=discord)](https://discord.gg/7dCr6ThSN5)
 
 <br />
 <p align="center">
   <a href="https://github.com/h4570/tyra">
-    <img src="http://allvectorlogo.com/img/2016/05/ps2-logo.png" alt="Logo" width="230" height="125">
+    <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/github-splash.png" alt="Logo" width="100%" height="auto">
   </a>
 
-  <h3 align="center">Tyra alpha 1.1.0</h3>
+  <h3 align="center">Tyra</h3>
 
   <p align="center">
-    Open source renderer and game engine for PS2 (PlayStation 2™).
+    Open source game engine for PlayStation 2™
     <br />
-    <a href="https://www.youtube.com/"><strong>View Demo (soon) »</strong></a>
+    <a href="https://streamable.com/k5jr0w"><strong>View Demo »</strong></a>
     <br />
     <br />
     <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
@@ -26,6 +27,7 @@ PS2-Scene [![Discord](https://img.shields.io/discord/652861436992946216?logo=dis
 
 * [About the Project](#about-the-project) 
   * [Samples](#samples) 
+  * [Branches](#branches) 
   * [About project](#about-project) 
   * [Acronyms](#acronyms) 
   * [Tyra features](#tyra-features) 
@@ -36,7 +38,7 @@ PS2-Scene [![Discord](https://img.shields.io/discord/652861436992946216?logo=dis
 * [Roadmap](#roadmap) 
 * [Contributing](#contributing) 
 * [License](#license) 
-* [Contact](#contact) 
+* [Tyra team](#tyra-team) 
 * [Thanks](#thanks) 
 
 ## About The Project  
@@ -44,18 +46,22 @@ PS2-Scene [![Discord](https://img.shields.io/discord/652861436992946216?logo=dis
 <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.1.0/tyra.gif" alt="sample" width="600" height="auto">
 
 ### Samples
+* [Dolphin](https://github.com/h4570/tyra/tree/master/src/samples/dolphin) 
 * [Floors](https://github.com/h4570/tyra/tree/master/src/samples/floors) 
-* [Ari (WIP)](https://github.com/h4570/tyra/tree/master/src/samples/ari) 
+
+### Branches
+* Master - monthly releases
+* Develop - daily builds. **Please use this at this moment**
 
 ### Contributors wanted
 #### I will be grateful for any help, Discord: h4570#3402  
   
 ### About project
-Goal of Tyra project is to provide simple API for PS2 (PlayStation 2™) game creation. So you can just run PS2 emulator, grab your .obj file, and put it into live in a seconds. Project is on early stage, so a lot of stuff is changing from release to release.  
+Goal of Tyra project is to provide simple API for PS2 game creation, so you can just run PS2 emulator, grab .obj file, and put it into live in a seconds. Project is on early stage, so a lot of stuff is changing from release to release.  
  
 YouTube tutorials soon!  
   
-**Why PS2 game dev is so different?** Raw PS2 development can be a big challenge. PS2 it's pretty low-level and there are a lot of stuff that you must do from scratch.  
+**Why Tyra is needed?** Raw PS2 development can be a big challenge. PS2 it's pretty low-level and there are a lot of stuff that you must do from scratch.  
 Tyra takes care for you, and rendering, coprocessors communication and many more low-level stuff is already done.
 
 ### Acronyms 
@@ -66,18 +72,15 @@ Tyra takes care for you, and rendering, coprocessors communication and many more
 * IOP - I/O processor which enables access to peripheral devices, such the game controller  
 
 ### Tyra features
-* VU1 rendering (PATH 1), double-buffered  
-* GIF rendering (PATH 3), double-buffered    
+* 3D support - VU1 "Path 1 rendering"  
 * Frustum culling, backface culling  
-* OpenGL adaptions: Perspective projection, lookAt camera  
-* Texture support (.bmp loader)  
+* OpenGL adaptions: Frustum projection, lookAt camera  
+* Texture support - .bmp and png  
 * Mesh loaders: ".obj", ".dff" (RenderWare, GTA:SA) and ".md2" (Quake II) 
 * Threading support 
-* Lighting support (now PATH3 only)  
-* Animation support 
-* Audio support 
+* Animation support for obj and md2
+* Audio support - .wav and .adpcm 
 * Pad support 
-* TODO: physics, ADPCM and many more!  
 
 ### Built With  
 
@@ -85,12 +88,12 @@ Tyra takes care for you, and rendering, coprocessors communication and many more
 
 ## Getting Started  
 
-To get a local copy up and running follow these simple steps.  
-YouTube tutorials soon!
+[![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
+In our Discord channel, there is detailed tutorial which will help you with setting up the all environment - starting from installing dependencies and ending on emulator setup or intellisense.  
 
 ### Prerequisites 
 
-This is an example of how to list things you need to use the software and how to install them.  
+This is an example of how to list things you need to use the software.  
 * PS2 DEV environment - [PS2DEV](https://github.com/ps2dev/ps2dev)  
 * At least #674b6f4 PS2SDK (01.12.2020) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
 * PS2 Emulator. For example [PCSX2](https://pcsx2.net/) 
@@ -103,17 +106,19 @@ git clone https://github.com/h4570/tyra.git
 ```
 2. Get into src folder and compile it!  
 ```sh
+cd src/samples/floors
+make rebuild-engine
 make
 ```  
 
 ## Extra info 
-* Textures can be saved using GIMP. Just replace red with green color, and when exporting select .bmp, 24bit: RGB888, without saving information about colors 
+* BMP loader needs some polishing soe be sure that you exporting BMP with 24bit: RGB888 and without information about colors. 
 * If you want to run .elf in PCSX2, be sure that you have version >=1.6 and **Host access** enabled in PCSX2 configuration file.  
-* If you want to use your own .obj file, please check "triangulate faces" in blender. PS2 is supporting only trinagle primitive type. 
+* If you want to use your own .obj file, please check "triangulate faces" in blender. PS2 is supporting only triangle primitive type.  
 
 ## Roadmap  
 
-### Roadmap moved to github kanban:  
+### Roadmap for next master release:  
 [https://github.com/h4570/tyra/projects/1](https://github.com/h4570/tyra/projects/1)  
 
 
@@ -133,26 +138,33 @@ Contributions are what make the open source community such an amazing place to b
 
 Distributed under the Apache License 2.0 License. See `LICENSE` for more information. 
 
-## Contact  
+## Tyra team  
 
-Sandro Sobczyński - sandro.sobczynski@gmail.com   
-[![LinkedIn][linkedin-shield]][linkedin-url]  
+Sandro Sobczyński - sandro.sobczynski@gmail.com  
+[![LinkedIn][linkedin-shield]](https://linkedin.com/in/sandro-sobczyński-28820b15a)  
+Michał Mostowik - mostek3pl@gmail.com  
+[![LinkedIn][linkedin-shield]](https://www.linkedin.com/in/notfoxar)  
 
 ## Thanks  
 
 Without these guys, everything would be harder:
-* Dr Henry Fortuna - Abertay University (code sources)
-* Lukasz D.K. (huge archive of PS2 stuff)
-* Guilherme Lampert - PlayStation London (code sources)
-* Jesper Svennevid, Daniel Collin - Microcode (openvcl, code samples)
-* Whole PS2SDK/PS2Scene team
+* Dr Henry Fortuna - for code sources
+* Rick Gaiser - for help and new GCC!
+* Lukasz D.K. - for huge archive of PS2 stuff-
+* Guilherme Lampert - for code sources
+* Jesper Svennevid, Daniel Collin - for openvcl's code samples
+* Whole PS2DEV team
 * And so many other guys. Thanks!
 
 Project Link: [https://github.com/h4570/tyra](https://github.com/h4570/tyra)  
+  
+<br />
+<a href="https://github.com/h4570/tyra">
+  <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/github-splash2.png" alt="Logo" width="100%" height="auto">
+</a>
 
 [contributors-shield]: https://img.shields.io/github/contributors/h4570/tyra.svg?style=flat-square  
 [contributors-url]: https://github.com/h4570/tyra/graphs/contributors 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555  
-[linkedin-url]: https://linkedin.com/in/sandro-sobczyński-28820b15a/  
 [license-shield]: https://img.shields.io/github/license/h4570/tyra.svg?style=flat-square  
 [license-url]: https://github.com/h4570/tyra/blob/master/LICENSE  
