@@ -9,7 +9,7 @@
     <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/github-splash.png" alt="Logo" width="100%" height="auto">
   </a>
 
-  <h3 align="center">Tyra</h3>
+  <h3 align="center">Tyra - alpha 1.1.0</h3>
 
   <p align="center">
     Open source game engine for PlayStation 2™
@@ -43,7 +43,10 @@
 
 ## About The Project  
 
-<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.1.0/tyra.gif" alt="sample" width="600" height="auto">
+<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.1.0/tyra.gif" alt="sample" width="600" height="auto">  
+
+### Contributors wanted
+I will be grateful for any help [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
 
 ### Samples
 * [Dolphin](https://github.com/h4570/tyra/tree/master/src/samples/dolphin) 
@@ -52,9 +55,6 @@
 ### Branches
 * Master - monthly releases
 * Develop - daily builds. **Please use this at this moment**
-
-### Contributors wanted
-#### I will be grateful for any help, Discord: h4570#3402  
   
 ### About project
 Goal of Tyra project is to provide simple API for PS2 game creation, so you can just run PS2 emulator, grab .obj file, and put it into live in a seconds. Project is on early stage, so a lot of stuff is changing from release to release.  
