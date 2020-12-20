@@ -13,9 +13,6 @@
 
 BoundingBox::BoundingBox(Vector3 *t_vectorArray)
 {
-    if (sizeof(t_vectorArray) / sizeof(Vector3) != 8)
-        PRINT_ERR("Attempted to create bounding box with invalid count of vectors!");
-
     //Perform a deep copy of vertex array parameter
     for (int i = 0; i < 9; i++)
         _vertices[i] = t_vectorArray[i];
@@ -40,4 +37,8 @@ BoundingBox::BoundingBox(Vector3 *t_vectorArray)
     //Y-Axis faces
     _topFace = BoundingBoxFace(_vertices[2], _vertices[7], _vertices[2].y);
     _bottomFace = BoundingBoxFace(_vertices[0], _vertices[5], _vertices[0].y);
+}
+
+BoundingBox::~BoundingBox()
+{
 }
