@@ -22,6 +22,9 @@
  */
 struct BoundingBoxFace
 {
+    BoundingBoxFace(){
+
+    };
     BoundingBoxFace(const Vector3 &t_minCorner, const Vector3 &t_maxCorner, float t_axisPos)
     {
         minCorner = t_minCorner;
@@ -60,7 +63,7 @@ public:
     /** Return the right face (nearer on x-axis) */
     const BoundingBoxFace &getRightFace() { return _rightFace; };
     /** Return the top face (further on y-axis) */
-    const BoundingBoxFace &getTopFace() { return _frontFace; };
+    const BoundingBoxFace &getTopFace() { return _topFace; };
     /** Return the bottom face (nearer on y-axis) */
     const BoundingBoxFace &getBottomFace() { return _bottomFace; };
 
