@@ -88,6 +88,11 @@ public:
      */
     Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBox[i]; };
 
+    /**
+     * Returns bounding box (AABB) object pointer.
+     */
+    BoundingBox *getBoundingBoxP() { return boundingBoxObj; };
+
     // ----
     // Setters
     // ----
