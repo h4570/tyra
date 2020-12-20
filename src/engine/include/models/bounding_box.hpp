@@ -22,7 +22,7 @@
  */
 struct BoundingBoxFace
 {
-    BoundingBoxFace(Vector3 t_minCorner, Vector3 t_maxCorner, float t_axisPos)
+    BoundingBoxFace(const Vector3 &t_minCorner, const Vector3 &t_maxCorner, float t_axisPos)
     {
         minCorner = t_minCorner;
         maxCorner = t_maxCorner;
@@ -51,18 +51,34 @@ public:
     const float &getWidth() { return _width; };
     /** Return the vector directly in middle of the bounding box. */
     const Vector3 &getCenter() { return _centerVector; };
-    /** Return the front face (furhter on z-axis) */
+    /** Return the front face (further on z-axis) */
     const BoundingBoxFace &getFrontFace() { return _frontFace; };
+    /** Return the back face (nearer on z-axis) */
+    const BoundingBoxFace &getBackFace() { return _backFace; };
+    /** Return the left face (further on x-axis) */
+    const BoundingBoxFace &getLeftFace() { return _leftFace; };
+    /** Return the right face (nearer on x-axis) */
+    const BoundingBoxFace &getRightFace() { return _rightFace; };
+    /** Return the top face (further on y-axis) */
+    const BoundingBoxFace &getTopFace() { return _frontFace; };
+    /** Return the bottom face (nearer on y-axis) */
+    const BoundingBoxFace &getBottomFace() { return _bottomFace; };
 
 private:
     Vector3 _vertices[8];
     float _height, _depth, _width;
     Vector3 _centerVector;
+    /** Front face (further on z-axis) */
     BoundingBoxFace _frontFace;
+    /** Back face (nearer on z-axis) */
     BoundingBoxFace _backFace;
+    /** Left face (nearer on x-axis) */
     BoundingBoxFace _leftFace;
+    /** Right face (further on x-axis) */
     BoundingBoxFace _rightFace;
+    /** Top face (further on y-axis) */
     BoundingBoxFace _topFace;
+    /** Bottom face (nearer on y-axis) */
     BoundingBoxFace _bottomFace;
 };
 

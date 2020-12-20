@@ -30,4 +30,14 @@ BoundingBox::BoundingBox(Vector3 *t_vectorArray)
     _centerVector.x += (_width / 2);
     _centerVector.y += (_height / 2);
     _centerVector.z += (_depth / 2);
+
+    //Z-Axis faces
+    _frontFace = BoundingBoxFace(_vertices[1], _vertices[7], _vertices[1].z);
+    _backFace = BoundingBoxFace(_vertices[0], _vertices[6], _vertices[0].z);
+    //X-Axis faces
+    _leftFace = BoundingBoxFace(_vertices[0], _vertices[3], _vertices[0].x);
+    _rightFace = BoundingBoxFace(_vertices[4], _vertices[7], _vertices[4].x);
+    //Y-Axis faces
+    _topFace = BoundingBoxFace(_vertices[2], _vertices[7], _vertices[2].y);
+    _bottomFace = BoundingBoxFace(_vertices[0], _vertices[5], _vertices[0].y);
 }
