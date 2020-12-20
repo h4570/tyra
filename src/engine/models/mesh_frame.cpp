@@ -37,6 +37,7 @@ MeshFrame::~MeshFrame()
         delete[] normals;
     if (_areMaterialsAllocated)
         delete[] materials;
+    delete boundingBoxObj;
 }
 
 // ----
@@ -121,6 +122,7 @@ void MeshFrame::calculateBoundingBoxes()
         if (hiZ < vertices[i].z)
             hiZ = vertices[i].z;
     }
+
     boundingBox[0].set(lowX, lowY, lowZ);
     boundingBox[1].set(lowX, lowY, hiZ);
     boundingBox[2].set(lowX, hiY, lowZ);
@@ -131,4 +133,12 @@ void MeshFrame::calculateBoundingBoxes()
     boundingBox[6].set(hiX, hiY, lowZ);
     boundingBox[7].set(hiX, hiY, hiZ);
     _isBoundingBoxCalculated = true;
+
+    //Function temporarily is a hybrid between old Vector3[8] boundingbox and
+    //the new class implementation. Upon confirmation that new implementation
+    //works correctly, delete the old code.
+
+    //BoundingBox is declared on the heap to prevent any ill-formed default
+    //constructor instantiated BoundingBox objects.
+    boundingBoxObj = new BoundingBox(boundingBox);
 }

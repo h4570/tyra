@@ -13,6 +13,7 @@
 
 #include <stddef.h>
 #include <tamtypes.h>
+#include "bounding_box.hpp"
 #include "math/point.hpp"
 #include "math/vector3.hpp"
 #include "./mesh_material.hpp"
@@ -139,7 +140,9 @@ public:
     void calculateBoundingBoxes();
 
 private:
+    /** Deprecated. It is advised to use BoundingBox class instead. */
     Vector3 boundingBox[8];
+    BoundingBox *boundingBoxObj;
     u8 _areSTsAllocated,
         _areVerticesAllocated,
         _areNormalsAllocated,
