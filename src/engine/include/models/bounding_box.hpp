@@ -69,7 +69,7 @@ public:
      * Returns bounding box raw vertices array.
      * Total length: 8
      */
-    Vector3 &getVertex(const u8 &i) { return _vertices[i]; };
+    const Vector3 &getVertex(const u8 &i) { return _vertices[i]; };
     /** Returns single vertex from raw vertices array.*/
     Vector3 *getVertices() { return _vertices; };
 
