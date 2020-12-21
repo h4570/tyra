@@ -12,6 +12,11 @@
 #include "../include/utils/debug.hpp"
 #include <cstring>
 
+/** 
+ * Construct a BoundingBox class
+ * Allows for user friendly access to bounding box data.
+ * @param t_vertices Array of 8 Vector3 elements.
+ */
 BoundingBox::BoundingBox(Vector3 *t_vertices)
 {
     //Perform a deep copy of vertex array parameter
