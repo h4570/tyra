@@ -9,6 +9,7 @@
 */
 
 #include "../include/models/mesh_material.hpp"
+#include "../include/models/bounding_box.hpp"
 #include "../include/utils/debug.hpp"
 #include "../include/utils/string.hpp"
 #include <cstdlib>
@@ -132,4 +133,5 @@ void MeshMaterial::calculateBoundingBox(Vector3 *t_vertices, u32 t_vertCount)
     boundingBox[6].set(hiX, hiY, lowZ);
     boundingBox[7].set(hiX, hiY, hiZ);
     _isBoundingBoxCalculated = true;
+    boundingBoxObj = new BoundingBox(boundingBox);
 }

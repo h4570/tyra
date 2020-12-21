@@ -12,6 +12,7 @@
 #define _TYRA_MESH_MATERIAL_
 
 #include <tamtypes.h>
+#include "bounding_box.hpp"
 #include "./math/vector3.hpp"
 #include "./math/plane.hpp"
 
@@ -65,13 +66,20 @@ public:
      * Returns bounding box (AABB).
      * Total length: 8
      */
-    Vector3 *getBoundingBox() { return boundingBox; };
+    //Vector3 *getBoundingBox() { return boundingBox; };
+    Vector3 *getBoundingBox() { return boundingBoxObj->getVertices(); };
 
     /** 
      * Returns bounding box (AABB) vertex.
      * Total length: 8
      */
-    Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBox[i]; };
+    //Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBox[i]; };
+    Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBoxObj->getVertex(i); };
+
+    /**
+     * Returns bounding box (AABB) object pointer.
+     */
+    BoundingBox *getBoundingBoxP() { return boundingBoxObj; };
 
     // ----
     //  Setters
@@ -120,6 +128,7 @@ public:
 
 private:
     Vector3 boundingBox[8];
+    BoundingBox *boundingBoxObj;
     u32 facesCount, id;
     u32 *vertexFaces, *stFaces, *normalFaces;
     u8 _isNameSet, _areFacesAllocated, _isBoundingBoxCalculated;
