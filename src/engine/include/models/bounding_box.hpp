@@ -43,7 +43,6 @@ struct BoundingBoxFace
  * Class containing bounding box data
  * which can be used for collision detection.
  */
-
 class BoundingBox
 {
 public:
