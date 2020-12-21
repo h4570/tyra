@@ -94,10 +94,13 @@ public:
      * Returns bounding vertex of current frame.
      * @param i 0-7. Because, bounding box have 8 corners
      */
-    Vector3 &getCurrentBoundingBoxVertex(const u8 &i) { return frames[animState.currentFrame].getBoundingBoxVertex(i); };
+    const Vector3 &getCurrentBoundingBoxVertex(const u8 &i) { return frames[animState.currentFrame].getBoundingBoxVertex(i); };
 
-    /** Returns bounding box of current frame. Size: 8 */
-    Vector3 *getCurrentBoundingBox() const { return frames[animState.currentFrame].getBoundingBoxVertices(); };
+    /** @returns bounding box vertex array of current frame. Size: 8 */
+    const Vector3 *getCurrentBoundingBoxVertices() const { return frames[animState.currentFrame].getBoundingBoxVertices(); };
+
+    /** @returns bounding box object of current frame. */
+    const BoundingBox *getCurrentBoundingBox() const { return frames[animState.currentFrame].getBoundingBox(); };
 
     // ----
     //  Setters
