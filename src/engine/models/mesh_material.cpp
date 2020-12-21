@@ -83,9 +83,9 @@ u8 MeshMaterial::isInFrustum(Plane *t_frustumPlanes, const Vector3 &position)
         for (u8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++)
         {
             boxCalcTemp.set(
-                boundingBox[y].x + position.x,
-                boundingBox[y].y + position.y,
-                boundingBox[y].z + position.z);
+                boundingBoxObj->getVertices()[y].x + position.x,
+                boundingBoxObj->getVertices()[y].y + position.y,
+                boundingBoxObj->getVertices()[y].z + position.z);
             if (t_frustumPlanes[i].distanceTo(boxCalcTemp) < 0)
                 boxOut++;
             else
@@ -102,6 +102,7 @@ u8 MeshMaterial::isInFrustum(Plane *t_frustumPlanes, const Vector3 &position)
 
 void MeshMaterial::calculateBoundingBox(Vector3 *t_vertices, u32 t_vertCount)
 {
+    Vector3 boundingBox[8];
     float lowX, lowY, lowZ, hiX, hiY, hiZ;
     lowX = hiX = t_vertices[vertexFaces[0]].x;
     lowY = hiY = t_vertices[vertexFaces[0]].y;
@@ -133,5 +134,8 @@ void MeshMaterial::calculateBoundingBox(Vector3 *t_vertices, u32 t_vertCount)
     boundingBox[6].set(hiX, hiY, lowZ);
     boundingBox[7].set(hiX, hiY, hiZ);
     _isBoundingBoxCalculated = true;
+
+    //BoundingBox is declared on the heap to prevent any ill-formed default
+    //constructor instantiated BoundingBox objects.
     boundingBoxObj = new BoundingBox(boundingBox);
 }

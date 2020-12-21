@@ -145,8 +145,6 @@ public:
     void calculateBoundingBoxes();
 
 private:
-    /** Deprecated. It is advised to use BoundingBox class instead. */
-    Vector3 boundingBox[8];
     BoundingBox *boundingBoxObj;
     u8 _areSTsAllocated,
         _areVerticesAllocated,

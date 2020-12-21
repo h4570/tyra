@@ -125,7 +125,6 @@ public:
     u8 isInFrustum(Plane *t_frustumPlanes, const Vector3 &position);
 
 private:
-    Vector3 boundingBox[8];
     BoundingBox *boundingBoxObj;
     u32 facesCount, id;
     u32 *vertexFaces, *stFaces, *normalFaces;

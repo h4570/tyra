@@ -94,6 +94,7 @@ void MeshFrame::allocateMaterials(const u32 &t_val)
 
 void MeshFrame::calculateBoundingBoxes()
 {
+    Vector3 boundingBox[8];
     if (!_areVerticesAllocated)
     {
         PRINT_ERR("Can't calculate bounding box, because vertices were not allocated!");
@@ -133,10 +134,6 @@ void MeshFrame::calculateBoundingBoxes()
     boundingBox[6].set(hiX, hiY, lowZ);
     boundingBox[7].set(hiX, hiY, hiZ);
     _isBoundingBoxCalculated = true;
-
-    //Function temporarily is a hybrid between old Vector3[8] boundingbox and
-    //the new class implementation. Upon confirmation that new implementation
-    //works correctly, delete the old code.
 
     //BoundingBox is declared on the heap to prevent any ill-formed default
     //constructor instantiated BoundingBox objects.
