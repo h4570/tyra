@@ -12,6 +12,7 @@
 #define _TYRA_MESH_MATERIAL_
 
 #include <tamtypes.h>
+#include "bounding_box.hpp"
 #include "./math/vector3.hpp"
 #include "./math/plane.hpp"
 
@@ -62,16 +63,21 @@ public:
     u32 *getNormalFaces() const { return normalFaces; };
 
     /** 
-     * Returns bounding box (AABB).
+     * @returns bounding box (AABB).
      * Total length: 8
      */
-    Vector3 *getBoundingBox() { return boundingBox; };
+    Vector3 *getBoundingBoxVertices() { return boundingBoxObj->getVertices(); };
 
     /** 
-     * Returns bounding box (AABB) vertex.
+     * @returns bounding box (AABB) vertex.
      * Total length: 8
      */
-    Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBox[i]; };
+    const Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBoxObj->getVertex(i); };
+
+    /**
+     * @returns bounding box (AABB) object pointer.
+     */
+    BoundingBox *getBoundingBox() { return boundingBoxObj; };
 
     // ----
     //  Setters
@@ -119,7 +125,7 @@ public:
     u8 isInFrustum(Plane *t_frustumPlanes, const Vector3 &position);
 
 private:
-    Vector3 boundingBox[8];
+    BoundingBox *boundingBoxObj;
     u32 facesCount, id;
     u32 *vertexFaces, *stFaces, *normalFaces;
     u8 _isNameSet, _areFacesAllocated, _isBoundingBoxCalculated;

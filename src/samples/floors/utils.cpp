@@ -38,7 +38,7 @@ void Utils::getMinMax(const Mesh &t_mesh, Vector3 &t_min, Vector3 &t_max)
 {
     Vector3 calc = Vector3();
     u8 isInitialized = 0;
-    Vector3 *boundingBox = t_mesh.getCurrentBoundingBox();
+    const Vector3 *boundingBox = t_mesh.getCurrentBoundingBoxVertices();
     for (u32 i = 0; i < 8; i++)
     {
         calc.set(
