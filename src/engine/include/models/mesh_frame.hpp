@@ -77,19 +77,19 @@ public:
     MeshMaterial *getMaterials() const { return materials; };
 
     /** 
-     * Returns bounding box (AABB).
+     * @returns bounding box (AABB).
      * Total length: 8
      */
     Vector3 *getBoundingBoxVertices() { return boundingBoxObj->getVertices(); };
 
     /** 
-     * Returns bounding box (AABB) vertex.
+     * @returns bounding box (AABB) vertex.
      * Total length: 8
      */
     const Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBoxObj->getVertex(i); };
 
     /**
-     * Returns bounding box (AABB) object pointer.
+     * @returns bounding box (AABB) object pointer.
      */
     BoundingBox *getBoundingBox() { return boundingBoxObj; };
 

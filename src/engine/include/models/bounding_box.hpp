@@ -51,26 +51,26 @@ public:
     const float &getHeight() { return _height; };
     const float &getDepth() { return _depth; };
     const float &getWidth() { return _width; };
-    /** Return the vector directly in middle of the bounding box. */
+    /** @returns the vector directly in middle of the bounding box. */
     const Vector3 &getCenter() { return _centerVector; };
-    /** Return the front face (further on z-axis) */
+    /** @returns the front face (further on z-axis) */
     const BoundingBoxFace &getFrontFace() { return _frontFace; };
-    /** Return the back face (nearer on z-axis) */
+    /** @returns the back face (nearer on z-axis) */
     const BoundingBoxFace &getBackFace() { return _backFace; };
-    /** Return the left face (further on x-axis) */
+    /** @returns the left face (further on x-axis) */
     const BoundingBoxFace &getLeftFace() { return _leftFace; };
-    /** Return the right face (nearer on x-axis) */
+    /** @returns the right face (nearer on x-axis) */
     const BoundingBoxFace &getRightFace() { return _rightFace; };
-    /** Return the top face (further on y-axis) */
+    /** @returns the top face (further on y-axis) */
     const BoundingBoxFace &getTopFace() { return _topFace; };
-    /** Return the bottom face (nearer on y-axis) */
+    /** @returns the bottom face (nearer on y-axis) */
     const BoundingBoxFace &getBottomFace() { return _bottomFace; };
     /** 
-     * Returns bounding box raw vertices array.
+     * @returns bounding box raw vertices array.
      * Total length: 8
      */
     const Vector3 &getVertex(const u8 &i) { return _vertices[i]; };
-    /** Returns single vertex from raw vertices array.*/
+    /** @returns single vertex from raw vertices array.*/
     Vector3 *getVertices() { return _vertices; };
 
 private:
