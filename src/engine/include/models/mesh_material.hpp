@@ -66,14 +66,12 @@ public:
      * Returns bounding box (AABB).
      * Total length: 8
      */
-    //Vector3 *getBoundingBox() { return boundingBox; };
     Vector3 *getBoundingBox() { return boundingBoxObj->getVertices(); };
 
     /** 
      * Returns bounding box (AABB) vertex.
      * Total length: 8
      */
-    //Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBox[i]; };
     Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBoxObj->getVertex(i); };
 
     /**
