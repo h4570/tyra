@@ -66,6 +66,13 @@ public:
     const BoundingBoxFace &getTopFace() { return _topFace; };
     /** Return the bottom face (nearer on y-axis) */
     const BoundingBoxFace &getBottomFace() { return _bottomFace; };
+    /** 
+     * Returns bounding box raw vertices array.
+     * Total length: 8
+     */
+    Vector3 &getVertex(const u8 &i) { return _vertices[i]; };
+    /** Returns single vertex from raw vertices array.*/
+    Vector3 *getVertices() { return _vertices; };
 
 private:
     Vector3 _vertices[8];
