@@ -83,9 +83,9 @@ u8 MeshMaterial::isInFrustum(Plane *t_frustumPlanes, const Vector3 &position)
         for (u8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++)
         {
             boxCalcTemp.set(
-                boundingBoxObj->getVertices()[y].x + position.x,
-                boundingBoxObj->getVertices()[y].y + position.y,
-                boundingBoxObj->getVertices()[y].z + position.z);
+                boundingBoxObj->getVertex(y).x + position.x,
+                boundingBoxObj->getVertex(y).y + position.y,
+                boundingBoxObj->getVertex(y).z + position.z);
             if (t_frustumPlanes[i].distanceTo(boxCalcTemp) < 0)
                 boxOut++;
             else
