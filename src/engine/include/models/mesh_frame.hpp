@@ -80,7 +80,7 @@ public:
      * Returns bounding box (AABB).
      * Total length: 8
      */
-    Vector3 *getBoundingBox() { return boundingBoxObj->getVertices(); };
+    Vector3 *getBoundingBoxVertices() { return boundingBoxObj->getVertices(); };
 
     /** 
      * Returns bounding box (AABB) vertex.
@@ -91,7 +91,7 @@ public:
     /**
      * Returns bounding box (AABB) object pointer.
      */
-    BoundingBox *getBoundingBoxP() { return boundingBoxObj; };
+    BoundingBox *getBoundingBox() { return boundingBoxObj; };
 
     // ----
     // Setters

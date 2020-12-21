@@ -97,7 +97,7 @@ public:
     Vector3 &getCurrentBoundingBoxVertex(const u8 &i) { return frames[animState.currentFrame].getBoundingBoxVertex(i); };
 
     /** Returns bounding box of current frame. Size: 8 */
-    Vector3 *getCurrentBoundingBox() const { return frames[animState.currentFrame].getBoundingBox(); };
+    Vector3 *getCurrentBoundingBox() const { return frames[animState.currentFrame].getBoundingBoxVertices(); };
 
     // ----
     //  Setters
