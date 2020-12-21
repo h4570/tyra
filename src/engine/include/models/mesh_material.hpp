@@ -72,7 +72,7 @@ public:
      * Returns bounding box (AABB) vertex.
      * Total length: 8
      */
-    Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBoxObj->getVertex(i); };
+    const Vector3 &getBoundingBoxVertex(const u8 &i) { return boundingBoxObj->getVertex(i); };
 
     /**
      * Returns bounding box (AABB) object pointer.
