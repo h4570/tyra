@@ -14,7 +14,7 @@
 BoundingBox::BoundingBox(Vector3 *t_vectorArray)
 {
     //Perform a deep copy of vertex array parameter
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < 8; i++)
         _vertices[i] = t_vectorArray[i];
 
     //This might be shortened with Vector3 operator overloading, but current
