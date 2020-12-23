@@ -19,7 +19,7 @@ class Matrix
 {
 
 public:
-    float data[16];
+    float data[16] __attribute__((aligned(64)));
 
     Matrix(float m11, float m12, float m13, float m14,
            float m21, float m22, float m23, float m24,
