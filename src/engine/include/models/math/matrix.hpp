@@ -52,7 +52,16 @@ public:
     // Operators
     // ----
 
-    Matrix operator*(const Matrix &v)
+    Matrix operator*(const Matrix &v) const
+    {
+        Matrix result;
+        cross(result.data, this->data, v.data);
+        return result;
+    }
+
+    Vector3 operator*(const Vector3 &v) const;
+
+    Matrix operator*(const Matrix &v) const
     {
         Matrix result;
         cross(result.data, this->data, v.data);
@@ -144,7 +153,7 @@ private:
     void rotateY(const float &t_radians);
     void rotateZ(const float &t_radians);
     void translate(const Vector3 &t_val);
-    void cross(float res[16], const float a[16], const float b[16]);
+    void cross(float res[16], const float a[16], const float b[16]) const;
     void setCamera(const float t_pos[4], const float t_vz[4], const float t_vy[4]);
 };
 

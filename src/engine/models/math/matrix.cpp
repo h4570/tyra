@@ -53,6 +53,24 @@ Matrix::Matrix(const float &m11, const float &m12, const float &m13, const float
 // Operators
 // ----
 
+Vector3 Matrix::operator*(const Vector3 &v) const
+{
+    Vector3 result;
+    asm volatile(
+        "lqc2         vf4, 0x00(%1)  \n\t"
+        "lqc2         vf5, 0x10(%1) \n\t"
+        "lqc2         vf6, 0x20(%1) \n\t"
+        "lqc2         vf7, 0x30(%1) \n\t"
+        "lqc2         vf8, 0x00(%2)  \n\t"
+        "vmulax.xyzw  ACC, vf4, vf8 \n\t"
+        "vmadday.xyzw ACC, vf5, vf8 \n\t"
+        "vmaddaz.xyzw ACC, vf6, vf8 \n\t"
+        "vmaddw.xyzw  vf9, vf7, vf8 \n\t"
+        "sqc2         vf9, 0x00(%0)  \n\t"
+        :
+        : "r"(result.xyz), "r"(this->data), "r"(v.xyz));
+}
+
 // ----
 // Functions
 // ----
@@ -321,7 +339,7 @@ void Matrix::setCamera(const float t_pos[4], const float t_vz[4], const float t_
         : "r"(this->data), "r"(t_pos), "r"(t_vz), "r"(t_vy));
 }
 
-void Matrix::cross(float res[16], const float a[16], const float b[16])
+void Matrix::cross(float res[16], const float a[16], const float b[16]) const
 {
     asm volatile(
         "lqc2         vf1, 0x00(%1) \n\t"
