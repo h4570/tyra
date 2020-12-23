@@ -160,7 +160,7 @@ Matrix Matrix::operator*(const Matrix &t)
         "sqc2         vf3, 0x20(%0) \n\t"
         "sqc2         vf4, 0x30(%0) \n\t"
         :
-        : "r"(result.data), "r"(this->data), "r"(t.data)
+        : "r"(result.data), "r"(t.data), "r"(this->data)
         : "memory");
     return result;
 }
@@ -197,7 +197,7 @@ void Matrix::operator*=(const Matrix &t)
         "sqc2         vf3, 0x20(%0) \n\t"
         "sqc2         vf4, 0x30(%0) \n\t"
         :
-        : "r"(this->data), "r"(this->data), "r"(t.data)
+        : "r"(this->data), "r"(t.data), "r"(this->data)
         : "memory");
 }
 
