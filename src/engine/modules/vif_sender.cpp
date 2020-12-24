@@ -68,7 +68,7 @@ void VifSender::uploadMicroProgram()
     dma_channel_send_packet2(packet2, DMA_CHANNEL_VIF1, 1);
     packet2_free(packet2);
 }
-#include <fastmath.h>
+
 void VifSender::sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation)
 {
 
