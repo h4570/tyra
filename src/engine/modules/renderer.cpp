@@ -277,7 +277,7 @@ void Renderer::draw(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulb
 void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
-    vifSender->sendMatrices(renderData, t_mesh.position, t_mesh.rotation);
+    vifSender->calcMatrix(renderData, t_mesh.position, t_mesh.rotation);
     if (!t_mesh.isDataLoaded())
         PRINT_ERR("Can't draw, because no mesh data was loaded!");
 
