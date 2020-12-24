@@ -55,7 +55,8 @@ Matrix::Matrix(const float &m11, const float &m12, const float &m13, const float
 
 Vector3 Matrix::operator*(const Vector3 &v) const
 {
-    Vector3 result;
+    float a[4] = {v.x, v.y, v.z, 1.0F};
+    float res[4];
     asm volatile(
         "lqc2         vf4, 0x00(%1)  \n\t"
         "lqc2         vf5, 0x10(%1) \n\t"
@@ -68,7 +69,8 @@ Vector3 Matrix::operator*(const Vector3 &v) const
         "vmaddw.xyzw  vf9, vf7, vf8 \n\t"
         "sqc2         vf9, 0x00(%0)  \n\t"
         :
-        : "r"(result.xyz), "r"(this->data), "r"(v.xyz));
+        : "r"(res), "r"(this->data), "r"(a));
+    return Vector3(res[0], res[1], res[2]);
 }
 
 // ----

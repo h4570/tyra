@@ -52,13 +52,6 @@ public:
     // Operators
     // ----
 
-    Matrix operator*(const Matrix &v) const
-    {
-        Matrix result;
-        cross(result.data, this->data, v.data);
-        return result;
-    }
-
     Vector3 operator*(const Vector3 &v) const;
 
     Matrix operator*(const Matrix &v) const
@@ -97,6 +90,25 @@ public:
     {
         identity();
         translate(t_val);
+    }
+
+    /** Create rotation matrix. */
+    inline void rotation(const Vector3 &t_val)
+    {
+        identity();
+        Matrix temp = Matrix();
+
+        temp.identity();
+        temp.rotateX(t_val.x);
+        operator*=(temp);
+
+        temp.identity();
+        temp.rotateY(t_val.y);
+        operator*=(temp);
+
+        temp.identity();
+        temp.rotateZ(t_val.z);
+        operator*=(temp);
     }
 
     /** Create X rotation matrix. */
