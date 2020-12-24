@@ -30,7 +30,7 @@ public:
 
     // TODO refactor
     void drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer);
-    void sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation);
+    void calcMatrix(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation);
 
 private:
     Light *light;
@@ -50,7 +50,6 @@ private:
      */
     Matrix modelViewProj;
     u8 context;
-    packet2_t *matricesPacket __attribute__((aligned(64)));
     VECTOR position, rotation;
     u32 vertCount;
 };

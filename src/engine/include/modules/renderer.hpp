@@ -134,8 +134,8 @@ private:
     VifSender *vifSender;
     packet2_t *flipPacket;
     color_t worldColor;
-    void allocateBuffers(float t_screenW, float t_screenH);
-    void initDrawingEnv(float t_screenW, float t_screenH);
+    void allocateBuffers(int t_screenW, int t_screenH);
+    void initDrawingEnv();
     void setPrim();
 };
 

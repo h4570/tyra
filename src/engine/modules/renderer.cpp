@@ -22,6 +22,9 @@
 // Constructors/Destructors
 // ----
 
+static const float GS_CENTER = 4096.0F;
+static const float SCREEN_CENTER = GS_CENTER / 2.0F;
+
 /** Initialize DMA<->GIF channel
  * Allocate buffers
  * Initialize screen
@@ -35,19 +38,19 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     PRINT_LOG("Initializing renderer");
     dma_channel_initialize(DMA_CHANNEL_GIF, NULL, 0); // Initialize DMA to enable data transfer
     dma_channel_fast_waits(DMA_CHANNEL_GIF);
+    screen = t_screen;
     context = 0;
     isTextureVRAMAllocated = false;
     isVSyncEnabled = true;
     isFrameEmpty = false;
     lastTextureId = 0;
     flipPacket = packet2_create(4, P2_TYPE_UNCACHED_ACCL, P2_MODE_NORMAL, 0);
-    allocateBuffers(t_screen->width, t_screen->height);
-    initDrawingEnv(t_screen->width, t_screen->height);
+    allocateBuffers((int)t_screen->width, (int)t_screen->height);
+    initDrawingEnv();
     setPrim();
     worldColor.r = 0x10;
     worldColor.g = 0x10;
     worldColor.b = 0x10;
-    screen = t_screen;
     gifSender = new GifSender(t_packetSize, t_screen, &light);
     vifSender = new VifSender(&light);
     perspective.setPerspective(*t_screen);
@@ -142,7 +145,7 @@ void Renderer::draw(Sprite &t_sprite)
     beginFrameIfNeeded();
     changeTexture(texture);
     packet2_t *packet2 = packet2_create(12, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
-    packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0, 2048, 2048));
+    packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0, SCREEN_CENTER, SCREEN_CENTER));
     packet2_utils_gif_add_set(packet2, 1);
     packet2_utils_gs_add_texbuff_clut(packet2, &textureBuffer, &t_sprite.clut);
     draw_enable_blending();
@@ -151,7 +154,8 @@ void Renderer::draw(Sprite &t_sprite)
                    draw_primitive_xyoffset(
                        packet2->next,
                        0,
-                       (2048 - (screen->width / 2)), (2048 - (screen->height / 2))));
+                       SCREEN_CENTER - (screen->width / 2.0F),
+                       SCREEN_CENTER - (screen->height / 2.0F)));
     draw_disable_blending();
     packet2_update(packet2, draw_finish(packet2->next));
     dma_channel_wait(DMA_CHANNEL_GIF, 0);
@@ -160,14 +164,14 @@ void Renderer::draw(Sprite &t_sprite)
 }
 
 /** Initializes drawing environment (1st app packet) */
-void Renderer::initDrawingEnv(float t_screenW, float t_screenH)
+void Renderer::initDrawingEnv()
 {
     PRINT_LOG("Initializing drawing environment");
-    u16 halfW = (u16)t_screenW / 2;
-    u16 halfH = (u16)t_screenH / 2;
     packet2_t *packet2 = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
     packet2_update(packet2, draw_setup_environment(packet2->base, 0, frameBuffers, &(zBuffer)));
-    packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0, (2048 - halfW), (2048 - halfH)));
+    packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0,
+                                                    SCREEN_CENTER - (screen->width / 2.0F),
+                                                    SCREEN_CENTER - (screen->height / 2.0F)));
     packet2_update(packet2, draw_finish(packet2->next));
     dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
     dma_channel_wait(DMA_CHANNEL_GIF, 0);
@@ -198,29 +202,29 @@ void Renderer::setWorldColor(const color_t &t_rgb)
 }
 
 /** Defines and allocates framebuffers and zbuffer */
-void Renderer::allocateBuffers(float t_screenW, float t_screenH)
+void Renderer::allocateBuffers(int t_screenW, int t_screenH)
 {
-    frameBuffers[0].width = (u16)t_screenW;
-    frameBuffers[0].height = (u16)t_screenH;
+    frameBuffers[0].width = (unsigned int)t_screenW;
+    frameBuffers[0].height = (unsigned int)t_screenH;
     frameBuffers[0].mask = 0;
-    frameBuffers[0].psm = GS_PSM_24;
-    frameBuffers[0].address = graph_vram_allocate((u16)t_screenW, (u16)t_screenH, frameBuffers[0].psm, GRAPH_ALIGN_PAGE);
+    frameBuffers[0].psm = GS_PSM_32;
+    frameBuffers[0].address = graph_vram_allocate(t_screenW, t_screenH, frameBuffers[0].psm, GRAPH_ALIGN_PAGE);
 
-    frameBuffers[1].width = (u16)t_screenW;
-    frameBuffers[1].height = (u16)t_screenH;
+    frameBuffers[1].width = (unsigned int)t_screenW;
+    frameBuffers[1].height = (unsigned int)t_screenH;
     frameBuffers[1].mask = 0;
-    frameBuffers[1].psm = GS_PSM_24;
-    frameBuffers[1].address = graph_vram_allocate((u16)t_screenW, (u16)t_screenH, frameBuffers[1].psm, GRAPH_ALIGN_PAGE);
+    frameBuffers[1].psm = GS_PSM_32;
+    frameBuffers[1].address = graph_vram_allocate(t_screenW, t_screenH, frameBuffers[1].psm, GRAPH_ALIGN_PAGE);
 
     zBuffer.enable = DRAW_ENABLE;
     zBuffer.mask = 0;
     zBuffer.method = ZTEST_METHOD_GREATER_EQUAL;
     zBuffer.zsm = GS_ZBUF_24;
-    zBuffer.address = graph_vram_allocate((u16)t_screenW, (u16)t_screenH, zBuffer.zsm, GRAPH_ALIGN_PAGE);
+    zBuffer.address = graph_vram_allocate(t_screenW, t_screenH, zBuffer.zsm, GRAPH_ALIGN_PAGE);
     PRINT_LOG("Framebuffers, zBuffer set and allocated!");
 
     // Initialize the screen and tie the first framebuffer to the read circuits.
-    graph_initialize(frameBuffers[1].address, frameBuffers[1].width, frameBuffers[1].height, frameBuffers[1].psm, 0, 0);
+    graph_initialize(frameBuffers[0].address, frameBuffers[0].width, frameBuffers[0].height, frameBuffers[0].psm, 0, 0);
 }
 
 /// --- Draw: PATH3
@@ -273,7 +277,7 @@ void Renderer::draw(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulb
 void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
-    vifSender->sendMatrices(renderData, t_mesh.position, t_mesh.rotation);
+    vifSender->calcMatrix(renderData, t_mesh.position, t_mesh.rotation);
     if (!t_mesh.isDataLoaded())
         PRINT_ERR("Can't draw, because no mesh data was loaded!");
 

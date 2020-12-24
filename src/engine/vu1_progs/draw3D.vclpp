@@ -1,0 +1,143 @@
+; ______       ____   ___
+;   |     \/   ____| |___|    
+;   |     |   |   \  |   |       
+;---------------------------
+; Copyright 2020, tyra - https://github.com/h4570/tyra
+; Sandro Sobczyński <sandro.sobczynski@gmail.com>
+;
+;---------------------------------------------------------------
+; draw3D.vcl                                                   |
+;---------------------------------------------------------------
+; First tyra VU1 microprogram.                                 |
+; Features:                                                    |
+; - Draw triangles (no strip) with STQ (textures) and 1 RGBA.  |
+;   This program uses double buffering (xtop)                  |
+;                                                              |
+; I want to say thank you to:                                  |
+; - Dr Henry Fortuna - for teaching how things work            |
+; - Jesper Svennevid, Daniel Collin - for openvcl samples      |
+; - Guilherme Lampert - for VU1 idea for PS2 Quake and vclpp   |
+; - Tyler Daniel - for PS2GL source code for PS2 Linux         |
+;---------------------------------------------------------------
+
+; TODO
+; - Add dynamic lighting (feature)
+; - Add --cont + MSCNT instead of alltime MSCAL
+
+#include "/repos/tyra/src/engine/vu1_progs/geometry.inc"
+#include "/repos/tyra/src/engine/vu1_progs/matrix.inc"
+#include "/repos/tyra/src/engine/vu1_progs/vector.inc"
+
+#vuprog draw3D
+
+.syntax new
+.name VU1Draw3D
+.vu
+.init_vf_all
+.init_vi_all
+
+--enter
+--endenter
+
+xtop    double_buffer
+
+;//////// LOAD CURRENT BUFFER DATA //////////
+MatrixLoad{ matrix, 0, double_buffer } 
+ilw.z   triangles_count,    4(double_buffer) ; Triangles count
+ilw.y   vertex_count,       4(double_buffer) ; Vertex count
+lq      gif_set_tag,        5(double_buffer) ; GIF tag - set
+lq      tex_gif_tag_1,      6(double_buffer) ; GIF tag - texture LOD
+lq      tex_gif_tag_2,      7(double_buffer) ; GIF tag - texture buffer & CLUT
+lq      prim_tag,           8(double_buffer) ; GIF tag - tell GS how many data we will send
+lq      rgba,               9(double_buffer) ; Mesh RGBA
+
+iaddiu  vertex_data,        double_buffer,  10           ; pointer to vertex data
+iadd    stq_data,           vertex_data,    vertex_count ; pointer to stq
+iadd    kick_address,       stq_data,       vertex_count ; pointer for XGKICK
+iadd    dest_address,       stq_data,       vertex_count ; helper pointer for data inserting
+;////////////////////////////////////////////
+
+LoadScaleConstant{ gs_scale }
+fcset   0x000000    ; VCL won't let us use CLIP without first zeroing the clip flags    
+
+;/////////////// STORE TAGS /////////////////
+sqi gif_set_tag,    (dest_address++) ;
+sqi tex_gif_tag_1,  (dest_address++) ; texture LOD tag
+sqi gif_set_tag,    (dest_address++) ;
+sqi tex_gif_tag_2,  (dest_address++) ; texture buffer & CLUT tag
+sqi prim_tag,       (dest_address++) ; prim + tell gs how many data will be
+;////////////////////////////////////////////
+
+;//////// FIX ADC BIT FOR CLIPPING //////////
+iaddiu  adc_bit, vi00,      0x7FFF
+iaddiu  adc_bit, adc_bit,   1
+;////////////////////////////////////////////
+
+;/////////// START TRIANGLE LOOP ////////////
+iaddiu triangle_counter,   vi00, 0 ; Reset counter
+triangle_loop: --LoopCS 1,3
+
+    ;//////////////// VERTEX 1 //////////////////
+    VectorLoad{ vertex, vertex_data, 0 }
+    VectorLoad{ stq1, stq_data, 0 }
+    MatrixXForm{ xformed_vertex, matrix, vertex }
+    VectorClip{ gs_vertex, xformed_vertex }
+    VectorPerspectiveDivide{ xformed_vertex }
+    VectorAddGSScales{ gs_vertex, xformed_vertex, gs_scale }
+    VectorTexturePerspectiveCorrection{ pers_stq, stq1 }
+    VectorStore{ pers_stq, dest_address, 0 }
+    VectorStore{ rgba, dest_address, 1 }
+    VectorStore{ gs_vertex, dest_address, 2 }
+    ;////////////////////////////////////////////
+
+    ;//////////////// VERTEX 2 //////////////////
+    VectorLoad{ vertex, vertex_data, 1 }
+    VectorLoad{ stq2, stq_data, 1 }
+    MatrixXForm{ xformed_vertex, matrix, vertex }
+    VectorClip{ gs_vertex, xformed_vertex }
+    VectorPerspectiveDivide{ xformed_vertex }
+    VectorAddGSScales{ gs_vertex, xformed_vertex, gs_scale }
+    VectorTexturePerspectiveCorrection{ pers_stq, stq2 }
+    VectorStore{ pers_stq, dest_address, 3 }
+    VectorStore{ rgba, dest_address, 4 }
+    VectorStore{ gs_vertex, dest_address, 5 }
+    ;////////////////////////////////////////////
+
+    ;//////////////// VERTEX 3 //////////////////
+    VectorLoad{ vertex, vertex_data, 2 }
+    VectorLoad{ stq3, stq_data, 2 }
+    MatrixXForm{ xformed_vertex, matrix, vertex }
+    VectorClip{ gs_vertex, xformed_vertex }
+    VectorPerspectiveDivide{ xformed_vertex }
+    VectorAddGSScales{ gs_vertex, xformed_vertex, gs_scale }
+    VectorTexturePerspectiveCorrection{ pers_stq, stq3 }
+    VectorStore{ pers_stq, dest_address, 6 }
+    VectorStore{ rgba, dest_address, 7 }
+
+    fcand		vi01, 0x03FFFF
+    iaddiu		new_adc_bit, vi01, 0x7FFF
+    mfir.w		gs_vertex, new_adc_bit
+    VectorStore{ gs_vertex, dest_address, 8 } 
+    ;////////////////////////////////////////////
+
+    ;////////////// LOOP CONTROL ////////////////
+    iaddiu          vertex_data,     vertex_data,     3                         
+    iaddiu          stq_data,        stq_data,        3  
+    iaddiu          dest_address,    dest_address,    9
+
+    iaddiu triangle_counter, triangle_counter, 1 // Incrementing this 
+    // by other value than 1 is causing HUGE problems, but.. why?
+    // My first idea was do vertex_counter and incrementing by 3
+    ibne   triangle_counter, triangles_count, triangle_loop
+    ;////////////////////////////////////////////
+
+;//////////////////////////////////////////// 
+
+--barrier
+
+xgkick kick_address ; dispatch to the GS rasterizer.
+
+--exit
+--endexit
+
+#endvuprog
