@@ -93,47 +93,6 @@ void Matrix::identity()
         : "r"(this->data));
 }
 
-void Matrix::rotationByAngle(const float &t_angle, const Vector3 &t_axis)
-{
-    Vector3 localAxis = Vector3(t_axis);
-    localAxis.normalize();
-    float x = localAxis.x;
-    float y = localAxis.y;
-    float z = localAxis.z;
-
-    float c = Math::cos(t_angle);
-    float s = Math::sin(t_angle);
-
-    this->data[0] = x * x * (1 - c) + c;
-    this->data[1] = y * x * (1 - c) + z * s;
-    this->data[2] = x * z * (1 - c) - y * s;
-    this->data[3] = 0.0F;
-
-    this->data[4] = x * y * (1 - c) - z * s;
-    this->data[5] = y * y * (1 - c) + c;
-    this->data[6] = y * z * (1 - c) + x * s;
-    this->data[7] = 0.0F;
-
-    this->data[8] = x * z * (1 - c) + y * s;
-    this->data[9] = y * z * (1 - c) - x * s;
-    this->data[10] = z * z * (1 - c) + c;
-    this->data[11] = 0.0F;
-
-    this->data[12] = 0.0F;
-    this->data[13] = 0.0F;
-    this->data[14] = 0.0F;
-    this->data[15] = 1.0F;
-}
-
-void Matrix::setScale(const Vector3 &t_val)
-{
-    this->identity();
-    this->data[0] = t_val.x;
-    this->data[5] = t_val.y;
-    this->data[10] = t_val.z;
-    this->data[15] = 1.0F;
-}
-
 void Matrix::setPerspective(const ScreenSettings &t_screen)
 {
     float fovYdiv2 = Math::HALF_ANG2RAD * t_screen.fov;
@@ -232,10 +191,8 @@ const void Matrix::print() const
 // Private
 // ----
 
-void Matrix::rotateX(const float &t_radians)
+void Matrix::rotationX(const float &t_radians)
 {
-    Matrix temp = Matrix();
-    temp.identity();
     float c = Math::cos(t_radians);
     float s = Math::sin(t_radians);
     this->data[5] = c;  // 1,1
@@ -244,10 +201,8 @@ void Matrix::rotateX(const float &t_radians)
     this->data[10] = c; // 2,2
 }
 
-void Matrix::rotateY(const float &t_radians)
+void Matrix::rotationY(const float &t_radians)
 {
-    Matrix temp = Matrix();
-    temp.identity();
     float c = Math::cos(t_radians);
     float s = Math::sin(t_radians);
     this->data[0] = c;  // 0,0
@@ -256,10 +211,8 @@ void Matrix::rotateY(const float &t_radians)
     this->data[10] = c; // 2,2
 }
 
-void Matrix::rotateZ(const float &t_radians)
+void Matrix::rotationZ(const float &t_radians)
 {
-    Matrix temp = Matrix();
-    temp.identity();
     float c = Math::cos(t_radians);
     float s = Math::sin(t_radians);
     this->data[0] = c;  // 0,0
@@ -268,11 +221,51 @@ void Matrix::rotateZ(const float &t_radians)
     this->data[5] = c;  // 1,1
 }
 
-void Matrix::translate(const Vector3 &t_val)
+void Matrix::rotationByAngle(const float &t_angle, const Vector3 &t_axis)
 {
-    this->data[12] += t_val.x; // 3,0
-    this->data[13] += t_val.y; // 3,1
-    this->data[14] += t_val.z; // 3,2
+    Vector3 localAxis = Vector3(t_axis);
+    localAxis.normalize();
+    float x = localAxis.x;
+    float y = localAxis.y;
+    float z = localAxis.z;
+
+    float c = Math::cos(t_angle);
+    float s = Math::sin(t_angle);
+
+    this->data[0] = x * x * (1 - c) + c;
+    this->data[1] = y * x * (1 - c) + z * s;
+    this->data[2] = x * z * (1 - c) - y * s;
+    this->data[3] = 0.0F;
+
+    this->data[4] = x * y * (1 - c) - z * s;
+    this->data[5] = y * y * (1 - c) + c;
+    this->data[6] = y * z * (1 - c) + x * s;
+    this->data[7] = 0.0F;
+
+    this->data[8] = x * z * (1 - c) + y * s;
+    this->data[9] = y * z * (1 - c) - x * s;
+    this->data[10] = z * z * (1 - c) + c;
+    this->data[11] = 0.0F;
+
+    this->data[12] = 0.0F;
+    this->data[13] = 0.0F;
+    this->data[14] = 0.0F;
+    this->data[15] = 1.0F;
+}
+
+void Matrix::translation(const Vector3 &t_val)
+{
+    this->data[12] = t_val.x; // 3,0
+    this->data[13] = t_val.y; // 3,1
+    this->data[14] = t_val.z; // 3,2
+}
+
+void Matrix::setScale(const Vector3 &t_val)
+{
+    this->data[0] = t_val.x;
+    this->data[5] = t_val.y;
+    this->data[10] = t_val.z;
+    this->data[15] = 1.0F;
 }
 
 void Matrix::setCamera(const float t_pos[4], const float t_vz[4], const float t_vy[4])

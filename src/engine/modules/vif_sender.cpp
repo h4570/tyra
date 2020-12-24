@@ -68,22 +68,22 @@ void VifSender::uploadMicroProgram()
     dma_channel_send_packet2(packet2, DMA_CHANNEL_VIF1, 1);
     packet2_free(packet2);
 }
-
+#include <fastmath.h>
 void VifSender::sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation)
 {
-    vec3ToNative(position, t_position, 1.0F);
-    vec3ToNative(rotation, t_rotation, 1.0F);
-    MATRIX localWorld, localScreen;
-    create_local_world(localWorld, position, rotation);
-    create_local_screen(localScreen, localWorld, t_renderData.worldView->data, t_renderData.perspective->data);
-    // Small undo, because im testing new matrix funcs, which are DIFFERENT than PS2SDK, so cant be used right now.
-    // Matrix viewProj = Matrix();
-    // viewProj.rotation(t_rotation);                                   // model matrix
-    // viewProj.translate(t_position);                                  // model matrix
-    // viewProj *= *t_renderData.worldView * *t_renderData.perspective; // viewproj = model * (view * projection)
+
+    Matrix model;
+    model.identity();
+    model.rotate(t_rotation);
+    model.translate(t_position);
+
+    modelViewProj.identity();
+    modelViewProj = model * modelViewProj;
+    modelViewProj = *t_renderData.view * modelViewProj;
+    modelViewProj = *t_renderData.projection * modelViewProj;
+
     packet2_reset(matricesPacket, false);
-    // packet2_utils_vu_add_unpack_data(matricesPacket, 0, &viewProj.data, 8, 0);
-    packet2_utils_vu_add_unpack_data(matricesPacket, 0, localScreen, 8, 0);
+    packet2_utils_vu_add_unpack_data(matricesPacket, 0, &modelViewProj.data, 8, 0);
     packet2_utils_vu_add_end_tag(matricesPacket);
     dma_channel_wait(DMA_CHANNEL_VIF1, 0);
     dma_channel_send_packet2(matricesPacket, DMA_CHANNEL_VIF1, 1);

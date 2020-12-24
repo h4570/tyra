@@ -85,58 +85,70 @@ public:
      */
     inline void unit() { identity(); };
 
-    /** Create translation matrix. */
-    inline void translation(const Vector3 &t_val)
+    /** Translate matrix. */
+    inline void translate(const Vector3 &t_val)
     {
-        identity();
-        translate(t_val);
+        Matrix temp = Matrix(true);
+        temp.translation(t_val);
+        cross(this->data, temp.data, this->data);
     }
 
-    /** Create rotation matrix. */
-    inline void rotation(const Vector3 &t_val)
+    /** Rotate matrix. */
+    inline void rotate(const Vector3 &t_val)
     {
-        identity();
-        Matrix temp = Matrix();
+        Matrix temp = Matrix(true);
+
+        temp.rotationZ(t_val.z);
+        cross(this->data, temp.data, this->data);
 
         temp.identity();
-        temp.rotateX(t_val.x);
-        operator*=(temp);
+        temp.rotationY(t_val.y);
+        cross(this->data, temp.data, this->data);
 
         temp.identity();
-        temp.rotateY(t_val.y);
-        operator*=(temp);
-
-        temp.identity();
-        temp.rotateZ(t_val.z);
-        operator*=(temp);
+        temp.rotationX(t_val.x);
+        cross(this->data, temp.data, this->data);
     }
 
-    /** Create X rotation matrix. */
-    inline void rotationX(const float &t_radians)
+    /** Rotate matrix by X. */
+    inline void rotateX(const float &t_radians)
     {
-        identity();
-        rotateX(t_radians);
+        Matrix temp = Matrix(true);
+        temp.rotationX(t_radians);
+        cross(this->data, temp.data, this->data);
     }
 
-    /** Create Y rotation matrix. */
-    inline void rotationY(const float &t_radians)
+    /** Rotate matrix by Y. */
+    inline void rotateY(const float &t_radians)
     {
-        identity();
-        rotateY(t_radians);
+        Matrix temp = Matrix(true);
+        temp.rotationY(t_radians);
+        cross(this->data, temp.data, this->data);
     }
 
-    /** Create Z rotation matrix. */
-    inline void rotationZ(const float &t_radians)
+    /** Rotate matrix by Z. */
+    inline void rotateZ(const float &t_radians)
     {
-        identity();
-        rotateZ(t_radians);
+        Matrix temp = Matrix(true);
+        temp.rotationZ(t_radians);
+        cross(this->data, temp.data, this->data);
     }
 
-    /** Create angle rotation matrix. */
-    void rotationByAngle(const float &t_angle, const Vector3 &t_axis);
+    /** Rotate matrix by angle. */
+    void rotateByAngle(const float &t_angle, const Vector3 &t_axis)
+    {
+        Matrix temp;
+        temp.rotationByAngle(t_angle, t_axis);
+        cross(this->data, temp.data, this->data);
+    }
 
-    /** Create scale matrix. */
-    void setScale(const Vector3 &t_val);
+    /** Scale matrix. */
+    void scale(const Vector3 &t_val)
+    {
+        Matrix temp = Matrix(true);
+        temp.setScale(t_val);
+        cross(this->data, temp.data, this->data);
+    }
 
     /** 
      * Create perspective projection matrix. 
@@ -161,12 +173,14 @@ public:
     const void print() const;
 
 private:
-    void rotateX(const float &t_radians);
-    void rotateY(const float &t_radians);
-    void rotateZ(const float &t_radians);
-    void translate(const Vector3 &t_val);
-    void cross(float res[16], const float a[16], const float b[16]) const;
+    void rotationX(const float &t_radians);
+    void rotationY(const float &t_radians);
+    void rotationZ(const float &t_radians);
+    void rotationByAngle(const float &t_angle, const Vector3 &t_axis);
+    void translation(const Vector3 &t_val);
+    void setScale(const Vector3 &t_val);
     void setCamera(const float t_pos[4], const float t_vz[4], const float t_vy[4]);
+    void cross(float res[16], const float a[16], const float b[16]) const;
 };
 
 #endif

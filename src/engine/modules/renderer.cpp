@@ -51,7 +51,7 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     gifSender = new GifSender(t_packetSize, t_screen, &light);
     vifSender = new VifSender(&light);
     perspective.setPerspective(*t_screen);
-    renderData.perspective = &perspective;
+    renderData.projection = &perspective;
     PRINT_LOG("Renderer initialized!");
 }
 
@@ -277,7 +277,8 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     if (!t_mesh.isDataLoaded())
         PRINT_ERR("Can't draw, because no mesh data was loaded!");
 
-    camRotation.rotation(-t_mesh.rotation);
+    camRotation.identity();
+    camRotation.rotate(-t_mesh.rotation);
     Vector3 rotatedCamera = Vector3(camRotation * *renderData.cameraPosition);
 
     if (t_mesh.getCurrentAnimationFrame() != t_mesh.getNextAnimationFrame())
@@ -287,9 +288,9 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         if (t_mesh.shouldBeFrustumCulled && !t_mesh.getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh.position))
             return;
         u32 vertCount = t_mesh.getMaterial(i).getFacesCount();
-        VECTOR __attribute__((aligned(16))) vertices[vertCount];
-        VECTOR __attribute__((aligned(16))) normals[vertCount];
-        VECTOR __attribute__((aligned(16))) coordinates[vertCount];
+        VECTOR vertices[vertCount] __attribute__((aligned(16)));
+        VECTOR normals[vertCount] __attribute__((aligned(16)));
+        VECTOR coordinates[vertCount] __attribute__((aligned(16)));
         Texture *tex = textureRepo.getByMesh(t_mesh.getId(), t_mesh.getMaterial(i).getId());
         changeTexture(tex);
         vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, rotatedCamera);
@@ -305,7 +306,7 @@ void Renderer::draw(Mesh &t_mesh) { draw(t_mesh, NULL, 0); }
 
 void Renderer::setCameraDefinitions(Matrix *t_worldView, Vector3 *t_cameraPos, Plane *t_planes)
 {
-    renderData.worldView = t_worldView;
+    renderData.view = t_worldView;
     renderData.cameraPosition = t_cameraPos;
     renderData.frustumPlanes = t_planes;
 }
