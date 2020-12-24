@@ -17,8 +17,8 @@
 #include "../include/utils/debug.hpp"
 
 const u32 VU1_PACKAGE_VERTS_PER_BUFF = 96; // Remember to modify buffer size in vu1 also
-const u32 VU1_PACKAGES_PER_PACKET = 6;
-const u32 VU1_PACKET_SIZE = 128;
+const u32 VU1_PACKAGES_PER_PACKET = 9;
+const u32 VU1_PACKET_SIZE = 256; // should be 128, but 256 is more safe for future
 
 // ----
 // Constructors/Destructors
