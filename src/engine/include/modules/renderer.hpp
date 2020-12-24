@@ -125,7 +125,7 @@ private:
     void flipBuffers();
     void beginFrameIfNeeded();
     u8 isFrameEmpty;
-    Matrix perspective;
+    Matrix perspective, camRotation;
     Light light;
     RenderData renderData;
     TextureRepository textureRepo;
