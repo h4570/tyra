@@ -18,7 +18,7 @@
 // Constructors/Destructors
 // ----
 
-CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t_up)
+CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position)
     : screen(t_screen)
 {
     PRINT_LOG("Initializing frustum");
@@ -30,7 +30,7 @@ CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t
     farHeight = tang * farPlaneDist;
     farWidth = farHeight * screen->aspectRatio;
     p_position = t_position;
-    p_up = t_up;
+    up.set(0.0F, 1.0F, 0.0F);
     PRINT_LOG("CameraBase initialized!");
 }
 
@@ -41,7 +41,7 @@ CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t
 void CameraBase::lookAt(Vector3 &t_target)
 {
     updatePlanes(t_target);
-    worldView.lookAt(*p_up, *p_position, t_target);
+    worldView.lookAt(*p_position, t_target);
 }
 
 void CameraBase::updatePlanes(Vector3 t_target)
@@ -51,7 +51,7 @@ void CameraBase::updatePlanes(Vector3 t_target)
     Z = *p_position - t_target;
     Z.normalize();
     // X axis of camera of given "up" vector and Z axis
-    X = *p_up * Z;
+    X = up * Z;
     X.normalize();
     // the real "up" vector is the cross product of Z and X
     Y = Z * X;

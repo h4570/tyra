@@ -277,8 +277,8 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     if (!t_mesh.isDataLoaded())
         PRINT_ERR("Can't draw, because no mesh data was loaded!");
 
-    Vector3 rotatedCamera = Vector3(*renderData.cameraPosition);
-    rotatedCamera.rotate(t_mesh.rotation, true);
+    camRotation.rotation(-t_mesh.rotation);
+    Vector3 rotatedCamera = Vector3(camRotation * *renderData.cameraPosition);
 
     if (t_mesh.getCurrentAnimationFrame() != t_mesh.getNextAnimationFrame())
         t_mesh.animate();

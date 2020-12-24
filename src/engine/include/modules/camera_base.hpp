@@ -21,7 +21,7 @@ class CameraBase
 {
 
 public:
-    CameraBase(ScreenSettings *t_screen, Vector3 *t_position, Vector3 *t_up);
+    CameraBase(ScreenSettings *t_screen, Vector3 *t_position);
     virtual ~CameraBase(){};
 
     /**
@@ -56,9 +56,10 @@ protected:
     void updatePlanes(Vector3 t_target);
 
 private:
-    Vector3 *p_position, *p_up;
+    Vector3 *p_position;
     float farPlaneDist, nearPlaneDist, nearHeight, nearWidth, farHeight, farWidth;
     Vector3 ftl, ftr, fbl, fbr, ntl, ntr, nbl, nbr;
+    Vector3 up; // always 0.0F, 1.0F, 0.0F
 };
 
 #endif

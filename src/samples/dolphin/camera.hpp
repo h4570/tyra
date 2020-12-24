@@ -22,7 +22,7 @@ class Camera : public CameraBase
 {
 
 public:
-    Vector3 position,up, unitCirclePosition;
+    Vector3 position, up, unitCirclePosition;
     float horizontalLevel, verticalLevel;
 
     Camera(ScreenSettings *t_screen);
@@ -34,7 +34,6 @@ public:
 
 protected:
     Vector3 *getPosition() { return &position; };
-    Vector3 *getUp() { return &up; };
     ScreenSettings screen;
 };
 

@@ -211,13 +211,13 @@ FloorsCheck *Player::checkFloors(const FloorManager &t_floorManager, const Vecto
     for (u32 i = 0; i < t_floorManager.floorAmount; i++)
     {
         Utils::getMinMax(t_floorManager.floors[i].mesh, min, max);
-        if (result->currentFloor == NULL && this->mesh.position.isOnSquare(min, max))
+        if (result->currentFloor == NULL && this->mesh.position.isOnBox(min, max))
         {
             result->currentFloor = &t_floorManager.floors[i];
             result->currFloorMin.set(min);
             result->currFloorMax.set(max);
         }
-        if (result->willCollideFloor == NULL && t_nextPos.collidesSquare(min, max))
+        if (result->willCollideFloor == NULL && t_nextPos.collidesBox(min, max))
         {
             result->willCollideFloor = &t_floorManager.floors[i];
             result->willCollideFloorMin.set(min);

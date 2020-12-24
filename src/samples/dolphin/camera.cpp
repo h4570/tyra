@@ -14,12 +14,9 @@
 
 const float CAMERA_Y = 15.0F;
 
-Camera::Camera(ScreenSettings *t_screen) : CameraBase(t_screen, &position, &up)
+Camera::Camera(ScreenSettings *t_screen) : CameraBase(t_screen, &position)
 {
     verticalLevel = 30.0F;
-    up.x = 0.0F;
-    up.y = 1.0F;
-    up.z = 0.0F;
 }
 
 Camera::~Camera() {}
