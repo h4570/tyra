@@ -31,10 +31,10 @@ public:
     Plane planes[6];
 
     /** 
-     * Projection matrix
+     * View matrix
      * Set by lookAt() method.
      */
-    Matrix worldView;
+    Matrix view;
 
 protected:
     /** Pointer to screen settings */
@@ -42,7 +42,7 @@ protected:
 
     /**
      * Adaption of OpenGL lookAt camera.
-     * Calculates worldView matrix and update frustum planes
+     * Calculates view matrix and update frustum planes
      * Should be called every frame.
      */
     void lookAt(Vector3 &t_target);

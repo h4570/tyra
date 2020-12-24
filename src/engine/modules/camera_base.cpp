@@ -41,7 +41,7 @@ CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position)
 void CameraBase::lookAt(Vector3 &t_target)
 {
     updatePlanes(t_target);
-    worldView.lookAt(*p_position, t_target);
+    view.lookAt(*p_position, t_target);
 }
 
 void CameraBase::updatePlanes(Vector3 t_target)

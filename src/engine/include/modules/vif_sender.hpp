@@ -39,6 +39,16 @@ private:
     void drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer);
     packet2_t *packets[2] __attribute__((aligned(64)));
     packet2_t *currPacket;
+    /** 
+     * OpenGL name: Model
+     * Sony name: local world 
+     */
+    Matrix model;
+    /** 
+     * OpenGL name: ModelViewProjection
+     * Sony name: local screen
+     */
+    Matrix modelViewProj;
     u8 context;
     packet2_t *matricesPacket __attribute__((aligned(64)));
     VECTOR position, rotation;

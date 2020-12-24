@@ -34,7 +34,7 @@ Dolphin::~Dolphin()
 void Dolphin::onInit()
 {
     player.init(engine);
-    engine->renderer->setCameraDefinitions(&camera.worldView, &camera.position, camera.planes);
+    engine->renderer->setCameraDefinitions(&camera.view, &camera.position, camera.planes);
 
     engine->audio.loadSong("sound/dirediredocks.wav");
     engine->audio.playSong();
