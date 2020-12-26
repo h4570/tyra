@@ -77,8 +77,9 @@ void Engine::firePS2()
 {
     SifInitRpc(0);
     srand(time(NULL));
-    fileService.startThread();
-    audio.startThread(&fileService);
+    // fileService.startThread();
+    // audio.startThread(&fileService);
+    audio.startThread(NULL);
     isInitialized = 0;
     mainThreadId = GetThreadId();
 }
