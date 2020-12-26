@@ -126,7 +126,7 @@ public:
 
 private:
     u8 songLoaded, volume, realVolume, songPlaying, songInLoop, songFinished;
-    std::vector<AudioListenerRef> songListeners;
+    std::vector<AudioListenerRef *> songListeners;
     FILE *wav;
     audsrv_fmt_t format;
     FileService *fileService;

@@ -26,32 +26,24 @@ Enemy::Enemy(TextureRepository *t_texRepo)
     PRINT_LOG("Creating enemy object");
 
     meshes = new Mesh[getMeshesCount()];
+    drawMeshes = new Mesh *[getMeshesCount()];
 
     meshes[0].loadMD2("meshes/enemy/", "poss_head", 0.3F, false);
-    meshes[0].rotation.x = -1.566F;
-    meshes[0].rotation.z = 1.566F;
-    meshes[0].shouldBeFrustumCulled = false;
-
     meshes[1].loadMD2("meshes/enemy/", "poss_body", 0.3F, false);
-    meshes[1].rotation.x = -1.566F;
-    meshes[1].rotation.z = 1.566F;
-    meshes[1].shouldBeFrustumCulled = false;
-
     meshes[2].loadMD2("meshes/enemy/", "poss_weapon", 0.3F, false);
-    meshes[2].rotation.x = -1.566F;
-    meshes[2].rotation.z = 1.566F;
-    meshes[2].shouldBeFrustumCulled = false;
+
+    for (u8 i = 0; i < 3; i++)
+    {
+        meshes[i].rotation.x = -1.566F;
+        meshes[i].rotation.z = 1.566F;
+        meshes[i].shouldBeFrustumCulled = false;
+        t_texRepo->addByMesh("meshes/enemy/", meshes[i], PNG);
+        meshes[i].playAnimation(1, 6);
+        drawMeshes[i] = &meshes[i];
+    }
 
     Vector3 initPos = Vector3(0.00F, 40.00F, 0.00F);
     setPosition(initPos);
-
-    t_texRepo->addByMesh("meshes/enemy/", meshes[0], PNG);
-    t_texRepo->addByMesh("meshes/enemy/", meshes[1], PNG);
-    t_texRepo->addByMesh("meshes/enemy/", meshes[2], PNG);
-
-    meshes[0].playAnimation(1, 6);
-    meshes[1].playAnimation(1, 6);
-    meshes[2].playAnimation(1, 6);
 
     isKilled = true;
 
