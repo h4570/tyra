@@ -13,8 +13,6 @@
 #include <dma.h>
 #include <graph.h>
 #include <packet.h>
-#include <draw.h>
-#include <gs_psm.h>
 #include "../include/utils/debug.hpp"
 #include "../include/utils/math.hpp"
 
@@ -268,10 +266,33 @@ void Renderer::drawByPath3(Mesh &t_mesh) { drawByPath3(t_mesh, NULL, 0); }
 
 /// --- Draw: PATH1
 
-void Renderer::draw(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
+void Renderer::draw(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
-    for (u16 i = 0; i < t_amount; i++)
-        draw(t_meshes[i], t_bulbs, t_bulbsCount);
+    beginFrameIfNeeded();
+    if (!t_meshes[0]->isDataLoaded())
+        PRINT_ERR("Can't draw, because no mesh data was loaded!");
+    else if (
+        t_amount >= 3 &&
+        !t_meshes[0]->shouldBeBackfaceCulled &&
+        t_meshes[0]->getFramesCount() == 1 &&
+        t_meshes[0]->getMaterialsCount() == 1 &&
+        t_meshes[0]->getFrame(0).getVertexCount() <= 96)
+    {
+        vifSender->disableWait();
+        Mesh **meshesInFrustum = new Mesh *[t_amount];
+        u16 addedMeshes = 0;
+        for (u16 i = 0; i < t_amount; i++)
+            if (t_meshes[i]->getMaterial(0).isInFrustum(renderData.frustumPlanes, t_meshes[i]->position))
+                meshesInFrustum[addedMeshes++] = t_meshes[i];
+        draw(*meshesInFrustum[0], t_bulbs, t_bulbsCount);
+        draw(*meshesInFrustum[1], t_bulbs, t_bulbsCount);
+        vifSender->enableWait();
+        vifSender->drawTheSameWithOtherMatrices(renderData, meshesInFrustum, 2, addedMeshes);
+        delete[] meshesInFrustum;
+    }
+    else
+        for (u16 i = 0; i < t_amount; i++)
+            draw(*t_meshes[i], t_bulbs, t_bulbsCount);
 }
 
 void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
@@ -302,7 +323,7 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
     }
 }
 
-void Renderer::draw(Mesh *t_meshes, u16 t_amount) { draw(t_meshes, t_amount, NULL, 0); }
+void Renderer::draw(Mesh **t_meshes, u16 t_amount) { draw(t_meshes, t_amount, NULL, 0); }
 
 void Renderer::draw(Mesh &t_mesh) { draw(t_mesh, NULL, 0); }
 

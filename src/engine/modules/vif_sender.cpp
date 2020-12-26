@@ -19,6 +19,8 @@
 const u32 VU1_PACKAGE_VERTS_PER_BUFF = 96; // Remember to modify buffer size in vu1 also
 const u32 VU1_PACKAGES_PER_PACKET = 9;
 const u32 VU1_PACKET_SIZE = 256; // should be 128, but 256 is more safe for future
+const u8 VU1_PARAMS_ADDRESS = 4;
+const u8 VU1_RGBA_ADDRESS = 8;
 
 // ----
 // Constructors/Destructors
@@ -31,16 +33,18 @@ extern u32 VU1Draw3D_CodeEnd __attribute__((section(".vudata")));
 
 VifSender::VifSender(Light *t_light)
 {
-    light = t_light;
     PRINT_LOG("Initializing VifSender");
-    PRINT_LOG("VifSender initialized!");
+    light = t_light;
+    lastVertCount = 0;
+    isDrawWaitEnabled = true;
     dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
     dma_channel_fast_waits(DMA_CHANNEL_VIF1);
     uploadMicroProgram();
     packets[0] = packet2_create(VU1_PACKET_SIZE, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
     packets[1] = packet2_create(VU1_PACKET_SIZE, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
     context = 0;
-    setDoubleBuffer();
+    setDoubleBufferAddStaticData();
+    PRINT_LOG("VifSender initialized!");
 }
 
 VifSender::~VifSender()
@@ -93,7 +97,7 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
                 i -= 3;
 
             const u32 endI = i + (VU1_PACKAGE_VERTS_PER_BUFF - 1) > vertCount2 ? vertCount2 : i + (VU1_PACKAGE_VERTS_PER_BUFF - 1);
-            drawVertices(t_mesh, i, endI, vertices, coordinates, t_renderData->prim, textureBuffer);
+            drawVertices(t_mesh, i, endI, vertices, coordinates, t_renderData->prim, textureBuffer, isDrawWaitEnabled ? endI == vertCount2 : false);
             if (endI == vertCount2) // if there are no more vertices to draw, break
             {
                 i = vertCount2;
@@ -109,9 +113,15 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
     }
 }
 
-void VifSender::setDoubleBuffer()
+void VifSender::setDoubleBufferAddStaticData()
 {
-    packet2_t *settings = packet2_create(2, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+    packet2_t *settings = packet2_create(10, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+    packet2_utils_vu_open_unpack(settings, 0, false);
+    {
+        packet2_utils_gs_add_draw_finish_giftag(settings);
+        packet2_utils_gif_add_set(settings, 1);
+    }
+    packet2_utils_vu_close_unpack(settings);
     packet2_utils_vu_add_double_buffer(settings, 10, 498);
     packet2_utils_vu_add_end_tag(settings);
     dma_channel_send_packet2(settings, DMA_CHANNEL_VIF1, true);
@@ -120,28 +130,98 @@ void VifSender::setDoubleBuffer()
 }
 
 /** Draw using PATH1 */
-void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer)
+void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *t_texBuff, u8 t_addDrawWait)
 {
     const u32 vertCount = t_end - t_start;
-    u32 vif_added_bytes = 0;
+    lastVertCount = vertCount;
     packet2_utils_vu_open_unpack(currPacket, 0, true);
     packet2_add_data(currPacket, modelViewProj.data, 4);
-    packet2_add_u32(currPacket, 0);             // Free
+    packet2_add_u32(currPacket, t_addDrawWait); // Draw finish?
     packet2_add_u32(currPacket, vertCount);     // Vertex count
     packet2_add_u32(currPacket, vertCount / 3); // Triangles count
     packet2_add_u32(currPacket, 0);             // Free
-    packet2_utils_gif_add_set(currPacket, 1);
     packet2_utils_gs_add_lod(currPacket, &t_mesh.lod);
-    packet2_utils_gs_add_texbuff_clut(currPacket, textureBuffer, &t_mesh.clut);
+    packet2_utils_gs_add_texbuff_clut(currPacket, t_texBuff, &t_mesh.clut);
     packet2_utils_gs_add_prim_giftag(currPacket, t_prim, vertCount, DRAW_STQ2_REGLIST, 3, 0);
     packet2_add_u32(currPacket, t_mesh.color.r);
     packet2_add_u32(currPacket, t_mesh.color.g);
     packet2_add_u32(currPacket, t_mesh.color.b);
     packet2_add_u32(currPacket, t_mesh.color.a);
-    vif_added_bytes += packet2_utils_vu_close_unpack(currPacket);
+    u32 vif_added_bytes = packet2_utils_vu_close_unpack(currPacket);
     packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_vertices + t_start, vertCount, true);
     vif_added_bytes += vertCount;
     packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_coordinates + t_start, vertCount, true);
     vif_added_bytes += vertCount;
     packet2_utils_vu_add_start_program(currPacket, 0);
+}
+
+void VifSender::drawTheSameWithOtherMatrices(const RenderData &t_renderData, Mesh **t_meshes, const u32 &t_skip, const u32 &t_count)
+{
+    packet2_t *packet2 = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+    u8 switchCounter = 0;
+    u32 i;
+    for (i = t_skip; i < t_count; i++)
+    {
+        model.identity();
+        model.rotate(t_meshes[i]->rotation);
+        model.translate(t_meshes[i]->position);
+
+        modelViewProj.identity();
+        modelViewProj = model * modelViewProj;
+        modelViewProj = *t_renderData.view * modelViewProj;
+        modelViewProj = *t_renderData.projection * modelViewProj;
+
+        packet2_utils_vu_open_unpack(packet2, 0, true);
+        {
+            packet2_add_data(packet2, modelViewProj.data, 4);
+        }
+        packet2_utils_vu_close_unpack(packet2);
+        packet2_utils_vu_open_unpack(packet2, VU1_RGBA_ADDRESS, true);
+        {
+            packet2_add_u32(packet2, t_meshes[i]->color.r);
+            packet2_add_u32(packet2, t_meshes[i]->color.g);
+            packet2_add_u32(packet2, t_meshes[i]->color.b);
+            packet2_add_u32(packet2, t_meshes[i]->color.a);
+        }
+        packet2_utils_vu_close_unpack(packet2);
+        if (i != t_count - 1)
+            packet2_utils_vu_add_start_program(packet2, 0);
+
+        if (switchCounter++ >= 32)
+        {
+            switchCounter = 0;
+            if (i == t_count - 1) // is last
+            {
+                packet2_utils_vu_open_unpack(packet2, VU1_PARAMS_ADDRESS, true);
+                {
+                    packet2_add_u32(packet2, true);              // Draw wait finish?
+                    packet2_add_u32(packet2, lastVertCount);     // Vertex count
+                    packet2_add_u32(packet2, lastVertCount / 3); // Triangles count
+                    packet2_add_u32(packet2, 0);                 // Free
+                }
+                packet2_utils_vu_close_unpack(packet2);
+                packet2_utils_vu_add_start_program(packet2, 0);
+            }
+            packet2_utils_vu_add_end_tag(packet2);
+            dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+            dma_channel_send_packet2(packet2, DMA_CHANNEL_VIF1, 1);
+            packet2_reset(packet2, false);
+        }
+    }
+    if (switchCounter != 0)
+    {
+        packet2_utils_vu_open_unpack(packet2, VU1_PARAMS_ADDRESS, true);
+        {
+            packet2_add_u32(packet2, true);              // Draw wait finish?
+            packet2_add_u32(packet2, lastVertCount);     // Vertex count
+            packet2_add_u32(packet2, lastVertCount / 3); // Triangles count
+            packet2_add_u32(packet2, 0);                 // Free
+        }
+        packet2_utils_vu_close_unpack(packet2);
+        packet2_utils_vu_add_start_program(packet2, 0);
+        packet2_utils_vu_add_end_tag(packet2);
+        dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+        dma_channel_send_packet2(packet2, DMA_CHANNEL_VIF1, 1);
+    }
+    packet2_free(packet2);
 }
