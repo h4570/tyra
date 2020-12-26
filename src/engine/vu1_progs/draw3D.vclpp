@@ -39,19 +39,24 @@
 --enter
 --endenter
 
+;///////////// LOAD STATIC DATA /////////////
+lq      gif_draw_finish_tag, 0(vi00) ; GIF tag - wait
+lq      gif_set_tag,         1(vi00) ; GIF tag - set
+;////////////////////////////////////////////
+
 xtop    double_buffer
 
 ;//////// LOAD CURRENT BUFFER DATA //////////
 MatrixLoad{ matrix, 0, double_buffer } 
-ilw.z   triangles_count,    4(double_buffer) ; Triangles count
+ilw.x   do_draw_finish,     4(double_buffer) ; Add draw finish tag? (sync)
 ilw.y   vertex_count,       4(double_buffer) ; Vertex count
-lq      gif_set_tag,        5(double_buffer) ; GIF tag - set
-lq      tex_gif_tag_1,      6(double_buffer) ; GIF tag - texture LOD
-lq      tex_gif_tag_2,      7(double_buffer) ; GIF tag - texture buffer & CLUT
-lq      prim_tag,           8(double_buffer) ; GIF tag - tell GS how many data we will send
-lq      rgba,               9(double_buffer) ; Mesh RGBA
+ilw.z   triangles_count,    4(double_buffer) ; Triangles count
+lq      tex_gif_tag_1,      5(double_buffer) ; GIF tag - texture LOD
+lq      tex_gif_tag_2,      6(double_buffer) ; GIF tag - texture buffer & CLUT
+lq      prim_tag,           7(double_buffer) ; GIF tag - tell GS how many data we will send
+lq      rgba,               8(double_buffer) ; Mesh RGBA
 
-iaddiu  vertex_data,        double_buffer,  10           ; pointer to vertex data
+iaddiu  vertex_data,        double_buffer,  9            ; pointer to vertex data
 iadd    stq_data,           vertex_data,    vertex_count ; pointer to stq
 iadd    kick_address,       stq_data,       vertex_count ; pointer for XGKICK
 iadd    dest_address,       stq_data,       vertex_count ; helper pointer for data inserting
@@ -65,6 +70,10 @@ sqi gif_set_tag,    (dest_address++) ;
 sqi tex_gif_tag_1,  (dest_address++) ; texture LOD tag
 sqi gif_set_tag,    (dest_address++) ;
 sqi tex_gif_tag_2,  (dest_address++) ; texture buffer & CLUT tag
+iblez   do_draw_finish, kick
+sqi     gif_set_tag,         (dest_address++) ;
+sqi     gif_draw_finish_tag, (dest_address++) ; do draw_finish is needed
+kick:
 sqi prim_tag,       (dest_address++) ; prim + tell gs how many data will be
 ;////////////////////////////////////////////
 
@@ -134,6 +143,7 @@ triangle_loop: --LoopCS 1,3
 ;//////////////////////////////////////////// 
 
 --barrier
+
 
 xgkick kick_address ; dispatch to the GS rasterizer.
 
