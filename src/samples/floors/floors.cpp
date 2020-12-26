@@ -60,8 +60,13 @@ void Floors::onUpdate()
     player->update(engine->pad, camera, *floorManager, *enemy);
     engine->renderer->draw(player->mesh);
     engine->renderer->draw(enemy->getMeshes(), enemy->getMeshesCount());
-    for (u16 i = 0; i < FLOORS_COUNT; i++)
-        engine->renderer->draw(floorManager->floors[i].mesh, lightManager.bulbs, lightManager.bulbsCount);
+
+    // You can draw array of meshes in draw() function also. It can be A LOT faster than for looping!
+    // Why? When given mesh is small, is not animated and is not backface culled, vertex data are send once!
+    engine->renderer->draw(floorManager->getMeshes(), FLOORS_COUNT, lightManager.bulbs, lightManager.bulbsCount);
+    // draw() in array mode, sometimes will force you to do synchronization between EE <-> VU1 <-> GS via:
+    // renderer->clearAndWaitForRender(); or renderer->waitForRender();
+
     ui->render(engine->renderer); // 2D rendering ist LAST step, because layers gonna play there.
 }
 

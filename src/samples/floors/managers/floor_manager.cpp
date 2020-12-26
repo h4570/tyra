@@ -22,6 +22,7 @@
  */
 FloorManager::FloorManager(int t_floorAmount, TextureRepository *t_texRepo)
 {
+    meshes = new Mesh *[t_floorAmount];
     texRepo = t_texRepo;
     floorAmount = t_floorAmount;
     spirals = new Point[t_floorAmount];
@@ -85,12 +86,15 @@ void FloorManager::initFloors()
     floors[0].mesh.loadObj("meshes/floor/", "floor", 3.0F, false);
     floors[0].mesh.shouldBeFrustumCulled = true;
     floors[0].mesh.shouldBeLighted = true;
+    meshes[0] = &floors[0].mesh;
     texRepo->addByMesh("meshes/floor/", floors[0].mesh, BMP);
     for (u16 i = 1; i < floorAmount; i++)
     {
+        floors[i].mesh.shouldBeFrustumCulled = true;
         floors[i].init(floors[0].mesh, spirals[i], i);
         texRepo->getByMesh(floors[0].mesh.getId(), floors[0].mesh.getMaterial(0).getId())
             ->addLink(floors[i].mesh.getId(), floors[i].mesh.getMaterial(0).getId());
+        meshes[i] = &floors[i].mesh;
     }
     PRINT_LOG("Floors initialized!");
 }
