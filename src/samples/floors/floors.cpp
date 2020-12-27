@@ -47,7 +47,7 @@ void Floors::onInit()
     engine->audio.addSongListener(this);
     engine->audio.loadSong("sounds/mafikizolo-loot.wav");
     engine->audio.playSong();
-    engine->audio.setSongVolume(1);
+    engine->audio.setSongVolume(80);
 }
 
 void Floors::onUpdate()
