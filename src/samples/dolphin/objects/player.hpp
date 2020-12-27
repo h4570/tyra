@@ -25,7 +25,6 @@ public:
     float gravity, velocity, lift;
     Mesh mesh;
     Player();
-    ~Player();
     void init(Engine *t_engine);
     void update(Pad &t_pad);
     const u8 &isJumping() { return bIsJumping; }

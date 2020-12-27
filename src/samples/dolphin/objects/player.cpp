@@ -28,10 +28,6 @@ Player::Player()
     lifes = 3;
 }
 
-Player::~Player()
-{
-}
-
 void Player::init(Engine *t_engine)
 {
     pEngine = t_engine;
@@ -63,8 +59,7 @@ void Player::update(Pad &t_pad)
 
     if (t_pad.isCrossClicked && mesh.getCurrentAnimationFrame() <= 14 && WATER_LEVEL - 15 < mesh.position.y)
     {
-        printf("Cross\n");
-        mesh.setAnimSpeed(0.8F);
+        mesh.setAnimSpeed(1.0F);
         mesh.playAnimation(14, 58, 0);
     }
 
@@ -72,19 +67,10 @@ void Player::update(Pad &t_pad)
         bIsJumping = true;
     else
         bIsJumping = false;
-    /*
-    if (lift < 0)
-        mesh.rotation.y = 1;
-    else if (lift > 0)
-        mesh.rotation.y = -1;
-    else
-        mesh.rotation.y = 0;
-        */
 
     if (velocity > 0 && mesh.getCurrentAnimationFrame() == 0)
     {
         mesh.setAnimSpeed(0.05F);
-        printf("Swim animation\n");
         mesh.playAnimation(1, 14, 0);
     }
     if (mesh.getCurrentAnimationFrame() == 42)
@@ -101,7 +87,7 @@ void Player::update(Pad &t_pad)
         bIsImpactingWater = false;
     }
 
-    velocity *= 60.0F / Dolphin::engineFPS; //Moving by deltatime of last frame.
+    velocity *= 60.0F / Dolphin::engineFPS; // Moving by deltatime of last frame.
     mesh.position.z +=
         Math::cos(mesh.rotation.z) * velocity * (bIsJumping + 1);
     mesh.position.x +=

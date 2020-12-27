@@ -24,7 +24,6 @@ public:
     void explode() { bExploding = true; }
     void update();
     Mine();
-    ~Mine();
     const u8 &getExplosionTicks() { return explosionTicks; }
 
 private:
