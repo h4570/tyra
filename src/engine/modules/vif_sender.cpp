@@ -157,10 +157,15 @@ void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_ver
 
 void VifSender::drawTheSameWithOtherMatrices(const RenderData &t_renderData, Mesh **t_meshes, const u32 &t_skip, const u32 &t_count)
 {
+    // Standard double buffering (packets)
+    packet2_t *packet1 = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
     packet2_t *packet2 = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+    packet2_t *currMPacket = packet1;
+    u8 currPacketIndex = 1;
+
+    // We are sending 32 matrices max per one VU1 send
     u8 switchCounter = 0;
-    u32 i;
-    for (i = t_skip; i < t_count; i++)
+    for (u32 i = t_skip; i < t_count; i++)
     {
         model.identity();
         model.rotate(t_meshes[i]->rotation);
@@ -171,57 +176,69 @@ void VifSender::drawTheSameWithOtherMatrices(const RenderData &t_renderData, Mes
         modelViewProj = *t_renderData.view * modelViewProj;
         modelViewProj = *t_renderData.projection * modelViewProj;
 
-        packet2_utils_vu_open_unpack(packet2, 0, true);
+        packet2_utils_vu_open_unpack(currMPacket, 0, true);
         {
-            packet2_add_data(packet2, modelViewProj.data, 4);
+            packet2_add_data(currMPacket, modelViewProj.data, 4);
         }
-        packet2_utils_vu_close_unpack(packet2);
-        packet2_utils_vu_open_unpack(packet2, VU1_RGBA_ADDRESS, true);
+        packet2_utils_vu_close_unpack(currMPacket);
+        packet2_utils_vu_open_unpack(currMPacket, VU1_RGBA_ADDRESS, true);
         {
-            packet2_add_u32(packet2, t_meshes[i]->color.r);
-            packet2_add_u32(packet2, t_meshes[i]->color.g);
-            packet2_add_u32(packet2, t_meshes[i]->color.b);
-            packet2_add_u32(packet2, t_meshes[i]->color.a);
+            packet2_add_u32(currMPacket, t_meshes[i]->color.r);
+            packet2_add_u32(currMPacket, t_meshes[i]->color.g);
+            packet2_add_u32(currMPacket, t_meshes[i]->color.b);
+            packet2_add_u32(currMPacket, t_meshes[i]->color.a);
         }
-        packet2_utils_vu_close_unpack(packet2);
-        if (i != t_count - 1)
-            packet2_utils_vu_add_start_program(packet2, 0);
+        packet2_utils_vu_close_unpack(currMPacket);
+
+        if (i != t_count - 1) // if it is last, we must also add draw wait finish interrupt.
+            packet2_utils_vu_add_start_program(currMPacket, 0);
 
         if (switchCounter++ >= 32)
         {
             switchCounter = 0;
             if (i == t_count - 1) // is last
             {
-                packet2_utils_vu_open_unpack(packet2, VU1_PARAMS_ADDRESS, true);
+                packet2_utils_vu_open_unpack(currMPacket, VU1_PARAMS_ADDRESS, true);
                 {
-                    packet2_add_u32(packet2, true);              // Draw wait finish?
-                    packet2_add_u32(packet2, lastVertCount);     // Vertex count
-                    packet2_add_u32(packet2, lastVertCount / 3); // Triangles count
-                    packet2_add_u32(packet2, 0);                 // Free
+                    packet2_add_u32(currMPacket, true);              // Draw wait finish?
+                    packet2_add_u32(currMPacket, lastVertCount);     // Vertex count
+                    packet2_add_u32(currMPacket, lastVertCount / 3); // Triangles count
+                    packet2_add_u32(currMPacket, 0);                 // Free
                 }
-                packet2_utils_vu_close_unpack(packet2);
-                packet2_utils_vu_add_start_program(packet2, 0);
+                packet2_utils_vu_close_unpack(currMPacket);
+                packet2_utils_vu_add_start_program(currMPacket, 0); // and start program
             }
-            packet2_utils_vu_add_end_tag(packet2);
+            packet2_utils_vu_add_end_tag(currMPacket);
             dma_channel_wait(DMA_CHANNEL_VIF1, 0);
-            dma_channel_send_packet2(packet2, DMA_CHANNEL_VIF1, 1);
-            packet2_reset(packet2, false);
+            dma_channel_send_packet2(currMPacket, DMA_CHANNEL_VIF1, 1);
+            if (currPacketIndex == 1) // Switch double buffer (packets)
+            {
+                currPacketIndex = 2;
+                currMPacket = packet2;
+            }
+            else
+            {
+                currPacketIndex = 1;
+                currMPacket = packet1;
+            }
+            packet2_reset(currMPacket, false);
         }
     }
-    if (switchCounter != 0)
+    if (switchCounter != 0) // if there are any not sended matrices
     {
-        packet2_utils_vu_open_unpack(packet2, VU1_PARAMS_ADDRESS, true);
+        packet2_utils_vu_open_unpack(currMPacket, VU1_PARAMS_ADDRESS, true);
         {
-            packet2_add_u32(packet2, true);              // Draw wait finish?
-            packet2_add_u32(packet2, lastVertCount);     // Vertex count
-            packet2_add_u32(packet2, lastVertCount / 3); // Triangles count
-            packet2_add_u32(packet2, 0);                 // Free
+            packet2_add_u32(currMPacket, true);              // Draw wait finish?
+            packet2_add_u32(currMPacket, lastVertCount);     // Vertex count
+            packet2_add_u32(currMPacket, lastVertCount / 3); // Triangles count
+            packet2_add_u32(currMPacket, 0);                 // Free
         }
-        packet2_utils_vu_close_unpack(packet2);
-        packet2_utils_vu_add_start_program(packet2, 0);
-        packet2_utils_vu_add_end_tag(packet2);
+        packet2_utils_vu_close_unpack(currMPacket);
+        packet2_utils_vu_add_start_program(currMPacket, 0);
+        packet2_utils_vu_add_end_tag(currMPacket);
         dma_channel_wait(DMA_CHANNEL_VIF1, 0);
-        dma_channel_send_packet2(packet2, DMA_CHANNEL_VIF1, 1);
+        dma_channel_send_packet2(currMPacket, DMA_CHANNEL_VIF1, 1);
     }
+    packet2_free(packet1);
     packet2_free(packet2);
 }

@@ -40,12 +40,26 @@ public:
 
     void enableVSync() { isVSyncEnabled = true; }
     void disableVSync() { isVSyncEnabled = false; }
-    void clearAndWaitForRender()
+
+    /** Reset draw wait flag. */
+    inline void resetWaitFlag()
     {
-        *GS_REG_CSR |= 2; // Reset wait flag
-        draw_wait_finish();
+        *GS_REG_CSR |= 2;
     }
-    void waitForRender() { draw_wait_finish(); }
+
+    /** Checks if draw wait flag is set */
+    inline u8 isWaitFlagSet() const
+    {
+        return *GS_REG_CSR & 2;
+    }
+
+    /** Waits for draw wait flag and reset it. */
+    inline void waitForRender()
+    {
+        while (!isWaitFlagSet())
+            ;
+        resetWaitFlag();
+    }
 
     /** 2D draw. */
     void draw(Sprite &t_sprite);
