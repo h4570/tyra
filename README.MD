@@ -14,7 +14,9 @@
   <p align="center">
     Open source game engine for PlayStation 2™
     <br />
-    <a href="https://streamable.com/k5jr0w"><strong>View Demo »</strong></a>
+    <a href="https://github.com/h4570/tyra/tree/master/src/samples/dolphin"><strong>Dolphin sample »</strong></a>
+    &nbsp;
+    <a href="https://github.com/h4570/tyra/tree/master/src/samples/floors"><strong>Floors sample »</strong></a>
     <br />
     <br />
     <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
@@ -27,49 +29,38 @@
 
 * [About the Project](#about-the-project) 
   * [Samples](#samples) 
-  * [Branches](#branches) 
   * [About project](#about-project) 
-  * [Acronyms](#acronyms) 
   * [Tyra features](#tyra-features) 
-  * [Built With](#built-with) 
+  * [Branches](#branches) 
 * [Getting Started](#getting-started) 
-  * [Prerequisites](#prerequisites) 
   * [Installation](#installation) 
+  * [Prerequisites](#prerequisites) 
 * [Roadmap](#roadmap) 
+* [Tyra team](#tyra-team)
 * [Contributing](#contributing) 
 * [License](#license) 
-* [Tyra team](#tyra-team) 
+* [Built With](#built-with) 
+* [Acronyms](#acronyms) 
 * [Thanks](#thanks) 
 
 ## About The Project  
 
 <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.29.1/tyra.gif" alt="sample" width="600" height="auto">  
 
-### Contributors wanted
-I will be grateful for any help [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
+### Contributors wanted [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
+We will be grateful for any help. If you dont know PS2.. don't worry, we are open to explain how things work.
 
 ### Samples
 * [Dolphin](https://github.com/h4570/tyra/tree/master/src/samples/dolphin) 
 * [Floors](https://github.com/h4570/tyra/tree/master/src/samples/floors) 
-
-### Branches
-* Master - monthly releases - tested on PS2 & PCSX2.
-* Develop - daily builds - can be unstable.
   
 ### About project
-Goal of Tyra project is to provide simple API for PS2 game creation, so you can just run PS2 emulator, grab .obj file, and put it into live in a seconds. Project is on early stage, so a lot of stuff is changing from release to release.  
+Goal of Tyra project is to provide simple API for PS2 game creation, so you can just run PS2 emulator, grab .obj file, and put it into live in a seconds. Project is on alpha stage, so keep in mind that there are many things to be done and to fix.
  
 YouTube tutorials soon!  
   
 **Why Tyra is needed?** Raw PS2 development can be a big challenge. PS2 it's pretty low-level and there are a lot of stuff that you must do from scratch.  
-Tyra takes care for you, and rendering, coprocessors communication and many more low-level stuff is already done.
-
-### Acronyms 
-* EE (Emotion Engine) - whole set of processors and subsystems that make up the PlayStation 2 
-* GS (Graphic synthesizer) - configurable rasterizer and texture mapper. Has only 2MB~ memory for textures, but for the opposite have very high transfer rate, so you can switch textures in the blink 
-* VU0 - programmable (ASM) vector processor that is accessed by inline assembly code injected into C program.  
-* VU1 - programmable (ASM) vector processor, which is similar to vertex shader. Accessed via DMA.  
-* IOP - I/O processor which enables access to peripheral devices, such the game controller  
+Tyra takes care for you, and rendering, coprocessors communication, synchronization and many more low-level stuff is already done.
 
 ### Tyra features
 * 3D support - VU1 "Path 1 rendering"  
@@ -83,13 +74,13 @@ Tyra takes care for you, and rendering, coprocessors communication and many more
 * Audio support - .wav and .adpcm 
 * Pad support 
 
-### Built With  
-
-* [PS2SDK](https://github.com/ps2dev/ps2sdk)  
+### Branches
+* Master - monthly releases - tested on PS2 & PCSX2.
+* Develop - daily builds - can be unstable.
 
 ## Getting Started  
 
-[![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
+### Installation [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
 In our Discord channel, there is detailed tutorial which will help you with setting up the all environment - starting from installing dependencies and ending on emulator setup or intellisense.  
 
 ### Prerequisites 
@@ -98,19 +89,6 @@ This is an example of how to list things you need to use the software.
 * PS2 DEV environment - [PS2DEV](https://github.com/ps2dev/ps2dev)  
 * At least #674b6f4 PS2SDK (01.12.2020) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
 * PS2 Emulator. For example [PCSX2](https://pcsx2.net/) 
-
-### Installation  
-
-1. Clone the repo 
-```sh
-git clone https://github.com/h4570/tyra.git
-```
-2. Get into src folder and compile it!  
-```sh
-cd src/samples/floors
-make rebuild-engine
-make
-```  
 
 ## Extra info 
 * BMP loader needs some polishing so be sure that you exporting BMP with 24bit: RGB888 and without information about colors. 
@@ -122,6 +100,12 @@ make
 ### Roadmap for next master release:  
 [January 2021 Roadmap](https://github.com/h4570/tyra/projects/4)  
 
+## Tyra team  
+
+Sandro Sobczyński - sandro.sobczynski@gmail.com  
+[![LinkedIn][linkedin-shield]](https://linkedin.com/in/sandro-sobczyński-28820b15a)  
+Michał Mostowik - mostek3pl@gmail.com  
+[![LinkedIn][linkedin-shield]](https://www.linkedin.com/in/notfoxar)  
 
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
 
@@ -139,12 +123,16 @@ Contributions are what make the open source community such an amazing place to b
 
 Distributed under the Apache License 2.0 License. See `LICENSE` for more information. 
 
-## Tyra team  
+## Built With  
 
-Sandro Sobczyński - sandro.sobczynski@gmail.com  
-[![LinkedIn][linkedin-shield]](https://linkedin.com/in/sandro-sobczyński-28820b15a)  
-Michał Mostowik - mostek3pl@gmail.com  
-[![LinkedIn][linkedin-shield]](https://www.linkedin.com/in/notfoxar)  
+* [PS2SDK](https://github.com/ps2dev/ps2sdk)  
+
+### Acronyms 
+* EE (Emotion Engine) - whole set of processors and subsystems that make up the PlayStation 2 
+* GS (Graphic synthesizer) - configurable rasterizer and texture mapper. Has only 2MB~ memory for textures, but for the opposite have very high transfer rate, so you can switch textures in the blink 
+* VU0 - programmable (ASM) vector processor that is accessed by inline assembly code injected into C program.  
+* VU1 - programmable (ASM) vector processor, which is similar to vertex shader. Accessed via DMA.  
+* IOP - I/O processor which enables access to peripheral devices, such the game controller  
 
 ## Thanks  
 
