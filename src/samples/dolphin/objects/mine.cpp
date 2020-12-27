@@ -20,10 +20,6 @@ Mine::Mine()
     explosionTicks = 0;
 }
 
-Mine::~Mine()
-{
-}
-
 void Mine::update()
 {
     if (bExploding && explosionTicks < MINE_EXPLOSION_TICKS)

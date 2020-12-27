@@ -37,8 +37,15 @@ public:
     static float engineFPS;
 
 private:
-    /*DO NOT TOUCH ORDER OF DECLARATION!
-    GCC BUG CAUSES RENDERING TO FAIL IN ANY OTHER ORDER OF DECLARATION!*/
+    void calcSpiral(int X, int Y);
+    static const u16 WATER_TILES_COUNT = 1024;
+
+    Point spirals[WATER_TILES_COUNT];
+    Mesh **waterDrawList;
+    /** 
+     * DO NOT TOUCH ORDER OF DECLARATION!
+     * GCC BUG CAUSES RENDERING TO FAIL IN ANY OTHER ORDER OF DECLARATION!
+     */
     Mesh seabed;
     Mesh island;
     Mesh skybox;
@@ -49,7 +56,7 @@ private:
     Collectible *oysters;
     TextureRepository *texRepo;
     Sprite waterOverlay;
-    Mesh water;
+    Mesh water[WATER_TILES_COUNT];
     Mesh waterbox;
     Sprite lifeSprites[3];
     Sprite gameOver;

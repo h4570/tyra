@@ -25,10 +25,6 @@ Collectible::Collectible()
     bDisappearing = false;
 }
 
-Collectible::~Collectible()
-{
-}
-
 void Collectible::disappear()
 {
     bDisappearing = true;
