@@ -287,7 +287,12 @@ void Renderer::draw(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bul
         draw(*meshesInFrustum[0], t_bulbs, t_bulbsCount);
         draw(*meshesInFrustum[1], t_bulbs, t_bulbsCount);
         vifSender->enableWait();
+        resetWaitFlag();
         vifSender->drawTheSameWithOtherMatrices(renderData, meshesInFrustum, 2, addedMeshes);
+        if (isWaitFlagSet())
+            resetWaitFlag();
+        else
+            waitForRender();
         delete[] meshesInFrustum;
     }
     else
