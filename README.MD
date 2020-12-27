@@ -9,7 +9,7 @@
     <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/github-splash.png" alt="Logo" width="100%" height="auto">
   </a>
 
-  <h3 align="center">Tyra - alpha 1.1.0</h3>
+  <h3 align="center">Tyra - alpha 1.29.1</h3>
 
   <p align="center">
     Open source game engine for PlayStation 2™
@@ -43,7 +43,7 @@
 
 ## About The Project  
 
-<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.1.0/tyra.gif" alt="sample" width="600" height="auto">  
+<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.29.1/tyra.gif" alt="sample" width="600" height="auto">  
 
 ### Contributors wanted
 I will be grateful for any help [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
@@ -53,8 +53,8 @@ I will be grateful for any help [![Discord](https://img.shields.io/badge/discord
 * [Floors](https://github.com/h4570/tyra/tree/master/src/samples/floors) 
 
 ### Branches
-* Master - monthly releases
-* Develop - daily builds. **Please use this at this moment**
+* Master - monthly releases - tested on PS2 & PCSX2.
+* Develop - daily builds - can be unstable.
   
 ### About project
 Goal of Tyra project is to provide simple API for PS2 game creation, so you can just run PS2 emulator, grab .obj file, and put it into live in a seconds. Project is on early stage, so a lot of stuff is changing from release to release.  
@@ -73,8 +73,9 @@ Tyra takes care for you, and rendering, coprocessors communication and many more
 
 ### Tyra features
 * 3D support - VU1 "Path 1 rendering"  
+* 2D support - PNG & BMP
 * Frustum culling, backface culling  
-* OpenGL adaptions: Frustum projection, lookAt camera  
+* OpenGL adaptions: Perspective projection, lookAt camera  
 * Texture support - .bmp and png  
 * Mesh loaders: ".obj", ".dff" (RenderWare, GTA:SA) and ".md2" (Quake II) 
 * Threading support 
@@ -112,14 +113,14 @@ make
 ```  
 
 ## Extra info 
-* BMP loader needs some polishing soe be sure that you exporting BMP with 24bit: RGB888 and without information about colors. 
+* BMP loader needs some polishing so be sure that you exporting BMP with 24bit: RGB888 and without information about colors. 
 * If you want to run .elf in PCSX2, be sure that you have version >=1.6 and **Host access** enabled in PCSX2 configuration file.  
 * If you want to use your own .obj file, please check "triangulate faces" in blender. PS2 is supporting only triangle primitive type.  
 
 ## Roadmap  
 
 ### Roadmap for next master release:  
-[https://github.com/h4570/tyra/projects/1](https://github.com/h4570/tyra/projects/1)  
+[January 2021 Roadmap](https://github.com/h4570/tyra/projects/4)  
 
 
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
