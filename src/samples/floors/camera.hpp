@@ -35,7 +35,6 @@ public:
 
 protected:
     Vector3 *getPosition() { return &position; };
-    Vector3 *getUp() { return &up; };
     ScreenSettings screen;
 };
 

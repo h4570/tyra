@@ -12,12 +12,15 @@
 #define _TYRA_UTILS_
 
 #include <tamtypes.h>
+#include <models/mesh.hpp>
+#include <models/math/vector3.hpp>
 
 class Utils
 {
 
 public:
     static float expoEaseInOut(float t, float b, float c, float d);
+    static void getMinMax(const Mesh &t_mesh, Vector3 &t_min, Vector3 &t_max);
 };
 
 #endif

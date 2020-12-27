@@ -347,7 +347,7 @@ u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
 {
     Vector3 boxCalcTemp;
     u8 boxResult = 1, boxIn = 0, boxOut = 0;
-    Vector3 *currentBoundingBox = getCurrentBoundingBox();
+    const Vector3 *currentBoundingBox = getCurrentBoundingBoxVertices();
     for (int i = 0; i < 6; i++)
     {
         boxOut = 0;

@@ -23,7 +23,13 @@ const float FLOOR_ANIMATION_Y_MAX = 10.0F;
 // Constructors/Destructors
 // ----
 
-Floor::Floor() {}
+Floor::Floor()
+{
+    animTimer = 0;
+    animDirection = 0;
+    initOffset = 0;
+    isByAudioTriggered = false;
+}
 
 Floor::~Floor() {}
 
@@ -31,11 +37,6 @@ Floor::~Floor() {}
 // Methods
 // ----
 
-/** Init floor position and animation timer position
- * @param spec pointer to 3D object specification
- * @param spiral Spiral position
- * @param initOffset Number of floor (index)
- */
 void Floor::init(const Mesh &mother, const Point &spiral, const u8 &initOffset)
 {
     this->mesh.position.set(0.00F, -10.00F, 0.00F);
@@ -44,7 +45,6 @@ void Floor::init(const Mesh &mother, const Point &spiral, const u8 &initOffset)
     this->animTimer = rand() % FLOOR_ANIMATION_LENGTH;
     this->mesh.shouldBeLighted = true;
     this->mesh.shouldBeFrustumCulled = true;
-    this->animDirection = 0;
     this->mesh.position.x = spiral.x * 80.0F;
     this->mesh.position.z = spiral.y * 80.0F;
 }

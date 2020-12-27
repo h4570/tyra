@@ -23,10 +23,14 @@ public:
     Light();
     ~Light();
 
-    static u16 getLightsCount(u32 t_bulbsCount);
-    static void calculateLight(VECTOR *t_lightDirections, VECTOR *t_lightColors, int *t_lightTypes, LightBulb *t_bulbs, u32 t_bulbsCount, Vector3 t_objPosition);
+    u16 getLightsCount(u32 t_bulbsCount);
+
+    /** Values from 0.0000F to 1.0000F */
+    void setAmbientLight(const Vector3 &t_rgb);
+    void calculateLight(VECTOR *t_lightDirections, VECTOR *t_lightColors, int *t_lightTypes, LightBulb *t_bulbs, u32 t_lightsCount, Vector3 t_objPosition);
 
 private:
+    Vector3 ambientLight;
 };
 
 #endif

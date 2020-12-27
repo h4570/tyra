@@ -32,7 +32,7 @@ public:
     void init(Game *t_game, u32 t_gifPacketSize);
     void setDefaultScreen();
     Renderer *renderer;
-    FileService fileService;
+    // FileService fileService;
     Audio audio;
     ScreenSettings screen;
     Pad pad;

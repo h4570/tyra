@@ -41,13 +41,13 @@ Engine::~Engine() {}
 
 void Engine::setDefaultScreen()
 {
-    screen.projectionScale = 4096.0F;
     screen.nearPlaneDist = 2.0F;
     screen.farPlaneDist = 2000.0F;
     screen.fov = 60.0F;
-    screen.aspectRatio = 4.0F / 3.0F;
     screen.width = 640.0F;
     screen.height = 480.0F;
+    screen.aspectRatio = screen.width / screen.height;
+    screen.projectionScale = 4096.0F; // PS2 have 4k drawing area
 }
 
 void Engine::init(Game *t_game, u32 t_gifPacketSize)
@@ -77,8 +77,9 @@ void Engine::firePS2()
 {
     SifInitRpc(0);
     srand(time(NULL));
-    fileService.startThread();
-    audio.startThread(&fileService);
+    // fileService.startThread();
+    // audio.startThread(&fileService);
+    audio.startThread(NULL);
     isInitialized = 0;
     mainThreadId = GetThreadId();
 }
@@ -94,7 +95,7 @@ void Engine::gameLoop()
             fps = timer.getFPS();
             fpsDelayer = 0;
         }
-        timer.primeTimer();
+        timer.prime();
         renderer->endFrame(fps);
         /** -6~ FPS */
         SetAlarm(150, &Engine::wakeup, &mainThreadId);

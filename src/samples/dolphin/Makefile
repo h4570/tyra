@@ -1,11 +1,13 @@
-EE_BIN = ari.elf
+EE_BIN = dolphin.elf
 
 TYRA_DIR = ./../../engine
 
 EE_OBJS =											\
 	camera.o										\
 	objects/player.o								\
-	ari.o											\
+	objects/collectible.o							\
+	objects/mine.o									\
+	dolphin.o										\
 	main.o
 
 EE_LIBS = -ltyra 
