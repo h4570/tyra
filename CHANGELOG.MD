@@ -96,6 +96,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Makefile
 - Primitive floors sample
 
-[1.29.1]: https://github.com/h4570/tyra/compare/1.1.0...1.29.1
+[1.29.1]: https://github.com/h4570/tyra/compare/1.1.0...v1.29.1-alpha
 [1.1.0]: https://github.com/h4570/tyra/compare/1.0.0...1.1.0
 [1.0.0]: https://github.com/h4570/tyra/compare/1.0.0
