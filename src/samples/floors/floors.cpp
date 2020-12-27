@@ -38,16 +38,16 @@ Floors::~Floors()
 void Floors::onInit()
 {
     texRepo = engine->renderer->getTextureRepository();
+    enemy = new Enemy(texRepo);
+    ui = new Ui(texRepo);
+    floorManager = new FloorManager(FLOORS_COUNT, texRepo); // we must init FloorManager before starting audio!
+    player = new Player(&engine->audio, texRepo);
     setBgColorAndAmbientColor();
     engine->renderer->setCameraDefinitions(&camera.view, &camera.unitCirclePosition, camera.planes);
-    enemy = new Enemy(texRepo); // I know that here is bug with PNG loading
-    ui = new Ui(texRepo);       // Will be resolved in December version
     engine->audio.addSongListener(this);
     engine->audio.loadSong("sounds/mafikizolo-loot.wav");
     engine->audio.playSong();
-    engine->audio.setSongVolume(80);
-    floorManager = new FloorManager(FLOORS_COUNT, texRepo);
-    player = new Player(&engine->audio, texRepo);
+    engine->audio.setSongVolume(1);
 }
 
 void Floors::onUpdate()

@@ -30,10 +30,9 @@ FloorManager::FloorManager(int t_floorAmount, TextureRepository *t_texRepo)
     calcSpiral(floorSpiralMaxOffset, floorSpiralMaxOffset);
     initFloors();
     trick = 0.0F;
-    trickMode = 0;
     isTimeForChangeTriggerColor = true;
     isTimeForChangeDefaultColor = true;
-    audioOffset = audioMode = audioTick = 0;
+    audioOffset = audioMode = audioTick = trickMode = 0;
 }
 
 FloorManager::~FloorManager()
