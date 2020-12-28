@@ -330,7 +330,7 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         Texture *tex = textureRepo.getBySpriteOrMesh(material->getId());
         changeTexture(tex);
         vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, rotatedCamera);
-        vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer, &material->color);
+        vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer, &material->color, !material->areSTsPresent());
     }
 }
 

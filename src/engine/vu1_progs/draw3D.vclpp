@@ -23,6 +23,7 @@
 ; TODO
 ; - Add dynamic lighting (feature)
 ; - Add --cont + MSCNT instead of alltime MSCAL
+; - Split this program into two (RBA/STQ), so we can get better performance
 
 #include "/repos/tyra/src/engine/vu1_progs/geometry.inc"
 #include "/repos/tyra/src/engine/vu1_progs/matrix.inc"
@@ -51,6 +52,7 @@ MatrixLoad{ matrix, 0, double_buffer }
 ilw.x   do_draw_finish,     4(double_buffer) ; Add draw finish tag? (sync)
 ilw.y   vertex_count,       4(double_buffer) ; Vertex count
 ilw.z   triangles_count,    4(double_buffer) ; Triangles count
+ilw.w   rgba_only,          4(double_buffer) ; RGBA (1) or STQ+RGBA (0)
 lq      tex_gif_tag_1,      5(double_buffer) ; GIF tag - texture LOD
 lq      tex_gif_tag_2,      6(double_buffer) ; GIF tag - texture buffer & CLUT
 lq      prim_tag,           7(double_buffer) ; GIF tag - tell GS how many data we will send
@@ -70,10 +72,10 @@ sqi gif_set_tag,    (dest_address++) ;
 sqi tex_gif_tag_1,  (dest_address++) ; texture LOD tag
 sqi gif_set_tag,    (dest_address++) ;
 sqi tex_gif_tag_2,  (dest_address++) ; texture buffer & CLUT tag
-iblez   do_draw_finish, kick
+iblez   do_draw_finish, prim_tag_l
 sqi     gif_set_tag,         (dest_address++) ;
 sqi     gif_draw_finish_tag, (dest_address++) ; do draw_finish is needed
-kick:
+prim_tag_l:
 sqi prim_tag,       (dest_address++) ; prim + tell gs how many data will be
 ;////////////////////////////////////////////
 
@@ -87,52 +89,87 @@ iaddiu triangle_counter,   vi00, 0 ; Reset counter
 triangle_loop: --LoopCS 1,3
 
     ;//////////////// VERTEX 1 //////////////////
+    vec1:
     VectorLoad{ vertex, vertex_data, 0 }
-    VectorLoad{ stq1, stq_data, 0 }
     MatrixXForm{ xformed_vertex, matrix, vertex }
     VectorClip{ gs_vertex, xformed_vertex }
     VectorPerspectiveDivide{ xformed_vertex }
     VectorAddGSScales{ gs_vertex, xformed_vertex, gs_scale }
-    VectorTexturePerspectiveCorrection{ pers_stq, stq1 }
-    VectorStore{ pers_stq, dest_address, 0 }
-    VectorStore{ rgba, dest_address, 1 }
-    VectorStore{ gs_vertex, dest_address, 2 }
+
+    ibgtz  rgba_only, vec_1_rgba
+
+    vec_1_stq_rgba:
+        VectorLoad{ stq1, stq_data, 0 }
+        VectorTexturePerspectiveCorrection{ pers_stq, stq1 }
+        VectorStore{ pers_stq, dest_address, 0 }
+        VectorStore{ rgba, dest_address, 1 }
+        VectorStore{ gs_vertex, dest_address, 2 }
+        ibeq vi00, vi00, vec2
+
+    vec_1_rgba:
+        VectorStore{ rgba, dest_address, 0 }
+        VectorStore{ gs_vertex, dest_address, 1 }
+
     ;////////////////////////////////////////////
 
     ;//////////////// VERTEX 2 //////////////////
+    vec2:
     VectorLoad{ vertex, vertex_data, 1 }
-    VectorLoad{ stq2, stq_data, 1 }
     MatrixXForm{ xformed_vertex, matrix, vertex }
     VectorClip{ gs_vertex, xformed_vertex }
     VectorPerspectiveDivide{ xformed_vertex }
     VectorAddGSScales{ gs_vertex, xformed_vertex, gs_scale }
-    VectorTexturePerspectiveCorrection{ pers_stq, stq2 }
-    VectorStore{ pers_stq, dest_address, 3 }
-    VectorStore{ rgba, dest_address, 4 }
-    VectorStore{ gs_vertex, dest_address, 5 }
+
+    ibgtz  rgba_only, vec_2_rgba
+
+    vec_2_stq_rgba:
+        VectorLoad{ stq2, stq_data, 1 }
+        VectorTexturePerspectiveCorrection{ pers_stq, stq2 }
+        VectorStore{ pers_stq, dest_address, 3 }
+        VectorStore{ rgba, dest_address, 4 }
+        VectorStore{ gs_vertex, dest_address, 5 }
+        ibeq vi00, vi00, vec3
+
+    vec_2_rgba:
+        VectorStore{ rgba, dest_address, 2 }
+        VectorStore{ gs_vertex, dest_address, 3 }
+
     ;////////////////////////////////////////////
 
     ;//////////////// VERTEX 3 //////////////////
+    vec3:
     VectorLoad{ vertex, vertex_data, 2 }
-    VectorLoad{ stq3, stq_data, 2 }
     MatrixXForm{ xformed_vertex, matrix, vertex }
     VectorClip{ gs_vertex, xformed_vertex }
     VectorPerspectiveDivide{ xformed_vertex }
     VectorAddGSScales{ gs_vertex, xformed_vertex, gs_scale }
-    VectorTexturePerspectiveCorrection{ pers_stq, stq3 }
-    VectorStore{ pers_stq, dest_address, 6 }
-    VectorStore{ rgba, dest_address, 7 }
 
     fcand		vi01, 0x03FFFF
     iaddiu		new_adc_bit, vi01, 0x7FFF
     mfir.w		gs_vertex, new_adc_bit
-    VectorStore{ gs_vertex, dest_address, 8 } 
+
+    ibgtz  rgba_only, vec_3_rgba
+
+    vec_3_stq_rgba:
+        VectorLoad{ stq3, stq_data, 2 }
+        VectorTexturePerspectiveCorrection{ pers_stq, stq3 }
+        VectorStore{ pers_stq, dest_address, 6 }
+        VectorStore{ rgba, dest_address, 7 }
+        VectorStore{ gs_vertex, dest_address, 8 } 
+        iaddiu  dest_address,   dest_address, 9 // Loop control
+        ibeq vi00, vi00, loop_ctrl
+
+    vec_3_rgba:
+        VectorStore{ rgba, dest_address, 4 }
+        VectorStore{ gs_vertex, dest_address, 5 }
+        iaddiu  dest_address,   dest_address, 6 // Loop control
+
     ;////////////////////////////////////////////
 
     ;////////////// LOOP CONTROL ////////////////
+    loop_ctrl:
     iaddiu          vertex_data,     vertex_data,     3                         
     iaddiu          stq_data,        stq_data,        3  
-    iaddiu          dest_address,    dest_address,    9
 
     iaddiu triangle_counter, triangle_counter, 1 // Incrementing this 
     // by other value than 1 is causing HUGE problems, but.. why?
