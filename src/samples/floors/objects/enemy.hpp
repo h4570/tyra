@@ -24,7 +24,7 @@ public:
     Enemy(TextureRepository *t_texRepo);
     ~Enemy();
 
-    inline Mesh *getMeshes() const { return meshes; }
+    inline Mesh **getMeshes() const { return drawMeshes; }
     inline u8 getMeshesCount() const { return 3; }
     inline Vector3 getPosition() const { return position; }
     void setPosition(const Vector3 &t_vec);
@@ -35,6 +35,8 @@ public:
 private:
     /** 0 - head, 1 - body, 2 - weapon */
     Mesh *meshes;
+    /** Only for draw() method. */
+    Mesh **drawMeshes;
     const Floor *currentFloor;
     Vector3 position, currFloorMin, currFloorMax;
     u8 isKilled;

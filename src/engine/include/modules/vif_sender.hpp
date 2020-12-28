@@ -30,17 +30,31 @@ public:
 
     // TODO refactor
     void drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer);
-    void sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation);
+    void calcMatrix(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation);
+    void drawTheSameWithOtherMatrices(const RenderData &t_renderData, Mesh **t_meshes, const u32 &t_skip, const u32 &t_count);
+    void enableWait() { isDrawWaitEnabled = true; }
+    void disableWait() { isDrawWaitEnabled = false; }
 
 private:
+    u32 lastVertCount; // needed for drawTheSameWithOtherMatrices()
+    u8 isDrawWaitEnabled;
     Light *light;
     void uploadMicroProgram();
-    void setDoubleBuffer();
-    void drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer);
+    void setDoubleBufferAddStaticData();
+    void drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *t_textureBuffer, u8 t_addDrawWait);
     packet2_t *packets[2] __attribute__((aligned(64)));
     packet2_t *currPacket;
+    /** 
+     * OpenGL name: Model
+     * Sony name: local world 
+     */
+    Matrix model;
+    /** 
+     * OpenGL name: ModelViewProjection
+     * Sony name: local screen
+     */
+    Matrix modelViewProj;
     u8 context;
-    packet2_t *matricesPacket __attribute__((aligned(64)));
     VECTOR position, rotation;
     u32 vertCount;
 };

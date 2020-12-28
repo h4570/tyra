@@ -5,6 +5,7 @@ EE_CFLAGS := -DHAVE_LIBPNG -DHAVE_ZLIB $(EE_CFLAGS)
 EE_CXXFLAGS := -DHAVE_LIBPNG -DHAVE_ZLIB $(EE_CXXFLAGS)
 EE_DVP = dvp-as
 EE_VCL = vcl
+EE_VCLPP = vclpp
 LIB_NAME = libtyra.a
 
 include $(PS2SDK)/samples/Makefile.pref

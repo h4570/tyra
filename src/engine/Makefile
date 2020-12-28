@@ -6,6 +6,7 @@ EE_OBJS =								\
 	models/math/point.o					\
 	models/math/vector3.o				\
 	models/mesh_frame.o					\
+	models/bounding_box.o				\
 	models/mesh_material.o				\
 	models/mesh.o						\
 	models/sprite.o						\
@@ -34,8 +35,10 @@ all: $(EE_OBJS)
 	ar rcs $(LIB_NAME) $(EE_OBJS)
 	rm -f $(EE_OBJS)
 
-# https://github.com/microsoft/wsl/issues/2468#issuecomment-374904520
-#%.vsm: %.vcl # sudo service binfmt-support start
+#%.vcl: %.vclpp
+#	$(EE_VCLPP) $< $@
+
+#%.vsm: %.vcl
 #	$(EE_VCL) $< >> $@
 
 %.o: %.vsm

@@ -71,8 +71,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
             }
             else if (strcmp(lineHeader, "f") == 0)
             {
-
-                int *x;
+                int *x = NULL;
                 fpos_t start;
                 fgetpos(file, &start);
                 int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", x, x, x, x, x, x, x, x, x);

@@ -130,12 +130,7 @@ void GifSender::addClear(zbuffer_t *t_zBuffer, color_t *t_rgb)
     packet2_chain_close_tag(currentPacket);
 }
 
-/** Adds 3D objects to current packet
- * @param worldView Matrix
- * @param perspective Matrix with .setPerpsective() used [clone of gluPerspective]
- * @param objects3D Array of 3D objects pointers
- * @param amount Amount of 3D objects
- */
+/** Adds meshes to current packet */
 void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
 {
     packet2_chain_open_cnt(currentPacket, 0, 0, 0);
@@ -145,7 +140,7 @@ void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCoun
     xyz = new xyz_t[vertexCount];
     rgbaq = new color_t[vertexCount];
     st = new texel_t[vertexCount];
-    calc3DObject(*t_renderData->perspective, t_mesh, vertexCount, vertices, normals, coordinates, t_renderData, t_bulbs, t_bulbsCount);
+    calc3DObject(*t_renderData->projection, t_mesh, vertexCount, vertices, normals, coordinates, t_renderData, t_bulbs, t_bulbsCount);
     addCurrentCalcs(vertexCount);
     delete[] xyz;
     delete[] rgbaq;
@@ -155,10 +150,7 @@ void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCoun
 }
 
 /** Calculates 3D object data into xyz, rgbq, st
- * After it addCurrentSTQ() can be done
- * @param worldView Matrix
- * @param perspective Matrix with .setPerpsective() used [clone of gluPerspective]
- * @param mesh 3D object
+ * After it addCurrentCalcs() can be done
  */
 void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, RenderData *t_renderData, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
@@ -176,7 +168,7 @@ void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount
         create_local_light(localLight, rotation);
 
     // I cant put perspective from renderData here. ee-gcc bug?
-    create_local_screen(localScreen, localWorld, t_renderData->worldView->data, t_perspective.data);
+    create_local_screen(localScreen, localWorld, t_renderData->view->data, t_perspective.data);
 
     if (SHOULD_BE_LIGHTED)
     {

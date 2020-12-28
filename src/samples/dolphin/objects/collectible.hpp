@@ -21,7 +21,6 @@ public:
     float rotation;
     Mesh mesh;
     Collectible();
-    ~Collectible();
     void update();
     void disappear();
     void setActive(const u8 &b) { bActive = b; }

@@ -3,6 +3,10 @@
 ;-----VCL CODE------------
 ;-------------------------
 ;-------------------------
+; === __LP__ EXPL_draw3D_vcl_triangle_loop__MAIN_LOOP:
+; ===            hDown : optimal=30 clid=0 mlid=2 size=(31) 
+; ===              dUp : optimal=30 clid=0 mlid=2 size=(31) 
+; ===          another : optimal=30 clid=0 mlid=2 size=(31) 
 ; =================================================
 ; flowMon::Emit() vcl 1.4beta7 produced this code:
 		.vu
@@ -11,63 +15,171 @@
 		.global	VU1Draw3D_CodeEnd
 VU1Draw3D_CodeStart:
 __v_draw3D_vcl_4:
-; _LNOPT_w=[ normal2 ] 23 [23 0] 23   [__v_draw3D_vcl_4]
-         NOP                                                        lq            VF01,0(VI00)                        
-         NOP                                                        xtop          VI02                                
+; _LNOPT_w=[ normal2 ] 26 [26 0] 26   [__v_draw3D_vcl_4]
+         NOP                                                        xtop          VI05                                
          NOP                                                        lq            VF02,1(VI00)                        
-         NOP                                                        lq            VF06,1(VI02)                        
-         NOP                                                        lq            VF09,2(VI02)                        
-         NOP                                                        lq            VF08,3(VI02)                        
-         NOP                                                        lq            VF07,4(VI02)                        
-         NOP                                                        lq            VF03,2(VI00)                        
-         NOP                                                        iaddiu        VI03,VI02,0x00000007                
-         NOP                                                        ilw.w         VI07,0(VI02)                        
-         NOP                                                        lq            VF04,3(VI00)                        
-         NOP                                                        fcset         0                                   
-         NOP                                                        lq.xyz        VF05,0(VI02)                        
+         NOP                                                        lq            VF01,0(VI00)                        
+         NOP                                                        ilw.x         VI01,4(VI05)                        
+         NOP                                                        ilw.y         VI07,4(VI05)                        
+         NOP                                                        lq            VF03,0(VI05)                        
+         NOP                                                        lq            VF08,5(VI05)                        
+         NOP                                                        lq            VF10,6(VI05)                        
+         NOP                                                        lq            VF04,1(VI05)                        
+         NOP                                                        lq            VF05,2(VI05)                        
+         NOP                                                        iaddiu        VI03,VI05,0x00000009                
          NOP                                                        iadd          VI04,VI03,VI07                      
+         NOP                                                        lq            VF06,3(VI05)                        
          NOP                                                        iadd          VI06,VI04,VI07                      
-         NOP                                                        sqi           VF06,(VI06++)                       
-         NOP                                                        sqi           VF09,(VI06++)                       
-         NOP                                                        sqi           VF06,(VI06++)                       
+         NOP                                                        loi           0x44fff000                          
+         NOP                                                        ilw.z         VI02,4(VI05)                        
+         NOP                                                        lq            VF07,7(VI05)                        
+         NOP                                                        sqi           VF02,(VI06++)                       
          NOP                                                        sqi           VF08,(VI06++)                       
-         NOP                                                        lq            VF06,5(VI02)                        
+         NOP                                                        sqi           VF02,(VI06++)                       
+         NOP                                                        lq            VF08,8(VI05)                        
          NOP                                                        iadd          VI05,VI04,VI07                      
+         addi.xy       VF09,VF00,I                                  loi           0x492aaaaa                          
+         NOP                                                        fcset         0                                   
+         NOP                                                        iblez         VI01,kick                           
+         addi.z        VF09,VF00,I                                  sqi           VF10,(VI06++)                       
+; _LNOPT_w=[ normal2 ] 2 [2 0] 2   [__v_draw3D_vcl_5]
+         NOP                                                        sqi           VF02,(VI06++)                       
+         NOP                                                        sqi           VF01,(VI06++)                       
+kick:
+; _LNOPT_w=[ normal2 ] 27 [27 0] 32   [kick]
          NOP                                                        sqi           VF07,(VI06++)                       
-         NOP                                                        iadd          VI07,VI02,VI07                      
-vertexLoop:
-; _LNOPT_w=[ normal2 ] 21 [31 14] 31   [vertexLoop]
          NOP                                                        lq            VF07,0(VI03)                        
-         mulax         ACC,VF01,VF07x                               sq            VF06,1(VI06)                               ;	STALL_LATENCY ?3
-         madday        ACC,VF02,VF07y                               lq            VF08,0(VI04)                        
-         maddaz        ACC,VF03,VF07z                               iaddiu        VI06,VI06,0x00000003                
-         maddw         VF07,VF04,VF07w                              NOP                                               
-         clipw.xyz     VF07xyz,VF07w                                div           Q,VF00w,VF07w                              ;	STALL_LATENCY ?3
+         mulax         ACC,VF03,VF07x                               lq            VF14,1(VI03)                               ;	STALL_LATENCY ?3
+         madday        ACC,VF04,VF07y                               sq            VF08,1(VI06)                        
+         maddaz        ACC,VF05,VF07z                               sq            VF08,7(VI06)                        
+         maddw         VF11,VF06,VF07w                              NOP                                               
+         mulax         ACC,VF03,VF14x                               lq            VF07,2(VI03)                        
+         madday        ACC,VF04,VF14y                               NOP                                               
+         maddaz        ACC,VF05,VF14z                               NOP                                               
+         maddw         VF14,VF06,VF14w                              div           Q,VF00w,VF11w                       
+         mulax         ACC,VF03,VF07x                               NOP                                               
+         madday        ACC,VF04,VF07y                               iaddiu        VI07,VI00,0x00007fff                
+         maddaz        ACC,VF05,VF07z                               iaddiu        VI07,VI07,0x00000001                
+         maddw         VF07,VF06,VF07w                              iaddiu        VI08,VI00,0                         
+         clipw.xyz     VF11xyz,VF11w                                iaddiu        VI04,VI04,0                         
+         clipw.xyz     VF14xyz,VF14w                                div           Q,VF00w,VF14w                              ;	STALL_THRUPUT ?1
+         clipw.xyz     VF07xyz,VF07w                                lq            VF15,0(VI04)                        
+         mulq.xyz      VF02,VF11,Q                                  sq            VF08,4(VI06)                        
+         mulaw.xyz     ACC,VF09,VF00w                               iaddiu        VI03,VI03,0                         
+         mulq          VF11,VF15,Q                                  iaddiu        VI06,VI06,0                                ;	STALL_LATENCY ?1
+         madd.xyz      VF01,VF02,VF09                               lq            VF02,1(VI04)                        
+         NOP                                                        div           Q,VF00w,VF07w                       
+         mulq.xyz      VF15,VF14,Q                                  iaddiu        VI08,VI08,0x00000001                
+         mulaw.xyz     ACC,VF09,VF00w                               sq            VF11,0(VI06)                        
+         mulq          VF14,VF02,Q                                  mfir.w        VF11,VI07                           
+         ftoi4.xyz     VF11,VF01                                    ibeq          VI08,VI02,EXPL_draw3D_vcl_triangle_loop__EPI1
+         madd.xyz      VF02,VF15,VF09                               lq            VF15,2(VI04)                        
+; _LNOPT_w=[ ] 31 [29 0] 31   [EXPL_draw3D_vcl_triangle_loop__PRO1]
+         NOP                                                        lq            VF12,3(VI03)                        
          NOP                                                        NOP                                               
+         mulq.xyz      VF01,VF07,Q                                  NOP                                               
+         mulq          VF11,VF15,Q                                  sq            VF11,2(VI06)                        
+         mulax         ACC,VF03,VF12x                               lq            VF10,4(VI03)                        
+         madday        ACC,VF04,VF12y                               NOP                                               
+         maddaz        ACC,VF05,VF12z                               NOP                                               
+         maddw         VF11,VF06,VF12w                              sq            VF11,6(VI06)                        
+         mulax         ACC,VF03,VF10x                               lq            VF07,5(VI03)                        
+         madday        ACC,VF04,VF10y                               sq            VF14,3(VI06)                        
+         maddaz        ACC,VF05,VF10z                               sq            VF08,10(VI06)                       
+         maddw         VF10,VF06,VF10w                              div           Q,VF00w,VF11w                       
+         mulax         ACC,VF03,VF07x                               sq            VF08,13(VI06)                       
+         madday        ACC,VF04,VF07y                               sq            VF08,16(VI06)                       
+         maddaz        ACC,VF05,VF07z                               iaddiu        VI03,VI03,0x00000006                
+         maddw         VF07,VF06,VF07w                              iaddiu        VI04,VI04,0x00000006                
+         clipw.xyz     VF11xyz,VF11w                                lq            VF12,-3(VI04)                       
+         clipw.xyz     VF10xyz,VF10w                                iaddiu        VI06,VI06,0x00000012                
+         mulq.xyz      VF14,VF11,Q                                  div           Q,VF00w,VF10w                       
+         clipw.xyz     VF07xyz,VF07w                                fcand         VI01,262143                         
+         mulq          VF12,VF12,Q                                  iaddiu        VI08,VI08,0x00000001                
+         ftoi4.xyz     VF11,VF02                                    iaddiu        VI01,VI01,0x00007fff                
+         mulaw.xyz     ACC,VF09,VF00w                               mfir.w        VF11,VI07                           
+         madd.xyz      VF14,VF14,VF09                               mfir.w        VF10,VI01                           
+         mulaw.xyz     ACC,VF09,VF00w                               lq            VF02,-2(VI04)                       
+         madd.xyz      VF01,VF01,VF09                               div           Q,VF00w,VF07w                       
+         mulq.xyz      VF10,VF10,Q                                  lq            VF15,-1(VI04)                       
+         ftoi4.xyz     VF11,VF14                                    sq            VF11,-13(VI06)                      
+         mulq          VF14,VF02,Q                                  sq            VF12,-9(VI06)                       
+         mulaw.xyz     ACC,VF09,VF00w                               ibeq          VI08,VI02,EXPL_draw3D_vcl_triangle_loop__EPI0
+         madd.xyz      VF02,VF10,VF09                               mfir.w        VF11,VI07                           
+EXPL_draw3D_vcl_triangle_loop__MAIN_LOOP:
+; _LPOPT_w=[ hDown ] 31 [30 30] 31   [EXPL_draw3D_vcl_triangle_loop__MAIN_LOOP]
+         ftoi4.xyz     VF10,VF01                                    lq            VF13,0(VI03)                        
+         NOP                                                        lq            VF12,1(VI03)                        
+         mulq.xyz      VF01,VF07,Q                                  sq            VF14,-6(VI06)                       
+         mulq          VF11,VF15,Q                                  sq            VF11,-7(VI06)                       
+         mulax         ACC,VF03,VF13x                               sq            VF10,-10(VI06)                      
+         madday        ACC,VF04,VF13y                               sq            VF08,1(VI06)                        
+         maddaz        ACC,VF05,VF13z                               NOP                                               
+         maddw         VF11,VF06,VF13w                              sq            VF11,-3(VI06)                       
+         mulax         ACC,VF03,VF12x                               lq            VF07,2(VI03)                        
+         madday        ACC,VF04,VF12y                               sq            VF08,4(VI06)                        
+         maddaz        ACC,VF05,VF12z                               sq            VF08,7(VI06)                        
+         maddw         VF10,VF06,VF12w                              div           Q,VF00w,VF11w                       
+         mulax         ACC,VF03,VF07x                               NOP                                               
+         madday        ACC,VF04,VF07y                               iaddiu        VI03,VI03,0x00000003                
+         maddaz        ACC,VF05,VF07z                               NOP                                               
+         maddw         VF07,VF06,VF07w                              iaddiu        VI04,VI04,0x00000003                
+         clipw.xyz     VF11xyz,VF11w                                lq            VF12,-3(VI04)                       
+         clipw.xyz     VF10xyz,VF10w                                iaddiu        VI06,VI06,0x00000009                
+         mulq.xyz      VF13,VF11,Q                                  fcand         VI01,262143                         
+         clipw.xyz     VF07xyz,VF07w                                div           Q,VF00w,VF10w                       
+         mulq          VF12,VF12,Q                                  iaddiu        VI08,VI08,0x00000001                
+         ftoi4.xyz     VF11,VF02                                    iaddiu        VI01,VI01,0x00007fff                
+         mulaw.xyz     ACC,VF09,VF00w                               mfir.w        VF10,VI01                           
+         madd.xyz      VF13,VF13,VF09                               mfir.w        VF11,VI07                           
+         mulaw.xyz     ACC,VF09,VF00w                               lq            VF02,-2(VI04)                       
+         madd.xyz      VF01,VF01,VF09                               sq            VF12,-9(VI06)                       
+         mulq.xyz      VF10,VF10,Q                                  div           Q,VF00w,VF07w                       
+         ftoi4.xyz     VF11,VF13                                    sq            VF11,-13(VI06)                      
+         mulq          VF14,VF02,Q                                  mfir.w        VF11,VI07                           
+         mulaw.xyz     ACC,VF09,VF00w                               ibne          VI08,VI02,EXPL_draw3D_vcl_triangle_loop__MAIN_LOOP
+         madd.xyz      VF02,VF10,VF09                               lq            VF15,-1(VI04)                       
+EXPL_draw3D_vcl_triangle_loop__EPI0:
+; _LNOPT_w=[ ] 13 [13 0] 15   [EXPL_draw3D_vcl_triangle_loop__EPI0]
          NOP                                                        NOP                                               
+         ftoi4.xyz     VF10,VF01                                    fcand         VI01,262143                         
+         mulq.xyz      VF01,VF07,Q                                  sq            VF14,-6(VI06)                       
+         mulq          VF11,VF15,Q                                  sq            VF11,-7(VI06)                       
+         mulaw.xyz     ACC,VF09,VF00w                               iaddiu        VI01,VI01,0x00007fff                
+         madd.xyz      VF01,VF01,VF09                               sq            VF10,-10(VI06)                             ;	STALL_LATENCY ?1
+         ftoi4.xyz     VF11,VF02                                    sq            VF11,-3(VI06)                       
+         NOP                                                        mfir.w        VF11,VI07                           
+         NOP                                                        mfir.w        VF10,VI01                           
+         ftoi4.xyz     VF10,VF01                                    NOP                                               
+         NOP                                                        sq            VF11,-4(VI06)                              ;	STALL_LATENCY ?1
+         NOP                                                        b             EXPL_draw3D_vcl_triangle_loop__EXIT_POINT
+         NOP                                                        sq            VF10,-1(VI06)                       
+EXPL_draw3D_vcl_triangle_loop__EPI1:
+; _LNOPT_w=[ ] 12 [13 0] 14   [EXPL_draw3D_vcl_triangle_loop__EPI1]
          NOP                                                        NOP                                               
+         mulq.xyz      VF14,VF07,Q                                  sq            VF14,3(VI06)                        
          NOP                                                        NOP                                               
-         NOP                                                        NOP                                               
-         NOP                                                        NOP                                               
-         mulq.xyz      VF07,VF07,Q                                  fcand         VI01,262143                         
-         mulaw.xyz     ACC,VF05,VF00w                               iaddiu        VI03,VI03,0x00000001                
-         madd.xyz      VF07,VF07,VF05                               iaddiu        VI04,VI04,0x00000001                       ;	STALL_LATENCY ?2
-         mulq          VF08,VF08,Q                                  isubiu        VI07,VI07,1                         
-         ftoi4.xyz     VF07,VF07                                    iaddiu        VI01,VI01,0x00007fff                       ;	STALL_LATENCY ?2
-         NOP                                                        isw.w         VI01,-1(VI06)                       
-         NOP                                                        sq            VF08,-3(VI06)                       
-         NOP                                                        ibne          VI07,VI02,vertexLoop                
-         NOP                                                        sq.xyz        VF07,-1(VI06)                       
-; _LNOPT_w=[ normal2 ] 3 [1 0] 3   [__v_draw3D_vcl_7]
+         mulq          VF11,VF15,Q                                  sq            VF11,2(VI06)                        
+         mulaw.xyz     ACC,VF09,VF00w                               fcand         VI01,262143                         
+         madd.xyz      VF14,VF14,VF09                               iaddiu        VI01,VI01,0x00007fff                
+         NOP                                                        mfir.w        VF14,VI01                           
+         ftoi4.xyz     VF11,VF02                                    sq            VF11,6(VI06)                        
+         NOP                                                        mfir.w        VF11,VI07                           
+         ftoi4.xyz     VF14,VF14                                    NOP                                               
+         NOP                                                        sq            VF11,5(VI06)                               ;	STALL_LATENCY ?2
+         NOP                                                        sq            VF14,8(VI06)                        
+EXPL_draw3D_vcl_triangle_loop__EXIT_POINT:
+; _LNOPT_w=[ ] 0 [0 0] 0   [EXPL_draw3D_vcl_triangle_loop__EXIT_POINT]
+; _LNOPT_w=[ normal2 ] 3 [1 0] 3   [__v_draw3D_vcl_9]
          NOP                                                        xgkick        VI05                                
          NOP[E]                                                     NOP                                               
          NOP                                                        NOP                                               
 		.align 4
 VU1Draw3D_CodeEnd:
-;	iCount=47
+;	iCount=145
 ; register stats:
-;   8 VU User integer
-;  10 VU User floating point
+;   9 VU User integer
+;  16 VU User floating point
 ;-------------------------
 ;-------------------------
 ;-------------------------

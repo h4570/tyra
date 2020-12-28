@@ -31,8 +31,10 @@ public:
     u16 floorAmount;
     void update(Player &t_player);
     void onAudioTick();
+    Mesh **getMeshes() { return meshes; }
 
 private:
+    Mesh **meshes;
     TextureRepository *texRepo;
     u8 audioOffset, audioMode;
     u32 audioTick;
