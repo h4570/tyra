@@ -15,10 +15,11 @@
 
 struct TextureLink
 {
-    /** Mesh id or sprite id */
-    u32 meshOrSpriteId;
-    /** Mesh material id or 0 if is sprite */
-    u32 materialId;
+    /** 
+     * For 3D: Mesh material id. 
+     * For 2D: Sprite id. 
+     */
+    u32 id;
 };
 
 #endif

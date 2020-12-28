@@ -25,18 +25,25 @@ MeshMaterial::MeshMaterial()
     _isNameSet = false;
     _areFacesAllocated = false;
     _isBoundingBoxCalculated = false;
+    _areSTsPresent = false;
+    _areNormalsPresent = false;
+    _isMother = true;
+    setDefaultColor();
 }
 
 MeshMaterial::~MeshMaterial()
 {
-    if (_areFacesAllocated)
+    if (_isMother)
     {
-        delete[] vertexFaces;
-        delete[] stFaces;
-        delete[] normalFaces;
+        if (_areFacesAllocated)
+        {
+            delete[] vertexFaces;
+            delete[] stFaces;
+            delete[] normalFaces;
+        }
+        if (_isNameSet)
+            delete[] name;
     }
-    if (_isNameSet)
-        delete[] name;
 }
 
 // ----
@@ -102,7 +109,6 @@ u8 MeshMaterial::isInFrustum(Plane *t_frustumPlanes, const Vector3 &position)
 
 void MeshMaterial::calculateBoundingBox(Vector3 *t_vertices, u32 t_vertCount)
 {
-    Vector3 boundingBox[8];
     float lowX, lowY, lowZ, hiX, hiY, hiZ;
     lowX = hiX = t_vertices[vertexFaces[0]].x;
     lowY = hiY = t_vertices[vertexFaces[0]].y;
@@ -124,6 +130,8 @@ void MeshMaterial::calculateBoundingBox(Vector3 *t_vertices, u32 t_vertCount)
         if (hiZ < t_vertices[vertexFaces[i]].z)
             hiZ = t_vertices[vertexFaces[i]].z;
     }
+
+    Vector3 boundingBox[8];
     boundingBox[0].set(lowX, lowY, lowZ);
     boundingBox[1].set(lowX, lowY, hiZ);
     boundingBox[2].set(lowX, hiY, lowZ);
@@ -138,4 +146,33 @@ void MeshMaterial::calculateBoundingBox(Vector3 *t_vertices, u32 t_vertCount)
     //BoundingBox is declared on the heap to prevent any ill-formed default
     //constructor instantiated BoundingBox objects.
     boundingBoxObj = new BoundingBox(boundingBox);
+}
+
+void MeshMaterial::copyFrom(MeshMaterial *t_refCopy)
+{
+    _isNameSet = true;
+    name = t_refCopy->name;
+
+    _isBoundingBoxCalculated = true;
+    boundingBoxObj = t_refCopy->boundingBoxObj;
+
+    vertexFaces = t_refCopy->vertexFaces;
+    stFaces = t_refCopy->stFaces;
+    normalFaces = t_refCopy->normalFaces;
+    facesCount = t_refCopy->facesCount;
+    _areSTsPresent = t_refCopy->_areSTsPresent;
+    _areNormalsPresent = t_refCopy->_areNormalsPresent;
+    _areFacesAllocated = true;
+
+    _isMother = false;
+}
+
+/** Set's default object color + no transparency */
+void MeshMaterial::setDefaultColor()
+{
+    color.r = 0x80;
+    color.g = 0x80;
+    color.b = 0x80;
+    color.a = 0x80;
+    color.q = 1.0F;
 }

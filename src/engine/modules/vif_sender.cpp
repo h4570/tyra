@@ -83,7 +83,7 @@ void VifSender::calcMatrix(const RenderData &t_renderData, const Vector3 &t_posi
     modelViewProj = *t_renderData.projection * modelViewProj;
 }
 
-void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
+void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer, color_t *t_color, u8 t_rgbaOnly)
 {
     // we have to split 3D object into small parts, because of small memory of VU1
 
@@ -97,7 +97,7 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
                 i -= 3;
 
             const u32 endI = i + (VU1_PACKAGE_VERTS_PER_BUFF - 1) > vertCount2 ? vertCount2 : i + (VU1_PACKAGE_VERTS_PER_BUFF - 1);
-            drawVertices(t_mesh, i, endI, vertices, coordinates, t_renderData->prim, textureBuffer, isDrawWaitEnabled ? endI == vertCount2 : false);
+            drawVertices(t_mesh, i, endI, vertices, coordinates, t_renderData->prim, textureBuffer, isDrawWaitEnabled ? endI == vertCount2 : false, t_color, t_rgbaOnly);
             if (endI == vertCount2) // if there are no more vertices to draw, break
             {
                 i = vertCount2;
@@ -130,28 +130,34 @@ void VifSender::setDoubleBufferAddStaticData()
 }
 
 /** Draw using PATH1 */
-void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *t_texBuff, u8 t_addDrawWait)
+void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *t_texBuff, u8 t_addDrawWait, color_t *t_color, u8 t_rgbaOnly)
 {
     const u32 vertCount = t_end - t_start;
     lastVertCount = vertCount;
+    isLastRGBAOnly = t_rgbaOnly;
     packet2_utils_vu_open_unpack(currPacket, 0, true);
     packet2_add_data(currPacket, modelViewProj.data, 4);
     packet2_add_u32(currPacket, t_addDrawWait); // Draw finish?
     packet2_add_u32(currPacket, vertCount);     // Vertex count
     packet2_add_u32(currPacket, vertCount / 3); // Triangles count
-    packet2_add_u32(currPacket, 0);             // Free
+    packet2_add_u32(currPacket, t_rgbaOnly);    // 0 = STQ+RGBA, 1 = RGBA
     packet2_utils_gs_add_lod(currPacket, &t_mesh.lod);
     packet2_utils_gs_add_texbuff_clut(currPacket, t_texBuff, &t_mesh.clut);
-    packet2_utils_gs_add_prim_giftag(currPacket, t_prim, vertCount, DRAW_STQ2_REGLIST, 3, 0);
-    packet2_add_u32(currPacket, t_mesh.color.r);
-    packet2_add_u32(currPacket, t_mesh.color.g);
-    packet2_add_u32(currPacket, t_mesh.color.b);
-    packet2_add_u32(currPacket, t_mesh.color.a);
+    if (t_rgbaOnly)
+        packet2_utils_gs_add_prim_giftag(currPacket, t_prim, vertCount, DRAW_RGBAQ_REGLIST, 2, 0);
+    else
+        packet2_utils_gs_add_prim_giftag(currPacket, t_prim, vertCount, DRAW_STQ2_REGLIST, 3, 0);
+    packet2_add_u32(currPacket, t_color->r);
+    packet2_add_u32(currPacket, t_color->g);
+    packet2_add_u32(currPacket, t_color->b);
+    packet2_add_u32(currPacket, t_color->a);
     u32 vif_added_bytes = packet2_utils_vu_close_unpack(currPacket);
     packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_vertices + t_start, vertCount, true);
-    vif_added_bytes += vertCount;
-    packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_coordinates + t_start, vertCount, true);
-    vif_added_bytes += vertCount;
+    if (!t_rgbaOnly)
+    {
+        vif_added_bytes += vertCount;
+        packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_coordinates + t_start, vertCount, true);
+    }
     packet2_utils_vu_add_start_program(currPacket, 0);
 }
 
@@ -183,10 +189,10 @@ void VifSender::drawTheSameWithOtherMatrices(const RenderData &t_renderData, Mes
         packet2_utils_vu_close_unpack(currMPacket);
         packet2_utils_vu_open_unpack(currMPacket, VU1_RGBA_ADDRESS, true);
         {
-            packet2_add_u32(currMPacket, t_meshes[i]->color.r);
-            packet2_add_u32(currMPacket, t_meshes[i]->color.g);
-            packet2_add_u32(currMPacket, t_meshes[i]->color.b);
-            packet2_add_u32(currMPacket, t_meshes[i]->color.a);
+            packet2_add_u32(currMPacket, t_meshes[i]->getMaterial(0).color.r);
+            packet2_add_u32(currMPacket, t_meshes[i]->getMaterial(0).color.g);
+            packet2_add_u32(currMPacket, t_meshes[i]->getMaterial(0).color.b);
+            packet2_add_u32(currMPacket, t_meshes[i]->getMaterial(0).color.a);
         }
         packet2_utils_vu_close_unpack(currMPacket);
 
@@ -203,7 +209,7 @@ void VifSender::drawTheSameWithOtherMatrices(const RenderData &t_renderData, Mes
                     packet2_add_u32(currMPacket, true);              // Draw wait finish?
                     packet2_add_u32(currMPacket, lastVertCount);     // Vertex count
                     packet2_add_u32(currMPacket, lastVertCount / 3); // Triangles count
-                    packet2_add_u32(currMPacket, 0);                 // Free
+                    packet2_add_u32(currMPacket, isLastRGBAOnly);    // 0 = STQ+RGBA, 1 = RGBA
                 }
                 packet2_utils_vu_close_unpack(currMPacket);
                 packet2_utils_vu_add_start_program(currMPacket, 0); // and start program
@@ -231,7 +237,7 @@ void VifSender::drawTheSameWithOtherMatrices(const RenderData &t_renderData, Mes
             packet2_add_u32(currMPacket, true);              // Draw wait finish?
             packet2_add_u32(currMPacket, lastVertCount);     // Vertex count
             packet2_add_u32(currMPacket, lastVertCount / 3); // Triangles count
-            packet2_add_u32(currMPacket, 0);                 // Free
+            packet2_add_u32(currMPacket, isLastRGBAOnly);    // 0 = STQ+RGBA, 1 = RGBA
         }
         packet2_utils_vu_close_unpack(currMPacket);
         packet2_utils_vu_add_start_program(currMPacket, 0);
