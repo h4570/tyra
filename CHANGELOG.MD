@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Id to MeshFrame
+- Non textured rendering (RGBA only)
 
 ### Changed
 - Moved color from mesh to mesh material.
