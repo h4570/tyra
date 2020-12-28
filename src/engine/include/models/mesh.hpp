@@ -16,7 +16,6 @@
 #include "./texture.hpp"
 #include "./mesh_frame.hpp"
 #include <tamtypes.h>
-#include <draw_types.h>
 #include <draw_buffers.h>
 #include <draw_sampling.h>
 #include "./anim_state.hpp"
@@ -43,7 +42,6 @@ public:
      * When true, mesh materials are not drawn when they are outside of view frustum.
      */
     u8 shouldBeFrustumCulled;
-    color_t color;
     clutbuffer_t clut;
     lod_t lod;
 
@@ -176,6 +174,8 @@ public:
 
     void setAnimSpeed(const float &t_value) { animState.speed = t_value; }
 
+    const u8 &areFramesAllocated() const { return _areFramesAllocated; };
+
     /** 
      * Check if this class loaded mesh data first.
      * Meshes which use loadFrom() method have false there.
@@ -207,9 +207,8 @@ private:
     AnimState animState;
     MeshFrame *frames;
     u32 id, framesCount;
-    u8 _isMother;
+    u8 _isMother, _areFramesAllocated;
     Vector3 calc3Vectors[3];
-    void setDefaultColor();
     void setDefaultLODAndClut();
 };
 

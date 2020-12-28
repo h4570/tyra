@@ -91,8 +91,7 @@ void FloorManager::initFloors()
     {
         floors[i].mesh.shouldBeFrustumCulled = true;
         floors[i].init(floors[0].mesh, spirals[i], i);
-        texRepo->getByMesh(floors[0].mesh.getId(), floors[0].mesh.getMaterial(0).getId())
-            ->addLink(floors[i].mesh.getId(), floors[i].mesh.getMaterial(0).getId());
+        texRepo->getBySpriteOrMesh(floors[0].mesh.getMaterial(0).getId())->addLink(floors[i].mesh.getMaterial(0).getId());
         meshes[i] = &floors[i].mesh;
     }
     PRINT_LOG("Floors initialized!");
@@ -123,18 +122,18 @@ void FloorManager::update(Player &t_player)
     for (u16 i = 0; i < floorAmount; i++)
     {
         floors[i].animate(t_player);
-
+        MeshMaterial *material = &floors[i].mesh.getMaterial(0);
         if (floors[i].isByAudioTriggered)
         {
-            floors[i].mesh.color.r = trigColor.r;
-            floors[i].mesh.color.g = trigColor.g;
-            floors[i].mesh.color.b = trigColor.b;
+            material->color.r = trigColor.r;
+            material->color.g = trigColor.g;
+            material->color.b = trigColor.b;
         }
         else
         {
-            floors[i].mesh.color.r = defaultColor.r;
-            floors[i].mesh.color.g = defaultColor.g;
-            floors[i].mesh.color.b = defaultColor.b;
+            material->color.r = defaultColor.r;
+            material->color.g = defaultColor.g;
+            material->color.b = defaultColor.b;
         }
     }
 }

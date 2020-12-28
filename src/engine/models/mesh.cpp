@@ -28,6 +28,7 @@ Mesh::Mesh()
     shouldBeFrustumCulled = true;
     shouldBeBackfaceCulled = false;
     shouldBeLighted = false;
+    _areFramesAllocated = false;
     _isMother = false;
     scale = 1.0F;
     framesCount = 0;
@@ -40,13 +41,12 @@ Mesh::Mesh()
     animState.isStayFrameSet = false;
     animState.nextFrame = 0;
     animState.speed = 0.1F;
-    setDefaultColor();
     setDefaultLODAndClut();
 }
 
 Mesh::~Mesh()
 {
-    if (_isMother)
+    if (_areFramesAllocated)
         delete[] frames;
 }
 
@@ -59,6 +59,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, con
     ObjLoader loader = ObjLoader();
     framesCount = 1;
     frames = new MeshFrame[framesCount];
+    _areFramesAllocated = true;
     char *part1 = String::createConcatenated(t_subfolder, t_objFile); // "folder/object"
     char *finalPath = String::createConcatenated(part1, ".obj");      // "folder/object.obj"
     loader.load(&frames[0], finalPath, t_scale, t_invertT);
@@ -78,6 +79,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, con
         ObjLoader loader = ObjLoader();
         framesCount = t_framesCount;
         frames = new MeshFrame[framesCount];
+        _areFramesAllocated = true;
         char *part1 = String::createConcatenated(t_subfolder, t_objFile); // "folder/object"
         char *part2 = String::createConcatenated(part1, "_");             // "folder/object_"
         for (u32 i = 0; i < framesCount; i++)
@@ -105,6 +107,7 @@ void Mesh::loadDff(char *t_subfolder, char *t_dffFile, const float &t_scale, con
     char *dffPath = String::createConcatenated(part1, ".dff");
     framesCount = 1;
     frames = new MeshFrame[1];
+    _areFramesAllocated = true;
     loader.load(frames, dffPath, t_scale, t_invertT);
     delete[] part1;
     delete[] dffPath;
@@ -120,8 +123,11 @@ void Mesh::loadMD2(char *t_subfolder, char *t_md2File, const float &t_scale, con
 
 void Mesh::loadFrom(const Mesh &t_mesh)
 {
-    frames = t_mesh.frames;
     framesCount = t_mesh.framesCount;
+    frames = new MeshFrame[framesCount];
+    _areFramesAllocated = true;
+    for (u32 i = 0; i < framesCount; i++)
+        frames[i].copyFrom(&t_mesh.getFrame(i));
 }
 
 void Mesh::playAnimation(const u32 &t_startFrame, const u32 &t_endFrame)
@@ -254,8 +260,7 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
                   "r"(nextVerts[vertFaces[faceI]].xyz),
                   "r"(nextVerts[vertFaces[faceI + 1]].xyz),
                   "r"(nextVerts[vertFaces[faceI + 2]].xyz),
-                  "f"(animState.interpolation)
-                : "$10");
+                  "f"(animState.interpolation));
         }
         else
         {
@@ -373,16 +378,6 @@ u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
             boxResult = 1;
     }
     return boxResult;
-}
-
-/** Set's default object color + no transparency */
-void Mesh::setDefaultColor()
-{
-    color.r = 0x80;
-    color.g = 0x80;
-    color.b = 0x80;
-    color.a = 0x80;
-    color.q = 1.0F;
 }
 
 /** Sets texture level of details settings and CLUT settings */

@@ -105,7 +105,7 @@ void Renderer::changeTexture(Texture *t_tex)
 
 void Renderer::draw(Sprite &t_sprite)
 {
-    Texture *texture = textureRepo.getBySprite(t_sprite.getId());
+    Texture *texture = textureRepo.getBySpriteOrMesh(t_sprite.getId());
     texrect_t rect;
     float sizeX, sizeY;
     if (t_sprite.getMode() == MODE_REPEAT)
@@ -242,17 +242,18 @@ void Renderer::drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         t_mesh.animate();
     for (u32 i = 0; i < t_mesh.getMaterialsCount(); i++)
     {
-        if (t_mesh.shouldBeFrustumCulled && !t_mesh.getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh.position))
+        MeshMaterial *material = &t_mesh.getMaterial(i);
+        if (t_mesh.shouldBeFrustumCulled && !material->isInFrustum(renderData.frustumPlanes, t_mesh.position))
             return;
-        Texture *tex = textureRepo.getByMesh(t_mesh.getId(), t_mesh.getMaterial(i).getId());
+        Texture *tex = textureRepo.getBySpriteOrMesh(material->getId());
         changeTexture(tex);
         gifSender->initPacket(context);
-        u32 vertCount = t_mesh.getMaterial(i).getFacesCount();
+        u32 vertCount = material->getFacesCount();
         VECTOR *vertices = new VECTOR[vertCount];
         VECTOR *normals = new VECTOR[vertCount];
         VECTOR *coordinates = new VECTOR[vertCount];
         vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
-        gifSender->addObject(&renderData, t_mesh, vertCount, vertices, normals, coordinates, t_bulbs, t_bulbsCount, &textureBuffer);
+        gifSender->addObject(&renderData, t_mesh, vertCount, vertices, normals, coordinates, t_bulbs, t_bulbsCount, &textureBuffer, &material->color);
         gifSender->sendPacket();
         delete[] vertices;
         delete[] normals;
@@ -315,16 +316,17 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         t_mesh.animate();
     for (u32 i = 0; i < t_mesh.getMaterialsCount(); i++)
     {
-        if (t_mesh.shouldBeFrustumCulled && !t_mesh.getMaterial(i).isInFrustum(renderData.frustumPlanes, t_mesh.position))
+        MeshMaterial *material = &t_mesh.getMaterial(i);
+        if (t_mesh.shouldBeFrustumCulled && !material->isInFrustum(renderData.frustumPlanes, t_mesh.position))
             return;
-        u32 vertCount = t_mesh.getMaterial(i).getFacesCount();
+        u32 vertCount = material->getFacesCount();
         VECTOR vertices[vertCount] __attribute__((aligned(16)));
         VECTOR normals[vertCount] __attribute__((aligned(16)));
         VECTOR coordinates[vertCount] __attribute__((aligned(16)));
-        Texture *tex = textureRepo.getByMesh(t_mesh.getId(), t_mesh.getMaterial(i).getId());
+        Texture *tex = textureRepo.getBySpriteOrMesh(material->getId());
         changeTexture(tex);
         vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, rotatedCamera);
-        vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer);
+        vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer, &material->color);
     }
 }
 

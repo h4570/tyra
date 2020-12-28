@@ -35,6 +35,12 @@ public:
     // Getters
     // ----
 
+    /** 
+     * Auto generated unique Id. 
+     * Core role of this variable is to select correct texture to draw
+     */
+    const u32 &getId() const { return id; };
+
     const u32 &getVertexCount() const { return vertexCount; };
     const u32 &getSTsCount() const { return stsCount; };
     const u32 &getNormalsCount() const { return normalsCount; };
@@ -119,6 +125,18 @@ public:
     // Other
     // ----
 
+    /** 
+     * Check if this object is mother. 
+     * Mother = object loaded with loadObj(), loadDff().. 
+     * Have all mother data: vertex, st, etc.. 
+     * Non-mother = object loaded with loadFrom().  
+     * Have reference copy to mother data: vertex, st, etc.. 
+     *  
+     * When you will destruct mother object, all vertex, st data will be deleted.
+     * When you will destruct non-mother object, all vertex, st data will be NOT deleted.
+     */
+    const u8 &isMother() const { return _isMother; };
+
     const u8 &areSTsAllocated() const { return _areSTsAllocated; };
     const u8 &areVerticesAllocated() const { return _areVerticesAllocated; };
     const u8 &areNormalsAllocated() const { return _areNormalsAllocated; };
@@ -127,6 +145,9 @@ public:
 
     const u8 &areSTsPresent() const { return _areSTsPresent; };
     const u8 &areNormalsPresent() const { return _areNormalsPresent; };
+
+    /** Create reference copy (non-mother) */
+    void copyFrom(MeshFrame *t_refCopy);
 
     /** Set STs count and allocate memory. */
     void allocateSTs(const u32 &t_val);
@@ -152,14 +173,15 @@ public:
 
 private:
     BoundingBox *boundingBoxObj;
-    u8 _areSTsAllocated,
+    u8 _isMother,
+        _areSTsAllocated,
         _areVerticesAllocated,
         _areNormalsAllocated,
         _areMaterialsAllocated,
         _areSTsPresent,
         _areNormalsPresent,
         _isBoundingBoxCalculated;
-    u32 vertexCount, stsCount, normalsCount, materialsCount;
+    u32 vertexCount, stsCount, normalsCount, materialsCount, id;
     MeshMaterial *materials;
     Point __attribute__((aligned(16))) * sts;
     Vector3 __attribute__((aligned(16))) * vertices, *normals;

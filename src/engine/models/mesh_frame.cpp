@@ -8,6 +8,7 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
+#include <cstdlib>
 #include "../include/models/mesh_frame.hpp"
 #include "../include/utils/debug.hpp"
 
@@ -17,6 +18,7 @@
 
 MeshFrame::MeshFrame()
 {
+    id = rand() % 1000000;
     vertexCount = 0;
     stsCount = 0;
     normalsCount = 0;
@@ -27,19 +29,23 @@ MeshFrame::MeshFrame()
     _areMaterialsAllocated = false;
     _areSTsPresent = false;
     _areNormalsPresent = false;
+    _isMother = true;
 }
 
 MeshFrame::~MeshFrame()
 {
-    if (_areSTsAllocated)
-        delete[] sts;
-    if (_areVerticesAllocated)
-        delete[] vertices;
-    if (_areNormalsAllocated)
-        delete[] normals;
+    if (_isMother)
+    {
+        if (_areSTsAllocated)
+            delete[] sts;
+        if (_areVerticesAllocated)
+            delete[] vertices;
+        if (_areNormalsAllocated)
+            delete[] normals;
+        delete boundingBoxObj;
+    }
     if (_areMaterialsAllocated)
         delete[] materials;
-    delete boundingBoxObj;
 }
 
 // ----
@@ -96,14 +102,12 @@ void MeshFrame::allocateMaterials(const u32 &t_val)
 
 void MeshFrame::calculateBoundingBoxes()
 {
-    Vector3 boundingBox[8];
     if (!_areVerticesAllocated)
-    {
         PRINT_ERR("Can't calculate bounding box, because vertices were not allocated!");
-        return;
-    }
+
     for (u32 i = 0; i < materialsCount; i++)
         materials->calculateBoundingBox(vertices, vertexCount);
+
     float lowX, lowY, lowZ, hiX, hiY, hiZ;
     lowX = hiX = vertices[0].x;
     lowY = hiY = vertices[0].y;
@@ -126,6 +130,7 @@ void MeshFrame::calculateBoundingBoxes()
             hiZ = vertices[i].z;
     }
 
+    Vector3 boundingBox[8];
     boundingBox[0].set(lowX, lowY, lowZ);
     boundingBox[1].set(lowX, lowY, hiZ);
     boundingBox[2].set(lowX, hiY, lowZ);
@@ -137,7 +142,32 @@ void MeshFrame::calculateBoundingBoxes()
     boundingBox[7].set(hiX, hiY, hiZ);
     _isBoundingBoxCalculated = true;
 
-    //BoundingBox is declared on the heap to prevent any ill-formed default
-    //constructor instantiated BoundingBox objects.
+    // BoundingBox is declared on the heap to prevent any ill-formed default
+    // constructor instantiated BoundingBox objects.
     boundingBoxObj = new BoundingBox(boundingBox);
+}
+
+void MeshFrame::copyFrom(MeshFrame *t_refCopy)
+{
+    vertexCount = t_refCopy->vertexCount;
+    stsCount = t_refCopy->stsCount;
+    normalsCount = t_refCopy->normalsCount;
+    materialsCount = t_refCopy->materialsCount;
+    materials = new MeshMaterial[materialsCount];
+    for (u32 i = 0; i < materialsCount; i++)
+        materials[i].copyFrom(&t_refCopy->materials[i]);
+    _areSTsAllocated = true;
+    _areVerticesAllocated = true;
+    _areNormalsAllocated = true;
+    _areMaterialsAllocated = true;
+    _areSTsPresent = t_refCopy->_areSTsPresent;
+    _areNormalsPresent = t_refCopy->_areNormalsPresent;
+    vertices = t_refCopy->vertices;
+    sts = t_refCopy->sts;
+    normals = t_refCopy->normals;
+
+    boundingBoxObj = t_refCopy->boundingBoxObj;
+    _isBoundingBoxCalculated = true;
+
+    _isMother = false;
 }
