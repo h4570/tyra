@@ -107,9 +107,25 @@ public:
     /** Set material name. */
     void setName(char *t_val);
 
+    /** 
+     * Do not call this method unless you know what you do.
+     * Should be called by data loader. 
+     */
+    void setSTsPresent(const u8 &b) { _areSTsPresent = b; };
+
+    /** 
+     * Do not call this method unless you know what you do.
+     * Should be called by data loader. 
+     */
+    void setNormalsPresent(const u8 &b) { _areNormalsPresent = b; };
+
     // ----
     //  Other
     // ----
+
+    const u8 &areSTsPresent() const { return _areSTsPresent; };
+
+    const u8 &areNormalsPresent() const { return _areNormalsPresent; };
 
     /** Create reference copy (non-mother) */
     void copyFrom(MeshMaterial *t_refCopy);
@@ -148,7 +164,12 @@ private:
     BoundingBox *boundingBoxObj;
     u32 facesCount, id;
     u32 *vertexFaces, *stFaces, *normalFaces;
-    u8 _isMother, _isNameSet, _areFacesAllocated, _isBoundingBoxCalculated;
+    u8 _isMother,
+        _isNameSet,
+        _areFacesAllocated,
+        _isBoundingBoxCalculated,
+        _areSTsPresent,
+        _areNormalsPresent;
     char *name;
 };
 

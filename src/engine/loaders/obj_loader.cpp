@@ -145,7 +145,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                     o_result->getMaterial(materialsI).setSTFace(faceI, coordIndex[0] - 1);
                     o_result->getMaterial(materialsI).setSTFace(faceI + 1, coordIndex[1] - 1);
                     o_result->getMaterial(materialsI).setSTFace(faceI + 2, coordIndex[2] - 1);
-                    o_result->setSTsPresent(true);
+                    o_result->getMaterial(materialsI).setSTsPresent(true);
                 }
 
                 if (matches == 9)
@@ -153,7 +153,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                     o_result->getMaterial(materialsI).setNormalFace(faceI, normalIndex[0] - 1);
                     o_result->getMaterial(materialsI).setNormalFace(faceI + 1, normalIndex[1] - 1);
                     o_result->getMaterial(materialsI).setNormalFace(faceI + 2, normalIndex[2] - 1);
-                    o_result->setNormalsPresent(true);
+                    o_result->getMaterial(materialsI).setNormalsPresent(true);
                     faceI += 3;
                 }
                 else if (matches == 2)
@@ -171,7 +171,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                         o_result->getMaterial(materialsI).setNormalFace(faceI, normalIndex[0] - 1);
                         o_result->getMaterial(materialsI).setNormalFace(faceI + 1, normalIndex[1] - 1);
                         o_result->getMaterial(materialsI).setNormalFace(faceI + 2, normalIndex[2] - 1);
-                        o_result->setNormalsPresent(true);
+                        o_result->getMaterial(materialsI).setNormalsPresent(true);
                         faceI += 2;
                     }
                 }
@@ -180,6 +180,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
         else
             break;
     }
+
     o_result->calculateBoundingBoxes();
     fclose(file);
     delete[] path;

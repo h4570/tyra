@@ -27,8 +27,6 @@ MeshFrame::MeshFrame()
     _areVerticesAllocated = false;
     _areNormalsAllocated = false;
     _areMaterialsAllocated = false;
-    _areSTsPresent = false;
-    _areNormalsPresent = false;
     _isMother = true;
 }
 
@@ -160,8 +158,6 @@ void MeshFrame::copyFrom(MeshFrame *t_refCopy)
     _areVerticesAllocated = true;
     _areNormalsAllocated = true;
     _areMaterialsAllocated = true;
-    _areSTsPresent = t_refCopy->_areSTsPresent;
-    _areNormalsPresent = t_refCopy->_areNormalsPresent;
     vertices = t_refCopy->vertices;
     sts = t_refCopy->sts;
     normals = t_refCopy->normals;

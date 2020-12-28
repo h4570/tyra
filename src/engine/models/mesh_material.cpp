@@ -25,6 +25,8 @@ MeshMaterial::MeshMaterial()
     _isNameSet = false;
     _areFacesAllocated = false;
     _isBoundingBoxCalculated = false;
+    _areSTsPresent = false;
+    _areNormalsPresent = false;
     _isMother = true;
     setDefaultColor();
 }
@@ -158,6 +160,8 @@ void MeshMaterial::copyFrom(MeshMaterial *t_refCopy)
     stFaces = t_refCopy->stFaces;
     normalFaces = t_refCopy->normalFaces;
     facesCount = t_refCopy->facesCount;
+    _areSTsPresent = t_refCopy->_areSTsPresent;
+    _areNormalsPresent = t_refCopy->_areNormalsPresent;
     _areFacesAllocated = true;
 
     _isMother = false;
