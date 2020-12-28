@@ -64,39 +64,39 @@ public:
     /** 2D draw. */
     void draw(Sprite &t_sprite);
 
-    /// --- Draw: PATH3
+    /// --- OBSOLETE
 
-    /** 
-     * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS! 
-     * Draw many meshes with lighting information.
-     * Slowest way of rendering (PATH 3, using EE and GIF). 
-     * NOTICE: Animation supported, lighting supported
-     */
-    void drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
+    // /**
+    //  * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS!
+    //  * Draw many meshes with lighting information.
+    //  * Slowest way of rendering (PATH 3, using EE and GIF).
+    //  * NOTICE: Animation supported, lighting supported
+    //  */
+    // void drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
 
-    /** 
-     * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS! 
-     * Draw mesh with lighting information.
-     * Slowest way of rendering (PATH 3, using EE and GIF). 
-     * NOTICE: Animation supported, lighting supported
-     */
-    void drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
+    // /**
+    //  * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS!
+    //  * Draw mesh with lighting information.
+    //  * Slowest way of rendering (PATH 3, using EE and GIF).
+    //  * NOTICE: Animation supported, lighting supported
+    //  */
+    // void drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
 
-    /** 
-     * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS! 
-     * Draw many meshes without lighting information.
-     * Slowest way of rendering (PATH 3, using EE and GIF). 
-     * NOTICE: Animation supported, lighting supported
-     */
-    void drawByPath3(Mesh *t_meshes, u16 t_amount);
+    // /**
+    //  * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS!
+    //  * Draw many meshes without lighting information.
+    //  * Slowest way of rendering (PATH 3, using EE and GIF).
+    //  * NOTICE: Animation supported, lighting supported
+    //  */
+    // void drawByPath3(Mesh *t_meshes, u16 t_amount);
 
-    /** 
-     * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS! 
-     * Draw mesh without lighting information.
-     * Slowest way of rendering (PATH 3, using EE and GIF). 
-     * NOTICE: Animation supported, lighting supported
-     */
-    void drawByPath3(Mesh &t_mesh);
+    // /**
+    //  * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS!
+    //  * Draw mesh without lighting information.
+    //  * Slowest way of rendering (PATH 3, using EE and GIF).
+    //  * NOTICE: Animation supported, lighting supported
+    //  */
+    // void drawByPath3(Mesh &t_mesh);
 
     /// --- Draw: PATH1
 

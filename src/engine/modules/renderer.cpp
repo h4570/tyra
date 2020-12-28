@@ -227,43 +227,47 @@ void Renderer::allocateBuffers(int t_screenW, int t_screenH)
 
 /// --- Draw: PATH3
 
-void Renderer::drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
-{
-    for (u16 i = 0; i < t_amount; i++)
-        drawByPath3(t_meshes[i], t_bulbs, t_bulbsCount);
-}
+// Obsolete
+// void Renderer::drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
+// {
+//     for (u16 i = 0; i < t_amount; i++)
+//         drawByPath3(t_meshes[i], t_bulbs, t_bulbsCount);
+// }
 
-void Renderer::drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
-{
-    beginFrameIfNeeded();
-    if (!t_mesh.isDataLoaded())
-        PRINT_ERR("Can't draw, because no mesh data was loaded!");
-    if (t_mesh.getCurrentAnimationFrame() != t_mesh.getNextAnimationFrame())
-        t_mesh.animate();
-    for (u32 i = 0; i < t_mesh.getMaterialsCount(); i++)
-    {
-        MeshMaterial *material = &t_mesh.getMaterial(i);
-        if (t_mesh.shouldBeFrustumCulled && !material->isInFrustum(renderData.frustumPlanes, t_mesh.position))
-            return;
-        Texture *tex = textureRepo.getBySpriteOrMesh(material->getId());
-        changeTexture(tex);
-        gifSender->initPacket(context);
-        u32 vertCount = material->getFacesCount();
-        VECTOR *vertices = new VECTOR[vertCount];
-        VECTOR *normals = new VECTOR[vertCount];
-        VECTOR *coordinates = new VECTOR[vertCount];
-        vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
-        gifSender->addObject(&renderData, t_mesh, vertCount, vertices, normals, coordinates, t_bulbs, t_bulbsCount, &textureBuffer, &material->color);
-        gifSender->sendPacket();
-        delete[] vertices;
-        delete[] normals;
-        delete[] coordinates;
-    }
-}
+// Obsolete
+// void Renderer::drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
+// {
+//     beginFrameIfNeeded();
+//     if (!t_mesh.isDataLoaded())
+//         PRINT_ERR("Can't draw, because no mesh data was loaded!");
+//     if (t_mesh.getCurrentAnimationFrame() != t_mesh.getNextAnimationFrame())
+//         t_mesh.animate();
+//     for (u32 i = 0; i < t_mesh.getMaterialsCount(); i++)
+//     {
+//         MeshMaterial *material = &t_mesh.getMaterial(i);
+//         if (t_mesh.shouldBeFrustumCulled && !material->isInFrustum(renderData.frustumPlanes, t_mesh.position))
+//             return;
+//         Texture *tex = textureRepo.getBySpriteOrMesh(material->getId());
+//         changeTexture(tex);
+//         gifSender->initPacket(context);
+//         u32 vertCount = material->getFacesCount();
+//         VECTOR *vertices = new VECTOR[vertCount];
+//         VECTOR *normals = new VECTOR[vertCount];
+//         VECTOR *coordinates = new VECTOR[vertCount];
+//         vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, *renderData.cameraPosition);
+//         gifSender->addObject(&renderData, t_mesh, vertCount, vertices, normals, coordinates, t_bulbs, t_bulbsCount, &textureBuffer, &material->color);
+//         gifSender->sendPacket();
+//         delete[] vertices;
+//         delete[] normals;
+//         delete[] coordinates;
+//     }
+// }
 
-void Renderer::drawByPath3(Mesh *t_meshes, u16 t_amount) { drawByPath3(t_meshes, t_amount, NULL, 0); }
+// Obsolete
+// void Renderer::drawByPath3(Mesh *t_meshes, u16 t_amount) { drawByPath3(t_meshes, t_amount, NULL, 0); }
 
-void Renderer::drawByPath3(Mesh &t_mesh) { drawByPath3(t_mesh, NULL, 0); }
+// Obsolete
+// void Renderer::drawByPath3(Mesh &t_mesh) { drawByPath3(t_mesh, NULL, 0); }
 
 /// --- Draw: PATH1
 
