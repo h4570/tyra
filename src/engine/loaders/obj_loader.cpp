@@ -36,6 +36,8 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
     fseek(file, 0, SEEK_SET);
     u32 verticesI = 0, cordsI = 0, normalsI = 0, faceI = 0, vertexIndex[3], coordIndex[3], normalIndex[3];
     s16 materialsI = -1;
+    Vector3 vector = Vector3();
+    Point point = Point();
     while (1)
     {
         char lineHeader[128]; // read the first word of the line
@@ -44,13 +46,11 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
         {
             if (strcmp(lineHeader, "v") == 0)
             {
-                Vector3 vector = Vector3();
                 fscanf(file, "%f %f %f\n", &vector.x, &vector.y, &vector.z);
                 o_result->setVertex(verticesI++, vector * t_scale);
             }
             else if (strcmp(lineHeader, "vt") == 0)
             {
-                Point point = Point();
                 fscanf(file, "%f %f\n", &point.x, &point.y);
                 if (t_invertT)
                     point.y = 1.0F - point.y;
@@ -58,7 +58,6 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
             }
             else if (strcmp(lineHeader, "vn") == 0)
             {
-                Vector3 vector = Vector3();
                 fscanf(file, "%f %f %f\n", &vector.x, &vector.y, &vector.z);
                 o_result->setNormal(normalsI++, vector);
             }
@@ -71,7 +70,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
             }
             else if (strcmp(lineHeader, "f") == 0)
             {
-                int *x = NULL;
+                int *x = &res; // random assignment, to disable compilation warning
                 fpos_t start;
                 fgetpos(file, &start);
                 int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", x, x, x, x, x, x, x, x, x);
