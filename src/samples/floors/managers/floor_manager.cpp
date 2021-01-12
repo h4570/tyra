@@ -12,6 +12,7 @@
 
 #include <utils/math.hpp>
 #include <utils/debug.hpp>
+#include <stdlib.h>
 
 // ----
 // Constructors/Destructors
@@ -26,7 +27,7 @@ FloorManager::FloorManager(int t_floorAmount, TextureRepository *t_texRepo)
     texRepo = t_texRepo;
     floorAmount = t_floorAmount;
     spirals = new Point[t_floorAmount];
-    int floorSpiralMaxOffset = (int)Math::sqrt(t_floorAmount);
+    int floorSpiralMaxOffset = (int)sqrt(t_floorAmount);
     calcSpiral(floorSpiralMaxOffset, floorSpiralMaxOffset);
     initFloors();
     trick = 0.0F;

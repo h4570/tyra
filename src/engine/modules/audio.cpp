@@ -178,6 +178,8 @@ void Audio::startThread(FileService *t_fileService)
 /** Main thread loop */
 void Audio::threadLoop()
 {
+    if (songPlaying)
+        songPlaying = 1; // GCC11: wtf? we need to put some code there, because song is not playing..
     if (!songPlaying || !songLoaded)
         return;
     if (songFinished)

@@ -11,6 +11,7 @@
 #include "../include/utils/string.hpp"
 #include "../include/utils/debug.hpp"
 #include <stdio.h>
+#define CHAR_BIT 8
 
 char *String::createU32ToString(u32 a)
 {

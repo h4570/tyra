@@ -195,7 +195,7 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
     asm volatile(
         // VU0 macro program:
         // Load vector with 1.0F values to VF21
-        "lqc2 vf21, 0x0(%0) \n\t" // load "one vec"
+        "lqc2 $vf21, 0x0(%0) \n\t" // load "one vec"
         :
         : "r"(ONE_VEC));
 
@@ -221,34 +221,34 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
                 // Calculate lerp() and store data into calc3Vectors
 
                 // Vertex 0
-                "lqc2      vf4, 0x0(%3)  \n\t"  // vf4 = v1
-                "lqc2      vf5, 0x0(%6)  \n\t"  // vf5 = v2
-                "mfc1      $10,  %9       \n\t" // vf6 = t
-                "qmtc2     $10,  vf6      \n\t" // lerp:
-                "vsub.xyz  vf7, vf5, vf4 \n\t"  // vf7 = v2 - v1
-                "vmulx.xyz vf8, vf7, vf6 \n\t"  // vf8 = vf7 * t
-                "vadd.xyz  vf9, vf8, vf4 \n\t"  // vf9 = vf8 + vf4
-                "sqc2      vf9, 0x0(%0)  \n\t"  // v0  = vf9
+                "lqc2      $vf4, 0x0(%3)  \n\t"   // $vf4 = v1
+                "lqc2      $vf5, 0x0(%6)  \n\t"   // $vf5 = v2
+                "mfc1      $10,  %9       \n\t"   // $vf6 = t
+                "qmtc2     $10,  $vf6      \n\t"  // lerp:
+                "vsub.xyz  $vf7, $vf5, $vf4 \n\t" // $vf7 = v2 - v1
+                "vmulx.xyz $vf8, $vf7, $vf6 \n\t" // $vf8 = $vf7 * t
+                "vadd.xyz  $vf9, $vf8, $vf4 \n\t" // $vf9 = $vf8 + $vf4
+                "sqc2      $vf9, 0x0(%0)  \n\t"   // v0  = $vf9
 
                 // Vertex 1
-                "lqc2      vf4, 0x0(%4)  \n\t"  // vf4 = v1
-                "lqc2      vf5, 0x0(%7)  \n\t"  // vf5 = v2
-                "mfc1      $10,  %9       \n\t" // vf6 = t
-                "qmtc2     $10,  vf6      \n\t" // lerp:
-                "vsub.xyz  vf7, vf5, vf4 \n\t"  // vf7 = v2 - v1
-                "vmulx.xyz vf8, vf7, vf6 \n\t"  // vf8 = vf7 * t
-                "vadd.xyz  vf9, vf8, vf4 \n\t"  // vf9 = vf8 + vf4
-                "sqc2      vf9, 0x0(%1)  \n\t"  // v0  = vf9
+                "lqc2      $vf4, 0x0(%4)  \n\t"   // $vf4 = v1
+                "lqc2      $vf5, 0x0(%7)  \n\t"   // $vf5 = v2
+                "mfc1      $10,  %9       \n\t"   // $vf6 = t
+                "qmtc2     $10,  $vf6      \n\t"  // lerp:
+                "vsub.xyz  $vf7, $vf5, $vf4 \n\t" // $vf7 = v2 - v1
+                "vmulx.xyz $vf8, $vf7, $vf6 \n\t" // $vf8 = $vf7 * t
+                "vadd.xyz  $vf9, $vf8, $vf4 \n\t" // $vf9 = $vf8 + $vf4
+                "sqc2      $vf9, 0x0(%1)  \n\t"   // v0  = $vf9
 
                 // Vertex 2
-                "lqc2      vf4, 0x0(%5)  \n\t"  // vf4 = v1
-                "lqc2      vf5, 0x0(%8)  \n\t"  // vf5 = v2
-                "mfc1      $10,  %9       \n\t" // vf6 = t
-                "qmtc2     $10,  vf6      \n\t" // lerp:
-                "vsub.xyz  vf7, vf5, vf4 \n\t"  // vf7 = v2 - v1
-                "vmulx.xyz vf8, vf7, vf6 \n\t"  // vf8 = vf7 * t
-                "vadd.xyz  vf9, vf8, vf4 \n\t"  // vf9 = vf8 + vf4
-                "sqc2      vf9, 0x0(%2)  \n\t"  // v0  = vf9
+                "lqc2      $vf4, 0x0(%5)  \n\t"   // $vf4 = v1
+                "lqc2      $vf5, 0x0(%8)  \n\t"   // $vf5 = v2
+                "mfc1      $10,  %9       \n\t"   // $vf6 = t
+                "qmtc2     $10,  $vf6      \n\t"  // lerp:
+                "vsub.xyz  $vf7, $vf5, $vf4 \n\t" // $vf7 = v2 - v1
+                "vmulx.xyz $vf8, $vf7, $vf6 \n\t" // $vf8 = $vf7 * t
+                "vadd.xyz  $vf9, $vf8, $vf4 \n\t" // $vf9 = $vf8 + $vf4
+                "sqc2      $vf9, 0x0(%2)  \n\t"   // v0  = $vf9
 
                 :
                 : "r"(calc3Vectors[0].xyz),
@@ -267,12 +267,12 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
             asm volatile(
                 // VU0 macro program
                 // Copy 0,1,2 vertices
-                "lqc2 vf1, 0x0(%3) \n\t" // load vert
-                "lqc2 vf2, 0x0(%4) \n\t" // load normal
-                "lqc2 vf3, 0x0(%5) \n\t" // load st
-                "sqc2 vf1, 0x0(%0) \n\t" // store vert
-                "sqc2 vf2, 0x0(%1) \n\t" // store normal
-                "sqc2 vf3, 0x0(%2) \n\t" // store st
+                "lqc2 $vf1, 0x0(%3) \n\t" // load vert
+                "lqc2 $vf2, 0x0(%4) \n\t" // load normal
+                "lqc2 $vf3, 0x0(%5) \n\t" // load st
+                "sqc2 $vf1, 0x0(%0) \n\t" // store vert
+                "sqc2 $vf2, 0x0(%1) \n\t" // store normal
+                "sqc2 $vf3, 0x0(%2) \n\t" // store st
                 :
                 : "r"(calc3Vectors[0].xyz),
                   "r"(calc3Vectors[1].xyz),
@@ -291,37 +291,37 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
                 // Copy data and set vert/normal "w" and st "z"+"w" to 1.0F
 
                 // Vertex 0
-                "lqc2 vf1, 0x0(%3) \n\t"       // load vert
-                "lqc2 vf2, 0x0(%4) \n\t"       // load normal
-                "lqc2 vf3, 0x0(%5) \n\t"       // load st
-                "vadd.w  vf1, vf20, vf21 \n\t" // set vert.w to 1.0F
-                "vadd.w  vf2, vf20, vf21 \n\t" // set normal.W to 1.0F
-                "vadd.zw vf3, vf20, vf21 \n\t" // set st.zw to 1.0F
-                "sqc2 vf1, 0x0(%0) \n\t"       // store vert
-                "sqc2 vf2, 0x0(%1) \n\t"       // store normal
-                "sqc2 vf3, 0x0(%2) \n\t"       // store st
+                "lqc2 $vf1, 0x0(%3) \n\t"         // load vert
+                "lqc2 $vf2, 0x0(%4) \n\t"         // load normal
+                "lqc2 $vf3, 0x0(%5) \n\t"         // load st
+                "vadd.w  $vf1, $vf20, $vf21 \n\t" // set vert.w to 1.0F
+                "vadd.w  $vf2, $vf20, $vf21 \n\t" // set normal.W to 1.0F
+                "vadd.zw $vf3, $vf20, $vf21 \n\t" // set st.zw to 1.0F
+                "sqc2 $vf1, 0x0(%0) \n\t"         // store vert
+                "sqc2 $vf2, 0x0(%1) \n\t"         // store normal
+                "sqc2 $vf3, 0x0(%2) \n\t"         // store st
 
                 // Vertex 1
-                "lqc2 vf1, 0x0(%9) \n\t"       // load vert
-                "lqc2 vf2, 0x0(%10) \n\t"      // load normal
-                "lqc2 vf3, 0x0(%11) \n\t"      // load st
-                "vadd.w  vf1, vf20, vf21 \n\t" // set vert.w to 1.0F
-                "vadd.w  vf2, vf20, vf21 \n\t" // set normal.W to 1.0F
-                "vadd.zw vf3, vf20, vf21 \n\t" // set st.zw to 1.0F
-                "sqc2 vf1, 0x0(%6) \n\t"       // store vert
-                "sqc2 vf2, 0x0(%7) \n\t"       // store normal
-                "sqc2 vf3, 0x0(%8) \n\t"       // store st
+                "lqc2 $vf1, 0x0(%9) \n\t"         // load vert
+                "lqc2 $vf2, 0x0(%10) \n\t"        // load normal
+                "lqc2 $vf3, 0x0(%11) \n\t"        // load st
+                "vadd.w  $vf1, $vf20, $vf21 \n\t" // set vert.w to 1.0F
+                "vadd.w  $vf2, $vf20, $vf21 \n\t" // set normal.W to 1.0F
+                "vadd.zw $vf3, $vf20, $vf21 \n\t" // set st.zw to 1.0F
+                "sqc2 $vf1, 0x0(%6) \n\t"         // store vert
+                "sqc2 $vf2, 0x0(%7) \n\t"         // store normal
+                "sqc2 $vf3, 0x0(%8) \n\t"         // store st
 
                 // Vertex 2
-                "lqc2 vf1, 0x0(%15) \n\t"      // load vert
-                "lqc2 vf2, 0x0(%16) \n\t"      // load normal
-                "lqc2 vf3, 0x0(%17) \n\t"      // load st
-                "vadd.w  vf1, vf20, vf21 \n\t" // set vert.w to 1.0F
-                "vadd.w  vf2, vf20, vf21 \n\t" // set normal.W to 1.0F
-                "vadd.zw vf3, vf20, vf21 \n\t" // set st.zw to 1.0F
-                "sqc2 vf1, 0x0(%12) \n\t"      // store vert
-                "sqc2 vf2, 0x0(%13) \n\t"      // store normal
-                "sqc2 vf3, 0x0(%14) \n\t"      // store st
+                "lqc2 $vf1, 0x0(%15) \n\t"        // load vert
+                "lqc2 $vf2, 0x0(%16) \n\t"        // load normal
+                "lqc2 $vf3, 0x0(%17) \n\t"        // load st
+                "vadd.w  $vf1, $vf20, $vf21 \n\t" // set vert.w to 1.0F
+                "vadd.w  $vf2, $vf20, $vf21 \n\t" // set normal.W to 1.0F
+                "vadd.zw $vf3, $vf20, $vf21 \n\t" // set st.zw to 1.0F
+                "sqc2 $vf1, 0x0(%12) \n\t"        // store vert
+                "sqc2 $vf2, 0x0(%13) \n\t"        // store normal
+                "sqc2 $vf3, 0x0(%14) \n\t"        // store st
 
                 :
                 : "r"(o_vertices[addedFaces]),

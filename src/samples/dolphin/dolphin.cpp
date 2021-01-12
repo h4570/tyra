@@ -73,7 +73,7 @@ void Dolphin::onInit()
 
     printf("Loading water...\n");
 
-    u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
+    u32 spiralOffset = (u32)sqrt(WATER_TILES_COUNT);
     waterDrawList = new Mesh *[WATER_TILES_COUNT];
     calcSpiral(spiralOffset, spiralOffset);
     water[0].loadObj("water/", "water", WATER_TILE_SCALE, false);
