@@ -126,6 +126,7 @@ public:
 
 private:
     u8 songLoaded, volume, realVolume, songPlaying, songInLoop, songFinished;
+    u8 hack; // TODO
     std::vector<AudioListenerRef *> songListeners;
     FILE *wav;
     audsrv_fmt_t format;
