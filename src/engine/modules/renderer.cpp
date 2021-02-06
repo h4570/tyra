@@ -328,7 +328,6 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
         VECTOR normals[vertCount] __attribute__((aligned(16)));
         VECTOR coordinates[vertCount] __attribute__((aligned(16)));
         Texture *tex = textureRepo.getBySpriteOrMesh(material->getId());
-        // printf("TexId:%d\n", tex->getId());
         changeTexture(tex);
         vertCount = t_mesh.getDrawData(i, vertices, normals, coordinates, rotatedCamera);
         vifSender->drawMesh(&renderData, perspective, vertCount, vertices, normals, coordinates, t_mesh, t_bulbs, t_bulbsCount, &textureBuffer, &material->color, !material->areSTsPresent());
