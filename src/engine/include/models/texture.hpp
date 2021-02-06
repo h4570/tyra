@@ -83,20 +83,17 @@ public:
     /** 
      * Returns index of link.
      * -1 if not found.
+     * @param t_id
+     * For 3D: Mesh material id.
+     * For 2D: Sprite id.
      */
-    const s32 getIndexOfLink(const u32 &t_meshId, const u32 &t_materialId) const
+    const s32 getIndexOfLink(const u32 &t_id) const
     {
         for (u32 i = 0; i < texLinks.size(); i++)
-            if (texLinks[i].materialId == t_materialId && texLinks[i].meshOrSpriteId == t_meshId)
+            if (texLinks[i].id == t_id)
                 return i;
         return -1;
     };
-
-    /** 
-     * Returns index of link.
-     * -1 if not found.
-     */
-    inline const s32 getIndexOfLink(const u32 &t_spriteId) const { return getIndexOfLink(t_spriteId, 0); };
 
     // ----
     //  Setters
@@ -144,18 +141,15 @@ public:
 
     const u8 &isSizeSet() const { return _isSizeSet; };
 
-    const u8 isLinkedWith(const u32 &t_meshId, const u32 &t_materialId) const
+    /** 
+     * Check if texture is linked with Mesh/Sprite. 
+     * @param t_id
+     * For 3D: Mesh material id.
+     * For 2D: Sprite id.
+     */
+    const u8 isLinkedWith(const u32 &t_id) const
     {
-        s32 index = getIndexOfLink(t_meshId, t_materialId);
-        if (index != -1)
-            return true;
-        else
-            return false;
-    };
-
-    const u8 isLinkedWith(const u32 &t_spriteId) const
-    {
-        s32 index = getIndexOfLink(t_spriteId);
+        s32 index = getIndexOfLink(t_id);
         if (index != -1)
             return true;
         else
@@ -164,18 +158,15 @@ public:
 
     void removeLinkByIndex(const u32 &t_index) { texLinks.erase(texLinks.begin() + t_index); }
 
-    void removeLinkBySprite(const u32 &t_spriteId)
+    /** 
+     * Remove texture link with given Mesh/Sprite. 
+     * @param t_id
+     * For 3D: Mesh material id.
+     * For 2D: Sprite id.
+     */
+    void removeLinkById(const u32 &t_id)
     {
-        s32 index = getIndexOfLink(t_spriteId);
-        if (index != -1)
-            removeLinkByIndex(index);
-        else
-            PRINT_ERR("Cant remove link, because it was not found!");
-    }
-
-    void removeLinkByMesh(const u32 &t_meshId, const u32 &t_materialId)
-    {
-        s32 index = getIndexOfLink(t_meshId, t_materialId);
+        s32 index = getIndexOfLink(t_id);
         if (index != -1)
             removeLinkByIndex(index);
         else

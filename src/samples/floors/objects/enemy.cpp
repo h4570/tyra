@@ -16,6 +16,7 @@
 #include <modules/gif_sender.hpp>
 #include <utils/debug.hpp>
 #include <utils/math.hpp>
+#include <stdlib.h>
 
 // ----
 // Constructors/Destructors

@@ -73,7 +73,7 @@ void Dolphin::onInit()
 
     printf("Loading water...\n");
 
-    u32 spiralOffset = (u32)Math::sqrt(WATER_TILES_COUNT);
+    u32 spiralOffset = (u32)sqrt(WATER_TILES_COUNT);
     waterDrawList = new Mesh *[WATER_TILES_COUNT];
     calcSpiral(spiralOffset, spiralOffset);
     water[0].loadObj("water/", "water", WATER_TILE_SCALE, false);
@@ -88,8 +88,7 @@ void Dolphin::onInit()
         water[i].shouldBeFrustumCulled = true;
         water[i].shouldBeBackfaceCulled = false;
         water[i].position.set(WATER_TILE_SCALE * 2.0F * spirals[i].x, WATER_LEVEL, WATER_TILE_SCALE * 2.0F * spirals[i].y);
-        texRepo->getByMesh(water[0].getId(), water[0].getMaterial(0).getId())
-            ->addLink(water[i].getId(), water[i].getMaterial(0).getId());
+        texRepo->getBySpriteOrMesh(water[0].getMaterial(0).getId())->addLink(water[i].getMaterial(0).getId());
         waterDrawList[i] = &water[i];
     }
 
@@ -123,8 +122,7 @@ void Dolphin::onInit()
         oysters[i].mesh.loadFrom(oysters[0].mesh);
         oysters[i].mesh.shouldBeBackfaceCulled = false;
         oysters[i].mesh.shouldBeFrustumCulled = false;
-        texRepo->getByMesh(oysters[0].mesh.getId(), oysters[0].mesh.getMaterial(0).getId())
-            ->addLink(oysters[i].mesh.getId(), oysters[i].mesh.getMaterial(0).getId());
+        texRepo->getBySpriteOrMesh(oysters[0].mesh.getMaterial(0).getId())->addLink(oysters[i].mesh.getMaterial(0).getId());
         oysters[i].mesh.position.set(i * -100, 5.0F, i * -100);
     }
 
@@ -141,8 +139,7 @@ void Dolphin::onInit()
         mines[i].mesh.loadFrom(mines[0].mesh);
         mines[i].mesh.shouldBeBackfaceCulled = false;
         mines[i].mesh.shouldBeFrustumCulled = false;
-        texRepo->getByMesh(mines[0].mesh.getId(), mines[0].mesh.getMaterial(0).getId())
-            ->addLink(mines[i].mesh.getId(), mines[i].mesh.getMaterial(0).getId());
+        texRepo->getBySpriteOrMesh(mines[0].mesh.getMaterial(0).getId())->addLink(mines[i].mesh.getMaterial(0).getId());
         mines[i].mesh.position.set(i * -10, 0.0F, i * -68);
     }
 

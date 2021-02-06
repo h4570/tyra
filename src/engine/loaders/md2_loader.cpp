@@ -138,6 +138,8 @@ MeshFrame *MD2Loader::load(u32 &o_framesCount, char *t_subpath, char *t_nameWith
         {
             for (u32 x = 0; x < framesCount; x++)
             {
+                resultFrames[x].getMaterial(0).setSTsPresent(true);
+                resultFrames[x].getMaterial(0).setNormalsPresent(true);
                 resultFrames[x].getMaterial(0).setVertexFace((i * 3) + j, triangle->index_xyz[j]);
                 resultFrames[x].getMaterial(0).setSTFace((i * 3) + j, triangle->index_st[j]);
                 resultFrames[x].getMaterial(0).setNormalFace((i * 3) + j, triangle->index_xyz[j]);

@@ -178,6 +178,20 @@ void Audio::startThread(FileService *t_fileService)
 /** Main thread loop */
 void Audio::threadLoop()
 {
+    // ---
+    // TODO - bug here, GCC11 is doing some optimizations and this method probably think that
+    // "songPlaying" is false + on real PS2 I see that program tries to turn on this
+    // method as rarely as possible (slow, flickering sound). On GCC 3.2.3 this one was fine lol!.
+    if (songPlaying) // HACK1 - im not proud of that
+        songPlaying = 1;
+    if (songLoaded)
+        songLoaded = 1;
+    if (hack == 1) // HACK2 - lets give some work to gcc lol
+        hack = 2;
+    else
+        hack = 1;
+    // ---
+
     if (!songPlaying || !songLoaded)
         return;
     if (songFinished)

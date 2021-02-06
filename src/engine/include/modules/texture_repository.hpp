@@ -45,23 +45,14 @@ public:
     /** 
      * Returns single texture.
      * NULL if not found.
+     * @param t_id
+     * For 3D: Mesh material id. 
+     * For 2D: Sprite id. 
      */
-    Texture *getBySprite(const u32 &t_spriteId)
+    Texture *getBySpriteOrMesh(const u32 &t_id)
     {
         for (u32 i = 0; i < textures.size(); i++)
-            if (textures[i]->isLinkedWith(t_spriteId))
-                return textures[i];
-        return NULL;
-    }
-
-    /** 
-     * Returns single texture.
-     * NULL if not found.
-     */
-    Texture *getByMesh(const u32 &t_meshId, const u32 &t_materialId)
-    {
-        for (u32 i = 0; i < textures.size(); i++)
-            if (textures[i]->isLinkedWith(t_meshId, t_materialId))
+            if (textures[i]->isLinkedWith(t_id))
                 return textures[i];
         return NULL;
     }

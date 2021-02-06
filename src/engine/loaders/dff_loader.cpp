@@ -244,6 +244,8 @@ void DffLoader::readGeometryExtension(MeshFrame *o_frame, char **materialNames, 
     {
         u32 facesCount = readDwordFromArrayLE(t_buffer, t_ptrPos);
         u32 materialIndex = readDwordFromArrayLE(t_buffer, t_ptrPos);
+        o_frame->getMaterial(i).setSTsPresent(true);
+        o_frame->getMaterial(i).setNormalsPresent(true);
         o_frame->getMaterial(i).allocateFaces(facesCount);
         o_frame->getMaterial(i).setName(materialNames[materialIndex]);
         for (u32 j = 0; j < facesCount; j++)
