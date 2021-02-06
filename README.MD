@@ -9,7 +9,7 @@
     <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/github-splash.png" alt="Logo" width="100%" height="auto">
   </a>
 
-  <h3 align="center">Tyra - alpha 1.29.1</h3>
+  <h3 align="center">Tyra - alpha 1.31.2</h3>
 
   <p align="center">
     Open source game engine for PlayStation 2™
@@ -45,10 +45,7 @@
 
 ## About The Project  
 
-<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.29.1/tyra.gif" alt="sample" width="600" height="auto">  
-
-### Contributors wanted [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
-We will be grateful for any help. If you dont know PS2.. don't worry, we are open to explain how things work.
+<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/tyra.gif" alt="sample" width="600" height="auto">  
 
 ### Samples
 * [Dolphin](https://github.com/h4570/tyra/tree/master/src/samples/dolphin) 
@@ -87,7 +84,7 @@ In our Discord channel, there is detailed tutorial which will help you with sett
 
 This is an example of how to list things you need to use the software.  
 * PS2 DEV environment - [PS2DEV](https://github.com/ps2dev/ps2dev)  
-* At least #674b6f4 PS2SDK (01.12.2020) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
+* At least #e8e9edb PS2SDK (06.02.2021) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
 * PS2 Emulator. For example [PCSX2](https://pcsx2.net/) 
 
 ## Extra info 
@@ -98,7 +95,7 @@ This is an example of how to list things you need to use the software.
 ## Roadmap  
 
 ### Roadmap for next master release:  
-[January 2021 Roadmap](https://github.com/h4570/tyra/projects/4)  
+[Next release roadmap](https://github.com/h4570/tyra/projects/4)  
 
 ## Tyra team  
 
@@ -139,7 +136,7 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 Without these guys, everything would be harder:
 * Dr Henry Fortuna - for code sources
 * Rick Gaiser - for help and new GCC!
-* Lukasz D.K. - for huge archive of PS2 stuff-
+* Lukasz D.K. - for huge archive of PS2 stuff
 * Guilherme Lampert - for code sources
 * Jesper Svennevid, Daniel Collin - for openvcl's code samples
 * Whole PS2DEV team

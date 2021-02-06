@@ -10,10 +10,10 @@
 - Usage of draw() in array mode (for floors, very fast)
 
 ### Assets
-[Download](http://apgcglz.cluster028.hosting.ovh.net/tyra/1.29.1/samples/floors/assets.zip) 
+[Download](http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/samples/floors/assets.zip) 
 
 ### Screenshot  
 
 [![Floors screenshot][floors-screenshot]](#) 
 
-[floors-screenshot]: http://apgcglz.cluster028.hosting.ovh.net/tyra/1.29.1/samples/floors/floors.gif 
+[floors-screenshot]: http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/samples/floors/floors.gif 
