@@ -260,7 +260,8 @@ u32 Mesh::getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals
                   "r"(nextVerts[vertFaces[faceI]].xyz),
                   "r"(nextVerts[vertFaces[faceI + 1]].xyz),
                   "r"(nextVerts[vertFaces[faceI + 2]].xyz),
-                  "f"(animState.interpolation));
+                  "f"(animState.interpolation)
+                : "$10");
         }
         else
         {
