@@ -25,6 +25,8 @@
   </p>
 </p>  
 
+[![Stargazers repo roster for h4570/tyra](https://reporoster.com/stars/h4570/tyra)](https://github.com/h4570/tyra/stargazers)
+
 ## Table of Contents  
 
 * [About the Project](#about-the-project) 
@@ -75,8 +77,6 @@ Tyra takes care for you, and rendering, coprocessors communication, synchronizat
 * Master - monthly releases - tested on PS2 & PCSX2.
 * Develop - daily builds - can be unstable.
 
-[![Stargazers repo roster for h4570/tyra](https://reporoster.com/stars/h4570/tyra)](https://github.com/h4570/tyra/stargazers)
-
 ## Getting Started  
 
 ### Installation [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
@@ -84,7 +84,6 @@ In our Discord channel, there is detailed tutorial which will help you with sett
 
 ### Prerequisites 
 
-This is an example of how to list things you need to use the software.  
 * PS2 DEV environment - [PS2DEV](https://github.com/ps2dev/ps2dev)  
 * At least #e8e9edb PS2SDK (06.02.2021) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
 * PS2 Emulator. For example [PCSX2](https://pcsx2.net/) 
