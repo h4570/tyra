@@ -75,6 +75,8 @@ Tyra takes care for you, and rendering, coprocessors communication, synchronizat
 * Master - monthly releases - tested on PS2 & PCSX2.
 * Develop - daily builds - can be unstable.
 
+[![Stargazers repo roster for h4570/tyra](https://reporoster.com/stars/h4570/tyra)](https://github.com/h4570/tyra/stargazers)
+
 ## Getting Started  
 
 ### Installation [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
