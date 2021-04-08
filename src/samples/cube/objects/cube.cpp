@@ -25,6 +25,7 @@ Cube::Cube( TextureRepository *t_texRepo )
 
 void Cube::update(const Pad &t_pad, const Camera &t_camera)
 {
+    rotate(t_pad);
     Vector3 *nextPos = getNextPosition(t_pad, t_camera);
 }
 
@@ -55,4 +56,12 @@ Vector3 *Cube::getNextPosition(const Pad &t_pad, const Camera &t_camera)
         result->z += -normalizedCamera.x;
     }
     return result;
+}
+
+void Cube::rotate(const Pad &t_pad){
+    //if (t_pad.rJoyH >= 200)
+    //else if (t_pad.rJoyH <= 100)
+        mesh.rotation.x += 0.01;
+        mesh.rotation.y += 0.01;
+        mesh.rotation.z += 0.01;
 }
