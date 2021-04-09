@@ -19,7 +19,6 @@ void Cubes::onInit(){
 }
 
 void Cubes::onUpdate(){
-    lightManager.update();
     camera.update(engine->pad, cube->mesh);
     cube->update(engine->pad, camera);
     engine->renderer->draw(cube->mesh);

@@ -4,7 +4,6 @@
 #include <tamtypes.h>
 #include <game.hpp>
 #include <engine.hpp>
-#include "managers/light_manager.hpp"
 #include "modules/texture_repository.hpp"
 #include "camera.hpp"
 #include "objects/cube.hpp"
@@ -25,7 +24,6 @@ class Cubes : public Game
         void setBgColorAndAmbientColor();
         TextureRepository *texRepo;
         Cube *cube;
-        LightManager lightManager;
         Camera camera;
 };
 

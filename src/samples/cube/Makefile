@@ -3,7 +3,6 @@ EE_BIN = cube.elf
 TYRA_DIR = ./../../engine
 
 EE_OBJS =											\
-	managers/light_manager.o						\
 	objects/cube.o									\
 	camera.o										\
 	cubes.o											\
