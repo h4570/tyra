@@ -11,9 +11,9 @@ Cube::Cube( TextureRepository *t_texRepo )
 {
     PRINT_LOG("Creating cube");
     texRepo = t_texRepo;
-    speed = 1.5F;
+    speed = 1.2F;
 
-    mesh.loadObj("meshes/cube/", "cube", 6.0F, true);
+    mesh.loadObj("meshes/cube/", "cube", 10.0F, true);
     mesh.position.set(20.00F, 40.00F, 10.00F);
     mesh.rotation.x = -1.566F;
     mesh.rotation.z = 1.566F;
@@ -61,7 +61,7 @@ Vector3 *Cube::getNextPosition(const Pad &t_pad, const Camera &t_camera)
 void Cube::rotate(const Pad &t_pad){
     //if (t_pad.rJoyH >= 200)
     //else if (t_pad.rJoyH <= 100)
-        mesh.rotation.x += 0.01;
-        mesh.rotation.y += 0.01;
-        mesh.rotation.z += 0.01;
+        mesh.rotation.x += (0.01 * speed);
+        mesh.rotation.y += (0.01 * speed);
+        mesh.rotation.z += (0.01 * speed);
 }
