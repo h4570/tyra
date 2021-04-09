@@ -28,9 +28,9 @@ void Cubes::onUpdate(){
 void Cubes::setBgColorAndAmbientColor()
 {
     color_t bgColor;
-    bgColor.r = 0x50;
-    bgColor.g = 0x50;
-    bgColor.b = 0x50;
+    bgColor.r = 0x20;
+    bgColor.g = 0x20;
+    bgColor.b = 0x20;
     engine->renderer->setWorldColor(bgColor);
     Vector3 ambient = Vector3(0.2F, 0.2F, 0.2F);
     engine->renderer->setAmbientLight(ambient);
