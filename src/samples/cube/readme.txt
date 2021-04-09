@@ -1,0 +1,1 @@
+unpack this to: tyra/src/samples/cube/bin
