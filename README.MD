@@ -38,22 +38,23 @@
   * [Installation](#installation) 
   * [Prerequisites](#prerequisites) 
 * [Roadmap](#roadmap) 
-* [Tyra team](#tyra-team)
 * [Contributing](#contributing) 
 * [License](#license) 
 * [Built With](#built-with) 
 * [Acronyms](#acronyms) 
 * [Thanks](#thanks) 
 
-## About The Project  
+## About the Project  
 
-<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/tyra.gif" alt="sample" width="600" height="auto">  
+<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/tyra.gif" alt="Sample code" width="600" height="auto">  
+<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/samples/dolphin/dolphin.gif " alt="Sample game" width="500" height="auto">  
 
 ### Samples
 * [Dolphin](https://github.com/h4570/tyra/tree/master/src/samples/dolphin) 
 * [Floors](https://github.com/h4570/tyra/tree/master/src/samples/floors) 
+* [Cube](https://github.com/h4570/tyra/tree/master/src/samples/cube) 
   
-### About project
+### About the project
 Goal of Tyra project is to provide simple API for PS2 game creation, so you can just run PS2 emulator, grab .obj file, and put it into live in a seconds. Project is on alpha stage, so keep in mind that there are many things to be done and to fix.
  
 YouTube tutorials soon!  
@@ -98,13 +99,6 @@ In our Discord channel, there is detailed tutorial which will help you with sett
 ### Roadmap for next master release:  
 [Next release roadmap](https://github.com/h4570/tyra/projects/4)  
 
-## Tyra team  
-
-Sandro Sobczyński - sandro.sobczynski@gmail.com  
-[![LinkedIn][linkedin-shield]](https://linkedin.com/in/sandro-sobczyński-28820b15a)  
-Michał Mostowik - mostek3pl@gmail.com  
-[![LinkedIn][linkedin-shield]](https://www.linkedin.com/in/notfoxar)  
-
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
 
 ## Contributing 
@@ -145,6 +139,8 @@ Without these guys, everything would be harder:
 * And so many other guys. Thanks!
 
 Project Link: [https://github.com/h4570/tyra](https://github.com/h4570/tyra)  
+Sandro Sobczyński - sandro.sobczynski@gmail.com  
+[![LinkedIn][linkedin-shield]](https://linkedin.com/in/sandro-sobczyński-28820b15a)  
   
 <br />
 <a href="https://github.com/h4570/tyra">
