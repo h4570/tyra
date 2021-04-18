@@ -130,22 +130,17 @@ void GifSender::addClear(zbuffer_t *t_zBuffer, color_t *t_rgb)
     packet2_chain_close_tag(currentPacket);
 }
 
-/** Adds 3D objects to current packet
- * @param worldView Matrix
- * @param perspective Matrix with .setPerpsective() used [clone of gluPerspective]
- * @param objects3D Array of 3D objects pointers
- * @param amount Amount of 3D objects
- */
-void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
+/** Adds meshes to current packet */
+void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer, color_t *t_color)
 {
     packet2_chain_open_cnt(currentPacket, 0, 0, 0);
     packet2_update(currentPacket, draw_texture_sampling(currentPacket->next, 0, &t_mesh.lod));
     packet2_update(currentPacket, draw_texturebuffer(currentPacket->next, 0, textureBuffer, &t_mesh.clut));
-    packet2_update(currentPacket, draw_prim_start(currentPacket->next, 0, t_renderData->prim, &t_mesh.color));
+    packet2_update(currentPacket, draw_prim_start(currentPacket->next, 0, t_renderData->prim, t_color));
     xyz = new xyz_t[vertexCount];
     rgbaq = new color_t[vertexCount];
     st = new texel_t[vertexCount];
-    calc3DObject(*t_renderData->perspective, t_mesh, vertexCount, vertices, normals, coordinates, t_renderData, t_bulbs, t_bulbsCount);
+    calc3DObject(*t_renderData->projection, t_mesh, vertexCount, vertices, normals, coordinates, t_renderData, t_bulbs, t_bulbsCount, t_color);
     addCurrentCalcs(vertexCount);
     delete[] xyz;
     delete[] rgbaq;
@@ -155,12 +150,9 @@ void GifSender::addObject(RenderData *t_renderData, Mesh &t_mesh, u32 vertexCoun
 }
 
 /** Calculates 3D object data into xyz, rgbq, st
- * After it addCurrentSTQ() can be done
- * @param worldView Matrix
- * @param perspective Matrix with .setPerpsective() used [clone of gluPerspective]
- * @param mesh 3D object
+ * After it addCurrentCalcs() can be done
  */
-void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, RenderData *t_renderData, LightBulb *t_bulbs, u16 t_bulbsCount)
+void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, RenderData *t_renderData, LightBulb *t_bulbs, u16 t_bulbsCount, color_t *t_color)
 {
     VECTOR *colors = new VECTOR[vertexCount];
     VECTOR position, rotation;
@@ -176,7 +168,7 @@ void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount
         create_local_light(localLight, rotation);
 
     // I cant put perspective from renderData here. ee-gcc bug?
-    create_local_screen(localScreen, localWorld, t_renderData->worldView->data, t_perspective.data);
+    create_local_screen(localScreen, localWorld, t_renderData->view->data, t_perspective.data);
 
     if (SHOULD_BE_LIGHTED)
     {
@@ -195,9 +187,9 @@ void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount
         for (u32 i = 0; i < vertexCount; i++)
         {
             // Apply the light value to the colour.
-            colors[i][0] = (t_mesh.color.r * lights[i][0]);
-            colors[i][1] = (t_mesh.color.g * lights[i][1]);
-            colors[i][2] = (t_mesh.color.b * lights[i][2]);
+            colors[i][0] = (t_color->r * lights[i][0]);
+            colors[i][1] = (t_color->g * lights[i][1]);
+            colors[i][2] = (t_color->b * lights[i][2]);
             vector_clamp(colors[i], colors[i], 0.00F, 1.99F);
         }
 
@@ -209,14 +201,14 @@ void GifSender::calc3DObject(Matrix t_perspective, Mesh &t_mesh, u32 vertexCount
     else
         for (u32 i = 0; i < vertexCount; i++)
         {
-            colors[i][0] = t_mesh.color.r / 128.0F;
-            colors[i][1] = t_mesh.color.g / 128.0F;
-            colors[i][2] = t_mesh.color.b / 128.0F;
+            colors[i][0] = t_color->r / 128.0F;
+            colors[i][1] = t_color->g / 128.0F;
+            colors[i][2] = t_color->b / 128.0F;
         }
 
     calculate_vertices(vertices, vertexCount, vertices, localScreen);
 
-    convertCalcs(vertexCount, vertices, colors, coordinates, t_mesh.color);
+    convertCalcs(vertexCount, vertices, colors, coordinates, *t_color);
 
     delete[] colors;
 }

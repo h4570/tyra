@@ -89,24 +89,25 @@ void Audio::setSongVolume(const u8 &t_vol)
 
 u32 Audio::addSongListener(AudioListener *t_listener)
 {
-    AudioListenerRef ref;
-    ref.id = rand() % 1000000;
-    ref.listener = t_listener;
+    AudioListenerRef *ref = new AudioListenerRef;
+    ref->id = rand() % 1000000;
+    ref->listener = t_listener;
     songListeners.push_back(ref);
-    return ref.id;
+    return ref->id;
 }
 
 void Audio::removeSongListener(const u32 &t_id)
 {
     s32 index = -1;
     for (u32 i = 0; i < songListeners.size(); i++)
-        if (songListeners[i].id == t_id)
+        if (songListeners[i]->id == t_id)
         {
             index = i;
             break;
         }
     if (index == -1)
         PRINT_ERR("Cant remove listener because given id was not found!");
+    delete songListeners[index];
     songListeners.erase(songListeners.begin() + index);
 }
 
@@ -160,7 +161,7 @@ void Audio::playADPCM(audsrv_adpcm_t *t_adpcm, const s8 &t_ch)
 void Audio::startThread(FileService *t_fileService)
 {
     PRINT_LOG("Creating audio thread");
-    fileService = t_fileService;
+    // fileService = t_fileService;
     extern void *_gp;
     thread.func = (void *)Audio::mainThread;
     thread.stack = threadStack;
@@ -177,6 +178,20 @@ void Audio::startThread(FileService *t_fileService)
 /** Main thread loop */
 void Audio::threadLoop()
 {
+    // ---
+    // TODO - bug here, GCC11 is doing some optimizations and this method probably think that
+    // "songPlaying" is false + on real PS2 I see that program tries to turn on this
+    // method as rarely as possible (slow, flickering sound). On GCC 3.2.3 this one was fine lol!.
+    if (songPlaying) // HACK1 - im not proud of that
+        songPlaying = 1;
+    if (songLoaded)
+        songLoaded = 1;
+    if (hack == 1) // HACK2 - lets give some work to gcc lol
+        hack = 2;
+    else
+        hack = 1;
+    // ---
+
     if (!songPlaying || !songLoaded)
         return;
     if (songFinished)
@@ -186,7 +201,7 @@ void Audio::threadLoop()
         {
             printf("Running again.\n");
             for (u32 i = 0; i < getSongListenersCount(); i++)
-                songListeners[i].listener->onAudioFinish();
+                songListeners[i]->listener->onAudioFinish();
             rewindSongToStart();
         }
         else
@@ -202,7 +217,7 @@ void Audio::threadLoop()
         WaitSema(fillbufferSema); // wait until previous chunk wasn't finished
         audsrv_play_audio(wavChunk, chunkReadStatus);
         for (u32 i = 0; i < getSongListenersCount(); i++)
-            songListeners[i].listener->onAudioTick();
+            songListeners[i]->listener->onAudioTick();
     }
 
     chunkReadStatus = fread(wavChunk, 1, sizeof(wavChunk), wav);

@@ -57,7 +57,7 @@ void TextureRepository::addByMesh(char *t_path, Mesh &mesh, TextureFormat t_form
         else
             pngLoader.load(*texture, t_path, mesh.getMaterial(i).getName(), ".png");
         texture->setName(mesh.getMaterial(i).getName());
-        texture->addLink(mesh.getId(), mesh.getMaterial(i).getId());
+        texture->addLink(mesh.getMaterial(i).getId());
         textures.push_back(texture);
     }
 }

@@ -11,7 +11,6 @@
 #include "../include/utils/math.hpp"
 
 #include <math.h>
-#include <fastmath.h>
 
 float Math::cos(float x)
 {
@@ -69,16 +68,6 @@ float Math::cos(float x)
         : "=&f"(r)
         : "f"(x)
         : "$f1", "$f2", "$f3", "$f4", "$f5", "$f6", "$f7", "$f8", "$f9", "$8", "$9", "$10");
-    return r;
-}
-
-float Math::sqrt(float x)
-{
-    float r;
-    __asm__ volatile(
-        "sqrt.s %0, %1 \n\t"
-        : "=&f"(r)
-        : "f"(x));
     return r;
 }
 

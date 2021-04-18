@@ -12,6 +12,7 @@
 #define _TYRA_MESH_MATERIAL_
 
 #include <tamtypes.h>
+#include <draw_types.h>
 #include "bounding_box.hpp"
 #include "./math/vector3.hpp"
 #include "./math/plane.hpp"
@@ -28,6 +29,8 @@ class MeshMaterial
 public:
     MeshMaterial();
     ~MeshMaterial();
+
+    color_t color;
 
     // ----
     // Getters
@@ -104,11 +107,43 @@ public:
     /** Set material name. */
     void setName(char *t_val);
 
+    /** 
+     * Do not call this method unless you know what you do.
+     * Should be called by data loader. 
+     */
+    void setSTsPresent(const u8 &b) { _areSTsPresent = b; };
+
+    /** 
+     * Do not call this method unless you know what you do.
+     * Should be called by data loader. 
+     */
+    void setNormalsPresent(const u8 &b) { _areNormalsPresent = b; };
+
     // ----
     //  Other
     // ----
 
+    const u8 &areSTsPresent() const { return _areSTsPresent; };
+
+    const u8 &areNormalsPresent() const { return _areNormalsPresent; };
+
+    /** Create reference copy (non-mother) */
+    void copyFrom(MeshMaterial *t_refCopy);
+
     const u8 &isNameSet() const { return _isNameSet; };
+
+    /** 
+     * Check if this object is mother. 
+     * Mother = object loaded with loadObj(), loadDff().. 
+     * Have all mother data: vertex faces, st faces, etc.. 
+     * Non-mother = object loaded with loadFrom().  
+     * Have reference copy to mother data: vertex faces, st faces, etc.. 
+     *  
+     * When you will destruct mother object, all faces data will be deleted.
+     * When you will destruct non-mother object, all faces data will be NOT deleted.
+     */
+    const u8 &isMother() const { return _isMother; };
+
     const u8 &areFacesAllocated() const { return _areFacesAllocated; };
 
     /** Set faces count and allocate memory. */
@@ -125,10 +160,16 @@ public:
     u8 isInFrustum(Plane *t_frustumPlanes, const Vector3 &position);
 
 private:
+    void setDefaultColor();
     BoundingBox *boundingBoxObj;
     u32 facesCount, id;
     u32 *vertexFaces, *stFaces, *normalFaces;
-    u8 _isNameSet, _areFacesAllocated, _isBoundingBoxCalculated;
+    u8 _isMother,
+        _isNameSet,
+        _areFacesAllocated,
+        _isBoundingBoxCalculated,
+        _areSTsPresent,
+        _areNormalsPresent;
     char *name;
 };
 

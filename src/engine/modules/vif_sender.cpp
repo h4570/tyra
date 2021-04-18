@@ -17,8 +17,10 @@
 #include "../include/utils/debug.hpp"
 
 const u32 VU1_PACKAGE_VERTS_PER_BUFF = 96; // Remember to modify buffer size in vu1 also
-const u32 VU1_PACKAGES_PER_PACKET = 6;
-const u32 VU1_PACKET_SIZE = 128;
+const u32 VU1_PACKAGES_PER_PACKET = 9;
+const u32 VU1_PACKET_SIZE = 256; // should be 128, but 256 is more safe for future
+const u8 VU1_PARAMS_ADDRESS = 4;
+const u8 VU1_RGBA_ADDRESS = 8;
 
 // ----
 // Constructors/Destructors
@@ -31,24 +33,24 @@ extern u32 VU1Draw3D_CodeEnd __attribute__((section(".vudata")));
 
 VifSender::VifSender(Light *t_light)
 {
-    light = t_light;
     PRINT_LOG("Initializing VifSender");
-    PRINT_LOG("VifSender initialized!");
+    light = t_light;
+    lastVertCount = 0;
+    isDrawWaitEnabled = true;
     dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
     dma_channel_fast_waits(DMA_CHANNEL_VIF1);
     uploadMicroProgram();
     packets[0] = packet2_create(VU1_PACKET_SIZE, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
     packets[1] = packet2_create(VU1_PACKET_SIZE, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-    matricesPacket = packet2_create(4, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
     context = 0;
-    setDoubleBuffer();
+    setDoubleBufferAddStaticData();
+    PRINT_LOG("VifSender initialized!");
 }
 
 VifSender::~VifSender()
 {
     packet2_free(packets[0]);
     packet2_free(packets[1]);
-    packet2_free(matricesPacket);
 }
 
 // ----
@@ -69,27 +71,19 @@ void VifSender::uploadMicroProgram()
     packet2_free(packet2);
 }
 
-void VifSender::sendMatrices(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation)
+void VifSender::calcMatrix(const RenderData &t_renderData, const Vector3 &t_position, const Vector3 &t_rotation)
 {
-    vec3ToNative(position, t_position, 1.0F);
-    vec3ToNative(rotation, t_rotation, 1.0F);
-    MATRIX localWorld, localScreen;
-    create_local_world(localWorld, position, rotation);
-    create_local_screen(localScreen, localWorld, t_renderData.worldView->data, t_renderData.perspective->data);
-    // Small undo, because im testing new matrix funcs, which are DIFFERENT than PS2SDK, so cant be used right now.
-    // Matrix viewProj = Matrix();
-    // viewProj.rotation(t_rotation);                                   // model matrix
-    // viewProj.translate(t_position);                                  // model matrix
-    // viewProj *= *t_renderData.worldView * *t_renderData.perspective; // viewproj = model * (view * projection)
-    packet2_reset(matricesPacket, false);
-    // packet2_utils_vu_add_unpack_data(matricesPacket, 0, &viewProj.data, 8, 0);
-    packet2_utils_vu_add_unpack_data(matricesPacket, 0, localScreen, 8, 0);
-    packet2_utils_vu_add_end_tag(matricesPacket);
-    dma_channel_wait(DMA_CHANNEL_VIF1, 0);
-    dma_channel_send_packet2(matricesPacket, DMA_CHANNEL_VIF1, 1);
+    model.identity();
+    model.rotate(t_rotation);
+    model.translate(t_position);
+
+    modelViewProj.identity();
+    modelViewProj = model * modelViewProj;
+    modelViewProj = *t_renderData.view * modelViewProj;
+    modelViewProj = *t_renderData.projection * modelViewProj;
 }
 
-void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer)
+void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 vertCount2, VECTOR *vertices, VECTOR *normals, VECTOR *coordinates, Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount, texbuffer_t *textureBuffer, color_t *t_color, u8 t_rgbaOnly)
 {
     // we have to split 3D object into small parts, because of small memory of VU1
 
@@ -103,7 +97,7 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
                 i -= 3;
 
             const u32 endI = i + (VU1_PACKAGE_VERTS_PER_BUFF - 1) > vertCount2 ? vertCount2 : i + (VU1_PACKAGE_VERTS_PER_BUFF - 1);
-            drawVertices(t_mesh, i, endI, vertices, coordinates, t_renderData->prim, textureBuffer);
+            drawVertices(t_mesh, i, endI, vertices, coordinates, t_renderData->prim, textureBuffer, isDrawWaitEnabled ? endI == vertCount2 : false, t_color, t_rgbaOnly);
             if (endI == vertCount2) // if there are no more vertices to draw, break
             {
                 i = vertCount2;
@@ -119,82 +113,138 @@ void VifSender::drawMesh(RenderData *t_renderData, Matrix t_perspective, u32 ver
     }
 }
 
-void VifSender::setDoubleBuffer()
+void VifSender::setDoubleBufferAddStaticData()
 {
-    packet2_t *settings = packet2_create(2, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-    packet2_utils_vu_add_double_buffer(settings, 8, 496);
+    packet2_t *settings = packet2_create(10, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+    packet2_utils_vu_open_unpack(settings, 0, false);
+    {
+        packet2_utils_gs_add_draw_finish_giftag(settings);
+        packet2_utils_gif_add_set(settings, 1);
+    }
+    packet2_utils_vu_close_unpack(settings);
+    packet2_utils_vu_add_double_buffer(settings, 10, 498);
     packet2_utils_vu_add_end_tag(settings);
-    dma_channel_send_packet2(settings, DMA_CHANNEL_VIF1, 1);
+    dma_channel_send_packet2(settings, DMA_CHANNEL_VIF1, true);
     dma_channel_wait(DMA_CHANNEL_VIF1, 0);
     packet2_free(settings);
 }
 
 /** Draw using PATH1 */
-void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *textureBuffer)
+void VifSender::drawVertices(Mesh &t_mesh, u32 t_start, u32 t_end, VECTOR *t_vertices, VECTOR *t_coordinates, prim_t *t_prim, texbuffer_t *t_texBuff, u8 t_addDrawWait, color_t *t_color, u8 t_rgbaOnly)
 {
     const u32 vertCount = t_end - t_start;
-    u32 vif_added_bytes = 0;
-    packet2_utils_vu_open_unpack(currPacket, 0, 1);
-    // TODO get this via screensettings
-    packet2_add_float(currPacket, 2048.0F);                   // scale
-    packet2_add_float(currPacket, 2048.0F);                   // scale
-    packet2_add_float(currPacket, ((float)0xFFFFFF) / 32.0F); // scale
-    packet2_add_u32(currPacket, vertCount);                   // vertex count
-    packet2_utils_gif_add_set(currPacket, 1);
+    lastVertCount = vertCount;
+    isLastRGBAOnly = t_rgbaOnly;
+    packet2_utils_vu_open_unpack(currPacket, 0, true);
+    packet2_add_data(currPacket, modelViewProj.data, 4);
+    packet2_add_u32(currPacket, t_addDrawWait); // Draw finish?
+    packet2_add_u32(currPacket, vertCount);     // Vertex count
+    packet2_add_u32(currPacket, vertCount / 3); // Triangles count
+    packet2_add_u32(currPacket, t_rgbaOnly);    // 0 = STQ+RGBA, 1 = RGBA
     packet2_utils_gs_add_lod(currPacket, &t_mesh.lod);
-    packet2_utils_gs_add_texbuff_clut(currPacket, textureBuffer, &t_mesh.clut);
-    packet2_utils_gs_add_prim_giftag(currPacket, t_prim, vertCount, DRAW_STQ2_REGLIST, 3, 0);
-
-    packet2_add_u32(currPacket, t_mesh.color.r);
-    packet2_add_u32(currPacket, t_mesh.color.g);
-    packet2_add_u32(currPacket, t_mesh.color.b);
-    packet2_add_u32(currPacket, t_mesh.color.a);
-
-    // Clipping tests start
-
-    // // const float minZ = 1;
-    // // const float maxZ = 65535;
-    // // const int iGuardDimXY = 2048;
-
-    // // vu1.addFloat(1.0F); // f_TODO clipping maybe there is problem?
-    // // vu1.addFloat(1.0F);
-    // // vu1.addFloat(1.0F);
-    // // vu1.addFloat(1.0F);
-    // //  float xClip = (float)2048.0f/(drawContext.GetFBWidth() * 0.5f * 2.0f);
-    // //       packet += Math::Max( xClip, 1.0f );
-    // //       float yClip = (float)2048.0f/(drawContext.GetFBHeight() * 0.5f * 2.0f);
-    // //       packet += Math::Max( yClip, 1.0f );
-    // //       float depthClip = 2048.0f / depthClipToGs;
-    // //       // F_FIXME: maybe these 2048's should be 2047.5s...
-    // //       depthClip *= 1.003f; // round up a bit for fp error (????)
-    // //       packet += depthClip;
-    // //       // enable/disable clipping
-    // //       packet += (drawContext.GetDoClipping()) ? 1 : 0;
-
-    // u32 depthBits = 24; // or 28(fog) or 16
-    // float depthClipToGs = (float)((1 << depthBits) - 1) / 2.0f;
-    // vu1.addFloat(2048.0f / (640.0F * 0.5f * 2.0f));
-    // vu1.addFloat(2048.0f / (480.0F * 0.5f * 2.0f));
-    // vu1.addFloat((2048.0f / depthClipToGs) * 1.003F);
-    // // vu1.addFloat(2048.0F);                   // scale
-    // // vu1.addFloat(2048.0F);                   // scale
-    // // vu1.addFloat(((float)0xFFFFFF) / 32.0F); // scale
-    // vu1.addFloat(0.0F);
-    // // vu1.addFloat(0.5f * iGuardDimXY);
-    // // vu1.addFloat(-0.5f * iGuardDimXY);
-    // // vu1.addFloat(1.0F);
-    // // vu1.addFloat(500.0F); // far
-
-    packet2_add_float(currPacket, 0.0F);
-    packet2_add_float(currPacket, 0.0F);
-    packet2_add_float(currPacket, 0.0F);
-    packet2_add_float(currPacket, 0.0F);
-
-    //// Clipping tests end
-    vif_added_bytes += packet2_utils_vu_close_unpack(currPacket);
-    packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_vertices + t_start, vertCount, 1);
-    vif_added_bytes += vertCount;
-    packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_coordinates + t_start, vertCount, 1);
-    vif_added_bytes += vertCount;
+    packet2_utils_gs_add_texbuff_clut(currPacket, t_texBuff, &t_mesh.clut);
+    if (t_rgbaOnly)
+        packet2_utils_gs_add_prim_giftag(currPacket, t_prim, vertCount, DRAW_RGBAQ_REGLIST, 2, 0);
+    else
+        packet2_utils_gs_add_prim_giftag(currPacket, t_prim, vertCount, DRAW_STQ2_REGLIST, 3, 0);
+    packet2_add_u32(currPacket, t_color->r);
+    packet2_add_u32(currPacket, t_color->g);
+    packet2_add_u32(currPacket, t_color->b);
+    packet2_add_u32(currPacket, t_color->a);
+    u32 vif_added_bytes = packet2_utils_vu_close_unpack(currPacket);
+    packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_vertices + t_start, vertCount, true);
+    if (!t_rgbaOnly)
+    {
+        vif_added_bytes += vertCount;
+        packet2_utils_vu_add_unpack_data(currPacket, vif_added_bytes, t_coordinates + t_start, vertCount, true);
+    }
     packet2_utils_vu_add_start_program(currPacket, 0);
+}
+
+void VifSender::drawTheSameWithOtherMatrices(const RenderData &t_renderData, Mesh **t_meshes, const u32 &t_skip, const u32 &t_count)
+{
+    // Standard double buffering (packets)
+    packet2_t *packet1 = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+    packet2_t *packet2 = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+    packet2_t *currMPacket = packet1;
+    u8 currPacketIndex = 1;
+
+    // We are sending 32 matrices max per one VU1 send
+    u8 switchCounter = 0;
+    for (u32 i = t_skip; i < t_count; i++)
+    {
+        model.identity();
+        model.rotate(t_meshes[i]->rotation);
+        model.translate(t_meshes[i]->position);
+
+        modelViewProj.identity();
+        modelViewProj = model * modelViewProj;
+        modelViewProj = *t_renderData.view * modelViewProj;
+        modelViewProj = *t_renderData.projection * modelViewProj;
+
+        packet2_utils_vu_open_unpack(currMPacket, 0, true);
+        {
+            packet2_add_data(currMPacket, modelViewProj.data, 4);
+        }
+        packet2_utils_vu_close_unpack(currMPacket);
+        packet2_utils_vu_open_unpack(currMPacket, VU1_RGBA_ADDRESS, true);
+        {
+            packet2_add_u32(currMPacket, t_meshes[i]->getMaterial(0).color.r);
+            packet2_add_u32(currMPacket, t_meshes[i]->getMaterial(0).color.g);
+            packet2_add_u32(currMPacket, t_meshes[i]->getMaterial(0).color.b);
+            packet2_add_u32(currMPacket, t_meshes[i]->getMaterial(0).color.a);
+        }
+        packet2_utils_vu_close_unpack(currMPacket);
+
+        if (i != t_count - 1) // if it is last, we must also add draw wait finish interrupt.
+            packet2_utils_vu_add_start_program(currMPacket, 0);
+
+        if (switchCounter++ >= 32)
+        {
+            switchCounter = 0;
+            if (i == t_count - 1) // is last
+            {
+                packet2_utils_vu_open_unpack(currMPacket, VU1_PARAMS_ADDRESS, true);
+                {
+                    packet2_add_u32(currMPacket, true);              // Draw wait finish?
+                    packet2_add_u32(currMPacket, lastVertCount);     // Vertex count
+                    packet2_add_u32(currMPacket, lastVertCount / 3); // Triangles count
+                    packet2_add_u32(currMPacket, isLastRGBAOnly);    // 0 = STQ+RGBA, 1 = RGBA
+                }
+                packet2_utils_vu_close_unpack(currMPacket);
+                packet2_utils_vu_add_start_program(currMPacket, 0); // and start program
+            }
+            packet2_utils_vu_add_end_tag(currMPacket);
+            dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+            dma_channel_send_packet2(currMPacket, DMA_CHANNEL_VIF1, 1);
+            if (currPacketIndex == 1) // Switch double buffer (packets)
+            {
+                currPacketIndex = 2;
+                currMPacket = packet2;
+            }
+            else
+            {
+                currPacketIndex = 1;
+                currMPacket = packet1;
+            }
+            packet2_reset(currMPacket, false);
+        }
+    }
+    if (switchCounter != 0) // if there are any not sended matrices
+    {
+        packet2_utils_vu_open_unpack(currMPacket, VU1_PARAMS_ADDRESS, true);
+        {
+            packet2_add_u32(currMPacket, true);              // Draw wait finish?
+            packet2_add_u32(currMPacket, lastVertCount);     // Vertex count
+            packet2_add_u32(currMPacket, lastVertCount / 3); // Triangles count
+            packet2_add_u32(currMPacket, isLastRGBAOnly);    // 0 = STQ+RGBA, 1 = RGBA
+        }
+        packet2_utils_vu_close_unpack(currMPacket);
+        packet2_utils_vu_add_start_program(currMPacket, 0);
+        packet2_utils_vu_add_end_tag(currMPacket);
+        dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+        dma_channel_send_packet2(currMPacket, DMA_CHANNEL_VIF1, 1);
+    }
+    packet2_free(packet1);
+    packet2_free(packet2);
 }

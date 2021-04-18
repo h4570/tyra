@@ -22,10 +22,18 @@ struct RenderData
 {
     LightBulb *bulbs;
     u16 bulbsCount;
-    /** Camera (lookAt) */
-    Matrix *worldView;
-    /** Perspective projection */
-    Matrix *perspective;
+    /** 
+     * Camera matrix (glLookAt)
+     * OpenGL name: View 
+     * Sony name: World view 
+     */
+    Matrix *view;
+    /** 
+     * Projection matrix (glPerspective)
+     * OpenGL name: Projection
+     * Sony name: View screen
+     */
+    Matrix *projection;
     Vector3 *cameraPosition;
     Plane *frustumPlanes;
     prim_t *prim;

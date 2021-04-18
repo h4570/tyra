@@ -13,6 +13,8 @@
 
 #include <draw_buffers.h>
 #include <draw_primitives.h>
+#include <gs_privileged.h>
+#include <draw.h>
 #include <packet2.h>
 #include "gif_sender.hpp"
 #include "vif_sender.hpp"
@@ -39,60 +41,87 @@ public:
     void enableVSync() { isVSyncEnabled = true; }
     void disableVSync() { isVSyncEnabled = false; }
 
-    /// --- Draw: PATH3
+    /** Reset draw wait flag. */
+    inline void resetWaitFlag()
+    {
+        *GS_REG_CSR |= 2;
+    }
 
+    /** Checks if draw wait flag is set */
+    inline u8 isWaitFlagSet() const
+    {
+        return *GS_REG_CSR & 2;
+    }
+
+    /** Waits for draw wait flag and reset it. */
+    inline void waitForRender()
+    {
+        while (!isWaitFlagSet())
+            ;
+        resetWaitFlag();
+    }
+
+    /** 2D draw. */
     void draw(Sprite &t_sprite);
 
-    /** 
-     * Draw many meshes with lighting information.
-     * Slowest way of rendering (PATH 3, using EE and GIF). 
-     * NOTICE: Animation supported, lighting supported
-     */
-    void drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
+    /// --- OBSOLETE
 
-    /** 
-     * Draw mesh with lighting information.
-     * Slowest way of rendering (PATH 3, using EE and GIF). 
-     * NOTICE: Animation supported, lighting supported
-     */
-    void drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
+    // /**
+    //  * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS!
+    //  * Draw many meshes with lighting information.
+    //  * Slowest way of rendering (PATH 3, using EE and GIF).
+    //  * NOTICE: Animation supported, lighting supported
+    //  */
+    // void drawByPath3(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
 
-    /** 
-     * Draw many meshes without lighting information.
-     * Slowest way of rendering (PATH 3, using EE and GIF). 
-     * NOTICE: Animation supported, lighting supported
-     */
-    void drawByPath3(Mesh *t_meshes, u16 t_amount);
+    // /**
+    //  * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS!
+    //  * Draw mesh with lighting information.
+    //  * Slowest way of rendering (PATH 3, using EE and GIF).
+    //  * NOTICE: Animation supported, lighting supported
+    //  */
+    // void drawByPath3(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
 
-    /** 
-     * Draw mesh without lighting information.
-     * Slowest way of rendering (PATH 3, using EE and GIF). 
-     * NOTICE: Animation supported, lighting supported
-     */
-    void drawByPath3(Mesh &t_mesh);
+    // /**
+    //  * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS!
+    //  * Draw many meshes without lighting information.
+    //  * Slowest way of rendering (PATH 3, using EE and GIF).
+    //  * NOTICE: Animation supported, lighting supported
+    //  */
+    // void drawByPath3(Mesh *t_meshes, u16 t_amount);
+
+    // /**
+    //  * WARNING: THIS FUNC CAUSE VISUAL ARTIFACTS!
+    //  * Draw mesh without lighting information.
+    //  * Slowest way of rendering (PATH 3, using EE and GIF).
+    //  * NOTICE: Animation supported, lighting supported
+    //  */
+    // void drawByPath3(Mesh &t_mesh);
 
     /// --- Draw: PATH1
 
     /** 
-     * Draw many meshes with lighting information.
+     * Draw many meshes with lighting information. 
+     * Draw in array mode, can be A LOT faster than for looping! 
      * Fastest way of rendering (PATH 1, using VU1). 
      * NOTICE: Animation supported, lighting NOT supported (at this moment)
      */
-    void draw(Mesh *t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
+    void draw(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount);
 
     /** 
-     * Draw mesh with lighting information.
-     * Fastest way of rendering (PATH 1, using VU1). 
+     * Draw mesh with lighting information. 
+     * Fastest way of rendering (PATH 1, using VU1).  
      * NOTICE: Animation supported, lighting NOT supported (at this moment)
      */
     void draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount);
 
     /** 
-     * Draw many meshes without lighting information.
-     * Fastest way of rendering (PATH 1, using VU1). 
+     * Draw many meshes without lighting information. 
+     * Draw in array mode, can be A LOT faster than for looping! 
+     * Fastest way of rendering (PATH 1, using VU1).  
      * NOTICE: Animation supported, lighting NOT supported (at this moment)
      */
-    void draw(Mesh *t_meshes, u16 t_amount);
+    void draw(Mesh **t_meshes, u16 t_amount);
 
     /** 
      * Draw mesh without lighting information.
@@ -125,7 +154,7 @@ private:
     void flipBuffers();
     void beginFrameIfNeeded();
     u8 isFrameEmpty;
-    Matrix perspective;
+    Matrix perspective, camRotation;
     Light light;
     RenderData renderData;
     TextureRepository textureRepo;
@@ -134,8 +163,8 @@ private:
     VifSender *vifSender;
     packet2_t *flipPacket;
     color_t worldColor;
-    void allocateBuffers(float t_screenW, float t_screenH);
-    void initDrawingEnv(float t_screenW, float t_screenH);
+    void allocateBuffers(int t_screenW, int t_screenH);
+    void initDrawingEnv();
     void setPrim();
 };
 

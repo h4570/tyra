@@ -38,13 +38,11 @@ void PngLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     char *path = String::createConcatenated(path_part2, t_extension);
     delete[] path_part1;
     delete[] path_part2;
+
     FILE *file = fopen(path, "rb");
 
     if (file == NULL)
-    {
-        PRINT_ERR("Failed to load .png file!");
-        return;
-    }
+        PRINT_ERR("Failed to open .png file!");
 
     png_structp png_ptr;
     png_infop info_ptr;
@@ -56,29 +54,15 @@ void PngLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, (png_voidp)NULL, NULL, NULL);
 
     if (!png_ptr)
-    {
-        printf("PNG Read Struct Init Failed\n");
-        fclose(file);
-        return;
-    }
+        PRINT_ERR("PNG struct info init failed(1)!");
 
     info_ptr = png_create_info_struct(png_ptr);
 
     if (!info_ptr)
-    {
-        printf("PNG Info Struct Init Failed\n");
-        fclose(file);
-        png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
-        return;
-    }
+        PRINT_ERR("PNG struct info init failed(2)!");
 
     if (setjmp(png_jmpbuf(png_ptr)))
-    {
-        printf("Got PNG Error!\n");
-        png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
-        fclose(file);
-        return;
-    }
+        PRINT_ERR("PNG reader fatal error!");
 
     png_init_io(png_ptr, file);
 
@@ -114,80 +98,39 @@ void PngLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
         type = TEX_TYPE_RGB;
         break;
     default:
-        PRINT_ERR("This png format is not supported!");
+        PRINT_ERR("This png format is not supported! RGB/RGBA only.");
     }
 
     o_texture.setSize(width, height, type);
     printf("PNGLoader - width: %d | height: %d\n", width, height);
 
-    if (type == TEX_TYPE_RGBA)
-    {
-        int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-        png_byte *row_pointers[height];
+    size_t row_bytes = png_get_rowbytes(png_ptr, info_ptr);
+    png_byte *row_pointers[height];
+    for (row = 0; row < height; row++)
+        row_pointers[row] = new png_byte[row_bytes];
 
-        for (row = 0; row < height; row++)
-            row_pointers[row] = new png_byte[row_bytes];
+    png_read_image(png_ptr, row_pointers);
 
-        png_read_image(png_ptr, row_pointers);
+    u32 x = 0;
 
-        struct pixel
+    for (i = 0; i < height; i++)
+        for (j = 0; j < width; j++)
         {
-            u8 r, g, b, a;
-        };
-
-        u32 x = 0;
-        for (i = 0; i < height; i++)
-        {
-            for (j = 0; j < width; j++)
+            o_texture.setData(x, row_pointers[i][4 * j]);
+            o_texture.setData(x + 1, row_pointers[i][4 * j + 1]);
+            o_texture.setData(x + 2, row_pointers[i][4 * j + 2]);
+            if (type == TEX_TYPE_RGBA)
             {
-                o_texture.setData(x, row_pointers[i][4 * j]);
-                o_texture.setData(x + 1, row_pointers[i][4 * j + 1]);
-                o_texture.setData(x + 2, row_pointers[i][4 * j + 2]);
                 o_texture.setData(x + 3, ((int)row_pointers[i][4 * j + 3] * 128 / 255));
                 x += 4;
             }
-        }
-
-        for (row = 0; row < height; row++)
-            delete row_pointers[row];
-    }
-    else if (type == TEX_TYPE_RGB)
-    {
-        int row_bytes = png_get_rowbytes(png_ptr, info_ptr);
-        png_byte *row_pointers[height];
-
-        for (row = 0; row < height; row++)
-            row_pointers[row] = new png_byte[row_bytes];
-
-        png_read_image(png_ptr, row_pointers);
-
-        struct pixel3
-        {
-            u8 r, g, b;
-        };
-
-        u32 x = 0;
-        for (i = 0; i < height; i++)
-        {
-            for (j = 0; j < width; j++)
-            {
-                o_texture.setData(x, row_pointers[i][4 * j]);
-                o_texture.setData(x + 1, row_pointers[i][4 * j + 1]);
-                o_texture.setData(x + 2, row_pointers[i][4 * j + 2]);
+            else if (type == TEX_TYPE_RGB)
                 x += 3;
-            }
         }
 
-        for (row = 0; row < height; row++)
-            delete row_pointers[row];
-    }
-    else
-    {
-        printf("This texture depth is not supported yet!\n");
-        return;
-    }
+    for (row = 0; row < height; row++)
+        delete[] row_pointers[row];
 
-    // Texture->Filter = GS_FILTER_NEAREST;
     png_read_end(png_ptr, NULL);
     png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
 

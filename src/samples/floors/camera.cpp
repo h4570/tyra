@@ -19,13 +19,10 @@ const float CAMERA_Y = 30.0F;
 // Constructors/Destructors
 // ----
 
-Camera::Camera(ScreenSettings *t_screen) : CameraBase(t_screen, &position, &up)
+Camera::Camera(ScreenSettings *t_screen) : CameraBase(t_screen, &position)
 {
     PRINT_LOG("Initializing camera");
     verticalLevel = 80.0F;
-    up.x = 0.0F;
-    up.y = 1.0F;
-    up.z = 0.0F;
     PRINT_LOG("Camera initialized!");
 }
 

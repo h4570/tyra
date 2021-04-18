@@ -82,18 +82,9 @@ void Texture::setWrapSettings(const WrapSettings t_horizontal, const WrapSetting
     wrapSettings.vertical = t_vertical;
 }
 
-void Texture::addLink(const u32 &t_meshId, const u32 &t_materialId)
+void Texture::addLink(const u32 &t_id)
 {
     TextureLink link;
-    link.materialId = t_materialId;
-    link.meshOrSpriteId = t_meshId;
-    texLinks.push_back(link);
-}
-
-void Texture::addLink(const u32 &t_spriteId)
-{
-    TextureLink link;
-    link.materialId = 0;
-    link.meshOrSpriteId = t_spriteId;
+    link.id = t_id;
     texLinks.push_back(link);
 }

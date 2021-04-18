@@ -66,13 +66,13 @@ void Ui::update(const Player &player)
     if (!isTask1Done && player.getJumpCount() >= 10)
     {
         isTask1Done = true;
-        grayCheckboxTex->removeLinkBySprite(task1Checkbox.getId());
+        grayCheckboxTex->removeLinkById(task1Checkbox.getId());
         blueCheckboxTex->addLink(task1Checkbox.getId());
     }
     if (!isTask2Done && player.getKilledEnemiesCount() >= 10)
     {
         isTask2Done = true;
-        grayCheckboxTex->removeLinkBySprite(task2Checkbox.getId());
+        grayCheckboxTex->removeLinkById(task2Checkbox.getId());
         blueCheckboxTex->addLink(task2Checkbox.getId());
     }
 }
