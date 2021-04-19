@@ -88,7 +88,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                 }
                 break;
                 /** Loaded only two digits (V, VT) succesfuly. Not setting VN. */
-                case 2:
+                case 3:
                 {
                     fscanf(file, "%d/%d/ %d/%d/ %d/%d/\n",
                            &vertexIndex[0], &coordIndex[0],
