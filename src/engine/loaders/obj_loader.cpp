@@ -76,7 +76,6 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                 int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", x, x, x, x, x, x, x, x, x);
                 fsetpos(file, &start);
                 int newerMatches = 0;
-
                 switch (matches)
                 {
                 /** Vs, VTs and VNs all set */
@@ -89,7 +88,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                 }
                 break;
                 /** Loaded only two digits (V, VT) succesfuly. Not setting VN. */
-                case 2:
+                case 3:
                 {
                     fscanf(file, "%d/%d/ %d/%d/ %d/%d/\n",
                            &vertexIndex[0], &coordIndex[0],
@@ -101,12 +100,12 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                 case 1:
                 {
                     /** Check for existance of V/// configuration.. */
-                    newerMatches = fscanf(file, "%d/// %d/// %d///\n", x, x, x);
+                    newerMatches = fscanf(file, "%d// %d// %d//\n", x, x, x);
                     fsetpos(file, &start);
                     if (newerMatches == 3)
                     {
                         /** Configuration confirmed. */
-                        fscanf(file, "%d/// %d/// %d///\n", &vertexIndex[0], &vertexIndex[1], &vertexIndex[2]);
+                        fscanf(file, "%d// %d// %d//\n", &vertexIndex[0], &vertexIndex[1], &vertexIndex[2]);
                     }
                     else
                     {
@@ -129,9 +128,12 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                     }
                     break;
                 }
+                break;
                 default:
+                {
                     PRINT_ERR("Unknown faces format in .obj file!");
                     break;
+                }
                 }
 
                 if (matches == 9 || matches == 2 || matches == 1)
