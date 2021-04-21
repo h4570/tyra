@@ -32,6 +32,7 @@ BmpLoader::~BmpLoader() {}
  */
 void BmpLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *t_extension)
 {
+    PRINT_LOG("Loading BMP file...");
     char *path_part1 = String::createConcatenated(t_subfolder, t_name);
     char *path_part2 = String::createConcatenated("host:", path_part1);
     char *path = String::createConcatenated(path_part2, t_extension);
@@ -50,8 +51,15 @@ void BmpLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
 
     u32 width = (u32)header[18];
     u32 height = (u32)header[22];
+    u32 bits = (u32)header[28];
+
+    if (bits != 24)
+    {
+        PRINT_ERR("Invalid bits per pixel in .bmp file - expected 24!");
+    }
+
     o_texture.setSize(width, height, TEX_TYPE_RGB);
-    printf("BMPLoader - width: %d | height: %d\n", width, height);
+    printf("BMPLoader - width: %d | height: %d | bits: %d\n", width, height, bits);
 
     u64 rowPadded = (width * 3 + 3) & (~3);
 
