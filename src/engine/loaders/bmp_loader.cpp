@@ -32,7 +32,6 @@ BmpLoader::~BmpLoader() {}
  */
 void BmpLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *t_extension)
 {
-    PRINT_LOG("Loading BMP file...");
     char *path_part1 = String::createConcatenated(t_subfolder, t_name);
     char *path_part2 = String::createConcatenated("host:", path_part1);
     char *path = String::createConcatenated(path_part2, t_extension);
