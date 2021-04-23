@@ -66,7 +66,7 @@ void BmpLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     unsigned char row[rowPadded];
 
     //Offset file stream to raster data
-    //fseek(file, dataOffset, SEEK_SET);
+    fseek(file, dataOffset, SEEK_SET);
 
     u32 x = 0;
     for (u32 i = 0; i < height; i++)
