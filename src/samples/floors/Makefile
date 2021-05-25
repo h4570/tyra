@@ -24,6 +24,9 @@ all: $(EE_BIN)
 rebuild-engine: 
 	cd $(TYRA_DIR) && make clean && make
 
+rebuild-dbg-engine: 
+	cd $(TYRA_DIR) && make clean && make debug
+
 clean:
 	rm -f $(EE_OBJS)
 
@@ -35,5 +38,9 @@ run: $(EE_BIN)
 	mv $(EE_BIN) bin/$(EE_BIN)
 	rm $(EE_OBJS)
 	cd bin/ && ps2client execee host:$(EE_BIN)
+
+run-pcsx2:
+	taskkill.exe /f /t /im pcsx2.exe || true
+	$(PCSX2_PATH) --elf=$(WSL_TYRA_PATH)\\src\\samples\\floors\\bin\\floors.elf
 
 include $(TYRA_DIR)/Makefile.pref

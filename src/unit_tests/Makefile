@@ -34,7 +34,6 @@ run-pcsx2:
 	taskkill.exe /f /t /im pcsx2.exe || true
 	$(PCSX2_PATH) --elf=$(WSL_TYRA_PATH)\\src\\unit_tests\\bin\\unit_tests.elf
 
-
 show:
 	cat bin/test-result.txt
 
