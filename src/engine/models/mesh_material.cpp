@@ -52,11 +52,7 @@ MeshMaterial::~MeshMaterial()
 
 void MeshMaterial::allocateFaces(const u32 &t_val)
 {
-    if (_areFacesAllocated)
-    {
-        PRINT_ERR("Can't allocate faces, because were already set!");
-        return;
-    }
+    assertMsg(!_areFacesAllocated, "Can't allocate faces, because were already set!");
     facesCount = t_val;
     stFaces = new u32[t_val];
     normalFaces = new u32[t_val];
@@ -66,11 +62,7 @@ void MeshMaterial::allocateFaces(const u32 &t_val)
 
 void MeshMaterial::setName(char *t_val)
 {
-    if (_isNameSet)
-    {
-        PRINT_ERR("Can't set name, because was already set!");
-        return;
-    }
+    assertMsg(!_isNameSet, "Can't set name, because was already set!");
     name = String::createCopy(t_val);
     _isNameSet = true;
 }
@@ -143,8 +135,8 @@ void MeshMaterial::calculateBoundingBox(Vector3 *t_vertices, u32 t_vertCount)
     boundingBox[7].set(hiX, hiY, hiZ);
     _isBoundingBoxCalculated = true;
 
-    //BoundingBox is declared on the heap to prevent any ill-formed default
-    //constructor instantiated BoundingBox objects.
+    // BoundingBox is declared on the heap to prevent any ill-formed default
+    // constructor instantiated BoundingBox objects.
     boundingBoxObj = new BoundingBox(boundingBox);
 }
 

@@ -52,20 +52,15 @@ void Audio::loadSong(char *t_path)
     char *fullFilename = String::createConcatenated("host:", t_path);
     wav = fopen(fullFilename, "rb");
     delete[] fullFilename;
-    if (wav == NULL)
-        PRINT_ERR("Failed to open wav file!");
-    else
-    {
-        rewindSongToStart();
-        songLoaded = true;
-        PRINT_LOG("Song loaded!");
-    }
+    assertMsg(wav != NULL, "Failed to open wav file!");
+    rewindSongToStart();
+    songLoaded = true;
+    consoleLog("Song loaded!");
 }
 
 void Audio::playSong()
 {
-    if (!songLoaded)
-        PRINT_ERR("Cant play song because was not loaded!");
+    assertMsg(songLoaded, "Cant play song because was not loaded!");
     if (songFinished)
         rewindSongToStart();
     volume = realVolume;
@@ -105,8 +100,7 @@ void Audio::removeSongListener(const u32 &t_id)
             index = i;
             break;
         }
-    if (index == -1)
-        PRINT_ERR("Cant remove listener because given id was not found!");
+    assertMsg(index != -1, "Cant remove listener because given id was not found!");
     delete songListeners[index];
     songListeners.erase(songListeners.begin() + index);
 }
@@ -132,7 +126,7 @@ audsrv_adpcm_t *Audio::loadADPCM(char *t_path)
     if (audsrv_load_adpcm(result, data, adpcmFileSize))
     {
         printf("AUDSRV returned error string: %s", audsrv_get_error_string());
-        PRINT_ERR("audsrv_load_adpcm() failed!");
+        assertMsg(true == false, "audsrv_load_adpcm() failed!");
     }
     fclose(file);
     return result;
@@ -143,7 +137,7 @@ void Audio::playADPCM(audsrv_adpcm_t *t_adpcm)
     if (audsrv_play_adpcm(t_adpcm))
     {
         printf("AUDSRV returned error string: %s", audsrv_get_error_string());
-        PRINT_ERR("audsrv_play_adpcm() failed!");
+        assertMsg(true == false, "audsrv_play_adpcm() failed!");
     }
 }
 
@@ -152,7 +146,7 @@ void Audio::playADPCM(audsrv_adpcm_t *t_adpcm, const s8 &t_ch)
     if (audsrv_ch_play_adpcm(t_ch, t_adpcm))
     {
         printf("AUDSRV returned error string: %s", audsrv_get_error_string());
-        PRINT_ERR("audsrv_play_adpcm() failed!");
+        assertMsg(true == false, "audsrv_ch_play_adpcm() failed!");
     }
 }
 
@@ -160,7 +154,7 @@ void Audio::playADPCM(audsrv_adpcm_t *t_adpcm, const s8 &t_ch)
 
 void Audio::startThread(FileService *t_fileService)
 {
-    PRINT_LOG("Creating audio thread");
+    consoleLog("Creating audio thread");
     // fileService = t_fileService;
     extern void *_gp;
     thread.func = (void *)Audio::mainThread;
@@ -168,11 +162,11 @@ void Audio::startThread(FileService *t_fileService)
     thread.stack_size = getThreadStackSize();
     thread.gp_reg = (void *)&_gp;
     thread.initial_priority = 0x17;
-    if ((threadId = CreateThread(&thread)) < 0)
-        PRINT_ERR("Create audio thread failed!");
-    PRINT_LOG("Audio thread created");
+    threadId = CreateThread(&thread);
+    assertMsg(threadId >= 0, "Create audio thread failed!");
+    consoleLog("Audio thread created");
     StartThread(threadId, NULL);
-    PRINT_LOG("Audio thread started");
+    consoleLog("Audio thread started");
 }
 
 /** Main thread loop */
@@ -256,25 +250,23 @@ void Audio::rewindSongToStart()
 /** Initialize semaphore which will wait until chunk of the song is not finished. */
 void Audio::initSema()
 {
-    PRINT_LOG("Creating audio semaphore");
+    consoleLog("Creating audio semaphore");
     sema.init_count = 0;
     sema.max_count = 1;
     sema.option = 0;
     fillbufferSema = CreateSema(&sema);
-    PRINT_LOG("Audio semaphore created");
+    consoleLog("Audio semaphore created");
 }
 
 /** Load LIBSD and AUDSRV modules */
 void Audio::loadModules()
 {
-    PRINT_LOG("Modules loading started (LIBSD, AUDSRV)");
+    consoleLog("Modules loading started (LIBSD, AUDSRV)");
     int ret = SifLoadModule("rom0:LIBSD", 0, NULL);
-    if (ret == -203)
-        PRINT_ERR("LIBSD loading failed!");
+    assertMsg(ret != -203, "LIBSD loading failed!");
     ret = SifLoadModule("host:AUDSRV.IRX", 0, NULL);
-    if (ret == -203)
-        PRINT_ERR("AUDSRV.IRX loading failed!");
-    PRINT_LOG("Audio modules loaded");
+    assertMsg(ret != -203, "AUDSRV.IRX loading failed!");
+    consoleLog("Audio modules loaded");
 }
 
 /** 
@@ -283,26 +275,26 @@ void Audio::loadModules()
  */
 void Audio::initAUDSRV()
 {
-    PRINT_LOG("Initializing AUDSRV");
+    consoleLog("Initializing AUDSRV");
     int ret = audsrv_init();
     if (ret != 0)
     {
         printf("AUDSRV returned error string: %s", audsrv_get_error_string());
-        PRINT_ERR("Failed to initialize AUDSRV!");
+        assertMsg(true == false, "Failed to initialize AUDSRV!");
     }
     ret = audsrv_adpcm_init();
     if (ret != 0)
     {
         printf("AUDSRV returned error string: %s", audsrv_get_error_string());
-        PRINT_ERR("Failed to initialize AUDSRV ADPCM!");
+        assertMsg(true == false, "Failed to initialize AUDSRV ADPCM!");
     }
     ret = audsrv_on_fillbuf(getSongBufferSize(), (audsrv_callback_t)iSignalSema, (void *)fillbufferSema);
     if (ret != 0)
     {
         printf("AUDSRV returned error string: %s", audsrv_get_error_string());
-        PRINT_ERR("Failed to initialize AUDSRV fillbuffer!");
+        assertMsg(true == false, "Failed to initialize AUDSRV fillbuffer!");
     }
-    PRINT_LOG("AUDSRV initialized!");
+    consoleLog("AUDSRV initialized!");
 }
 
 /** 

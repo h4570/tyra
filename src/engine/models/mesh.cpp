@@ -70,9 +70,8 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, con
 
 void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT)
 {
-    if (t_framesCount == 0)
-        PRINT_ERR("Frames count cannot be 0!");
-    else if (t_framesCount == 1)
+    assertMsg(t_framesCount != 0, "Frames count cannot be 0!");
+    if (t_framesCount == 1)
         loadObj(t_subfolder, t_objFile, t_scale, t_invertT);
     else
     {
@@ -132,39 +131,27 @@ void Mesh::loadFrom(const Mesh &t_mesh)
 
 void Mesh::playAnimation(const u32 &t_startFrame, const u32 &t_endFrame)
 {
-    if (framesCount > 1)
-    {
-        if (t_endFrame >= framesCount)
-            PRINT_ERR("End frame value is too high. Valid range: (0, getFramesCount()-1)");
-        animState.startFrame = t_startFrame;
-        animState.endFrame = t_endFrame;
-        if (animState.currentFrame == t_startFrame)
-            animState.nextFrame = t_endFrame;
-        else
-            animState.nextFrame = t_startFrame;
-    }
-    else if (framesCount == 0)
-        PRINT_ERR("Cant play animation, because no mesh data was loaded!");
-    else if (framesCount == 1)
-        PRINT_ERR("Cant play animation, because this mesh have only one frame.");
+    assertMsg(framesCount > 0, "Cant play animation, because no mesh data was loaded!");
+    assertMsg(framesCount != 1, "Cant play animation, because this mesh have only one frame.");
+    assertMsg(t_endFrame < framesCount, "End frame value is too high. Valid range: (0, getFramesCount()-1)");
+    animState.startFrame = t_startFrame;
+    animState.endFrame = t_endFrame;
+    if (animState.currentFrame == t_startFrame)
+        animState.nextFrame = t_endFrame;
+    else
+        animState.nextFrame = t_startFrame;
 }
 
 void Mesh::playAnimation(const u32 &t_startFrame, const u32 &t_endFrame, const u32 &t_stayFrame)
 {
-    if (framesCount > 1)
-    {
-        if (t_endFrame >= framesCount)
-            PRINT_ERR("End frame value is too high. Valid range: (0, getFramesCount()-1)");
-        animState.startFrame = t_startFrame;
-        animState.endFrame = t_endFrame;
-        animState.isStayFrameSet = true;
-        animState.stayFrame = t_stayFrame;
-        animState.nextFrame = t_startFrame;
-    }
-    else if (framesCount == 0)
-        PRINT_ERR("Cant play animation, because no mesh data was loaded!");
-    else if (framesCount == 1)
-        PRINT_ERR("Cant play animation, because this mesh have only one frame.");
+    assertMsg(framesCount > 0, "Cant play animation, because no mesh data was loaded!");
+    assertMsg(framesCount != 1, "Cant play animation, because this mesh have only one frame.");
+    assertMsg(t_endFrame < framesCount, "End frame value is too high. Valid range: (0, getFramesCount()-1)");
+    animState.startFrame = t_startFrame;
+    animState.endFrame = t_endFrame;
+    animState.isStayFrameSet = true;
+    animState.stayFrame = t_stayFrame;
+    animState.nextFrame = t_startFrame;
 }
 
 void Mesh::animate()

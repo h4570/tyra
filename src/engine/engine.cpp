@@ -52,16 +52,12 @@ void Engine::setDefaultScreen()
 
 void Engine::init(Game *t_game, u32 t_gifPacketSize)
 {
-    if (isInitialized)
-        PRINT_ERR("Already initialized!");
-    else
-    {
-        game = t_game;
-        renderer = new Renderer(t_gifPacketSize, &screen);
-        isInitialized = true;
-        game->onInit();
-        gameLoop();
-    }
+    assertMsg(!isInitialized, "Engine was already initialized!");
+    game = t_game;
+    renderer = new Renderer(t_gifPacketSize, &screen);
+    isInitialized = true;
+    game->onInit();
+    gameLoop();
 }
 
 /** Do not call this method. This is used in gameLoop() to maintain multithreading */

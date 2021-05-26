@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Unit tests
+- Assert
+
+### Changed
+- All PRINT_LOG and PRINT_ERR to consoleLog() and assertMsg()
 
 ## [1.31.2] - 2021-02-06
 

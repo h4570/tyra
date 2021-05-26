@@ -44,7 +44,7 @@ int MEM_fread(char *buf, size_t size, size_t n, const FILE *f)
  */
 MeshFrame *MD2Loader::load(u32 &o_framesCount, char *t_subpath, char *t_nameWithoutExtension, float t_scale, u8 t_invertT)
 {
-    PRINT_LOG("Loading new MD2 file");
+    consoleLog("Loading new MD2 file");
     char *part1 = String::createConcatenated(t_subpath, t_nameWithoutExtension);
     char *part2 = String::createConcatenated("host:", part1);
     char *finalPath = String::createConcatenated(part2, ".md2"); // "folder/object.md2"
@@ -53,20 +53,11 @@ MeshFrame *MD2Loader::load(u32 &o_framesCount, char *t_subpath, char *t_nameWith
     md2_t header;
 
     FILE *file = fopen(finalPath, "rb");
-
-    if (file == NULL)
-    {
-        PRINT_ERR("Failed to load .md2 file!");
-        return NULL;
-    }
+    assertMsg(file != NULL, "Failed to load .md2 file!");
 
     fread((char *)&header, sizeof(md2_t), 1, file);
 
-    if ((header.ident != MD2_IDENT) && (header.version != MD2_VERSION))
-    {
-        PRINT_ERR("This MD2 file was not in correct format!");
-        return NULL;
-    }
+    assertMsg((header.ident == MD2_IDENT) && (header.version == MD2_VERSION), "This MD2 file was not in correct format!");
 
     u32 framesCount = header.num_frames;
     u32 vertexCount = header.num_xyz;
@@ -147,7 +138,7 @@ MeshFrame *MD2Loader::load(u32 &o_framesCount, char *t_subpath, char *t_nameWith
         }
     }
 
-    PRINT_LOG("MD2 file loaded!");
+    consoleLog("MD2 file loaded!");
     delete[] finalPath;
     o_framesCount = framesCount;
     for (u32 i = 0; i < framesCount; i++)

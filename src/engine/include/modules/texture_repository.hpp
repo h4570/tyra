@@ -119,10 +119,8 @@ public:
     const void removeById(const u32 &t_texId)
     {
         s32 index = getIndexOf(t_texId);
-        if (index != -1)
-            removeByIndex(index);
-        else
-            PRINT_ERR("Cant remove texture, because it was not found!");
+        assertMsg(index != -1, "Cant remove texture, because it was not found!");
+        removeByIndex(index);
     }
 
 private:

@@ -30,8 +30,7 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
 {
     char *path = String::createConcatenated("host:", t_filename);
     FILE *file = fopen(path, "rb");
-    if (file == NULL)
-        PRINT_ERR("Failed to load .obj file!");
+    assertMsg(file != NULL, "Failed to load .obj file!");
     allocateObjMemory(file, o_result);
     fseek(file, 0, SEEK_SET);
     u32 verticesI = 0, cordsI = 0, normalsI = 0, faceI = 0, vertexIndex[3], coordIndex[3], normalIndex[3];
@@ -112,26 +111,19 @@ void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_
                         /** Failed, checking configuration V//VN */
                         newerMatches = fscanf(file, "%d//%d %d//%d %d//%d", x, x, x, x, x, x);
                         fsetpos(file, &start);
-                        if (newerMatches == 6)
-                        {
-                            /** Configuration confirmed. */
-                            newerMatches = fscanf(file, "%d//%d %d//%d %d//%d",
-                                                  &vertexIndex[0], &normalIndex[0],
-                                                  &vertexIndex[1], &normalIndex[1],
-                                                  &vertexIndex[2], &normalIndex[2]);
-                        }
-                        else
-                        {
-                            /**Unknown configuration.*/
-                            PRINT_ERR("Unknown .obj face for .obj file!");
-                        }
+                        assertMsg(newerMatches == 6, "Unknown .obj face for .obj file!");
+                        /** Configuration confirmed. */
+                        newerMatches = fscanf(file, "%d//%d %d//%d %d//%d",
+                                              &vertexIndex[0], &normalIndex[0],
+                                              &vertexIndex[1], &normalIndex[1],
+                                              &vertexIndex[2], &normalIndex[2]);
                     }
                     break;
                 }
                 break;
                 default:
                 {
-                    PRINT_ERR("Unknown faces format in .obj file!");
+                    assertMsg(true == false, "Unknown faces format in .obj file!");
                     break;
                 }
                 }

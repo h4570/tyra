@@ -33,7 +33,7 @@ static const float SCREEN_CENTER = GS_CENTER / 2.0F;
  */
 Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
 {
-    PRINT_LOG("Initializing renderer");
+    consoleLog("Initializing renderer");
     dma_channel_initialize(DMA_CHANNEL_GIF, NULL, 0); // Initialize DMA to enable data transfer
     dma_channel_fast_waits(DMA_CHANNEL_GIF);
     screen = t_screen;
@@ -53,7 +53,7 @@ Renderer::Renderer(u32 t_packetSize, ScreenSettings *t_screen)
     vifSender = new VifSender(&light);
     perspective.setPerspective(*t_screen);
     renderData.projection = &perspective;
-    PRINT_LOG("Renderer initialized!");
+    consoleLog("Renderer initialized!");
 }
 
 Renderer::~Renderer() {}
@@ -69,8 +69,7 @@ void Renderer::allocateTextureBuffer(Texture *t_texture)
     textureBuffer.psm = t_texture->getType();
     textureBuffer.info.components = textureBuffer.psm == TEX_TYPE_RGBA ? TEXTURE_COMPONENTS_RGBA : TEXTURE_COMPONENTS_RGB;
     textureBuffer.address = graph_vram_allocate(t_texture->getWidth(), t_texture->getHeight(), textureBuffer.psm, GRAPH_ALIGN_BLOCK);
-    if (textureBuffer.address <= 1)
-        PRINT_ERR("Texture buffer allocation error. No memory!");
+    assertMsg(textureBuffer.address > 1, "Texture buffer allocation error. No memory!");
     textureBuffer.info.width = draw_log2(t_texture->getWidth());
     textureBuffer.info.height = draw_log2(t_texture->getHeight());
     textureBuffer.info.function = TEXTURE_FUNCTION_MODULATE;
@@ -89,18 +88,14 @@ void Renderer::deallocateTextureBuffer()
 
 void Renderer::changeTexture(Texture *t_tex)
 {
-    if (t_tex != NULL)
+    assertMsg(t_tex != NULL, "Texture was not found in texture repository!");
+    if (t_tex->getId() != lastTextureId)
     {
-        if (t_tex->getId() != lastTextureId)
-        {
-            lastTextureId = t_tex->getId();
-            deallocateTextureBuffer();
-            allocateTextureBuffer(t_tex);
-            GifSender::sendTexture(*t_tex, &textureBuffer);
-        }
+        lastTextureId = t_tex->getId();
+        deallocateTextureBuffer();
+        allocateTextureBuffer(t_tex);
+        GifSender::sendTexture(*t_tex, &textureBuffer);
     }
-    else
-        PRINT_ERR("Texture was not found in texture repository!");
 }
 
 void Renderer::draw(Sprite &t_sprite)
@@ -164,7 +159,7 @@ void Renderer::draw(Sprite &t_sprite)
 /** Initializes drawing environment (1st app packet) */
 void Renderer::initDrawingEnv()
 {
-    PRINT_LOG("Initializing drawing environment");
+    consoleLog("Initializing drawing environment");
     packet2_t *packet2 = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
     packet2_update(packet2, draw_setup_environment(packet2->base, 0, frameBuffers, &(zBuffer)));
     packet2_update(packet2, draw_primitive_xyoffset(packet2->next, 0,
@@ -174,7 +169,7 @@ void Renderer::initDrawingEnv()
     dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
     dma_channel_wait(DMA_CHANNEL_GIF, 0);
     packet2_free(packet2);
-    PRINT_LOG("Drawing environment initialized!");
+    consoleLog("Drawing environment initialized!");
 }
 
 /** Sets drawing prim for all 3D objects */
@@ -189,7 +184,7 @@ void Renderer::setPrim()
     prim.mapping_type = PRIM_MAP_ST;
     prim.colorfix = PRIM_UNFIXED;
     renderData.prim = &prim;
-    PRINT_LOG("Prim set!");
+    consoleLog("Prim set!");
 }
 
 void Renderer::setWorldColor(const color_t &t_rgb)
@@ -219,7 +214,7 @@ void Renderer::allocateBuffers(int t_screenW, int t_screenH)
     zBuffer.method = ZTEST_METHOD_GREATER_EQUAL;
     zBuffer.zsm = GS_ZBUF_24;
     zBuffer.address = graph_vram_allocate(t_screenW, t_screenH, zBuffer.zsm, GRAPH_ALIGN_PAGE);
-    PRINT_LOG("Framebuffers, zBuffer set and allocated!");
+    consoleLog("Framebuffers, zBuffer set and allocated!");
 
     // Initialize the screen and tie the first framebuffer to the read circuits.
     graph_initialize(frameBuffers[0].address, frameBuffers[0].width, frameBuffers[0].height, frameBuffers[0].psm, 0, 0);
@@ -274,9 +269,8 @@ void Renderer::allocateBuffers(int t_screenW, int t_screenH)
 void Renderer::draw(Mesh **t_meshes, u16 t_amount, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
-    if (!t_meshes[0]->isDataLoaded())
-        PRINT_ERR("Can't draw, because no mesh data was loaded!");
-    else if (
+    assertMsg(t_meshes[0]->isDataLoaded(), "Can't draw, because no mesh data was loaded!");
+    if (
         t_amount >= 3 &&
         !t_meshes[0]->shouldBeBackfaceCulled &&
         t_meshes[0]->getFramesCount() == 1 &&
@@ -309,9 +303,7 @@ void Renderer::draw(Mesh &t_mesh, LightBulb *t_bulbs, u16 t_bulbsCount)
 {
     beginFrameIfNeeded();
     vifSender->calcMatrix(renderData, t_mesh.position, t_mesh.rotation);
-    if (!t_mesh.isDataLoaded())
-        PRINT_ERR("Can't draw, because no mesh data was loaded!");
-
+    assertMsg(t_mesh.isDataLoaded(), "Can't draw, because no mesh data was loaded!");
     camRotation.identity();
     camRotation.rotate(-t_mesh.rotation);
     Vector3 rotatedCamera = Vector3(camRotation * *renderData.cameraPosition);

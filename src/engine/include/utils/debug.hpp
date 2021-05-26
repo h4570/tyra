@@ -11,14 +11,16 @@
 #ifndef _TYRA_DEBUG_
 #define _TYRA_DEBUG_
 
-#include <tamtypes.h>
-#include <math3d.h>
-#include <stdio.h>
+#ifdef NDEBUG
+#define consoleLog(message) ((void)0)
+#define assertMsg(condition, message) ((void)0)
 
+#else // IF Debug
+#include <stdio.h>
 class Debug
 {
 public:
-    static void errTrap(char *t_text, char *t_file)
+    static void trap(const char *t_text, const char *t_file)
     {
         printf("\n");
         printf("====================================\n");
@@ -29,8 +31,10 @@ public:
             ;
     }
 };
+#define consoleLog(message) printf("LOG: " message " (" __FILE__ ")\n")
+#define assertMsg(condition, message) \
+    if (!(condition))                 \
+    Debug::trap(message, __FILE__)
+#endif // NDEBUG
 
-#define PRINT_LOG(TEXT) printf("LOG: " TEXT " (" __FILE__ ")\n")
-#define PRINT_ERR(TEXT) Debug::errTrap(TEXT, __FILE__)
-
-#endif
+#endif // _TYRA_DEBUG_

@@ -30,15 +30,10 @@ Pad::Pad()
     this->slot = 0; // Always zero if not using multitap
     if ((this->ret = padPortOpen(this->port, this->slot, padBuf)) == 0)
     {
-        PRINT_ERR("padPortOpen failed!");
         printf("padPortOpen returned: %d\n", this->ret);
-        SleepThread();
+        assertMsg(true == false, "padPortOpen failed!");
     }
-    if (!this->initPad())
-    {
-        PRINT_ERR("initPad failed!");
-        SleepThread();
-    }
+    assertMsg(this->initPad(), "initPad failed!");
 }
 
 Pad::~Pad() {}
@@ -50,22 +45,20 @@ Pad::~Pad() {}
 /** Load SIO2MAN and PADMAN modules */
 void Pad::loadModules()
 {
-    PRINT_LOG("Loading pad modules");
+    consoleLog("Loading pad modules");
     this->ret = SifLoadModule("rom0:SIO2MAN", 0, NULL);
     if (this->ret < 0)
     {
-        PRINT_ERR("SifLoadModule (SIO2MAN) failed!");
         printf("SifLoadModule returned: %d\n", this->ret);
-        SleepThread();
+        assertMsg(true == false, "SifLoadModule (SIO2MAN) failed!");
     }
     this->ret = SifLoadModule("rom0:PADMAN", 0, NULL);
     if (this->ret < 0)
     {
-        PRINT_ERR("SifLoadModule (PADMAN) failed!");
         printf("SifLoadModule returned: %d\n", this->ret);
-        SleepThread();
+        assertMsg(true == false, "SifLoadModule (PADMAN) failed!");
     }
-    PRINT_LOG("Pad modules loaded!");
+    consoleLog("Pad modules loaded!");
 }
 
 /** Wait when pad will be ready (stable and ready) */
@@ -81,7 +74,7 @@ int Pad::waitPadReady()
         if (state != lastState)
         {
             padStateInt2String(state, stateString);
-            PRINT_LOG("Pad state changed");
+            consoleLog("Pad state changed");
             printf("Curent pad(%d,%d) status: %s\n", this->port, this->slot, stateString);
         }
         lastState = state;
@@ -89,23 +82,20 @@ int Pad::waitPadReady()
     }
     // Were the pad ever 'out of sync'?
     if (lastState != -1)
-        PRINT_LOG("Pad is ready!");
+        consoleLog("Pad is ready!");
     return 0;
 }
 
 /** Initializes and checks type of pad */
 int Pad::initPad()
 {
-    PRINT_LOG("Initializing pad");
+    consoleLog("Initializing pad");
     this->waitPadReady();
     // How many different modes can this device operate in?
     // i.e. get # entrys in the modetable
     int modes = padInfoMode(this->port, this->slot, PAD_MODETABLE, -1);
-    if (modes == 0)
-    {
-        PRINT_ERR("Connected device is not a dual shock controller!"); // (it has no actuator engines)
-        return 1;
-    }
+    assertMsg(modes, "Connected device is not a dual shock controller!"); // (it has no actuator engines)
+
     // Verify that the controller has a DUAL SHOCK mode
     int i = 0;
     do
@@ -115,22 +105,14 @@ int Pad::initPad()
         i++;
     } while (i < modes);
 
-    if (i >= modes)
-    {
-        PRINT_ERR("Connected device is not a dual shock controller!");
-        return 1;
-    }
+    assertMsg(i < modes, "Connected device is not a dual shock controller!");
 
     // If ExId != 0x0 => This controller has actuator engines
     // This check should always pass if the Dual Shock test above passed
     this->ret = padInfoMode(this->port, this->slot, PAD_MODECUREXID, 0);
-    if (this->ret == 0)
-    {
-        PRINT_ERR("Connected device is not a dual shock controller!");
-        return 1;
-    }
+    assertMsg(this->ret, "Connected device is not a dual shock controller!");
 
-    PRINT_LOG("Enabling dual shock functions.");
+    consoleLog("Enabling dual shock functions.");
 
     // When using MMODE_LOCK, user cant change mode with Select button
     padSetMainMode(this->port, this->slot, PAD_MMODE_DUALSHOCK, PAD_MMODE_LOCK);
@@ -156,7 +138,7 @@ int Pad::initPad()
     else
         printf("Did not find any actuators.\n");
     this->waitPadReady();
-    PRINT_LOG("Pad initialized!");
+    consoleLog("Pad initialized!");
     return 1;
 }
 

@@ -52,11 +52,7 @@ MeshFrame::~MeshFrame()
 
 void MeshFrame::allocateSTs(const u32 &t_val)
 {
-    if (_areSTsAllocated)
-    {
-        PRINT_ERR("Can't allocate STs, because were already set!");
-        return;
-    }
+    assertMsg(!_areSTsAllocated, "Can't allocate STs, because were already set!");
     stsCount = t_val;
     sts = new Point[t_val];
     _areSTsAllocated = true;
@@ -64,11 +60,7 @@ void MeshFrame::allocateSTs(const u32 &t_val)
 
 void MeshFrame::allocateVertices(const u32 &t_val)
 {
-    if (_areVerticesAllocated)
-    {
-        PRINT_ERR("Can't allocate vertices, because were already set!");
-        return;
-    }
+    assertMsg(!_areVerticesAllocated, "Can't allocate vertices, because were already set!");
     vertexCount = t_val;
     vertices = new Vector3[t_val];
     _areVerticesAllocated = true;
@@ -76,11 +68,7 @@ void MeshFrame::allocateVertices(const u32 &t_val)
 
 void MeshFrame::allocateNormals(const u32 &t_val)
 {
-    if (_areNormalsAllocated)
-    {
-        PRINT_ERR("Can't allocate normals, because were already set!");
-        return;
-    }
+    assertMsg(!_areNormalsAllocated, "Can't allocate normals, because were already set!");
     normalsCount = t_val;
     normals = new Vector3[t_val];
     _areNormalsAllocated = true;
@@ -88,11 +76,7 @@ void MeshFrame::allocateNormals(const u32 &t_val)
 
 void MeshFrame::allocateMaterials(const u32 &t_val)
 {
-    if (_areMaterialsAllocated)
-    {
-        PRINT_ERR("Can't allocate materials, because were already set!");
-        return;
-    }
+    assertMsg(!_areMaterialsAllocated, "Can't allocate materials, because were already set!");
     materialsCount = t_val;
     materials = new MeshMaterial[t_val];
     _areMaterialsAllocated = true;
@@ -100,9 +84,7 @@ void MeshFrame::allocateMaterials(const u32 &t_val)
 
 void MeshFrame::calculateBoundingBoxes()
 {
-    if (!_areVerticesAllocated)
-        PRINT_ERR("Can't calculate bounding box, because vertices were not allocated!");
-
+    assertMsg(_areVerticesAllocated, "Can't calculate bounding box, because vertices were not allocated!");
     for (u32 i = 0; i < materialsCount; i++)
         materials->calculateBoundingBox(vertices, vertexCount);
 
