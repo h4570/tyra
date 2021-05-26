@@ -14,8 +14,6 @@
 #ifdef NDEBUG
 #define consoleLog(message) ((void)0)
 #define assertMsg(condition, message) ((void)0)
-#define PRINT_LOG(TEXT) ((void)0) // DELETE ME
-#define PRINT_ERR(TEXT) ((void)0) // DELETE ME
 
 #else // IF Debug
 #include <stdio.h>
@@ -37,8 +35,6 @@ public:
 #define assertMsg(condition, message) \
     if (!(condition))                 \
     Debug::trap(message, __FILE__)
-#define PRINT_LOG(TEXT) printf("LOG: " TEXT " (" __FILE__ ")\n") // DELETE ME
-#define PRINT_ERR(TEXT) Debug::trap(TEXT, __FILE__)              // DELETE ME
-#endif                                                           // NDEBUG
+#endif // NDEBUG
 
 #endif // _TYRA_DEBUG_

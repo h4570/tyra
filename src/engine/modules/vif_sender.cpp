@@ -33,7 +33,7 @@ extern u32 VU1Draw3D_CodeEnd __attribute__((section(".vudata")));
 
 VifSender::VifSender(Light *t_light)
 {
-    PRINT_LOG("Initializing VifSender");
+    consoleLog("Initializing VifSender");
     light = t_light;
     lastVertCount = 0;
     isDrawWaitEnabled = true;
@@ -44,7 +44,7 @@ VifSender::VifSender(Light *t_light)
     packets[1] = packet2_create(VU1_PACKET_SIZE, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
     context = 0;
     setDoubleBufferAddStaticData();
-    PRINT_LOG("VifSender initialized!");
+    consoleLog("VifSender initialized!");
 }
 
 VifSender::~VifSender()

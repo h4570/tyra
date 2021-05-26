@@ -17,8 +17,8 @@
 
 TextureRepository::TextureRepository()
 {
-    PRINT_LOG("Initializing texture repository");
-    PRINT_LOG("Texture repository initialized!");
+    consoleLog("Initializing texture repository");
+    consoleLog("Texture repository initialized!");
 }
 
 TextureRepository::~TextureRepository()

@@ -30,12 +30,12 @@
  */
 GifSender::GifSender(u32 t_packetSize, ScreenSettings *t_screen, Light *t_light) : screen(t_screen)
 {
-    PRINT_LOG("Initializing GifSender");
+    consoleLog("Initializing GifSender");
     light = t_light;
     packetSize = t_packetSize;
     packets[0] = packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
     packets[1] = packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
-    PRINT_LOG("GifSender initialized!");
+    consoleLog("GifSender initialized!");
 }
 
 /** Releases packets memory */

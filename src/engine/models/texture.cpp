@@ -41,13 +41,8 @@ Texture::~Texture()
 
 void Texture::setSize(const u8 &t_width, const u8 &t_height, const TextureType &t_type)
 {
-    if (_isSizeSet)
-    {
-        PRINT_ERR("Can't set size, because was already set!");
-        return;
-    }
-    if (t_width > 256 || t_height > 256)
-        PRINT_ERR("Given texture can be too big for PS2. Please strict to 256x256 max. Prefer 128x128.");
+    assertMsg(!_isSizeSet, "Can't set size, because was already set!");
+    assertMsg(t_width <= 256 && t_height <= 256, "Given texture can be too big for PS2. Please strict to 256x256 max. Prefer 128x128.");
     width = t_width;
     height = t_height;
     _type = t_type;
@@ -57,11 +52,7 @@ void Texture::setSize(const u8 &t_width, const u8 &t_height, const TextureType &
 
 void Texture::setName(char *t_val)
 {
-    if (_isNameSet)
-    {
-        PRINT_ERR("Can't set name, because was already set!");
-        return;
-    }
+    assertMsg(!_isNameSet, "Can't set name, because was already set!");
     name = String::createCopy(t_val);
     _isNameSet = true;
 }

@@ -167,10 +167,8 @@ public:
     void removeLinkById(const u32 &t_id)
     {
         s32 index = getIndexOfLink(t_id);
-        if (index != -1)
-            removeLinkByIndex(index);
-        else
-            PRINT_ERR("Cant remove link, because it was not found!");
+        assertMsg(index != -1, "Cant remove link, because it was not found!");
+        removeLinkByIndex(index);
     }
 
 private:

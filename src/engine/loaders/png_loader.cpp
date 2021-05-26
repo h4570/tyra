@@ -40,9 +40,7 @@ void PngLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     delete[] path_part2;
 
     FILE *file = fopen(path, "rb");
-
-    if (file == NULL)
-        PRINT_ERR("Failed to open .png file!");
+    assertMsg(file != NULL, "Failed to open .png file!");
 
     png_structp png_ptr;
     png_infop info_ptr;
@@ -52,26 +50,15 @@ void PngLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     int bit_depth, color_type, interlace_type;
 
     png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, (png_voidp)NULL, NULL, NULL);
-
-    if (!png_ptr)
-        PRINT_ERR("PNG struct info init failed(1)!");
-
+    assertMsg(png_ptr, "PNG struct info init failed(1)!");
     info_ptr = png_create_info_struct(png_ptr);
-
-    if (!info_ptr)
-        PRINT_ERR("PNG struct info init failed(2)!");
-
-    if (setjmp(png_jmpbuf(png_ptr)))
-        PRINT_ERR("PNG reader fatal error!");
+    assertMsg(info_ptr, "PNG struct info init failed(2)!");
+    assertMsg(!setjmp(png_jmpbuf(png_ptr)), "PNG reader fatal error!");
 
     png_init_io(png_ptr, file);
-
     png_set_sig_bytes(png_ptr, sig_read);
-
     png_read_info(png_ptr, info_ptr);
-
     png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
-
     png_set_strip_16(png_ptr);
 
     if (color_type == PNG_COLOR_TYPE_PALETTE)
@@ -98,7 +85,7 @@ void PngLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
         type = TEX_TYPE_RGB;
         break;
     default:
-        PRINT_ERR("This png format is not supported! RGB/RGBA only.");
+        assertMsg(true == false, "This png format is not supported! RGB/RGBA only.");
     }
 
     o_texture.setSize(width, height, type);

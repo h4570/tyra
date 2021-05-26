@@ -38,12 +38,7 @@ void BmpLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     delete[] path_part1;
     delete[] path_part2;
     FILE *file = fopen(path, "rb");
-
-    if (file == NULL)
-    {
-        PRINT_ERR("Failed to load .bmp file!");
-        return;
-    }
+    assertMsg(file != NULL, "Failed to load .bmp file!");
 
     unsigned char header[54];
     fread(header, sizeof(unsigned char), 54, file);
@@ -53,10 +48,7 @@ void BmpLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     u32 bits = (u32)header[28];
     u32 dataOffset = (u32)header[10];
 
-    if (bits != 24)
-    {
-        PRINT_ERR("Invalid bits per pixel in .bmp file - expected 24!");
-    }
+    assertMsg(bits == 24, "Invalid bits per pixel in .bmp file - expected 24!");
 
     o_texture.setSize(width, height, TEX_TYPE_RGB);
     printf("BMPLoader - width: %d | height: %d | bits: %d\n", width, height, bits);

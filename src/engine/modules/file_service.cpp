@@ -43,8 +43,7 @@ u32 FileService::addReadChunk(FILE *t_file, void *t_destination, const u32 &t_si
 s32 FileService::isTaskDone(const u32 &t_taskId)
 {
     s32 taskIndex = getIndexOf(t_taskId);
-    if (taskIndex == -1)
-        PRINT_ERR("Task was not found!");
+    assertMsg(taskIndex != -1, "Task was not found!");
     s32 result = tasks[taskIndex].readStatus;
     if (result != -2137)
         removeByIndex(taskIndex);
@@ -54,10 +53,8 @@ s32 FileService::isTaskDone(const u32 &t_taskId)
 const void FileService::removeById(const u32 &t_taskId)
 {
     s32 index = getIndexOf(t_taskId);
-    if (index != -1)
-        removeByIndex(index);
-    else
-        PRINT_ERR("Cant remove task, because it was not found!");
+    assertMsg(index != -1, "Cant remove task, because it was not found!");
+    removeByIndex(index);
 }
 
 const s32 FileService::getIndexOf(const u32 &t_taskId)
@@ -72,18 +69,18 @@ const s32 FileService::getIndexOf(const u32 &t_taskId)
 
 void FileService::startThread()
 {
-    PRINT_LOG("Creating file service thread");
+    consoleLog("Creating file service thread");
     extern void *_gp;
     thread.func = (void *)FileService::mainThread;
     thread.stack = threadStack;
     thread.stack_size = getThreadStackSize();
     thread.gp_reg = (void *)&_gp;
     thread.initial_priority = 0x12;
-    if ((threadId = CreateThread(&thread)) < 0)
-        PRINT_ERR("Create audio thread failed!");
-    PRINT_LOG("File service created");
+    threadId = CreateThread(&thread);
+    assertMsg(threadId >= 0, "Create audio thread failed!");
+    consoleLog("File service created");
     StartThread(threadId, NULL);
-    PRINT_LOG("File service started");
+    consoleLog("File service started");
 }
 
 /** Main thread loop */

@@ -21,7 +21,7 @@
 CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position)
     : screen(t_screen)
 {
-    PRINT_LOG("Initializing frustum");
+    consoleLog("Initializing frustum");
     farPlaneDist = screen->farPlaneDist;
     nearPlaneDist = screen->nearPlaneDist;
     float tang = tanf(screen->fov * Math::HALF_ANG2RAD);
@@ -31,7 +31,7 @@ CameraBase::CameraBase(ScreenSettings *t_screen, Vector3 *t_position)
     farWidth = farHeight * screen->aspectRatio;
     p_position = t_position;
     up.set(0.0F, 1.0F, 0.0F);
-    PRINT_LOG("CameraBase initialized!");
+    consoleLog("CameraBase initialized!");
 }
 
 // ----
