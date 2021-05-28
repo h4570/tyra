@@ -48,8 +48,8 @@
 
 ## About the Project  
 
-<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/tyra.gif" alt="Sample code" width="600" height="auto">  
-<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/samples/dolphin/dolphin.gif " alt="Sample game" width="500" height="auto">  
+<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/tyra.gif" alt="Sample code" width="600" height="auto">  
+<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/dolphin.gif " alt="Sample game" width="500" height="auto">  
 
 ### Samples
 * [Dolphin](https://github.com/h4570/tyra/tree/master/src/samples/dolphin) 
@@ -102,14 +102,14 @@ but with Tyra you can do it with methods like `loadObj()` and `draw()` 😁.
 ## Getting Started  
 
 ### Installation 
-Step by step [tutorial here](https://github.com/h4570/tyra/blob/master/src/engine/loaders/dff_loader.cpp)  
+Step by step [tutorial here](https://github.com/h4570/tyra/tree/develop/docs)  
 If you need any support, feel free to ask questions on discord:  
 [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
 
 ### Prerequisites 
 
 * PS2 DEV environment - [PS2DEV](https://github.com/ps2dev/ps2dev)  
-* At least #e8e9edb PS2SDK (06.02.2021) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
+* At least #58ffb33 PS2SDK (28.05.2021) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
 * PS2 Emulator. For example [PCSX2](https://pcsx2.net/) 
 
 <br />
@@ -149,7 +149,7 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 
 ## Built With  
 
-* [PS2SDK](https://github.com/ps2dev/ps2sdk)  
+* [PS2DEV](https://github.com/ps2dev/ps2dev)  
 
 <br />
 
