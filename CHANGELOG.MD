@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Unit test project
 - Assert
+- CI via Github workflows
 - Install tutorial as separated .MD file
 
 ### Changed
