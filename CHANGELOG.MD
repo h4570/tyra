@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.?.?] - ?-?-?
 
 ### Added
-- Unit tests
+- Unit test project
 - Assert
+- Install tutorial as separated .MD file
 
 ### Changed
+- Improved BMP loader.
 - All PRINT_LOG and PRINT_ERR to consoleLog() and assertMsg()
-- Refactored makefiles and **env variables**
+- Refactored makefiles
+- **CHANGED ENV VARIABLES!**
+- Install tutorial
+- Readme
 
 ## [1.31.2] - 2021-02-06
 
