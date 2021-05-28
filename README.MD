@@ -32,7 +32,7 @@
 * [About the Project](#about-the-project) 
   * [Samples](#samples) 
   * [Description](#description) 
-  * [Tyra features](#tyra-features) 
+  * [Features](#features) 
   * [Branches](#branches) 
 * [Getting Started](#getting-started) 
   * [Installation](#installation) 
@@ -81,9 +81,7 @@ For example, if you want to render something using only PS2DEV you must:
 
 but with Tyra you can do it with methods like `loadObj()` and `draw()` 😁. 
 
-<br />
-
-### Tyra features
+### Features
 * 3D support - VU1 "Path 1 rendering"  
 * 2D support - PNG & BMP
 * Frustum culling, backface culling  
