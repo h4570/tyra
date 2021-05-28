@@ -4,10 +4,9 @@
 ### Features
 
 - Rotating Cube
- 
 
 ### Assets
-You can download assets from [latest release](https://github.com/h4570/armnas/releases/latest) (unpack this in "`/your-tyra-dir/samples/cube/bin`")
+You can download assets from [latest release](https://github.com/h4570/armnas/releases/latest) (unpack to `/repos/tyra/src/samples/cube/bin`)
 
 ### Screenshot
 
