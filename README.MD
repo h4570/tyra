@@ -31,7 +31,7 @@
 
 * [About the Project](#about-the-project) 
   * [Samples](#samples) 
-  * [About project](#about-project) 
+  * [Description](#description) 
   * [Tyra features](#tyra-features) 
   * [Branches](#branches) 
 * [Getting Started](#getting-started) 
@@ -44,6 +44,8 @@
 * [Acronyms](#acronyms) 
 * [Thanks](#thanks) 
 
+<br />
+
 ## About the Project  
 
 <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/tyra.gif" alt="Sample code" width="600" height="auto">  
@@ -54,13 +56,32 @@
 * [Floors](https://github.com/h4570/tyra/tree/master/src/samples/floors) 
 * [Cube](https://github.com/h4570/tyra/tree/master/src/samples/cube) 
   
-### About the project
-Goal of Tyra project is to provide simple API for PS2 game creation, so you can just run PS2 emulator, grab .obj file, and put it into live in a seconds. Project is on alpha stage, so keep in mind that there are many things to be done and to fix.
+### Description
+Tyra is a project that aims to facilitate the development of PlayStation 2 games. The goal is simple API which will allow you to develop some nice small homebrew games in a short period of time. Finally, (thanks to PS2DEV team) Tyra supports C++20, so we are free from the 2003's GCC which only supported C++98.  
+**Project is on alpha stage, so keep in mind that there are many things to be done and to fix.**
+Unfortunately there are not many people, which want's to help with this project. **If you want to be a volunteer**, but don't have too much knowledge in this field, write to me on Discord, **I will be happy to help.**
  
-YouTube tutorials soon!  
+When project will be on beta stage, we plan to create some YouTube tutorials :)  
   
-**Why Tyra is needed?** Raw PS2 development can be a big challenge. PS2 it's pretty low-level and there are a lot of stuff that you must do from scratch.  
-Tyra takes care for you, and rendering, coprocessors communication, synchronization and many more low-level stuff is already done.
+**Why was this project created?** 
+PS2 development can be a big challenge.  
+PS2 it's pretty low-level and there are a lot of stuff that you must do from scratch.  
+For example, if you want to render something using only PS2DEV you must:
+- Create VU1 micro-program
+- Load micro-program and send it to VU1
+- Create parser for your 3D file
+- Create parser for texture file
+- Calculate lights, shadows, MVP matrices (3D->2D)..
+- Clip triangles ([sic!](https://github.com/h4570/tyra/issues/14))
+- Prepare DMA packets for coprocessors communication
+- Setup rasterizer (GS)
+- Send texture to GS
+- Send packets
+- Synchronize all  
+
+but with Tyra you can do it with methods like `loadObj()` and `draw()` 😁. 
+
+<br />
 
 ### Tyra features
 * 3D support - VU1 "Path 1 rendering"  
@@ -78,10 +99,14 @@ Tyra takes care for you, and rendering, coprocessors communication, synchronizat
 * Master - monthly releases - tested on PS2 & PCSX2.
 * Develop - daily builds - can be unstable.
 
+<br />
+
 ## Getting Started  
 
-### Installation [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
-In our Discord channel, there is detailed tutorial which will help you with setting up the all environment - starting from installing dependencies and ending on emulator setup or intellisense.  
+### Installation 
+Step by step [tutorial here](https://github.com/h4570/tyra/blob/master/src/engine/loaders/dff_loader.cpp)  
+If you need any support, feel free to ask questions on discord:  
+[![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
 
 ### Prerequisites 
 
@@ -89,10 +114,13 @@ In our Discord channel, there is detailed tutorial which will help you with sett
 * At least #e8e9edb PS2SDK (06.02.2021) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
 * PS2 Emulator. For example [PCSX2](https://pcsx2.net/) 
 
+<br />
+
 ## Extra info 
-* BMP loader needs some polishing so be sure that you exporting BMP with 24bit: RGB888 and without information about colors. 
-* If you want to run .elf in PCSX2, be sure that you have version >=1.6 and **Host access** enabled in PCSX2 configuration file.  
-* If you want to use your own .obj file, please check "triangulate faces" in blender. PS2 is supporting only triangle primitive type.  
+* If you want to use your own .obj file, please check "triangulate faces" in blender.  
+PS2 is supporting only triangle primitive type.  
+
+<br />
 
 ## Roadmap  
 
@@ -100,6 +128,8 @@ In our Discord channel, there is detailed tutorial which will help you with sett
 [Next release roadmap](https://github.com/h4570/tyra/projects/4)  
 
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
+
+<br />
 
 ## Contributing 
 
@@ -111,26 +141,34 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/amazing-feature`)  
 5. Open a Pull Request  
 
+<br />
+
 ## License  
 
 Distributed under the Apache License 2.0 License. See `LICENSE` for more information. 
+
+<br />
 
 ## Built With  
 
 * [PS2SDK](https://github.com/ps2dev/ps2sdk)  
 
-### Acronyms 
+<br />
+
+## Acronyms 
 * EE (Emotion Engine) - whole set of processors and subsystems that make up the PlayStation 2 
 * GS (Graphic synthesizer) - configurable rasterizer and texture mapper. Has only 2MB~ memory for textures, but for the opposite have very high transfer rate, so you can switch textures in the blink 
 * VU0 - programmable (ASM) vector processor that is accessed by inline assembly code injected into C program.  
 * VU1 - programmable (ASM) vector processor, which is similar to vertex shader. Accessed via DMA.  
 * IOP - I/O processor which enables access to peripheral devices, such the game controller  
 
+<br />
+
 ## Thanks  
 
 Without these guys, everything would be harder:
 * Dr Henry Fortuna - for code sources
-* Rick Gaiser - for help and new GCC!
+* Rick Gaiser, fjtrujy - for help and new GCC!
 * Lukasz D.K. - for huge archive of PS2 stuff
 * Guilherme Lampert - for code sources
 * Jesper Svennevid, Daniel Collin - for openvcl's code samples
