@@ -27,25 +27,34 @@ jobs:
         LIBTIFF: ${PS2SDK}/ports
         LIBJPEG: ${PS2SDK}/ports
         LIBPNG: ${PS2SDK}/ports
+        TYRA: ${PWD}
       run: |
         make
 
     - name: Compile unit test project
       working-directory: ./src/unit_tests/
+      env:
+        TYRA: ${PWD}
       run: |
         make
 
     - name: Compile cube project
       working-directory: ./src/samples/cube/
+      env:
+        TYRA: ${PWD}
       run: |
         make
     
     - name: Compile floors project
       working-directory: ./src/samples/floors/
+      env:
+        TYRA: ${PWD}
       run: |
         make
         
     - name: Compile dolphin project
       working-directory: ./src/samples/dolphin/
+      env:
+        TYRA: ${PWD}
       run: |
         make
