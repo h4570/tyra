@@ -11,7 +11,7 @@
 - Usage of draw() in array mode (for water tiles, very fast)
 
 ### Assets
-You can download assets from [latest release](https://github.com/h4570/armnas/releases/latest) (unpack to `/repos/tyra/src/samples/dolphin/bin`)
+You can download assets from [latest release](https://github.com/h4570/tyra/releases/latest) (unpack to `/repos/tyra/src/samples/dolphin/bin`)
 
 ### Screenshot  
 
