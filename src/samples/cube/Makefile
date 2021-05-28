@@ -1,16 +1,17 @@
-EE_BIN = cube.elf
+# Project settings
 
-TYRA_DIR = ./../../engine
-PCSX2_PATH = /mnt/c/Program\ Files\ \(x86\)/PCSX2/pcsx2.exe
-WSL_TYRA_PATH = \\\\wsl$$\\PS2-DEV\\repos\\tyra
-
+DIR_NAME = cube
+EE_LIBS = -ltyra
 EE_OBJS =											\
 	objects/cube.o									\
 	camera.o										\
 	cubes.o											\
 	main.o
 
-EE_LIBS = -ltyra 
+# ----------------
+# Other 
+
+EE_BIN = $(DIR_NAME).elf
 
 all: $(EE_BIN)
 	$(EE_STRIP) --strip-all $(EE_BIN)
@@ -18,10 +19,10 @@ all: $(EE_BIN)
 	rm $(EE_OBJS)
 
 rebuild-engine: 
-	cd $(TYRA_DIR) && make clean && make
+	cd $(TYRA)/src/engine && make clean && make EE_CXXFLAGS="-DNDEBUG $(EE_CXXFLAGS)"
 
 rebuild-dbg-engine: 
-	cd $(TYRA_DIR) && make clean && make debug
+	cd $(TYRA)/src/engine && make clean && make
 
 clean:
 	rm -f $(EE_OBJS)
@@ -37,6 +38,6 @@ run: $(EE_BIN)
 
 run-pcsx2:
 	taskkill.exe /f /t /im pcsx2.exe || true
-	$(PCSX2_PATH) --elf=$(WSL_TYRA_PATH)\\src\\samples\\cube\\bin\\cube.elf
+	$(WSL_LINUX_PCSX2)/pcsx2.exe --elf=$(WSL_MAKE_WINDOWS)\\repos\\tyra\\src\\samples\\$(DIR_NAME)\\bin\\$(EE_BIN)
 
-include $(TYRA_DIR)/Makefile.pref
+include $(TYRA)/src/engine/Makefile.pref
