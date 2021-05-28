@@ -36,7 +36,7 @@ all: $(EE_OBJS)
 	rm -f $(EE_OBJS)
 
 # %.vcl: %.vclpp
-	# $(EE_VCLPP) $< $@
+#	 $(EE_VCLPP) $< $@
 
 # %.vsm: %.vcl
 #	$(EE_VCL) $< >> $@
