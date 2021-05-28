@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - All PRINT_LOG and PRINT_ERR to consoleLog() and assertMsg()
+- Refactored makefiles and **env variables**
 
 ## [1.31.2] - 2021-02-06
 
