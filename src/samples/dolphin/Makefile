@@ -18,7 +18,6 @@ EE_BIN = $(DIR_NAME).elf
 all: $(EE_BIN)
 	$(EE_STRIP) --strip-all $(EE_BIN)
 	mv $(EE_BIN) bin/$(EE_BIN)
-	rm $(EE_OBJS)
 
 rebuild-engine: 
 	cd $(TYRA)/src/engine && make clean && make EE_CXXFLAGS="-DNDEBUG $(EE_CXXFLAGS)"
@@ -29,13 +28,10 @@ rebuild-dbg-engine:
 clean:
 	rm -f $(EE_OBJS)
 
-run: $(EE_BIN)
+run:
 	killall -v ps2client || true
 	ps2client reset
 	ps2client reset
-	$(EE_STRIP) --strip-all $(EE_BIN)
-	mv $(EE_BIN) bin/$(EE_BIN)
-	rm $(EE_OBJS)
 	cd bin/ && ps2client execee host:$(EE_BIN)
 
 run-pcsx2:

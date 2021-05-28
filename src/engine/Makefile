@@ -35,14 +35,14 @@ all: $(EE_OBJS)
 	ar rcs $(LIB_NAME) $(EE_OBJS)
 	rm -f $(EE_OBJS)
 
-#%.vcl: %.vclpp
-#	$(EE_VCLPP) $< $@
+%.vcl: %.vclpp
+	$(EE_VCLPP) $< $@
 
-#%.vsm: %.vcl
+# %.vsm: %.vcl
 #	$(EE_VCL) $< >> $@
 
-%.o: %.vsm
-	$(EE_DVP) $< -o $@
+# %.o: %.vsm
+#	$(EE_DVP) $< -o $@
 
 clean:
 	rm -f $(EE_OBJS)
