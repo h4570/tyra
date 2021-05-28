@@ -1,0 +1,51 @@
+# Based on https://github.com/ps2dev/gsKit/blob/master/.github/workflows/compilation.yml
+# Thanks fjtrujy!
+
+name: CI
+
+on:
+  push:
+  pull_request:
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ps2dev/ps2sdk-ports:latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        apk add build-base git
+
+    - name: Compile engine
+      working-directory: ./src/engine
+      env:
+        ZLIB: ${PS2SDK}/ports
+        LIBTIFF: ${PS2SDK}/ports
+        LIBJPEG: ${PS2SDK}/ports
+        LIBPNG: ${PS2SDK}/ports
+      run: |
+        make
+
+    - name: Compile unit test project
+      working-directory: ./src/unit_tests/
+      run: |
+        make
+
+    - name: Compile cube project
+      working-directory: ./src/samples/cube/
+      run: |
+        make
+    
+    - name: Compile floors project
+      working-directory: ./src/samples/floors/
+      run: |
+        make
+        
+    - name: Compile dolphin project
+      working-directory: ./src/samples/dolphin/
+      run: |
+        make
