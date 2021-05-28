@@ -17,4 +17,4 @@ You can download assets from [latest release](https://github.com/h4570/armnas/re
 
 [![Dolphin screenshot][dolphin-screenshot]](#) 
 
-[dolphin-screenshot]: http://apgcglz.cluster028.hosting.ovh.net/tyra/1.31.2/samples/dolphin/dolphin.gif 
+[dolphin-screenshot]: http://apgcglz.cluster028.hosting.ovh.net/tyra/dolphin.gif 
