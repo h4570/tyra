@@ -21,9 +21,9 @@ const float CAMERA_Y = 30.0F;
 
 Camera::Camera(ScreenSettings *t_screen) : CameraBase(t_screen, &position)
 {
-    PRINT_LOG("Initializing camera");
+    consoleLog("Initializing camera");
     verticalLevel = 80.0F;
-    PRINT_LOG("Camera initialized!");
+    consoleLog("Camera initialized!");
 }
 
 Camera::~Camera() {}

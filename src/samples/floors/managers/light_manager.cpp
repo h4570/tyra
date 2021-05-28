@@ -17,7 +17,7 @@
 
 LightManager::LightManager()
 {
-    PRINT_LOG("Creating light manager!");
+    consoleLog("Creating light manager!");
     bulbsCount = 2;
 
     bulbs = new LightBulb[2];
@@ -31,7 +31,7 @@ LightManager::LightManager()
 
     audioOffset = audioTick = 0;
 
-    PRINT_LOG("Light manager created!");
+    consoleLog("Light manager created!");
 }
 
 LightManager::~LightManager()

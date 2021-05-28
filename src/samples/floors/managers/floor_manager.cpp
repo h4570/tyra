@@ -51,7 +51,7 @@ FloorManager::~FloorManager()
 */
 void FloorManager::calcSpiral(int X, int Y)
 {
-    PRINT_LOG("Calculating square spiral for floors");
+    consoleLog("Calculating square spiral for floors");
     int x, y, dx;
     x = y = dx = 0;
     int dy = -1;
@@ -73,7 +73,7 @@ void FloorManager::calcSpiral(int X, int Y)
         x += dx;
         y += dy;
     }
-    PRINT_LOG("Square spiral calculated!");
+    consoleLog("Square spiral calculated!");
 }
 
 /** Initialize all floors by: 
@@ -82,7 +82,7 @@ void FloorManager::calcSpiral(int X, int Y)
  */
 void FloorManager::initFloors()
 {
-    PRINT_LOG("Initializing floors");
+    consoleLog("Initializing floors");
     floors[0].mesh.loadObj("meshes/floor/", "floor", 3.0F, false);
     floors[0].mesh.shouldBeFrustumCulled = true;
     floors[0].mesh.shouldBeLighted = true;
@@ -95,7 +95,7 @@ void FloorManager::initFloors()
         texRepo->getBySpriteOrMesh(floors[0].mesh.getMaterial(0).getId())->addLink(floors[i].mesh.getMaterial(0).getId());
         meshes[i] = &floors[i].mesh;
     }
-    PRINT_LOG("Floors initialized!");
+    consoleLog("Floors initialized!");
 }
 
 /** Main floor loop.

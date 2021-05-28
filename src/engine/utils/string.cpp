@@ -13,7 +13,7 @@
 #include <stdio.h>
 #define CHAR_BIT 8
 
-char *String::createU32ToString(u32 a)
+char *String::createU32ToString(const u32 a)
 {
     char *result = new char[(((sizeof a) * CHAR_BIT) + 2) / 3 + 2];
     sprintf(result, "%d", a);
@@ -21,7 +21,7 @@ char *String::createU32ToString(u32 a)
 }
 
 /** Converts "123" to "000123". 6 digits length */
-char *String::createWithLeadingZeros(char *a)
+char *String::createWithLeadingZeros(const char *a)
 {
     const u8 digitsAmount = 6;
     char *part = createConcatenated("00000000", a);
@@ -35,7 +35,7 @@ char *String::createWithLeadingZeros(char *a)
     return result;
 }
 
-char *String::createWithoutExtension(char *source)
+char *String::createWithoutExtension(const char *source)
 {
     u32 length = 0;
     for (;; length++)
@@ -48,7 +48,7 @@ char *String::createWithoutExtension(char *source)
     return res;
 }
 
-char *String::createCopy(char *source)
+char *String::createCopy(const char *source)
 {
     u32 srcLength = getLength(source);
     char *res = new char[srcLength + 1];
@@ -59,7 +59,7 @@ char *String::createCopy(char *source)
 }
 
 // For test\0 will return 4
-u32 String::getLength(char *a)
+u32 String::getLength(const char *a)
 {
     if (a == NULL)
         return 0;
@@ -68,7 +68,7 @@ u32 String::getLength(char *a)
             return i;
 }
 
-char *String::createConcatenated(char *a, char *b)
+char *String::createConcatenated(const char *a, const char *b)
 {
     u32 aLength = getLength(a);
     u32 bLength = getLength(b);

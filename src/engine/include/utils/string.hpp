@@ -17,12 +17,12 @@ class String
 {
 
 public:
-    static char *createU32ToString(u32 a);
-    static char *createWithLeadingZeros(char *a);
-    static char *createCopy(char *source);
-    static u32 getLength(char *a);
-    static char *createConcatenated(char *a, char *b);
-    static char *createWithoutExtension(char *source);
+    static char *createU32ToString(const u32 a);
+    static char *createWithLeadingZeros(const char *a);
+    static char *createCopy(const char *source);
+    static u32 getLength(const char *a);
+    static char *createConcatenated(const char *a, const char *b);
+    static char *createWithoutExtension(const char *source);
 };
 
 #endif

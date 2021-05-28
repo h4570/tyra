@@ -49,10 +49,10 @@ void PngLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *
     u32 sig_read = 0, row = 0, i = 0, j = 0;
     int bit_depth, color_type, interlace_type;
 
-    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, (png_voidp)NULL, NULL, NULL);
-    assertMsg(png_ptr, "PNG struct info init failed(1)!");
+    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    assertMsg(png_ptr, "PNG read struct init failed!");
     info_ptr = png_create_info_struct(png_ptr);
-    assertMsg(info_ptr, "PNG struct info init failed(2)!");
+    assertMsg(info_ptr, "PNG info struct init failed!");
     assertMsg(!setjmp(png_jmpbuf(png_ptr)), "PNG reader fatal error!");
 
     png_init_io(png_ptr, file);

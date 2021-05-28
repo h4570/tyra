@@ -24,7 +24,7 @@
 
 Enemy::Enemy(TextureRepository *t_texRepo)
 {
-    PRINT_LOG("Creating enemy object");
+    consoleLog("Creating enemy object");
 
     meshes = new Mesh[getMeshesCount()];
     drawMeshes = new Mesh *[getMeshesCount()];
@@ -48,7 +48,7 @@ Enemy::Enemy(TextureRepository *t_texRepo)
 
     isKilled = true;
 
-    PRINT_LOG("Enemy object created!");
+    consoleLog("Enemy object created!");
 }
 
 Enemy::~Enemy()

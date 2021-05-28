@@ -17,9 +17,9 @@
 // Constructors/Destructors
 // ----
 
-Cube::Cube( TextureRepository *t_texRepo )
+Cube::Cube(TextureRepository *t_texRepo)
 {
-    PRINT_LOG("Creating cube");
+    consoleLog("Creating cube");
     texRepo = t_texRepo;
     speed = 1.2F;
 
@@ -30,7 +30,7 @@ Cube::Cube( TextureRepository *t_texRepo )
 
     texRepo->addByMesh("meshes/cube/", mesh, PNG);
 
-    PRINT_LOG("Cube object created!");
+    consoleLog("Cube object created!");
 }
 
 void Cube::update(const Pad &t_pad, const Camera &t_camera)
@@ -68,10 +68,11 @@ Vector3 *Cube::getNextPosition(const Pad &t_pad, const Camera &t_camera)
     return result;
 }
 
-void Cube::rotate(const Pad &t_pad){
+void Cube::rotate(const Pad &t_pad)
+{
     //if (t_pad.rJoyH >= 200)
     //else if (t_pad.rJoyH <= 100)
-        mesh.rotation.x += (0.01 * speed);
-        mesh.rotation.y += (0.01 * speed);
-        mesh.rotation.z += (0.01 * speed);
+    mesh.rotation.x += (0.01 * speed);
+    mesh.rotation.y += (0.01 * speed);
+    mesh.rotation.z += (0.01 * speed);
 }

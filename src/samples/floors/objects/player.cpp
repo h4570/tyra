@@ -23,7 +23,7 @@
 
 Player::Player(Audio *t_audio, TextureRepository *t_texRepo)
 {
-    PRINT_LOG("Creating player object");
+    consoleLog("Creating player object");
     texRepo = t_texRepo;
     audio = t_audio;
     gravity = 0.1F;
@@ -53,7 +53,7 @@ Player::Player(Audio *t_audio, TextureRepository *t_texRepo)
     boomAdpcm = audio->loadADPCM("sounds/boom.adpcm");
     audio->setADPCMVolume(70, 0);
 
-    PRINT_LOG("Player object created!");
+    consoleLog("Player object created!");
 }
 
 Player::~Player()

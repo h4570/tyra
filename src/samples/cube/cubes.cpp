@@ -13,7 +13,7 @@
 Cubes::Cubes(Engine *t_engine)
     : engine(t_engine), camera(&t_engine->screen)
 {
-    PRINT_LOG("Initing cubes sample");
+    consoleLog("Initing cubes sample");
 }
 
 Cubes::~Cubes()
@@ -21,14 +21,16 @@ Cubes::~Cubes()
     return;
 }
 
-void Cubes::onInit(){
+void Cubes::onInit()
+{
     texRepo = engine->renderer->getTextureRepository();
     cube = new Cube(texRepo);
     setBgColorAndAmbientColor();
     engine->renderer->setCameraDefinitions(&camera.view, &camera.unitCirclePosition, camera.planes);
 }
 
-void Cubes::onUpdate(){
+void Cubes::onUpdate()
+{
     camera.update(engine->pad, cube->mesh);
     cube->update(engine->pad, camera);
     engine->renderer->draw(cube->mesh);

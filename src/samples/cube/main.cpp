@@ -12,7 +12,6 @@
 
 int main()
 {
-    PRINT_LOG("INIT");
     Engine engine = Engine();
     Cubes game = Cubes(&engine);
     game.engine->init(&game, 128);

@@ -18,7 +18,7 @@
 
 Ui::Ui(TextureRepository *t_texRepo)
 {
-    PRINT_LOG("Initializing ui");
+    consoleLog("Initializing ui");
 
     isTask1Done = false;
     isTask2Done = false;
@@ -52,7 +52,7 @@ Ui::Ui(TextureRepository *t_texRepo)
     grayCheckboxTex->addLink(task1Checkbox.getId());
     grayCheckboxTex->addLink(task2Checkbox.getId());
 
-    PRINT_LOG("Ui initialized!");
+    consoleLog("Ui initialized!");
 }
 
 Ui::~Ui() {}
