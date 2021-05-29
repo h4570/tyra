@@ -239,11 +239,7 @@ void Dolphin::onUpdate()
     waterbox.position.set(player.mesh.position.x, -260.0F, player.mesh.position.z);
 
     engine->renderer->draw(island);
-
-    for (int i = 0; i < WATER_TILES_COUNT; i++)
-    {
-        engine->renderer->draw(*waterDrawList[i]);
-    }
+    engine->renderer->draw(waterDrawList, WATER_TILES_COUNT);
     engine->renderer->draw(skybox);
     engine->renderer->draw(waterbox);
     engine->renderer->draw(seabed);
