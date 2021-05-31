@@ -239,6 +239,4 @@ void ObjLoader::allocateObjMemory(FILE *t_file, MeshFrame *o_result)
     }
 
     o_result->getMaterial(currentMatI).allocateFaces(facesCounter); // Allocate last one
-
-    // o_result->isMemoryAllocated = true;
 }
