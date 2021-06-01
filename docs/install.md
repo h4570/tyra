@@ -99,6 +99,10 @@ export WSL_LINUX_PCSX2=/mnt/c/Program\\\ Files\\\ \\\(x86\\\)/PCSX2
 - In VSCode's WSL terminal type:
 ```
 cd /ps2dev/source
+unset ZLIB
+unset LIBTIFF
+unset LIBJPEG
+unset LIBPNG
 ./build-all.sh
 ```
 `Info: This can take some time...`
