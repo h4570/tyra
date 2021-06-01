@@ -35,7 +35,7 @@ TextureRepository::~TextureRepository()
 // Methods
 // ----
 
-Texture *TextureRepository::add(char *t_subfolder, char *t_name, TextureFormat t_format)
+Texture *TextureRepository::add(const char *t_subfolder,const  char *t_name, TextureFormat t_format)
 {
     Texture *texture = new Texture();
     if (t_format == BMP)
@@ -47,7 +47,7 @@ Texture *TextureRepository::add(char *t_subfolder, char *t_name, TextureFormat t
     return texture;
 }
 
-void TextureRepository::addByMesh(char *t_path, Mesh &mesh, TextureFormat t_format)
+void TextureRepository::addByMesh(const char *t_path, Mesh &mesh, TextureFormat t_format)
 {
     for (u32 i = 0; i < mesh.getMaterialsCount(); i++)
     {
