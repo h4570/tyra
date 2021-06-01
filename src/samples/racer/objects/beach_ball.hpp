@@ -13,6 +13,7 @@
 
 #include "../camera.hpp"
 #include <modules/texture_repository.hpp>
+#include <models/math/vector3.hpp>
 #include <models/mesh.hpp>
 #include <tamtypes.h>
 
@@ -26,7 +27,13 @@ public:
 
     Mesh mesh;
 
+    void push(const Vector3 &car);
+    void update();
+
 private:
+    float gravity, velocity, lift;
+    Vector3 force;
+    void updateGravity();
     TextureRepository *texRepo;
 };
 
