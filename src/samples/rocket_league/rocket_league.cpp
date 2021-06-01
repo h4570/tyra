@@ -8,18 +8,18 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "racer.hpp"
+#include "rocket_league.hpp"
 
 // ----
 // Constructors/Destructors
 // ----
 
-Racer::Racer(Engine *t_engine)
+RocketLeague::RocketLeague(Engine *t_engine)
     : engine(t_engine), camera(&t_engine->screen)
 {
 }
 
-Racer::~Racer()
+RocketLeague::~RocketLeague()
 {
     delete player;
     delete raceTrack;
@@ -29,7 +29,7 @@ Racer::~Racer()
 // Methods
 // ----
 
-void Racer::onInit()
+void RocketLeague::onInit()
 {
     texRepo = engine->renderer->getTextureRepository();
     setBgColorAndAmbientColor();
@@ -45,7 +45,7 @@ void Racer::onInit()
     engine->audio.setSongVolume(50);
 }
 
-void Racer::onUpdate()
+void RocketLeague::onUpdate()
 {
     player->update(engine->pad, camera);
     camera.update(engine->pad, player->mesh);
@@ -64,7 +64,7 @@ void Racer::onUpdate()
     engine->renderer->draw(beachBall->mesh);
 }
 
-void Racer::setBgColorAndAmbientColor()
+void RocketLeague::setBgColorAndAmbientColor()
 {
     color_t bgColor;
     bgColor.r = 0x20;

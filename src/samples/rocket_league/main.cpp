@@ -8,12 +8,12 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "racer.hpp"
+#include "rocket_league.hpp"
 
 int main()
 {
     Engine engine = Engine();
-    Racer game = Racer(&engine);
+    RocketLeague game = RocketLeague(&engine);
     game.engine->init(&game, 128);
     SleepThread();
     return 0;

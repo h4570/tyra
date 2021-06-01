@@ -8,8 +8,8 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#ifndef _RACER_
-#define _RACER_
+#ifndef _ROCKET_LEAGUE_
+#define _ROCKET_LEAGUE_
 
 #include <tamtypes.h>
 #include <game.hpp>
@@ -23,12 +23,12 @@
 #include "./objects/police_car.hpp"
 #include "./objects/ammo_box.hpp"
 
-class Racer : public Game
+class RocketLeague : public Game
 {
 
 public:
-    Racer(Engine *t_engine);
-    ~Racer();
+    RocketLeague(Engine *t_engine);
+    ~RocketLeague();
 
     void onInit();
     void onUpdate();

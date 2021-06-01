@@ -1,6 +1,6 @@
 # Project settings
 
-DIR_NAME = racer
+DIR_NAME = rocket_league
 EE_LIBS = -ltyra
 EE_OBJS =											\
 	objects/player.o								\
@@ -12,7 +12,7 @@ EE_OBJS =											\
 	objects/race_track.o							\
 	objects/police_car.o							\
 	camera.o										\
-	racer.o											\
+	rocket_league.o									\
 	main.o
 
 # ----------------
