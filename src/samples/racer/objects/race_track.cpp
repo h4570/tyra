@@ -19,7 +19,6 @@ RaceTrack::RaceTrack(TextureRepository *t_texRepo)
     consoleLog("Creating race tack object");
     texRepo = t_texRepo;
     mesh.loadObj("meshes/football/", "football", 30.0F, true);
-    mesh.position.set(0.00F, 40.00F, 0.00F);
     mesh.shouldBeBackfaceCulled = false;
     mesh.shouldBeFrustumCulled = false;
     texRepo->addByMesh("meshes/football/", mesh, PNG);

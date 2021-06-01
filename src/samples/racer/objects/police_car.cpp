@@ -19,7 +19,7 @@ PoliceCar::PoliceCar(TextureRepository *t_texRepo)
     consoleLog("Creating police car object");
     texRepo = t_texRepo;
     mesh.loadMD2("meshes/police_car/", "policecar", 0.45F, false);
-    mesh.position.set(0.00F, 40.00F, 40.00F);
+    mesh.position.set(0.00F, 0.00F, 40.00F);
     mesh.rotation.x = -1.566F;
     mesh.rotation.z = 1.566F;
     mesh.shouldBeBackfaceCulled = false;

@@ -19,7 +19,7 @@ AmmoBox::AmmoBox(TextureRepository *t_texRepo)
     consoleLog("Creating beach ball object");
     texRepo = t_texRepo;
     mesh.loadMD2("meshes/ammobox/", "ammobox", .5F, true);
-    mesh.position.set(20.00F, 60.00F, 40.00F);
+    mesh.position.set(20.00F, 20.00F, 40.00F);
     mesh.rotation.x = -1.566F;
     mesh.rotation.z = 1.566F;
     mesh.shouldBeBackfaceCulled = false;
