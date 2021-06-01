@@ -26,7 +26,7 @@ ObjLoader::~ObjLoader() {}
 // Methods
 // ----
 
-void ObjLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_invertT)
+void ObjLoader::load(MeshFrame *o_result, const char *t_filename, const float &t_scale, const u8 &t_invertT)
 {
     char *path = String::createConcatenated("host:", t_filename);
     FILE *file = fopen(path, "rb");

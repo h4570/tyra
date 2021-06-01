@@ -54,7 +54,7 @@ Mesh::~Mesh()
 // Methods
 // ----
 
-void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u8 &t_invertT)
+void Mesh::loadObj(const char *t_subfolder, const char *t_objFile, const float &t_scale, const u8 &t_invertT)
 {
     ObjLoader loader = ObjLoader();
     framesCount = 1;
@@ -68,7 +68,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, con
     _isMother = true;
 }
 
-void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT)
+void Mesh::loadObj(const char *t_subfolder, const char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT)
 {
     assertMsg(t_framesCount != 0, "Frames count cannot be 0!");
     if (t_framesCount == 1)
@@ -99,7 +99,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, con
     }
 }
 
-void Mesh::loadDff(char *t_subfolder, char *t_dffFile, const float &t_scale, const u8 &t_invertT)
+void Mesh::loadDff(const char *t_subfolder, const char *t_dffFile, const float &t_scale, const u8 &t_invertT)
 {
     DffLoader loader = DffLoader();
     char *part1 = String::createConcatenated(t_subfolder, t_dffFile);
@@ -113,7 +113,7 @@ void Mesh::loadDff(char *t_subfolder, char *t_dffFile, const float &t_scale, con
     _isMother = true;
 }
 
-void Mesh::loadMD2(char *t_subfolder, char *t_md2File, const float &t_scale, const u8 &t_invertT)
+void Mesh::loadMD2(const char *t_subfolder, const char *t_md2File, const float &t_scale, const u8 &t_invertT)
 {
     MD2Loader loader = MD2Loader();
     frames = loader.load(framesCount, t_subfolder, t_md2File, t_scale, t_invertT);

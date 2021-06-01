@@ -26,7 +26,7 @@ public:
      * Notice: At this moment textures names are MATERIAL names from .obj file!
      * Notice 2: Faces MUST be triangulated (check out blender export settings).
      */
-    void load(MeshFrame *o_result, char *t_fileName, float t_scale, u8 t_invertT);
+    void load(MeshFrame *o_result, const char *t_fileName, const float &t_scale, const u8 &t_invertT);
 
 private:
     void allocateObjMemory(FILE *t_file, MeshFrame *t_result);

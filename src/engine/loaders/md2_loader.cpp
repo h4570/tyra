@@ -42,7 +42,7 @@ int MEM_fread(char *buf, size_t size, size_t n, const FILE *f)
  * When I did fopen() -> fread() -> fclose() -> allocate frames memory = I had no errors 🤨
  * It looks like memory allocation during fopen()-fread()-fclose() is broken.
  */
-MeshFrame *MD2Loader::load(u32 &o_framesCount, char *t_subpath, char *t_nameWithoutExtension, float t_scale, u8 t_invertT)
+MeshFrame *MD2Loader::load(u32 &o_framesCount, const char *t_subpath, const char *t_nameWithoutExtension, const float &t_scale, const u8 &t_invertT)
 {
     consoleLog("Loading new MD2 file");
     char *part1 = String::createConcatenated(t_subpath, t_nameWithoutExtension);
