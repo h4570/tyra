@@ -13,6 +13,7 @@
 
 #include "../camera.hpp"
 #include <modules/texture_repository.hpp>
+#include <models/math/vector3.hpp>
 #include <models/mesh.hpp>
 #include <tamtypes.h>
 
@@ -25,6 +26,7 @@ public:
     ~Skybox();
 
     Mesh mesh;
+    void update(const Vector3 &playerPosition);
 
 private:
     TextureRepository *texRepo;

@@ -32,3 +32,8 @@ Skybox::~Skybox()
 // ----
 // Methods
 // ----
+
+void Skybox::update(const Vector3 &playerPosition)
+{
+    mesh.position.set(playerPosition);
+}
