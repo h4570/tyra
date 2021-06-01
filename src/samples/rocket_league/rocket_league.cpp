@@ -34,7 +34,7 @@ void RocketLeague::onInit()
     texRepo = engine->renderer->getTextureRepository();
     setBgColorAndAmbientColor();
     engine->renderer->setCameraDefinitions(&camera.view, &camera.unitCirclePosition, camera.planes);
-    engine->audio.loadSong("sounds/one-more-win.wav");
+    engine->audio.loadSong("sounds/long-night-1a.wav");
     player = new Player(texRepo);
     raceTrack = new RaceTrack(texRepo);
     beachBall = new BeachBall(texRepo);
