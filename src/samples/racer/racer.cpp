@@ -47,12 +47,20 @@ void Racer::onInit()
 
 void Racer::onUpdate()
 {
+    player->update(engine->pad, camera);
     camera.update(engine->pad, player->mesh);
+
+    if (engine->pad.isCrossClicked)
+        beachBall->push(player->mesh.position);
+
+    beachBall->update();
+    skybox->update(player->mesh.position);
+
     engine->renderer->draw(skybox->mesh);
+    engine->renderer->draw(raceTrack->mesh);
     engine->renderer->draw(player->mesh);
     engine->renderer->draw(policeCar->mesh);
     engine->renderer->draw(ammoBox->mesh);
-    engine->renderer->draw(raceTrack->mesh);
     engine->renderer->draw(beachBall->mesh);
 }
 

@@ -5,6 +5,8 @@ EE_LIBS = -ltyra
 EE_OBJS =											\
 	objects/player.o								\
 	objects/ammo_box.o								\
+	objects/movable.o								\
+	objects/car.o									\
 	objects/skybox.o								\
 	objects/beach_ball.o							\
 	objects/race_track.o							\

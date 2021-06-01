@@ -12,27 +12,24 @@
 #define _PLAYER_
 
 #include "../camera.hpp"
+#include "car.hpp"
 #include <modules/pad.hpp>
 #include <modules/texture_repository.hpp>
 #include <models/mesh.hpp>
 #include <tamtypes.h>
 
 /** Player 3D object class  */
-class Player
+class Player : public Car
 {
 
 public:
     Player(TextureRepository *t_texRepo);
     ~Player();
 
-    Mesh mesh;
     void update(const Pad &t_pad, const Camera &t_camera);
 
 private:
     TextureRepository *texRepo;
-    float gravity, velocity, lift;
-    void updatePosition(const Pad &t_pad, const Camera &t_camera);
-    void updateGravity();
 };
 
 #endif
