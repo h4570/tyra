@@ -65,11 +65,22 @@ public:
     const BoundingBoxFace &getTopFace() { return _topFace; };
     /** @returns the bottom face (nearer on y-axis) */
     const BoundingBoxFace &getBottomFace() { return _bottomFace; };
+
+    /** @returns check's intersection against another AABB */
+    bool intersect(const BoundingBox &b, const Vector3 &aPosition, const Vector3 &bPosition) const
+    {
+        const Vector3 bMax = b.getVertex(7);
+        const Vector3 bMin = b.getVertex(0);
+        return ((_vertices[0].x + aPosition.x) <= (bMax.x + bPosition.x) && (_vertices[7].x + aPosition.x) >= (bMin.x + bPosition.x)) &&
+               ((_vertices[0].y + aPosition.y) <= (bMax.y + bPosition.y) && (_vertices[7].y + aPosition.y) >= (bMin.y + bPosition.y)) &&
+               ((_vertices[0].z + aPosition.z) <= (bMax.z + bPosition.z) && (_vertices[7].z + aPosition.z) >= (bMin.z + bPosition.z));
+    }
+
     /** 
      * @returns bounding box raw vertices array.
      * Total length: 8
      */
-    const Vector3 &getVertex(const u8 &i) { return _vertices[i]; };
+    const Vector3 &getVertex(const u8 &i) const { return _vertices[i]; };
     /** @returns single vertex from raw vertices array.*/
     Vector3 *getVertices() { return _vertices; };
 
