@@ -39,7 +39,7 @@ Player::~Player()
 // Methods
 // ----
 
-void Player::update(const Pad &t_pad, const Camera &t_camera)
+void Player::update(const Pad &t_pad)
 {
     drive(t_pad.lJoyV <= 100, t_pad.lJoyV >= 200, t_pad.lJoyH <= 100, t_pad.lJoyH >= 200);
 }

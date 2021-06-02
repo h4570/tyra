@@ -17,7 +17,7 @@
 // ----
 
 BeachBall::BeachBall(TextureRepository *t_texRepo)
-    : gravity(0.1F), velocity(0), lift(-3.0F)
+    : gravity(0.1F), velocity(0)
 {
     consoleLog("Creating beach ball object");
     texRepo = t_texRepo;
@@ -37,33 +37,31 @@ BeachBall::~BeachBall()
 // Methods
 // ----
 
-void BeachBall::push(const Vector3 &car)
+void BeachBall::push(const Vector3 &car, const float &pushForce)
 {
-    Vector3 temp = mesh.position - car;
-    temp.normalize();
-    temp *= 100;
-    force.set(temp);
-
-    velocity = lift;
+    if (!isOnFloor)
+        return;
+    force.set(mesh.position - car);
+    force.normalize();
+    force *= 30 * pushForce;
+    velocity = -(pushForce / 2);
 }
 
 void BeachBall::update()
 {
     updateGravity();
-
-    if (mesh.position.y > FLOOR_Y)
+    isOnFloor = mesh.position.y <= FLOOR_Y;
+    if (!isOnFloor)
     {
         const float change = 1.5F;
         if (force.x)
         {
-            if (force.z > 0)
+            if (force.x > 0)
                 mesh.position.x += change;
-            if (force.z < 0)
+            if (force.x < 0)
                 mesh.position.x -= change;
             if (force.x > -change && force.x < change)
                 force.x = 0;
-            else
-                force.x -= change;
         }
         if (force.z)
         {
@@ -73,9 +71,8 @@ void BeachBall::update()
                 mesh.position.z -= change;
             if (force.z > -change && force.z < change)
                 force.z = 0;
-            else
-                force.z -= change;
         }
+        mesh.rotation.z += 0.1F; // is it safe?
     }
     else
         force.set(0, 0, 0);
@@ -86,9 +83,9 @@ void BeachBall::updateGravity()
     this->velocity += this->gravity;
     this->mesh.position.y -= this->velocity;
 
-    if (this->mesh.position.y >= 60.0F || mesh.position.y < -60.0F)
+    if (this->mesh.position.y >= 100.0F)
     {
-        this->mesh.position.y = 60.0F;
+        this->mesh.position.y = 100.0F;
         this->velocity = 0;
     }
     else if (this->mesh.position.y <= FLOOR_Y) // is on floor

@@ -42,16 +42,20 @@ void RocketLeague::onInit()
     policeCar = new PoliceCar(texRepo);
     skybox = new Skybox(texRepo);
     engine->audio.playSong();
-    engine->audio.setSongVolume(50);
+    engine->audio.setSongVolume(80);
 }
 
 void RocketLeague::onUpdate()
 {
-    player->update(engine->pad, camera);
+    player->update(engine->pad);
+    // policeCar->update(engine->pad);
     camera.update(engine->pad, player->mesh);
 
-    if (engine->pad.isCrossClicked)
-        beachBall->push(player->mesh.position);
+    if (player->mesh.getCurrentBoundingBox()
+            ->intersect(
+                *beachBall->mesh.getCurrentBoundingBox(),
+                player->mesh.position, beachBall->mesh.position))
+        beachBall->push(player->mesh.position, player->getAbsAcceleration() + 0.1F);
 
     beachBall->update();
     skybox->update(player->mesh.position);
@@ -73,4 +77,21 @@ void RocketLeague::setBgColorAndAmbientColor()
     engine->renderer->setWorldColor(bgColor);
     Vector3 ambient = Vector3(0.003F, 0.003F, 0.003F);
     engine->renderer->setAmbientLight(ambient);
+}
+
+void RocketLeague::pushBall()
+{
+    // Player (dark car)
+    if (player->mesh.getCurrentBoundingBox()
+            ->intersect(
+                *beachBall->mesh.getCurrentBoundingBox(),
+                player->mesh.position, beachBall->mesh.position))
+        beachBall->push(player->mesh.position, player->getAbsAcceleration() + 0.1F);
+
+    // Computer (police car)
+    if (policeCar->mesh.getCurrentBoundingBox()
+            ->intersect(
+                *beachBall->mesh.getCurrentBoundingBox(),
+                policeCar->mesh.position, beachBall->mesh.position))
+        beachBall->push(policeCar->mesh.position, policeCar->getAbsAcceleration() + 0.1F);
 }

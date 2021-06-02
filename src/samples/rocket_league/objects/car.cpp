@@ -9,7 +9,8 @@
 */
 
 #include "car.hpp"
-#include <utils/math.hpp>
+
+#define Z_ROTATION_STEP 0.005F
 
 // ----
 // Constructors/Destructors
@@ -126,8 +127,8 @@ void Car::rotate(const u8 &left, const u8 &right)
 void Car::updateRotation(const u8 &left, const u8 &right)
 {
     if ((left && acceleration >= 0) || (right && acceleration < 0))
-        mesh.rotation.z += 0.004F * abs(acceleration);
+        mesh.rotation.z += Z_ROTATION_STEP * abs(acceleration);
     else if ((right && acceleration >= 0) || (left && acceleration < 0))
-        mesh.rotation.z -= 0.004F * abs(acceleration);
+        mesh.rotation.z -= Z_ROTATION_STEP * abs(acceleration);
 }
 // --- Rotation end

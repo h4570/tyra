@@ -15,6 +15,7 @@
 #include <tamtypes.h>
 #include <models/mesh.hpp>
 #include <modules/pad.hpp>
+#include <utils/math.hpp>
 
 class Car : public Movable
 {
@@ -23,6 +24,8 @@ public:
     Car(const float &preZRotation, const float &fullZRotation);
     ~Car();
     Mesh mesh;
+    const float &getAcceleration() const { return acceleration; };
+    float getAbsAcceleration() const { return abs(acceleration); };
 
 protected:
     float acceleration;

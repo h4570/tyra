@@ -32,7 +32,7 @@ Movable::~Movable() {}
 const u16 &Movable::updateRotationPercentage(const float &zRotation)
 {
     const s16 newRotationPerc = getRealRotationPercentage(zRotation);
-    assertMsg(newRotationPerc < 100 && newRotationPerc > -100, "Wrong range in new rotation percentage!");
+    assertMsg(newRotationPerc <= 100 && newRotationPerc >= -100, "Wrong range in new rotation percentage!");
     if (newRotationPerc < 0)
         rotationPercentage = 100 + newRotationPerc;
     else

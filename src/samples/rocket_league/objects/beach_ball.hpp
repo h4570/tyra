@@ -27,11 +27,12 @@ public:
 
     Mesh mesh;
 
-    void push(const Vector3 &car);
+    void push(const Vector3 &car, const float &pushForce);
     void update();
 
 private:
-    float gravity, velocity, lift;
+    u8 isOnFloor;
+    float gravity, velocity;
     Vector3 force;
     void updateGravity();
     TextureRepository *texRepo;

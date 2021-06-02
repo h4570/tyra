@@ -43,6 +43,7 @@ private:
     Skybox *skybox;
     RaceTrack *raceTrack;
     void setBgColorAndAmbientColor();
+    void pushBall();
 
     TextureRepository *texRepo;
     Camera camera;

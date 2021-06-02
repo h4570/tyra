@@ -26,7 +26,7 @@ public:
     Player(TextureRepository *t_texRepo);
     ~Player();
 
-    void update(const Pad &t_pad, const Camera &t_camera);
+    void update(const Pad &t_pad);
 
 private:
     TextureRepository *texRepo;

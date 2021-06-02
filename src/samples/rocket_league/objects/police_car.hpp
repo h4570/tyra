@@ -12,19 +12,20 @@
 #define _POLICE_CAR_
 
 #include "../camera.hpp"
+#include "car.hpp"
 #include <modules/texture_repository.hpp>
 #include <models/mesh.hpp>
 #include <tamtypes.h>
 
 /** PoliceCar 3D object class  */
-class PoliceCar
+class PoliceCar : public Car
 {
 
 public:
     PoliceCar(TextureRepository *t_texRepo);
     ~PoliceCar();
 
-    Mesh mesh;
+    void update(const Pad &t_pad);
 
 private:
     TextureRepository *texRepo;
