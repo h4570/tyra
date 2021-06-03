@@ -34,15 +34,21 @@ void RocketLeague::onInit()
     texRepo = engine->renderer->getTextureRepository();
     setBgColorAndAmbientColor();
     engine->renderer->setCameraDefinitions(&camera.view, &camera.unitCirclePosition, camera.planes);
-    engine->audio.loadSong("sounds/long-night-1a.wav");
+    // engine->audio.loadSong("sounds/long-night-1a.wav");
     player = new Player(texRepo);
     raceTrack = new RaceTrack(texRepo);
     beachBall = new BeachBall(texRepo);
-    ammoBox = new AmmoBox(texRepo);
+    // ammoBox = new AmmoBox(texRepo);
     policeCar = new PoliceCar(texRepo);
-    skybox = new Skybox(texRepo);
-    engine->audio.playSong();
-    engine->audio.setSongVolume(80);
+    // skybox = new Skybox(texRepo);
+    // engine->audio.playSong();
+    // engine->audio.setSongVolume(80);
+
+    // TODO1: Przesunac bounding box do mesha
+    // TODO2: Dodac update() przez pozycje i rotacje
+    // TODO3: Dodac auto update
+    // TODO4: Dac przelacznik, ktory wylaczy auto update
+    // TODO5: Poprawic inne sample
 }
 
 void RocketLeague::onUpdate()
@@ -58,13 +64,13 @@ void RocketLeague::onUpdate()
         beachBall->push(player->mesh.position, player->getAbsAcceleration() + 0.1F);
 
     beachBall->update();
-    skybox->update(player->mesh.position);
+    // skybox->update(player->mesh.position);
 
-    engine->renderer->draw(skybox->mesh);
+    // engine->renderer->draw(skybox->mesh);
     engine->renderer->draw(raceTrack->mesh);
     engine->renderer->draw(player->mesh);
     engine->renderer->draw(policeCar->mesh);
-    engine->renderer->draw(ammoBox->mesh);
+    // engine->renderer->draw(ammoBox->mesh);
     engine->renderer->draw(beachBall->mesh);
 }
 
