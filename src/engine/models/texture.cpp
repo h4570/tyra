@@ -50,7 +50,7 @@ void Texture::setSize(const u8 &t_width, const u8 &t_height, const TextureType &
     _isSizeSet = true;
 }
 
-void Texture::setName(char *t_val)
+void Texture::setName(const char *t_val)
 {
     assertMsg(!_isNameSet, "Can't set name, because was already set!");
     name = String::createCopy(t_val);

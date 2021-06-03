@@ -105,7 +105,7 @@ public:
     void setNormalFace(const u32 &t_index, const u32 &t_val) { normalFaces[t_index] = t_val; }
 
     /** Set material name. */
-    void setName(char *t_val);
+    void setName(const char *t_val);
 
     /** 
      * Do not call this method unless you know what you do.

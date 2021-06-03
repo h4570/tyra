@@ -83,7 +83,7 @@ public:
     MD2Loader();
     ~MD2Loader();
 
-    MeshFrame *load(u32 &o_framesCount, char *t_subpath, char *t_nameWithoutExtension, float t_scale, u8 t_invertT);
+    MeshFrame *load(u32 &o_framesCount, const char *t_subpath, const char *t_nameWithoutExtension, const float &t_scale, const u8 &t_invertT);
 
 private:
 };

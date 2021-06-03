@@ -192,7 +192,7 @@ void Vector3::normalize()
 
 float Vector3::distanceTo(const Vector3 &v) const
 {
-    register float result;
+     float result;
     asm volatile( // VU0 Macro program
         "lqc2     $vf4, 0x0(%1)  \n\t"
         "lqc2     $vf5, 0x0(%2)  \n\t"
@@ -215,7 +215,7 @@ float Vector3::distanceTo(const Vector3 &v) const
 
 u8 Vector3::shouldBeBackfaceCulled(const Vector3 *t_cameraPos, const Vector3 *t_v0, const Vector3 *t_v1, const Vector3 *t_v2)
 {
-    register float dot;
+     float dot;
     asm volatile(
         "lqc2        $vf4, 0x0(%1)  \n\t"   // $vf4 = cameraPos
         "lqc2        $vf5, 0x0(%2)  \n\t"   // $vf5 = v0

@@ -122,7 +122,7 @@ public:
      * Set texture name. 
      * Should be the file name without extension
      */
-    void setName(char *t_val);
+    void setName(const char *t_val);
 
     /** Set texture wrapping */
     void setWrapSettings(const WrapSettings t_horizontal, const WrapSettings t_vertical);

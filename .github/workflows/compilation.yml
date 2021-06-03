@@ -58,3 +58,10 @@ jobs:
         TYRA: ${GITHUB_WORKSPACE}
       run: |
         make
+
+    - name: Compile rocket league project
+      working-directory: ./src/samples/rocket_league/
+      env:
+        TYRA: ${GITHUB_WORKSPACE}
+      run: |
+        make

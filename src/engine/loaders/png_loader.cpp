@@ -31,7 +31,7 @@ PngLoader::~PngLoader() {}
  * @param t_name Without extension. Example "skyfall2"
  * @param t_extension With dot and extension. Example ".png"
  */
-void PngLoader::load(Texture &o_texture, char *t_subfolder, char *t_name, char *t_extension)
+void PngLoader::load(Texture &o_texture, const char *t_subfolder, const char *t_name, const char *t_extension)
 {
     char *path_part1 = String::createConcatenated(t_subfolder, t_name);
     char *path_part2 = String::createConcatenated("host:", path_part1);
