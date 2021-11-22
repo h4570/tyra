@@ -66,7 +66,7 @@ cube:
 # dolphin example
 dolphin:
 	$(MAKE) -C src/samples/dolphin all clean
-# floors examples
+# floors example
 floors:
 	$(MAKE) -C src/samples/floors all clean
 
