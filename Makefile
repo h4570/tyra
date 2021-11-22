@@ -60,6 +60,16 @@ all: $(ENGINE_OBJS)
 	cp -f $(LIB_NAME) $(PS2SDK)/ee/lib
 	rm -f $(ENGINE_OBJS)
 
+# cube example
+cube:
+	$(MAKE) -C src/samples/cube all clean
+# dolphin example
+dolphin:
+	$(MAKE) -C src/samples/dolphin all clean
+# floors examples
+floors:
+	$(MAKE) -C src/samples/floors all clean
+
 # %.vcl: %.vclpp
 #	 $(EE_VCLPP) $< $@
 
