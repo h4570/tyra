@@ -21,7 +21,7 @@ jobs:
         apk add build-base git
 
     - name: Compile engine
-      working-directory: ./src/engine
+      working-directory: ./
       env:
         ZLIB: ${PS2SDK}/ports
         LIBTIFF: ${PS2SDK}/ports
@@ -29,32 +29,32 @@ jobs:
         LIBPNG: ${PS2SDK}/ports
         TYRA: ${GITHUB_WORKSPACE}
       run: |
-        make
+        make 
 
     - name: Compile unit test project
       working-directory: ./src/unit_tests/
       env:
         TYRA: ${GITHUB_WORKSPACE}
       run: |
-        make
+        make 
 
     - name: Compile cube project
-      working-directory: ./src/samples/cube/
+      working-directory: ./
       env:
         TYRA: ${GITHUB_WORKSPACE}
       run: |
-        make
+        make cube
     
     - name: Compile floors project
-      working-directory: ./src/samples/floors/
+      working-directory: ./
       env:
         TYRA: ${GITHUB_WORKSPACE}
       run: |
-        make
+        make floors
         
     - name: Compile dolphin project
-      working-directory: ./src/samples/dolphin/
+      working-directory: ./
       env:
         TYRA: ${GITHUB_WORKSPACE}
       run: |
-        make
+        make dolphin
