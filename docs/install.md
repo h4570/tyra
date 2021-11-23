@@ -137,7 +137,7 @@ export LIBPNG=${PS2SDK}/ports
 
 - Refresh env variables via `. ~/.bashrc`
 
-### !!! Please don't forgot to remove/refresh these 4 exports when you will want to update PS2DEV (./build-all.sh), because there is circular dependency between these libs and gsKit which is included in PS2DEV !!!
+### Please don't forgot to remove/refresh these 4 exports when you will want to update PS2DEV (./build-all.sh), because there is circular dependency between these libs and gsKit which is included in PS2DEV!!!
 
 ---
 
@@ -146,10 +146,7 @@ export LIBPNG=${PS2SDK}/ports
 ## Build Tyra
 
 - Just hit make all on the root of tyra folder or you can go via `cd /src/engine` and hit `make all` there.
-- Go to one of the samples via `cd /repos/tyra/src/samples/floors`
-- Build debug version: `make rebuild-dbg-engine Info: If you want to build final version in future, type make rebuild-engine `
-
----
+- If you wanna build the debug build or rebuild the engine, just `make rebuild-engine ` on the root of tyra or `make rebuild-dbg-engine` to build debug version or go to one of the samples via `cd /repos/tyra/src/samples/floors `and do the same process above
 
 <br/>
 
@@ -177,14 +174,18 @@ Circle = C
 
 <br/>
 
-## Run one of the samples
+## Run one of the samples - Method 1
 
 - Add assets for "floors" sample
-- Download assets fromhttps://github.com/h4570/tyra/tree/master/src/samples/floors
+- Download assets from https://github.com/h4570/tyra/tree/master/src/samples/floors
 - Windows: Open your WSL folder (This PC -> WSL folder)
 - Extract assets to /repos/tyra/src/samples/floors/bin/ (create bin folder if not exists)
-- Compile sample via `make``Info: Elf file should be produced in /bin`
-- Run sample in PSX2 via `make run-pcsx2`
+- Compile sample via `make``Info: Elf file should be produced in /bin `
+- Run sample in PCSX2 via `make run-pcsx2`
+
+## Run one of the samples Method 2
+
+- Run `make floors` on the root of tyra project or change directory to the sampels via `cd src/samples/floors` and do the `make install` command
 
 ---
 
