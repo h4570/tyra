@@ -60,15 +60,29 @@ all: $(ENGINE_OBJS)
 	cp -f $(LIB_NAME) $(PS2SDK)/ee/lib
 	rm -f $(ENGINE_OBJS)
 
-# cube example
+# Cube example
 cube:
 	$(MAKE) -C src/samples/cube all clean
-# dolphin example
+
+# Dolphin example
 dolphin:
 	$(MAKE) -C src/samples/dolphin all clean
-# floors example
+
+# Floors example
 floors:
 	$(MAKE) -C src/samples/floors all clean
+
+# Rebuild the engine
+rebuild-engine: 
+	$(MAKE) -C src/engine && make && make EE_CXXFLAGS="-DNDEBUG $(EE_CXXFLAGS)"
+
+# Rebuild debug engine
+rebuild-dbg-engine: 
+	$(MAKE) -C src/engine && make && make
+
+# Unit tests folder
+tests: 
+	$(MAKE) -C src/unit_tests all clean
 
 # %.vcl: %.vclpp
 #	 $(EE_VCLPP) $< $@
