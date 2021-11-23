@@ -15,14 +15,12 @@ So let's get started!
 
 ## VSCode and WSL
 
-- Install VSCode fromhttps://code.visualstudio.com/
-- Install WSL
-  https://docs.microsoft.com/en-us/windows/wsl/install-win10
-  `Info: Please choose Ubuntu-20.04`
-- Set root as default WSL user.
-  Open `cmd.exe` and type:
-  `ubuntu2004 config --default-user root`
-
+Install VSCode from
+https://code.visualstudio.com/
+Install WSL https://docs.microsoft.com/en-us/windows/wsl/install-win10 Info: Please choose Ubuntu-20.04
+Set root as default WSL user.
+Open cmd.exe and type:
+ubuntu2004 config --default-user root
 ---
 
 <br/>
@@ -202,9 +200,10 @@ You can create your own sample, by just copying cube folder.
 
 ## Setup Intelisense
 
-- Downloadhttp://apgcglz.cluster028.hosting.ovh.net/tyra/intellisense.zip
-- Unpack `.vscode` folder to WSL's `/repos/tyra/Info: This configuration is set for cube sample, but you can change it in tasks.json file`
-
+Download
+http://apgcglz.cluster028.hosting.ovh.net/tyra/intellisense.zip
+Unpack .vscode folder to WSL's /repos/tyra/
+Info: This configuration is set for cube sample, but you can change it in tasks.json file
 ---
 
 <br/>
