@@ -70,6 +70,11 @@ dolphin:
 floors:
 	$(MAKE) -C src/samples/floors all clean
 
+rebuild-engine: 
+	$(MAKE) -C src/engine && make && make EE_CXXFLAGS="-DNDEBUG $(EE_CXXFLAGS)"
+
+rebuild-dbg-engine: 
+	$(MAKE) -C src/engine && make && make
 # %.vcl: %.vclpp
 #	 $(EE_VCLPP) $< $@
 
