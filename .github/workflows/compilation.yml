@@ -32,11 +32,11 @@ jobs:
         make 
 
     - name: Compile unit test project
-      working-directory: ./src/unit_tests/
+      working-directory: ./
       env:
         TYRA: ${GITHUB_WORKSPACE}
       run: |
-        make 
+        make tests
 
     - name: Compile cube project
       working-directory: ./
