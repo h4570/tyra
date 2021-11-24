@@ -20,6 +20,7 @@
 #include "modules/pad.hpp"
 #include "modules/audio.hpp"
 #include "modules/file_service.hpp"
+#include "video/mpeg.hpp"
 
 class Engine
 {
@@ -34,6 +35,7 @@ public:
     Renderer *renderer;
     // FileService fileService;
     Audio audio;
+    Video video;
     ScreenSettings screen;
     Pad pad;
     float fps;

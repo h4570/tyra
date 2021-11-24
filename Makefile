@@ -22,6 +22,7 @@ ENGINE_OBJS = src/engine/engine.o \
 	      src/engine/modules/texture_repository.o \
 	      src/engine/modules/timer.o \
               src/engine/modules/vif_sender.o \
+	      src/engine/modules/video.o \
 	      src/engine/models/math/matrix.o \
 	      src/engine/models/math/plane.o \
 	      src/engine/models/math/point.o \
