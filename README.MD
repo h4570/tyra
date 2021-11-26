@@ -17,8 +17,9 @@
     <a href="https://github.com/h4570/tyra/tree/master/src/samples/dolphin"><strong>Dolphin sample »</strong></a>
     &nbsp;
     <a href="https://github.com/h4570/tyra/tree/master/src/samples/floors"><strong>Floors sample »</strong></a>
-    <br />
-    <br />
+    <a href="https://github.com/wolfysdl/tyra/tree/master/src/samples/cube"<strong>Cube sample »</strong></a>
+    <br/>
+    <br/>
     <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
     ·
     <a href="https://github.com/h4570/tyra/issues">Request Feature</a>
