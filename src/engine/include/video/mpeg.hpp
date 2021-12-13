@@ -6,7 +6,7 @@
 # Copyright 2021, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # André Guilherme <andregui17@outlook.com>
-# Based on Eugene Plotnikov work: SIMPLE MEDIA SYSTEM
+# Based on Eugene´s Plotnikov work: SIMPLE MEDIA SYSTEM
 */
 
 #define __libmpeg_HPP
@@ -178,7 +178,7 @@ class Video
 {
 
  public:
-  void MPEG_Initialize(char *path);
+  void MPEG_Initialize(char *t_path);
   void MPEG_Destroy();
   void MPEG_Suspend();
   void MPEG_Resume();

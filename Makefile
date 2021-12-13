@@ -42,7 +42,7 @@ ENGINE_OBJS = src/engine/engine.o \
 	      src/engine/loaders/png_loader.o \
 	      src/engine/vu1_progs/draw3D.o \
 
-EE_LIBS := $(EE_LIBS) -ldraw -lcdvd -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++ -lpng -lz
+EE_LIBS := $(EE_LIBS) -ldraw -lcdvd -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++ -lpng -lz -lmpeg
 
 EE_INCS := -I$(TYRA)/src/engine/include -I$(PS2SDK)/ports/include $(EE_INCS)
 

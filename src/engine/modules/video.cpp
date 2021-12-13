@@ -27,7 +27,7 @@ u32 videoLoaded;
 u8 audioLoaded;
 u8 fullFilename;
 //Initialize video
-void Video::MPEG_Initialize(char *path)
+void Video::MPEG_Initialize(char *t_path)
 {
   if (videoLoaded && audioLoaded)
   {
@@ -35,7 +35,7 @@ void Video::MPEG_Initialize(char *path)
     MPEGSequenceInfo *m_Height;
     MPEGSequenceInfo *m_frame_cnt;
     MPEGSequenceInfo *m_VideoFmt;
-    char *fullFilename = String::createConcatenated("host:", path);
+    char *fullFilename = String::createConcatenated("host:", t_path);
     String::getLength;
     videoLoaded = true;
     if (MPEG_VIDEO_FORMAT_NTSC)
