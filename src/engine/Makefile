@@ -1,5 +1,7 @@
 TYRA_DIR = ./
 
+LIB_NAME = libtyra.a
+
 EE_OBJS =								\
 	models/math/matrix.o				\
 	models/math/plane.o					\
@@ -31,6 +33,20 @@ EE_OBJS =								\
 	vu1_progs/draw3D.o					\
 	engine.o
 
+EE_DVP = dvp-as
+
+EE_VCL = vcl
+
+EE_VCLPP = vclpp
+
+EE_LDFLAGS := -L$(PS2SDK)/ports/lib -L$(TYRA)/src/engine $(EE_LDFLAGS)
+
+EE_CXXFLAGS := -DHAVE_LIBJPEG -DHAVE_LIBTIFF -DHAVE_LIBPNG -DHAVE_ZLIB -D_XCDVD $(EE_CXXFLAGS)
+
+EE_LIBS := -ldraw -lcdvd -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++ -lpng -lz
+
+EE_INCS := -I$(TYRA)/src/engine/include -I$(PS2SDK)/ports/include
+
 all: $(EE_OBJS) 
 	ar rcs $(LIB_NAME) $(EE_OBJS)
 	rm -f $(EE_OBJS)
@@ -48,4 +64,5 @@ clean:
 	rm -f $(EE_OBJS)
 	rm -f $(LIB_NAME)
 
-include Makefile.pref
+include $(PS2SDK)/samples/Makefile.pref
+include $(PS2SDK)/samples/Makefile.eeglobal
