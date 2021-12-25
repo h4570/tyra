@@ -96,7 +96,7 @@ public:
      * @param t_format if you want to use BMP, be sure that you have 
      * BMP with RGB 888 24bit, without color information.
      */
-    Texture *add(char *t_subfolder, char *t_name, TextureFormat t_format);
+    Texture *add(const char *t_subfolder, const char *t_name, TextureFormat t_format);
 
     /** 
      * Add linked textures in given subpath for mesh material names.
@@ -104,7 +104,7 @@ public:
      * @param t_format if you want to use BMP, be sure that you have 
      * BMP with RGB 888 24bit, without color information.
      */
-    void addByMesh(char *t_path, Mesh &mesh, TextureFormat t_format);
+    void addByMesh(const char *t_path, Mesh &mesh, TextureFormat t_format);
 
     /** 
      * Remove texture from repository.

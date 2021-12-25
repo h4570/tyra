@@ -45,7 +45,7 @@ Audio::~Audio() {}
 // Methods
 // ----
 
-void Audio::loadSong(char *t_path)
+void Audio::loadSong(const char *t_path)
 {
     if (songLoaded)
         unloadSong();
