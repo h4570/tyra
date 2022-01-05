@@ -23,7 +23,7 @@ public:
     PngLoader();
     ~PngLoader();
 
-    void load(Texture &o_texture, char *t_subfolder, char *t_name, char *t_extension);
+    void load(Texture &o_texture, const char *t_subfolder, const char *t_name, const char *t_extension);
 };
 
 #endif

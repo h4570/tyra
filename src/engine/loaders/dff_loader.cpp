@@ -34,7 +34,7 @@ DffLoader::~DffLoader() {}
 // Methods
 // ----
 
-void DffLoader::load(MeshFrame *o_result, char *t_filename, float t_scale, u8 t_invertT)
+void DffLoader::load(MeshFrame *o_result, const char *t_filename, const float &t_scale, const u8 &t_invertT)
 {
     consoleLog("Loading dff file");
     char *path = String::createConcatenated("host:", t_filename);
