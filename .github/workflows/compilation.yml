@@ -61,9 +61,9 @@ jobs:
         make dolphin
 
     - name: Compile rocket league project
-      working-directory: ./src/samples/rocket_league/
+      working-directory: ./
       env:
         TYRA: ${GITHUB_WORKSPACE}
       run: |
-        make
+        make rocket 
 
