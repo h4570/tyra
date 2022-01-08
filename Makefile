@@ -39,7 +39,8 @@ ENGINE_OBJS = src/engine/engine.o \
 	      src/engine/loaders/md2_loader.o \
 	      src/engine/loaders/obj_loader.o \
 	      src/engine/loaders/png_loader.o \
-	      src/engine/vu1_progs/draw3D.o \
+	      src/engine/loaders/txd_loader.o \
+		  src/engine/vu1_progs/draw3D.o \
 
 EE_LIBS := $(EE_LIBS) -ldraw -lcdvd -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++ -lpng -lz
 
