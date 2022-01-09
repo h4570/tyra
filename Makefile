@@ -36,7 +36,7 @@ ENGINE_OBJS = src/engine/engine.o \
 	      src/engine/utils/string.o \
               src/engine/loaders/bmp_loader.o \
               src/engine/loaders/dff_loader.o \
-	      src/engine/loaders/md2_loader.o \
+	      src/engine/loaders/md_loader.o \
 	      src/engine/loaders/obj_loader.o \
 	      src/engine/loaders/png_loader.o \
 	      src/engine/vu1_progs/draw3D.o \

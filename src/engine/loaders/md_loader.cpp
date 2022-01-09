@@ -3,12 +3,13 @@
 #   |     \/   ____| |___|    
 #   |     |   |   \  |   |       
 #-----------------------------------------------------------------------
-# Copyright 2020, tyra - https://github.com/h4570/tyra
+# Copyright 2020 - 2022, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
+# André Guilherme <andregui17@outlook.com>
 */
 
-#include "../include/loaders/md2_loader.hpp"
+#include "../include/loaders/md_loader.hpp"
 
 #include "../include/utils/string.hpp"
 #include "../include/utils/debug.hpp"
@@ -21,9 +22,9 @@
 // Constructors/Destructors
 // ----
 
-MD2Loader::MD2Loader() {}
+MDLoader::MDLoader() {}
 
-MD2Loader::~MD2Loader() {}
+MDLoader::~MDLoader() {}
 
 // ----
 // Methods
@@ -42,7 +43,7 @@ int MEM_fread(char *buf, size_t size, size_t n, const FILE *f)
  * When I did fopen() -> fread() -> fclose() -> allocate frames memory = I had no errors 🤨
  * It looks like memory allocation during fopen()-fread()-fclose() is broken.
  */
-MeshFrame *MD2Loader::load(u32 &o_framesCount, char *t_subpath, char *t_nameWithoutExtension, float t_scale, u8 t_invertT)
+MeshFrame *MDLoader::load_md2(u32 &o_framesCount, char *t_subpath, char *t_nameWithoutExtension, float t_scale, u8 t_invertT)
 {
     consoleLog("Loading new MD2 file");
     char *part1 = String::createConcatenated(t_subpath, t_nameWithoutExtension);

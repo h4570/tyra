@@ -11,7 +11,7 @@
 #include "player.hpp"
 #include "../utils.hpp"
 
-#include <loaders/md2_loader.hpp>
+#include <loaders/md_loader.hpp>
 #include <loaders/bmp_loader.hpp>
 #include <modules/gif_sender.hpp>
 #include <utils/debug.hpp>

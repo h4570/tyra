@@ -10,7 +10,7 @@
 
 #include "../include/models/mesh.hpp"
 #include "../include/loaders/obj_loader.hpp"
-#include "../include/loaders/md2_loader.hpp"
+#include "../include/loaders/md_loader.hpp"
 #include "../include/loaders/dff_loader.hpp"
 #include "../include/loaders/bmp_loader.hpp"
 #include "../include/models/texture.hpp"
@@ -115,9 +115,16 @@ void Mesh::loadDff(char *t_subfolder, char *t_dffFile, const float &t_scale, con
 
 void Mesh::loadMD2(char *t_subfolder, char *t_md2File, const float &t_scale, const u8 &t_invertT)
 {
-    MD2Loader loader = MD2Loader();
-    frames = loader.load(framesCount, t_subfolder, t_md2File, t_scale, t_invertT);
+    MDLoader loader = MDLoader();
+    frames = loader.load_md2(framesCount, t_subfolder, t_md2File, t_scale, t_invertT);
     _isMother = true;
+}
+
+void Mesh::loadMD3(char *t_subfolder, char *t_md3File, const float &t_scale, const u8 &t_invertT) 
+{
+   MDLoader loader = MDLoader();
+   frames = loader.load_md3(framesCount, t_subfolder, t_md3File, t_scale, t_invertT);
+   _isMother = true;
 }
 
 void Mesh::loadFrom(const Mesh &t_mesh)

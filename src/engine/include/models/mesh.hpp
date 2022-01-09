@@ -150,12 +150,14 @@ public:
     /** 
      * Load mesh data from Quake II .md2 file. Animation supported.
      * @param t_subfolder Relative path. Example "meshes/blocks"
-     * @param t_objFile File name without extension. Example "sand"
+     * @param t_md2File File name without extension. Example "sand"
      * @param t_scale Scale. For 1:1, type 1.0F
      * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
      * Converts Y coordinate texture from Y to 1.0F - Y
      */
     void loadMD2(char *t_subfolder, char *t_md2File, const float &t_scale, const u8 &t_invertT);
+    
+    void loadMD3(char *t_subfolder, char *t_md3File, const float &t_scale, const u8 &t_invertT);
 
     /** Copy by reference mesh data from other mesh */
     void loadFrom(const Mesh &t_mesh);

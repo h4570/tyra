@@ -25,7 +25,7 @@ EE_OBJS =								\
 	utils/string.o						\
 	loaders/bmp_loader.o				\
 	loaders/dff_loader.o				\
-	loaders/md2_loader.o				\
+	loaders/md_loader.o				\
 	loaders/obj_loader.o				\
 	loaders/png_loader.o				\
 	vu1_progs/draw3D.o					\
