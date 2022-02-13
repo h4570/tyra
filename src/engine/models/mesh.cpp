@@ -10,7 +10,7 @@
 
 #include "../include/models/mesh.hpp"
 #include "../include/loaders/obj_loader.hpp"
-#include "../include/loaders/md_loader.hpp"
+#include "../include/loaders/mdl_loader.hpp"
 #include "../include/loaders/dff_loader.hpp"
 #include "../include/loaders/bmp_loader.hpp"
 #include "../include/models/texture.hpp"

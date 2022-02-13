@@ -9,7 +9,7 @@
 # André Guilherme <andregui17@outlook.com>
 */
 
-#include "../include/loaders/md_loader.hpp"
+#include "../include/loaders/mdl_loader.hpp"
 
 #include "../include/utils/string.hpp"
 #include "../include/utils/debug.hpp"
@@ -247,7 +247,7 @@ MeshFrame *MDLoader::load_md3(u32 &o_framesCount, char *t_subpath, char *t_nameW
         }
     }
 
-    consoleLog("MD2 file loaded!");
+    consoleLog("MD3 file loaded!");
     delete[] finalPath;
     o_framesCount = framesCount;
     for (u32 i = 0; i < framesCount; i++)
