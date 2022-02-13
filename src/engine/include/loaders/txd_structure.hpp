@@ -10,8 +10,6 @@
 # But adopted for Tyra engine 
 */
 
-
-
 #include "png_loader.hpp"
 #include <tamtypes.h>
 #include "../models/texture.hpp"
