@@ -1,7 +1,7 @@
 /*
 # ______       ____   ___
-#   |     \/   ____| |___|    
-#   |     |   |   \  |   |       
+#   |     \/   ____| |___|
+#   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2020, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
@@ -359,7 +359,7 @@ u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
             else
                 boxIn++;
         }
-        //if all corners are out
+        // if all corners are out
         if (boxIn == 0)
             return 0;
         else if (boxOut)
@@ -383,4 +383,40 @@ void Mesh::setDefaultLODAndClut()
     clut.psm = 0;
     clut.load_method = CLUT_NO_LOAD;
     clut.address = 0;
+}
+
+void Mesh::getMinMaxBoundingBox(Vector3 *min, Vector3 *max)
+{
+    Vector3 calc = Vector3();
+
+    u8 isInitialized = 0;
+    const Vector3 *boundingBox = getCurrentBoundingBoxVertices();
+    for (u8 i = 0; i < 8; i++)
+    {
+        calc.set(
+            boundingBox[i].x + position.x,
+            boundingBox[i].y + position.y,
+            boundingBox[i].z + position.z);
+        if (isInitialized == 0)
+        {
+            isInitialized = 1;
+            min->set(calc);
+            max->set(calc);
+        }
+
+        if (min->x > calc.x)
+            min->x = calc.x;
+        if (calc.x > max->x)
+            max->x = calc.x;
+
+        if (min->y > calc.y)
+            min->y = calc.y;
+        if (calc.y > max->y)
+            max->y = calc.y;
+
+        if (min->z > calc.z)
+            min->z = calc.z;
+        if (calc.z > max->z)
+            max->z = calc.z;
+    }
 }
