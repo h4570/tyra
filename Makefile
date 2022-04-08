@@ -11,35 +11,36 @@ TYRA_DIR = ./
 LIB_NAME = libtyra.a
 
 # ENGINE OBJECTS 
-ENGINE_OBJS = src/engine/engine.o \
-              src/engine/modules/audio.o \
-              src/engine/modules/camera_base.o \
-              src/engine/modules/file_service.o \
-	      src/engine/modules/gif_sender.o \
-              src/engine/modules/light.o \
-	      src/engine/modules/pad.o \
-	      src/engine/modules/renderer.o \
-	      src/engine/modules/texture_repository.o \
-	      src/engine/modules/timer.o \
-              src/engine/modules/vif_sender.o \
-	      src/engine/models/math/matrix.o \
-	      src/engine/models/math/plane.o \
-	      src/engine/models/math/point.o \
-	      src/engine/models/math/vector3.o \
-	      src/engine/models/mesh_frame.o \
-	      src/engine/models/bounding_box.o \
-	      src/engine/models/mesh_material.o \
-	      src/engine/models/mesh.o \
-	      src/engine/models/sprite.o \
-	      src/engine/models/texture.o \
-	      src/engine/utils/math.o \
-	      src/engine/utils/string.o \
-              src/engine/loaders/bmp_loader.o \
-              src/engine/loaders/dff_loader.o \
-	      src/engine/loaders/md2_loader.o \
-	      src/engine/loaders/obj_loader.o \
-	      src/engine/loaders/png_loader.o \
-	      src/engine/vu1_progs/draw3D.o \
+ENGINE_OBJS = 	src/engine/engine.o \
+              	src/engine/modules/audio.o \
+              	src/engine/modules/camera_base.o \
+              	src/engine/modules/file_service.o \
+				src/engine/modules/gif_sender.o \
+              	src/engine/modules/light.o \
+	      		src/engine/modules/pad.o \
+	      		src/engine/modules/renderer.o \
+	      		src/engine/modules/texture_repository.o \
+	      		src/engine/modules/timer.o \
+              	src/engine/modules/vif_sender.o \
+				src/engine/models/math/matrix.o \
+				src/engine/models/math/plane.o \
+				src/engine/models/math/point.o \
+				src/engine/models/math/vector3.o \
+				src/engine/models/math/ray.o \
+				src/engine/models/mesh_frame.o \
+				src/engine/models/bounding_box.o \
+				src/engine/models/mesh_material.o \
+				src/engine/models/mesh.o \
+				src/engine/models/sprite.o \
+				src/engine/models/texture.o \
+				src/engine/utils/math.o \
+				src/engine/utils/string.o \
+				src/engine/loaders/bmp_loader.o \
+				src/engine/loaders/dff_loader.o \
+				src/engine/loaders/md2_loader.o \
+				src/engine/loaders/obj_loader.o \
+				src/engine/loaders/png_loader.o \
+				src/engine/vu1_progs/draw3D.o \
 
 EE_LIBS := $(EE_LIBS) -ldraw -lcdvd -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++ -lpng -lz
 

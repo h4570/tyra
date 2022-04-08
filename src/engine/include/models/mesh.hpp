@@ -203,6 +203,13 @@ public:
      */
     u32 getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos);
 
+    /** 
+     * Set min and max bounding box vector3 
+     * @param min target vector3
+     * @param max target vector3
+     */
+    void getMinMaxBoundingBox(Vector3 *min, Vector3 *max);
+
 private:
     AnimState animState;
     MeshFrame *frames;
