@@ -60,7 +60,7 @@ void MeshMaterial::allocateFaces(const u32 &t_val)
     _areFacesAllocated = true;
 }
 
-void MeshMaterial::setName(char *t_val)
+void MeshMaterial::setName(const char *t_val)
 {
     assertMsg(!_isNameSet, "Can't set name, because was already set!");
     name = String::createCopy(t_val);

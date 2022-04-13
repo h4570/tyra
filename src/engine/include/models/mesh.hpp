@@ -122,7 +122,7 @@ public:
      * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
      * Converts Y coordinate texture from Y to 1.0F - Y
      */
-    void loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT);
+    void loadObj(const char *t_subfolder, const char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT);
 
     /** 
      * Load mesh data from .obj file. Animation not supported.
@@ -135,7 +135,7 @@ public:
      * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
      * Converts Y coordinate texture from Y to 1.0F - Y
      */
-    void loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u8 &t_invertT);
+    void loadObj(const char *t_subfolder, const char *t_objFile, const float &t_scale, const u8 &t_invertT);
 
     /** 
      * Load mesh data from RenderWare .dff file. Animation not supported
@@ -145,7 +145,7 @@ public:
      * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
      * Converts Y coordinate texture from Y to 1.0F - Y
      */
-    void loadDff(char *t_subfolder, char *t_dffFile, const float &t_scale, const u8 &t_invertT);
+    void loadDff(const char *t_subfolder, const char *t_dffFile, const float &t_scale, const u8 &t_invertT);
 
     /** 
      * Load mesh data from Quake II .md2 file. Animation supported.
@@ -204,6 +204,13 @@ public:
      * Should be called by renderer. 
      */
     u32 getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos);
+
+    /** 
+     * Set min and max bounding box vector3 
+     * @param min target vector3
+     * @param max target vector3
+     */
+    void getMinMaxBoundingBox(Vector3 *min, Vector3 *max);
 
 private:
     AnimState animState;

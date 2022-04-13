@@ -1,7 +1,7 @@
 /*
 # ______       ____   ___
-#   |     \/   ____| |___|    
-#   |     |   |   \  |   |       
+#   |     \/   ____| |___|
+#   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2020, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
@@ -54,7 +54,7 @@ Mesh::~Mesh()
 // Methods
 // ----
 
-void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u8 &t_invertT)
+void Mesh::loadObj(const char *t_subfolder, const char *t_objFile, const float &t_scale, const u8 &t_invertT)
 {
     ObjLoader loader = ObjLoader();
     framesCount = 1;
@@ -68,7 +68,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, con
     _isMother = true;
 }
 
-void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT)
+void Mesh::loadObj(const char *t_subfolder, const char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT)
 {
     assertMsg(t_framesCount != 0, "Frames count cannot be 0!");
     if (t_framesCount == 1)
@@ -99,7 +99,7 @@ void Mesh::loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, con
     }
 }
 
-void Mesh::loadDff(char *t_subfolder, char *t_dffFile, const float &t_scale, const u8 &t_invertT)
+void Mesh::loadDff(const char *t_subfolder, const char *t_dffFile, const float &t_scale, const u8 &t_invertT)
 {
     DffLoader loader = DffLoader();
     char *part1 = String::createConcatenated(t_subfolder, t_dffFile);
@@ -113,7 +113,7 @@ void Mesh::loadDff(char *t_subfolder, char *t_dffFile, const float &t_scale, con
     _isMother = true;
 }
 
-void Mesh::loadMD2(char *t_subfolder, char *t_md2File, const float &t_scale, const u8 &t_invertT)
+void Mesh::loadMD2(const char *t_subfolder, const char *t_md2File, const float &t_scale, const u8 &t_invertT)
 {
     MDLoader loader = MDLoader();
     frames = loader.load_md2(framesCount, t_subfolder, t_md2File, t_scale, t_invertT);
@@ -367,7 +367,7 @@ u8 Mesh::isInFrustum(Plane *t_frustumPlanes)
             else
                 boxIn++;
         }
-        //if all corners are out
+        // if all corners are out
         if (boxIn == 0)
             return 0;
         else if (boxOut)
@@ -391,4 +391,40 @@ void Mesh::setDefaultLODAndClut()
     clut.psm = 0;
     clut.load_method = CLUT_NO_LOAD;
     clut.address = 0;
+}
+
+void Mesh::getMinMaxBoundingBox(Vector3 *min, Vector3 *max)
+{
+    Vector3 calc = Vector3();
+
+    u8 isInitialized = 0;
+    const Vector3 *boundingBox = getCurrentBoundingBoxVertices();
+    for (u8 i = 0; i < 8; i++)
+    {
+        calc.set(
+            boundingBox[i].x + position.x,
+            boundingBox[i].y + position.y,
+            boundingBox[i].z + position.z);
+        if (isInitialized == 0)
+        {
+            isInitialized = 1;
+            min->set(calc);
+            max->set(calc);
+        }
+
+        if (min->x > calc.x)
+            min->x = calc.x;
+        if (calc.x > max->x)
+            max->x = calc.x;
+
+        if (min->y > calc.y)
+            min->y = calc.y;
+        if (calc.y > max->y)
+            max->y = calc.y;
+
+        if (min->z > calc.z)
+            min->z = calc.z;
+        if (calc.z > max->z)
+            max->z = calc.z;
+    }
 }

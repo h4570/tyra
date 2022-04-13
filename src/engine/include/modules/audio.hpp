@@ -46,7 +46,7 @@ public:
      * Can be used multiple times for song switching. 
      * @param t_path Example: "song.wav" or "folder/song.wav"
      */
-    void loadSong(char *t_path);
+    void loadSong(const char *t_path);
 
     void playSong();
 
