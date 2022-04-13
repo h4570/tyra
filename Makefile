@@ -73,6 +73,9 @@ dolphin:
 floors:
 	$(MAKE) -C src/samples/floors all clean
 
+rocket:
+	$(MAKE) -C src/samples/rocket_league all clean
+
 # Rebuild the engine
 rebuild-engine: 
 	$(MAKE) -C src/engine && make && make EE_CXXFLAGS="-DNDEBUG $(EE_CXXFLAGS)"
