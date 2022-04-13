@@ -3,7 +3,7 @@
 #   |     \/   ____| |___|    
 #   |     |   |   \  |   |       
 #-----------------------------------------------------------------------
-# Copyright 2020 - 2022, tyra - https://github.com/h4570/tyra
+# Copyright 2022, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # André Guilherme <andregui17@outlook.com>
 */
@@ -16,9 +16,10 @@
 ************************************************************************
 */
 // magic number "IDP3"
-#define MD3_IDENT			(('3'<<24)+('P'<<16)+('D'<<8)+'I')
+#define MD3_IDENT (('3'<<24)+('P'<<16)+('D'<<8)+'I')
+
 // MD Version
-#define MD3_VERSION			15
+#define MD3_VERSION 15
 
 // surface geometry should not exceed these limits
 #define	SHADER_MAX_VERTEXES	1000
@@ -34,11 +35,15 @@
 #define MD3_MAX_TAGS		16		// per frame
 #define MAX_MD3PATH			64		// from quake3
 #define	MAX_QPATH		64
+
 typedef char material[MAX_QPATH];
+
 // vertex scales
 #define	MD3_XYZ_SCALE		(1.0/64)
 
-typedef float vec3_t[3];
+typedef float vec_t;
+
+typedef vec_t vec3_t[3];
 
 /*
 ************************************************************************

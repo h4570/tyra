@@ -17,10 +17,14 @@
 ************************************************************************
 */
 
-// magic number "IDP2" or 844121161
+// magic number "IDP2" or 816242
 #define MD2_IDENT (('2' << 24) + ('P' << 16) + ('D' << 8) + 'I')
+
 // MD2 model version
 #define MD2_VERSION 8
+
+typedef float vec_t;
+typedef float vec3_t[3];
 
 /*
 ************************************************************************
@@ -50,14 +54,12 @@ typedef struct
     int ofs_frames; // offset to frame data
     int ofs_glcmds; // offset to opengl commands
     int ofs_end;    // offset to end of file
-
 } md2_t;
 
 typedef struct
 {
     unsigned char v[3];             // compressed vertex (x, y, z) coordinates
     unsigned char lightnormalindex; // index to a normal vector for the lighting
-
 } mvertex_t;
 
 typedef struct
@@ -66,15 +68,12 @@ typedef struct
     float translate[3]; // translation vector
     char name[16];      // frame name
     mvertex_t verts[1]; // first vertex of this frame
-
 } frame_t;
 
-typedef float vec3_t[3];
-
 typedef struct
-{
-    short index_xyz[3]; // indexes to triangle's vertices
-    short index_st[3];  // indexes to vertices' texture coorinates
+{ 
+  short index_xyz[3]; // indexes to triangle's vertices 
+  short index_st[3]; // indexes to vertices' texture coorinates
 } triangle_t;
 
 typedef struct

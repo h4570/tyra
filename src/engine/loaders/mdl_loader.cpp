@@ -157,8 +157,11 @@ MeshFrame *MDLoader::load_md3(u32 &o_framesCount, char *t_subpath, char *t_nameW
     delete[] part1;
     delete[] part2;
     md3Header_t header;
+    
     md3XyzNormal_t normal;
+    
     md3St_t str;
+    
     md3Surface_t surface;
 
     FILE *file = fopen(finalPath, "rb");

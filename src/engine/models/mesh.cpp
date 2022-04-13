@@ -113,7 +113,7 @@ void Mesh::loadDff(const char *t_subfolder, const char *t_dffFile, const float &
     _isMother = true;
 }
 
-void Mesh::loadMD2(const char *t_subfolder, const char *t_md2File, const float &t_scale, const u8 &t_invertT)
+void Mesh::loadMD2(char *t_subfolder, char *t_md2File, const float &t_scale, const u8 &t_invertT)
 {
     MDLoader loader = MDLoader();
     frames = loader.load_md2(framesCount, t_subfolder, t_md2File, t_scale, t_invertT);
@@ -126,6 +126,8 @@ void Mesh::loadMD3(char *t_subfolder, char *t_md3File, const float &t_scale, con
     char *md3path = String::createConcatenated(t_subfolder, t_md3File);
     char *md3 = String::createConcatenated(md3path, ".md3");
     framesCount = 1;
+//    frames = loader.load_md3(framesCount, md3path, md3, t_scale, t_invertT);
+//    _isMother = true;
 };
 
 void Mesh::loadFrom(const Mesh &t_mesh)

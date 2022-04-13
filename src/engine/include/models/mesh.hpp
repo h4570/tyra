@@ -3,9 +3,10 @@
 #   |     \/   ____| |___|    
 #   |     |   |   \  |   |       
 #-----------------------------------------------------------------------
-# Copyright 2020, tyra - https://github.com/h4570/tyra
+# Copyright 2020 - 2022, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
+# André Guilherme <andregui17@outlook.com>
 */
 
 #ifndef _TYRA_MESH_
@@ -157,6 +158,14 @@ public:
      */
     void loadMD2(char *t_subfolder, char *t_md2File, const float &t_scale, const u8 &t_invertT);
     
+    /** 
+     * Load mesh data from Quake III .md2 file. Working in progress
+     * @param t_subfolder Relative path. Example "meshes/blocks"
+     * @param t_md3File File name without extension. Example "sand"
+     * @param t_scale Scale. For 1:1, type 1.0F
+     * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
+     * Converts Y coordinate texture from Y to 1.0F - Y
+     */
     void loadMD3(char *t_subfolder, char *t_md3File, const float &t_scale, const u8 &t_invertT);
 
     /** Copy by reference mesh data from other mesh */
