@@ -21,60 +21,20 @@
 ********************************/
 TxdLoader::TxdLoader() 
 {
-  
+ 
+
 }
 
 TxdLoader::~TxdLoader()
 {
-
-}
-
-//taken from dff loader 
-void TxdLoader::ReadSectionHeader(RwSectionHeader &t_sh, u8 *t_buffer, u32 &t_ptrPos)
-{
-  t_sh.sectionType = TxdLoader::readDwordFromArrayLE(t_buffer, t_ptrPos);
-  t_sh.sectionSize = TxdLoader::readDwordFromArrayLE(t_buffer, t_ptrPos);
-  t_sh.versionNumber = TxdLoader::readDwordFromArrayLE(t_buffer, t_ptrPos);
-}
-
-void TxdLoader::Read_Default(Rw_TXD_Structure::RwRasterFormat *rwFORMAT_DEFAULT, u8 *t_buffer, u32 &t_ptrPos)
-{
-  u32 ptrPos;
-  u8 *t_data; 
     
-  //read all headers
-  for (u8 i = 0; i < 3 * 2; i++)
-  {
-    ptrPos += sizeof(u32);
-    RwSectionHeader header1 = RwSectionHeader();
-    readSectionHeader(header1, t_data, ptrPos);
-    ptrPos =+ header1.sectionSize;
-  }
-  
-  for(u8 i=0; i < 3 * 3; i++)
-  {
-    ptrPos += sizeof(u32);
-    RwSectionHeader header2 = RwSectionHeader();
-    readSectionHeader(header2, t_data, ptrPos);
-    ptrPos =+ header2.sectionSize;
-  }
 
-  for (u8 i = 0; i < 3 * 4; i++)
-  {
-    ptrPos += sizeof(u32);
-    RwSectionHeader header3 = RwSectionHeader();
-    readSectionHeader(header3, t_data, ptrPos);
-    ptrPos =+ header3.sectionSize;
-  }
+}
+//taken from dff loader 
 
-  for (u8 i = 0; i < 3 * 4; i++)
-  {
-    ptrPos += sizeof(u32);
-    RwSectionHeader header4 = RwSectionHeader();
-    readSectionHeader(header4, t_data, ptrPos);
-    ptrPos =+ header4.sectionSize;
-  }
-
+void TxdLoader::Read_Default(RwRasterFormat *DEFAULT_FORMAT, u8 *t_buffer, u32 &t_ptrPos)
+{
+   DEFAULT_FORMAT;
 }
 
 float TxdLoader::readString(u8 *t_buffer, u32 *t_ptrPos, u32 t_dataSize)
@@ -109,18 +69,65 @@ float TxdLoader::readFloatFromArrayLE(u8 *t_buffer, u32 &t_ptrPos)
     return res;
 }
 
-void TxdLoader::loadTextures(Rw_TXD_Structure::RwRasterFormat *t_td, u8 *t_buffer, u32 *t_ptrPos, char *t_filename)
+void TxdLoader::ReadHeader(u32 ptrPos, u8 *t_data)
 {
-    consoleLog("Loading textures");
-    char *path = String::createConcatenated("host:", t_filename);
-    consoleLog("Loaded Txd File");
-    FILE *file = fopen(path, "rb");
-    assertMsg(file != NULL, "Failed to load .txd file!");
-    fseek(file, 0L, SEEK_END);
-    long fileSize = ftell(file);
+  u8 i;
+  //read all headers
+  for (i = 0; i < 3 * 2; i++)
+  {
+    ptrPos += sizeof(u32);
+    RwSectionHeader header1;
+    readSectionHeader(header1, t_data, ptrPos);
+    ptrPos =+ header1.sectionSize;
+  }
+  
+  for(i=0; i < 3 * 3; i++)
+  {
+    ptrPos += sizeof(u32);
+    RwSectionHeader header2;
+    readSectionHeader(header2, t_data, ptrPos);
+    ptrPos =+ header2.sectionSize;
+  }
+
+  for (i = 0; i < 3 * 4; i++)
+  {
+    ptrPos += sizeof(u32);
+    RwSectionHeader header3;
+    readSectionHeader(header3, t_data, ptrPos);
+    ptrPos =+ header3.sectionSize;
+  }
+
+  for (i = 0; i < 3 * 5; i++)
+  {
+    ptrPos += sizeof(u32);
+    RwSectionHeader header4;
+    readSectionHeader(header4, t_data, ptrPos);
+    ptrPos =+ header4.sectionSize;
+  }
+}
+
+void TxdLoader::ReadSectionHeader(RwSectionHeader &t_sh, u8 *t_buffer, u32 &t_ptrPos)
+{
+  t_sh.sectionType = TxdLoader::readDwordFromArrayLE(t_buffer, t_ptrPos);
+  t_sh.sectionSize = TxdLoader::readDwordFromArrayLE(t_buffer, t_ptrPos);
+  t_sh.versionNumber = TxdLoader::readDwordFromArrayLE(t_buffer, t_ptrPos);
+}
+
+void TxdLoader::loadTextures(RwRasterFormat *t_td, u8 *t_buffer, u32 *t_ptrPos, char *t_filename)
+{
+    char *path;
+    FILE *file;
+    long fileSize;
     u8 data[fileSize];
-    rewind(file);
+    
+    consoleLog("Loading textures");
+    path = String::createConcatenated("host:", t_filename);
+    consoleLog("Loaded Txd File");
+    file = fopen(path, "rb");
     fread(&data, sizeof(u8), fileSize, file);
+    fseek(file, 0L, SEEK_END);
+    fileSize = ftell(file);
+    assertMsg(file != NULL, "Failed to load .txd file!");
+    rewind(file);
     fclose(file);
-    TxdLoader();
 }
