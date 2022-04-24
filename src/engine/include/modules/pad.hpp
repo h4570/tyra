@@ -20,6 +20,8 @@ class Pad
 
 public:
     u8 isCrossClicked, isSquareClicked, isTriangleClicked, isCircleClicked;
+    u8 isL1Clicked, isL2Clicked, isL3Clicked, isR1Clicked, isR2Clicked, isR3Clicked;
+    u8 isStartClicked, isSelectClicked;
     u8 isDpadUpPressed, isDpadDownPressed, isDpadLeftPressed, isDpadRightPressed;
     u8 lJoyH, lJoyV, rJoyH, rJoyV;
 
