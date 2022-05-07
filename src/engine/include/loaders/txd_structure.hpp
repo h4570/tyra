@@ -6,13 +6,16 @@
 # Copyright 2022, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # André Guilherme <andregui17@outlook.com>
-# This file has taken from https://github.com/mrqo/rw_parse/blob/master/rw_utils/rw_txd_structure.h 
-# But adopted for Tyra engine 
 */
 
-//#include "png_loader.hpp"
+/*
+** This file is based on: https://github.com/mrqo/rw_parse/blob/master/rw_utils/rw_txd_structure.h
+**     
+** rw_txd_structure.h Written by Marek Iwaniuk(c).
+** Txd structure documentation https://www.gtamoddin.com/wiki/Texture_Native_Struct 
+** Created on 25/07/2017 (MM/DD/YYYY)
+*/
 #include <tamtypes.h>
-//#include "../models/texture.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -146,5 +149,3 @@ public:
 	RwTextureNative*				textures;
 	RwTextureDictionaryExtension	extension;
 };
-//ends here
-
