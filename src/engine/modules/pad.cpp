@@ -187,6 +187,24 @@ void Pad::update()
             this->isDpadLeftPressed = 1;
         if (this->buttons.right_p)
             this->isDpadRightPressed = 1;
+        
+        if (this->newPad & PAD_L1)
+            this->isL1Clicked = 1;
+        if (this->newPad & PAD_L2)
+            this->isL2Clicked = 1;
+        if (this->newPad & PAD_L3)
+            this->isL3Clicked = 1;
+        if (this->newPad & PAD_R1)
+            this->isR1Clicked = 1;
+        if (this->newPad & PAD_R2)
+            this->isR2Clicked = 1;
+        if (this->newPad & PAD_R3)
+            this->isR3Clicked = 1;
+
+        if (this->newPad & PAD_START)
+            this->isStartClicked = 1;
+        if (this->newPad & PAD_SELECT)
+            this->isSelectClicked = 1;
     }
 }
 
@@ -205,4 +223,12 @@ void Pad::reset()
     this->lJoyV = 0;
     this->rJoyH = 0;
     this->rJoyV = 0;
+    this->isL1Clicked = 0;
+    this->isL2Clicked = 0;
+    this->isL3Clicked = 0;
+    this->isR1Clicked = 0;
+    this->isR2Clicked = 0;
+    this->isR3Clicked = 0;
+    this->isStartClicked = 0;
+    this->isSelectClicked = 0;
 }

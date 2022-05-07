@@ -15,8 +15,6 @@
 #include "md2_structure.hpp"
 #include "md3_structure.hpp"
 #include <stdio.h>
-#include <iostream>
-#include <vector>
 #include <tamtypes.h>
 
 
