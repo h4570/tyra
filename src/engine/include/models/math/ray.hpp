@@ -15,6 +15,8 @@
 #include "plane.hpp"
 #include "../bounding_box.hpp"
 #include <tamtypes.h>
+#include <math.h>
+#include <algorithm>
 
 /**
  * Class for raycasting.
@@ -78,10 +80,12 @@ public:
 
     /**
      * Returns Vector3 of intersection position
-     * @param box - the box to intersect with.
+     * @param minCorner - pointer to min corner position. (bottom left)
+     * @param maxCorner - pointer to max corner position. (top right)
+     * @param distance - the box to intersect with. 
      *
      */
-    Vector3 intersectBox(Vector3 *minCorner, Vector3 *maxCorner);
+    u8 intersectBox(Vector3 *minCorner, Vector3 *maxCorner, float &distance);
 
     /**
      * Returns distance from origin to intersected mesh
