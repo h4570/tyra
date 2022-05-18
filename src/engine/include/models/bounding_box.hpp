@@ -54,17 +54,17 @@ public:
     /** @returns the vector directly in middle of the bounding box. */
     const Vector3 &getCenter() { return _centerVector; };
     /** @returns the front face (further on z-axis) */
-    const BoundingBoxFace &getFrontFace() { return _frontFace; };
+    const BoundingBoxFace &getFrontFace() const { return _frontFace; };
     /** @returns the back face (nearer on z-axis) */
-    const BoundingBoxFace &getBackFace() { return _backFace; };
+    const BoundingBoxFace &getBackFace() const { return _backFace; };
     /** @returns the left face (further on x-axis) */
-    const BoundingBoxFace &getLeftFace() { return _leftFace; };
+    const BoundingBoxFace &getLeftFace() const { return _leftFace; };
     /** @returns the right face (nearer on x-axis) */
-    const BoundingBoxFace &getRightFace() { return _rightFace; };
+    const BoundingBoxFace &getRightFace() const { return _rightFace; };
     /** @returns the top face (further on y-axis) */
-    const BoundingBoxFace &getTopFace() { return _topFace; };
+    const BoundingBoxFace &getTopFace() const { return _topFace; };
     /** @returns the bottom face (nearer on y-axis) */
-    const BoundingBoxFace &getBottomFace() { return _bottomFace; };
+    const BoundingBoxFace &getBottomFace() const { return _bottomFace; };
 
     /** @returns check's intersection against another AABB */
     bool intersect(const BoundingBox &b, const Vector3 &aPosition, const Vector3 &bPosition) const
