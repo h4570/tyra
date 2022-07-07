@@ -61,88 +61,58 @@ Vector3 Ray::at(float t)
     return (this->direction * t) + this->origin;
 }
 
-Vector3 Ray::intersectBox(Vector3 *minCorner, Vector3 *maxCorner)
+u8 Ray::intersectBox(Vector3 *minCorner, Vector3 *maxCorner, float &distance)
 {
     float tmin, tmax, tymin, tymax, tzmin, tzmax;
+    Vector3 invDir = this->invDir();
+    invDir.normalize();
 
-    const float invdirx = 1 / this->direction.x,
-                invdiry = 1 / this->direction.y,
-                invdirz = 1 / this->direction.z;
-
-    const Vector3 origin = this->origin;
-
-    if (invdirx >= 0)
-    {
-
-        tmin = (minCorner->x - origin.x) * invdirx;
-        tmax = (maxCorner->x - origin.x) * invdirx;
-    }
-    else
-    {
-
-        tmin = (maxCorner->x - origin.x) * invdirx;
-        tmax = (minCorner->x - origin.x) * invdirx;
-    }
-
-    if (invdiry >= 0)
-    {
-
-        tymin = (minCorner->y - origin.y) * invdiry;
-        tymax = (maxCorner->y - origin.y) * invdiry;
-    }
-    else
-    {
-
-        tymin = (maxCorner->y - origin.y) * invdiry;
-        tymax = (minCorner->y - origin.y) * invdiry;
-    }
+    tmin = (minCorner->x - this->origin.x) * invDir.x;
+    tmax = (maxCorner->x - this->origin.x) * invDir.x;
+    tymin = (minCorner->y - this->origin.y) * invDir.y;
+    tymax = (maxCorner->y - this->origin.y) * invDir.y;
 
     if ((tmin > tymax) || (tymin > tmax))
-        return Vector3();
+    {
+        distance = -1.0f;
+        return 0;
+    }
 
-    // These lines also handle the case where tmin or tmax is NaN
-    // (result of 0 * Infinity). x !== x returns true if x is NaN
-
-    if (tymin > tmin || tmin != tmin)
+    if (tymin > tmin)
         tmin = tymin;
 
-    if (tymax < tmax || tmax != tmax)
+    if (tymax < tmax)
         tmax = tymax;
 
-    if (invdirz >= 0)
-    {
-
-        tzmin = (minCorner->z - origin.z) * invdirz;
-        tzmax = (maxCorner->z - origin.z) * invdirz;
-    }
-    else
-    {
-
-        tzmin = (maxCorner->z - origin.z) * invdirz;
-        tzmax = (minCorner->z - origin.z) * invdirz;
-    }
+    tzmin = (minCorner->z - this->origin.z) * invDir.z;
+    tzmax = (maxCorner->z - this->origin.z) * invDir.z;
 
     if ((tmin > tzmax) || (tzmin > tmax))
-        return Vector3();
+    {
+        distance = -1.0f;
+        return 0;
+    }
 
-    if (tzmin > tmin || tmin != tmin)
+    if (tzmin > tmin)
         tmin = tzmin;
 
-    if (tzmax < tmax || tmax != tmax)
+    if (tzmax < tmax)
         tmax = tzmax;
 
-    // return point closest to the ray (positive side)
-
     if (tmax < 0)
-        return Vector3();
+    {
+        distance = -1.0f;
+        return 0;
+    }
 
-    return this->at(tmin >= 0 ? tmin : tmax);
+    distance = tmin >= 0 ? tmin : tmax;
+    return 1;
 }
 
-Vector3 Ray::invDir(){
+Vector3 Ray::invDir()
+{
     return Vector3(
         1 / this->direction.x,
         1 / this->direction.y,
-        1 / this->direction.z
-    );
+        1 / this->direction.z);
 }
