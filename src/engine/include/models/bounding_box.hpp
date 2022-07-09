@@ -54,22 +54,33 @@ public:
     /** @returns the vector directly in middle of the bounding box. */
     const Vector3 &getCenter() { return _centerVector; };
     /** @returns the front face (further on z-axis) */
-    const BoundingBoxFace &getFrontFace() { return _frontFace; };
+    const BoundingBoxFace &getFrontFace() const { return _frontFace; };
     /** @returns the back face (nearer on z-axis) */
-    const BoundingBoxFace &getBackFace() { return _backFace; };
+    const BoundingBoxFace &getBackFace() const { return _backFace; };
     /** @returns the left face (further on x-axis) */
-    const BoundingBoxFace &getLeftFace() { return _leftFace; };
+    const BoundingBoxFace &getLeftFace() const { return _leftFace; };
     /** @returns the right face (nearer on x-axis) */
-    const BoundingBoxFace &getRightFace() { return _rightFace; };
+    const BoundingBoxFace &getRightFace() const { return _rightFace; };
     /** @returns the top face (further on y-axis) */
-    const BoundingBoxFace &getTopFace() { return _topFace; };
+    const BoundingBoxFace &getTopFace() const { return _topFace; };
     /** @returns the bottom face (nearer on y-axis) */
-    const BoundingBoxFace &getBottomFace() { return _bottomFace; };
+    const BoundingBoxFace &getBottomFace() const { return _bottomFace; };
+
+    /** @returns check's intersection against another AABB */
+    bool intersect(const BoundingBox &b, const Vector3 &aPosition, const Vector3 &bPosition) const
+    {
+        const Vector3 bMax = b.getVertex(7);
+        const Vector3 bMin = b.getVertex(0);
+        return ((_vertices[0].x + aPosition.x) <= (bMax.x + bPosition.x) && (_vertices[7].x + aPosition.x) >= (bMin.x + bPosition.x)) &&
+               ((_vertices[0].y + aPosition.y) <= (bMax.y + bPosition.y) && (_vertices[7].y + aPosition.y) >= (bMin.y + bPosition.y)) &&
+               ((_vertices[0].z + aPosition.z) <= (bMax.z + bPosition.z) && (_vertices[7].z + aPosition.z) >= (bMin.z + bPosition.z));
+    }
+
     /** 
      * @returns bounding box raw vertices array.
      * Total length: 8
      */
-    const Vector3 &getVertex(const u8 &i) { return _vertices[i]; };
+    const Vector3 &getVertex(const u8 &i) const { return _vertices[i]; };
     /** @returns single vertex from raw vertices array.*/
     Vector3 *getVertices() { return _vertices; };
 

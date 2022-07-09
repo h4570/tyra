@@ -36,7 +36,7 @@ ENGINE_OBJS = src/engine/engine.o \
 	      src/engine/utils/string.o \
               src/engine/loaders/bmp_loader.o \
               src/engine/loaders/dff_loader.o \
-	      src/engine/loaders/md2_loader.o \
+	      src/engine/loaders/mdl_loader.o \
 	      src/engine/loaders/obj_loader.o \
 	      src/engine/loaders/png_loader.o \
 	      src/engine/loaders/txd_loader.o \
@@ -72,6 +72,9 @@ dolphin:
 # Floors example
 floors:
 	$(MAKE) -C src/samples/floors all clean
+
+rocket:
+	$(MAKE) -C src/samples/rocket_league all clean
 
 # Rebuild the engine
 rebuild-engine: 

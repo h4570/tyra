@@ -164,7 +164,7 @@ public:
      * so there is no need to run it again.
      */
     void calculateBoundingBoxes();
-
+    
 private:
     BoundingBox *boundingBoxObj;
     u8 _isMother,

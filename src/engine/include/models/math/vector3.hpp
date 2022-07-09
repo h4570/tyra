@@ -89,7 +89,7 @@ public:
      */
     u8 collidesBox(const Vector3 &t_min, const Vector3 &t_max) const
     {
-        return ((this->x <= t_max.x && this->x >= t_min.x) && (this->y < t_max.y && this->y >= t_min.y) && (this->z <= t_max.z && this->z >= t_min.z)) ? 1 : 0;
+        return ((this->x <= t_max.x && this->x >= t_min.x) && (this->y <= t_max.y && this->y >= t_min.y) && (this->z <= t_max.z && this->z >= t_min.z)) ? 1 : 0;
     }
 
     /** 

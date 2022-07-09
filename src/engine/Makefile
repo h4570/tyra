@@ -5,6 +5,7 @@ EE_OBJS =								\
 	models/math/plane.o					\
 	models/math/point.o					\
 	models/math/vector3.o				\
+	models/math/ray.o					\
 	models/mesh_frame.o					\
 	models/bounding_box.o				\
 	models/mesh_material.o				\
@@ -25,7 +26,7 @@ EE_OBJS =								\
 	utils/string.o						\
 	loaders/bmp_loader.o				\
 	loaders/dff_loader.o				\
-	loaders/md2_loader.o				\
+	loaders/mdl_loader.o				\
 	loaders/obj_loader.o				\
 	loaders/png_loader.o				\
 	loaders/txd_loader.o                \

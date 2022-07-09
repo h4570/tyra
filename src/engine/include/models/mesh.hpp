@@ -3,9 +3,10 @@
 #   |     \/   ____| |___|    
 #   |     |   |   \  |   |       
 #-----------------------------------------------------------------------
-# Copyright 2020, tyra - https://github.com/h4570/tyra
+# Copyright 2020 - 2022, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
+# André Guilherme <andregui17@outlook.com>
 */
 
 #ifndef _TYRA_MESH_
@@ -122,7 +123,7 @@ public:
      * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
      * Converts Y coordinate texture from Y to 1.0F - Y
      */
-    void loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT);
+    void loadObj(const char *t_subfolder, const char *t_objFile, const float &t_scale, const u32 &t_framesCount, const u8 &t_invertT);
 
     /** 
      * Load mesh data from .obj file. Animation not supported.
@@ -135,7 +136,7 @@ public:
      * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
      * Converts Y coordinate texture from Y to 1.0F - Y
      */
-    void loadObj(char *t_subfolder, char *t_objFile, const float &t_scale, const u8 &t_invertT);
+    void loadObj(const char *t_subfolder, const char *t_objFile, const float &t_scale, const u8 &t_invertT);
 
     /** 
      * Load mesh data from RenderWare .dff file. Animation not supported
@@ -145,17 +146,27 @@ public:
      * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
      * Converts Y coordinate texture from Y to 1.0F - Y
      */
-    void loadDff(char *t_subfolder, char *t_dffFile, const float &t_scale, const u8 &t_invertT);
+    void loadDff(const char *t_subfolder, const char *t_dffFile, const float &t_scale, const u8 &t_invertT);
 
     /** 
      * Load mesh data from Quake II .md2 file. Animation supported.
      * @param t_subfolder Relative path. Example "meshes/blocks"
-     * @param t_objFile File name without extension. Example "sand"
+     * @param t_md2File File name without extension. Example "sand"
      * @param t_scale Scale. For 1:1, type 1.0F
      * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
      * Converts Y coordinate texture from Y to 1.0F - Y
      */
     void loadMD2(char *t_subfolder, char *t_md2File, const float &t_scale, const u8 &t_invertT);
+    
+    /** 
+     * Load mesh data from Quake III .md2 file. Working in progress
+     * @param t_subfolder Relative path. Example "meshes/blocks"
+     * @param t_md3File File name without extension. Example "sand"
+     * @param t_scale Scale. For 1:1, type 1.0F
+     * @param t_invertT Sometimes textures are in UV format, in this case, invertT should be set to true.
+     * Converts Y coordinate texture from Y to 1.0F - Y
+     */
+    void loadMD3(char *t_subfolder, char *t_md3File, const float &t_scale, const u8 &t_invertT);
 
     /** Copy by reference mesh data from other mesh */
     void loadFrom(const Mesh &t_mesh);
@@ -202,6 +213,13 @@ public:
      * Should be called by renderer. 
      */
     u32 getDrawData(u32 t_materialIndex, VECTOR *o_vertices, VECTOR *o_normals, VECTOR *o_coordinates, Vector3 &t_cameraPos);
+
+    /** 
+     * Set min and max bounding box vector3 
+     * @param min target vector3
+     * @param max target vector3
+     */
+    void getMinMaxBoundingBox(Vector3 *min, Vector3 *max);
 
 private:
     AnimState animState;
