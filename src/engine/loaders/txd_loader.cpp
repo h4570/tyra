@@ -25,7 +25,8 @@ TxdLoader::~TxdLoader() {}
 //taken from dff loader 
 void TxdLoader::Read_Default(RwRasterFormat *DEFAULT_FORMAT, u8 *t_buffer, u32 &t_ptrPos)
 {
-   DEFAULT_FORMAT;
+   FILE *file;
+   fread(&DEFAULT_FORMAT, sizeof(t_buffer), t_ptrPos, file);
 }
 
 float TxdLoader::readString(u8 *t_buffer, u32 *t_ptrPos, u32 t_dataSize)
