@@ -76,7 +76,7 @@ export WSL_LINUX_PCSX2=/mnt/c/Program\\\ Files\\\ \\\(x86\\\)/PCSX2
 ```
 
 - Refresh env variables via -> `. ~/.bashrc`
-- Close wsl terminal
+- Close WSL terminal
 
 ---
 
@@ -84,13 +84,13 @@ export WSL_LINUX_PCSX2=/mnt/c/Program\\\ Files\\\ \\\(x86\\\)/PCSX2
 
 ## Mapping WSL directories to your Windows machine
 
-- Open cmd and type `wsl.exe --list``Info: Remember your distribution name from this list. My is "Ubuntu-20.04"`
+- Open cmd and type `wsl.exe --list` `Info: Remember your distribution name from this list. Mine is "Ubuntu-20.04"`
 - Click at the windows logo on your keyboard, type "This PC" and open
-- At the upper menu click "Map disk drive"`Info: Replace my name with your WSL name!`
-  - Folder: \\\\wsl$\\Ubuntu-20.04
-  - Click OK
+- At the upper menu click "Map network drive", and set the folder name. The default settings will work.
+  - Folder: `\\\\wsl$\\Ubuntu-20.04` `Info: Replace my name with your WSL name!`
+  - Click FINISH
 
-`Info: You will have now new disk on your PC, this is the WSL filesystem.`
+`Info: You will now have a new network drive on your PC, this is the WSL filesystem.`
 
 ---
 
@@ -99,6 +99,7 @@ export WSL_LINUX_PCSX2=/mnt/c/Program\\\ Files\\\ \\\(x86\\\)/PCSX2
 ## Configuring VSCode
 
 - Open VSCode
+- Use the navbar on the left and click 'Extensions', or go to 'View -> Extensions' from the top menu.
 - Install extension "Remote - WSL"
 - Install extension "C/C++"
 - Restart VSCode if required
@@ -146,17 +147,17 @@ export LIBPNG=${PS2SDK}/ports
 
 ## Build Tyra
 
-- Just hit make all on the root of tyra folder or you can go via `cd /src/engine` and hit `make all` there.
+- Just hit make all on the root of tyra folder (`repos/tyra`) or you can go via `cd /src/engine` and hit `make all` there.
 - If you wanna build the debug build or rebuild the engine, just `make rebuild-engine ` on the root of tyra or `make rebuild-dbg-engine` to build debug version or go to one of the samples via `cd /repos/tyra/src/samples/floors `and do the same process above
 
 <br/>
 
 ## Install & configure PCSX2
 
-- Download & install PCSX2 from (1.6+ version)https://pcsx2.net/
-- Extract bios files fromhttps://romsmania.cc/bios/pcsx2-playstation-2-bios-3to `C:\Users%USERNAME%\Documents\PCSX2\bios`
+- Download & install PCSX2 from (1.6+ version) https://pcsx2.net/
+- Extract BIOS files from https://romsmania.cc/bios/pcsx2-playstation-2-bios-3 to `C:\Users\%USERNAME%\Documents\PCSX2\bios`
 - Close `PCSX2` if you have opened!
-- Open `C:\Users\hasto\Documents\PCSX2\inis\PCSX2_vm.ini` in notepad
+- Open `C:\Users\%USERNAME%\Documents\PCSX2\inis\PCSX2_vm.ini` in notepad and set HostFS to enabled. This should be on line 9.
 
 ```
 HostFs=enabled
@@ -181,12 +182,12 @@ Circle = C
 - Download assets from https://github.com/h4570/tyra/tree/master/src/samples/floors
 - Windows: Open your WSL folder (This PC -> WSL folder)
 - Extract assets to /repos/tyra/src/samples/floors/bin/ (create bin folder if not exists)
-- Compile sample via `make``Info: Elf file should be produced in /bin `
+- Compile sample via `make` `Info: Elf file should be produced in /bin `
 - Run sample in PCSX2 via `make run-pcsx2`
 
 ## Run one of the samples Method 2
 
-- Run `make floors` on the root of tyra project or change directory to the sampels via `cd src/samples/floors` and do the `make install` command
+- Run `make floors` on the root of Tyra project or change directory to the samples via `cd src/samples/floors` and do the `make install` command
 
 ---
 
@@ -201,12 +202,12 @@ You can create your own sample, by just copying cube folder.
 
 <br/>
 
-## Setup Intelisense
+## Setup Intellisense
 
 
 - Download
   http://apgcglz.cluster028.hosting.ovh.net/tyra/intellisense.zip
-- Unpack .vscode folder to WSL's `/repos/tyra/Info: This configuration is set for cube sample, but you can change it in tasks.json file`
+- Unpack .vscode folder to WSL's `/repos/tyra/` `Info: This configuration is set for cube sample, but you can change it in tasks.json file`
 
 
 ---

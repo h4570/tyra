@@ -5,6 +5,7 @@ EE_OBJS =								\
 	models/math/plane.o					\
 	models/math/point.o					\
 	models/math/vector3.o				\
+	models/math/ray.o					\
 	models/mesh_frame.o					\
 	models/bounding_box.o				\
 	models/mesh_material.o				\
