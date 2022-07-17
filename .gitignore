@@ -18,11 +18,6 @@
 *.dylib
 *.dll
 
-# Binary files
-bin/
-obj/
-res/
-
 # Compiled Static libraries
 *.lai
 *.la
