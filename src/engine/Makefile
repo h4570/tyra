@@ -22,6 +22,7 @@ EE_OBJS =								\
 	modules/texture_repository.o		\
 	modules/timer.o						\
 	modules/vif_sender.o				\
+	video/mpeg.o                       \
 	utils/math.o						\
 	utils/string.o						\
 	loaders/bmp_loader.o				\
