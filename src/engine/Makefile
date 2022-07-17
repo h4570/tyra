@@ -29,6 +29,7 @@ EE_OBJS =								\
 	loaders/mdl_loader.o				\
 	loaders/obj_loader.o				\
 	loaders/png_loader.o				\
+	loaders/txd_loader.o                \
 	vu1_progs/draw3D.o					\
 	engine.o
 
