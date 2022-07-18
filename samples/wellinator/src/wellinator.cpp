@@ -18,7 +18,7 @@ Wellinator::Wellinator(Engine* t_engine) { engine = t_engine; }
 Wellinator::~Wellinator() {}
 
 Mesh* getWarrior(Renderer* renderer);
-StdpipOptions* getRenderingOptions();
+StapipOptions* getRenderingOptions();
 Sprite* get2DPicture(Renderer* renderer);
 
 void Wellinator::init() {
@@ -42,7 +42,7 @@ void Wellinator::init() {
       FileUtils::fromCwd("blocks.png"));
 
   mcPip.init(&engine->renderer.core);
-  stdPip.init(&engine->renderer.core);
+  stapip.init(&engine->renderer.core);
 
   picture = get2DPicture(&engine->renderer);
 
@@ -116,8 +116,8 @@ void Wellinator::loop() {
 
     // warrior->setPosition(*nextPos);
 
-    engine->renderer.renderer3D.usePipeline(&stdPip);
-    { stdPip.render(warrior, renderOptions); }
+    engine->renderer.renderer3D.usePipeline(&stapip);
+    { stapip.render(warrior, renderOptions); }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);
     { mcPip.render(blocks, blocksCount, blocksTex, false); }
@@ -150,8 +150,8 @@ Sprite* get2DPicture(Renderer* renderer) {
   return sprite;
 }
 
-StdpipOptions* getRenderingOptions() {
-  auto* options = new StdpipOptions();
+StapipOptions* getRenderingOptions() {
+  auto* options = new StapipOptions();
 
   auto* ambientColor = new Color(32.0F, 32.0F, 32.0F, 128.0F);
   auto* directionalColors = new Color[3];
@@ -160,12 +160,12 @@ StdpipOptions* getRenderingOptions() {
   for (int i = 0; i < 3; i++)
     directionalDirections[i].set(1.0F, 1.0F, 1.0F, 1.0F);
 
-  auto* lightingOptions = new StdpipLightingOptions();  // Memory leak!
+  auto* lightingOptions = new StapipLightingOptions();  // Memory leak!
   lightingOptions->ambientColor = ambientColor;
   lightingOptions->directionalColors = directionalColors;
   lightingOptions->directionalDirections = directionalDirections;
 
-  options->shadingType = Tyra::StdpipShadingGouraud;
+  options->shadingType = Tyra::StapipShadingGouraud;
   options->blendingEnabled = true;
   options->antiAliasingEnabled = false;
   options->lighting = lightingOptions;

@@ -1,7 +1,6 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 --- H4570
-- [Renderer] Rename stdRenderer -> staticRenderer
 - [Renderer] Mesh, StaticMesh, AnimMesh
 - [Renderer] dynamicRenderer, dbufferring during mesh unrolling, simple clip
 - [Renderer] staticRenderer -> remove animation, dbufferring during mesh unrolling, full plane clip

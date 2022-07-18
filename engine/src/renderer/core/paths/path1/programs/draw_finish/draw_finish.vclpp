@@ -18,7 +18,7 @@
 
 #include "src/renderer/core/paths/path1/programs/vcl_sml.i"
 #include "src/renderer/core/paths/path1/programs/tyra_macros.i"
-#include "inc/renderer/3d/pipeline/std/core/path1/programs/stdpip_vu1_shared_defines.h"
+#include "inc/renderer/3d/pipeline/static/core/programs/stapip_vu1_shared_defines.h"
 
 --enter
 --endenter
