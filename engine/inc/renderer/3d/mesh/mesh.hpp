@@ -17,7 +17,7 @@ namespace Tyra {
 
 class Mesh {
  public:
-  explicit Mesh();
+  Mesh(const u8& isMother);
   ~Mesh();
 
   /** Translation matrix */
@@ -29,9 +29,22 @@ class Mesh {
   /** Scale matrix */
   M4x4 scale;
 
-  const u32& getId() const { return id; }
+  inline const u32& getId() const { return id; }
+  inline const u8& isMother() const { return _isMother; }
+  M4x4 getModelMatrix() const;
+
+  /** Get position from translation matrix */
+  inline Vec4* getPosition() {
+    return reinterpret_cast<Vec4*>(&translation.data[3 * 4]);
+  }
+
+  inline void setPosition(const Vec4& v) {
+    TYRA_ASSERT(v.w == 1.0F, "Vec4 must be homogeneous");
+    reinterpret_cast<Vec4*>(&translation.data[3 * 4])->set(v);
+  }
 
  protected:
+  u8 _isMother;
   u32 id;
 };
 

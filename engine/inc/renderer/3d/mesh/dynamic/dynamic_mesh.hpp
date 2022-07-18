@@ -24,30 +24,22 @@ class DynamicMesh : public Mesh {
   explicit DynamicMesh(const DynamicMesh& mesh);
   ~DynamicMesh();
 
-  const u8& isMother() const { return _isMother; }
-
-  /** Get position from translation matrix */
-  Vec4* getPosition() {
-    return reinterpret_cast<Vec4*>(&translation.data[3 * 4]);
-  }
-
-  void setPosition(const Vec4& v) {
-    TYRA_ASSERT(v.w == 1.0F, "Vec4 must be homogeneous");
-    reinterpret_cast<Vec4*>(&translation.data[3 * 4])->set(v);
-  }
-
   /** Returns material, which is a mesh "subgroup". */
   DynamicMeshMaterial* getMaterial(const u32& i) const { return materials[i]; }
+
+  DynamicMeshMaterial** getMaterials() { return materials; }
 
   const u32& getMaterialsCount() const { return materialsCount; }
 
   const DynamicMeshAnimState& getAnimState() const { return animState; }
 
   /** Count of all vertices.  */
-  u32 getVertexCount() { return frames[0]->getVertexCount(); }
+  inline u32 getVertexCount() { return frames[0]->getVertexCount(); }
 
   /** Returns single frame. */
-  DynamicMeshFrame* getFrame(const u32& i) const { return frames[i]; }
+  DynamicMeshFrame* getFrame(const u32& i) { return frames[i]; }
+
+  DynamicMeshFrame** getFrames() { return frames; }
 
   /** Count of frames. Static object (not animated) will have only 1 frame. */
   const u32& getFramesCount() const { return framesCount; }
@@ -62,21 +54,10 @@ class DynamicMesh : public Mesh {
 
   const u32& getStayAnimationFrame() const { return animState.stayFrame; }
 
-  M4x4 getModelMatrix() const;
-
-  // /**
-  //  * Returns material, which is a mesh "subgroup".
-  //  * NULL if not found.
-  //  */
-  // DynamicMeshMaterial* getMaterialById(const u32& t_id) const;
-
   /** @returns bounding box object of current frame. */
   const BBox& getCurrentBoundingBox() const {
     return frames[animState.currentFrame]->getBBox();
   }
-
-  /** Check if are there any frames */
-  u8 isDataLoaded() const { return framesCount > 0; }
 
   /** Loop in one frame */
   void playAnimation(const u32& t_frame) { playAnimation(t_frame, t_frame); }
@@ -102,7 +83,6 @@ class DynamicMesh : public Mesh {
  private:
   void initMesh();
   DynamicMeshAnimState animState;
-  u8 _isMother;
   u32 framesCount, materialsCount;
   DynamicMeshFrame** frames;
   DynamicMeshMaterial** materials;

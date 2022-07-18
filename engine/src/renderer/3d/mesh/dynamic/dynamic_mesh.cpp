@@ -15,7 +15,7 @@
 
 namespace Tyra {
 
-DynamicMesh::DynamicMesh(const MeshBuilderData& data) {
+DynamicMesh::DynamicMesh(const MeshBuilderData& data) : Mesh(true) {
   framesCount = data.framesCount;
   TYRA_ASSERT(framesCount > 0, "Frames count must be greater than 0");
 
@@ -32,14 +32,10 @@ DynamicMesh::DynamicMesh(const MeshBuilderData& data) {
     materials[i] = new DynamicMeshMaterial(data, i);
   }
 
-  translation.translate(Vec4(0.0F, 0.0F, 0.0F, 1.0F));
-
   initMesh();
-
-  _isMother = true;
 }
 
-DynamicMesh::DynamicMesh(const DynamicMesh& mesh) {
+DynamicMesh::DynamicMesh(const DynamicMesh& mesh) : Mesh(false) {
   framesCount = mesh.framesCount;
   materialsCount = mesh.materialsCount;
 
@@ -53,11 +49,7 @@ DynamicMesh::DynamicMesh(const DynamicMesh& mesh) {
     materials[i] = new DynamicMeshMaterial(*mesh.materials[i]);
   }
 
-  translation.translate(Vec4(0.0F, 0.0F, 0.0F, 1.0F));
-
   initMesh();
-
-  _isMother = false;
 }
 
 DynamicMesh::~DynamicMesh() {
@@ -71,10 +63,6 @@ DynamicMesh::~DynamicMesh() {
 
     delete[] materials;
   }
-}
-
-M4x4 DynamicMesh::getModelMatrix() const {
-  return translation * rotation * scale;
 }
 
 void DynamicMesh::initMesh() {
