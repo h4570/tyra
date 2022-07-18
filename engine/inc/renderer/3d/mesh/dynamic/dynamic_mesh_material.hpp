@@ -12,15 +12,16 @@
 
 #include "debug/debug.hpp"
 #include "loaders/3d/builder/mesh_builder_data.hpp"
-#include "renderer/3d/mesh/mesh_material_frame.hpp"
+#include "renderer/3d/mesh/dynamic/dynamic_mesh_material_frame.hpp"
 
 namespace Tyra {
 
-class MeshMaterial {
+class DynamicMeshMaterial {
  public:
-  explicit MeshMaterial(const MeshBuilderData& data, const u32& materialIndex);
-  explicit MeshMaterial(const MeshMaterial& material);
-  ~MeshMaterial();
+  explicit DynamicMeshMaterial(const MeshBuilderData& data,
+                               const u32& materialIndex);
+  explicit DynamicMeshMaterial(const DynamicMeshMaterial& material);
+  ~DynamicMeshMaterial();
 
   Color singleColor;
 
@@ -34,7 +35,7 @@ class MeshMaterial {
   u32* getTextureCoordFaces() const { return textureCoordFaces; }
   u32* getNormalFaces() const { return normalFaces; }
   u32* getColorFaces() const { return normalFaces; }
-  MeshMaterialFrame* getFrames() const { return *frames; }
+  DynamicMeshMaterialFrame* getFrames() const { return *frames; }
 
   const BBox& getBBox(const u32& frame) const;
 
@@ -46,7 +47,7 @@ class MeshMaterial {
   std::string getPrint(const char* name = nullptr) const;
 
  private:
-  MeshMaterialFrame** frames;
+  DynamicMeshMaterialFrame** frames;
 
   std::string _name;
   u8 _isMother, singleColorFlag;

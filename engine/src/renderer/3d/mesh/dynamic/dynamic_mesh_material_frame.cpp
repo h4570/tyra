@@ -13,13 +13,13 @@
 #include <tamtypes.h>
 #include "renderer/models/color.hpp"
 #include "loaders/3d/builder/mesh_builder_data.hpp"
-#include "renderer/3d/mesh/mesh_material_frame.hpp"
+#include "renderer/3d/mesh/dynamic/dynamic_mesh_material_frame.hpp"
 
 namespace Tyra {
 
-MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
-                                     const u32& frameIndex,
-                                     const u32& materialIndex) {
+DynamicMeshMaterialFrame::DynamicMeshMaterialFrame(const MeshBuilderData& data,
+                                                   const u32& frameIndex,
+                                                   const u32& materialIndex) {
   TYRA_ASSERT(frameIndex < data.framesCount && frameIndex >= 0,
               "Provided index \"", frameIndex, "\" is out of range");
   TYRA_ASSERT(materialIndex < data.materialsCount && materialIndex >= 0,
@@ -34,7 +34,8 @@ MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
   _isMother = true;
 }
 
-MeshMaterialFrame::MeshMaterialFrame(const MeshMaterialFrame& frame) {
+DynamicMeshMaterialFrame::DynamicMeshMaterialFrame(
+    const DynamicMeshMaterialFrame& frame) {
   id = rand() % 1000000;
 
   bbox = frame.bbox;
@@ -42,7 +43,7 @@ MeshMaterialFrame::MeshMaterialFrame(const MeshMaterialFrame& frame) {
   _isMother = false;
 }
 
-MeshMaterialFrame::~MeshMaterialFrame() {
+DynamicMeshMaterialFrame::~DynamicMeshMaterialFrame() {
   if (_isMother) {
     delete bbox;
   }

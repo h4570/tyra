@@ -14,7 +14,7 @@
 #include <draw_buffers.h>
 #include <vector>
 #include "./models/texture.hpp"
-#include "renderer/3d/mesh/mesh.hpp"
+#include "renderer/3d/mesh/dynamic/dynamic_mesh.hpp"
 #include "loaders/texture/base/texture_loader_selector.hpp"
 #include <string>
 
@@ -93,12 +93,13 @@ class TextureRepository {
   /**
    * Add linked textures in given path for mesh material names.
    */
-  void addByMesh(Mesh* mesh, const char* directory, const char* extension);
+  void addByMesh(DynamicMesh* mesh, const char* directory,
+                 const char* extension);
 
   /**
    * Add linked textures in given path for mesh material names.
    */
-  inline void addByMesh(Mesh* mesh, const std::string& directory,
+  inline void addByMesh(DynamicMesh* mesh, const std::string& directory,
                         const char* extension) {
     addByMesh(mesh, directory.c_str(), extension);
   }

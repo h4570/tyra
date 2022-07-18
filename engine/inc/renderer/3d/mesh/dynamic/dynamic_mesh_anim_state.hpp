@@ -25,6 +25,6 @@ typedef struct {
   u32 animType;
   u32 currentFrame;
   u32 nextFrame;
-} MeshAnimState;
+} DynamicMeshAnimState;
 
 }  // namespace Tyra

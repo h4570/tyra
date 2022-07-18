@@ -28,10 +28,10 @@ class H4570 : public Game {
  private:
   Engine* engine;
 
-  Mesh* warrior;
-  Mesh* warrior2;
-  Mesh* warrior3;
-  Mesh* warrior4;
+  DynamicMesh* warrior;
+  DynamicMesh* warrior2;
+  DynamicMesh* warrior3;
+  DynamicMesh* warrior4;
   Sprite* picture;
   audsrv_adpcm_t* adpcmSample;
   Timer adpcmTimer;

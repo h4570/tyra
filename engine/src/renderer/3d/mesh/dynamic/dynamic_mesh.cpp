@@ -11,11 +11,11 @@
 
 #include <tamtypes.h>
 #include "math/m4x4.hpp"
-#include "renderer/3d/mesh/mesh.hpp"
+#include "renderer/3d/mesh/dynamic/dynamic_mesh.hpp"
 
 namespace Tyra {
 
-Mesh::Mesh(const MeshBuilderData& data) {
+DynamicMesh::DynamicMesh(const MeshBuilderData& data) {
   id = rand() % 1000000;
 
   framesCount = data.framesCount;
@@ -24,14 +24,14 @@ Mesh::Mesh(const MeshBuilderData& data) {
   materialsCount = data.materialsCount;
   TYRA_ASSERT(materialsCount > 0, "Materials count must be greater than 0");
 
-  frames = new MeshFrame*[framesCount];
+  frames = new DynamicMeshFrame*[framesCount];
   for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new MeshFrame(data, i);
+    frames[i] = new DynamicMeshFrame(data, i);
   }
 
-  materials = new MeshMaterial*[materialsCount];
+  materials = new DynamicMeshMaterial*[materialsCount];
   for (u32 i = 0; i < materialsCount; i++) {
-    materials[i] = new MeshMaterial(data, i);
+    materials[i] = new DynamicMeshMaterial(data, i);
   }
 
   translation.translate(Vec4(0.0F, 0.0F, 0.0F, 1.0F));
@@ -41,20 +41,20 @@ Mesh::Mesh(const MeshBuilderData& data) {
   _isMother = true;
 }
 
-Mesh::Mesh(const Mesh& mesh) {
+DynamicMesh::DynamicMesh(const DynamicMesh& mesh) {
   id = rand() % 1000000;
 
   framesCount = mesh.framesCount;
   materialsCount = mesh.materialsCount;
 
-  frames = new MeshFrame*[framesCount];
+  frames = new DynamicMeshFrame*[framesCount];
   for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new MeshFrame(*mesh.frames[i]);
+    frames[i] = new DynamicMeshFrame(*mesh.frames[i]);
   }
 
-  materials = new MeshMaterial*[materialsCount];
+  materials = new DynamicMeshMaterial*[materialsCount];
   for (u32 i = 0; i < materialsCount; i++) {
-    materials[i] = new MeshMaterial(*mesh.materials[i]);
+    materials[i] = new DynamicMeshMaterial(*mesh.materials[i]);
   }
 
   translation.translate(Vec4(0.0F, 0.0F, 0.0F, 1.0F));
@@ -64,7 +64,7 @@ Mesh::Mesh(const Mesh& mesh) {
   _isMother = false;
 }
 
-Mesh::~Mesh() {
+DynamicMesh::~DynamicMesh() {
   for (u32 i = 0; i < framesCount; i++) {
     delete frames[i];
   }
@@ -77,9 +77,11 @@ Mesh::~Mesh() {
   }
 }
 
-M4x4 Mesh::getModelMatrix() const { return translation * rotation * scale; }
+M4x4 DynamicMesh::getModelMatrix() const {
+  return translation * rotation * scale;
+}
 
-void Mesh::initMesh() {
+void DynamicMesh::initMesh() {
   animState.startFrame = 0;
   animState.endFrame = 0;
   animState.interpolation = 0.0F;
@@ -91,7 +93,8 @@ void Mesh::initMesh() {
   animState.speed = 0.1F;
 }
 
-void Mesh::playAnimation(const u32& t_startFrame, const u32& t_endFrame) {
+void DynamicMesh::playAnimation(const u32& t_startFrame,
+                                const u32& t_endFrame) {
   TYRA_ASSERT(framesCount > 0,
               "Cant play animation, because no mesh data was loaded!");
   TYRA_ASSERT(framesCount != 1,
@@ -107,8 +110,8 @@ void Mesh::playAnimation(const u32& t_startFrame, const u32& t_endFrame) {
     animState.nextFrame = t_startFrame;
 }
 
-void Mesh::playAnimation(const u32& t_startFrame, const u32& t_endFrame,
-                         const u32& t_stayFrame) {
+void DynamicMesh::playAnimation(const u32& t_startFrame, const u32& t_endFrame,
+                                const u32& t_stayFrame) {
   TYRA_ASSERT(framesCount > 0,
               "Cant play animation, because no mesh data was loaded!");
   TYRA_ASSERT(framesCount != 1,
@@ -123,7 +126,7 @@ void Mesh::playAnimation(const u32& t_startFrame, const u32& t_endFrame,
   animState.nextFrame = t_startFrame;
 }
 
-void Mesh::animate() {
+void DynamicMesh::animate() {
   animState.interpolation += animState.speed;
   if (animState.interpolation >= 1.0F) {
     animState.interpolation = 0.0F;

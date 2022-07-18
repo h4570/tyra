@@ -11,17 +11,17 @@
 #pragma once
 
 #include "loaders/3d/builder/mesh_builder_data.hpp"
-#include "./mesh_frame.hpp"
-#include "./mesh_material_frame.hpp"
-#include "./mesh_anim_state.hpp"
+#include "./dynamic_mesh_frame.hpp"
+#include "./dynamic_mesh_material_frame.hpp"
+#include "./dynamic_mesh_anim_state.hpp"
 
 namespace Tyra {
 
-class Mesh {
+class DynamicMesh {
  public:
-  explicit Mesh(const MeshBuilderData& data);
-  explicit Mesh(const Mesh& mesh);
-  ~Mesh();
+  explicit DynamicMesh(const MeshBuilderData& data);
+  explicit DynamicMesh(const DynamicMesh& mesh);
+  ~DynamicMesh();
 
   /** Translation matrix */
   M4x4 translation;
@@ -47,17 +47,17 @@ class Mesh {
   }
 
   /** Returns material, which is a mesh "subgroup". */
-  MeshMaterial* getMaterial(const u32& i) const { return materials[i]; }
+  DynamicMeshMaterial* getMaterial(const u32& i) const { return materials[i]; }
 
   const u32& getMaterialsCount() const { return materialsCount; }
 
-  const MeshAnimState& getAnimState() const { return animState; }
+  const DynamicMeshAnimState& getAnimState() const { return animState; }
 
   /** Count of all vertices.  */
   u32 getVertexCount() { return frames[0]->getVertexCount(); }
 
   /** Returns single frame. */
-  MeshFrame* getFrame(const u32& i) const { return frames[i]; }
+  DynamicMeshFrame* getFrame(const u32& i) const { return frames[i]; }
 
   /** Count of frames. Static object (not animated) will have only 1 frame. */
   const u32& getFramesCount() const { return framesCount; }
@@ -78,7 +78,7 @@ class Mesh {
   //  * Returns material, which is a mesh "subgroup".
   //  * NULL if not found.
   //  */
-  // MeshMaterial* getMaterialById(const u32& t_id) const;
+  // DynamicMeshMaterial* getMaterialById(const u32& t_id) const;
 
   /** @returns bounding box object of current frame. */
   const BBox& getCurrentBoundingBox() const {
@@ -111,11 +111,11 @@ class Mesh {
 
  private:
   void initMesh();
-  MeshAnimState animState;
+  DynamicMeshAnimState animState;
   u8 _isMother;
   u32 id, framesCount, materialsCount;
-  MeshFrame** frames;
-  MeshMaterial** materials;
+  DynamicMeshFrame** frames;
+  DynamicMeshMaterial** materials;
 };
 
 }  // namespace Tyra

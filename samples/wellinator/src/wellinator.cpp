@@ -17,7 +17,7 @@ namespace Tyra {
 Wellinator::Wellinator(Engine* t_engine) { engine = t_engine; }
 Wellinator::~Wellinator() {}
 
-Mesh* getWarrior(Renderer* renderer);
+DynamicMesh* getWarrior(Renderer* renderer);
 StapipOptions* getRenderingOptions();
 Sprite* get2DPicture(Renderer* renderer);
 
@@ -125,10 +125,10 @@ void Wellinator::loop() {
   engine->renderer.endFrame();
 }
 
-Mesh* getWarrior(Renderer* renderer) {
+DynamicMesh* getWarrior(Renderer* renderer) {
   MD2Loader loader;
   auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), .08F, false);
-  auto* result = new Mesh(*data);
+  auto* result = new DynamicMesh(*data);
   result->translation.translateZ(-30.0F);
   delete data;
   renderer->core.texture.repository.addByMesh(result, FileUtils::getCwd(),

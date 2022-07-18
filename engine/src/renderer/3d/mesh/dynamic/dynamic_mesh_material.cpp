@@ -12,12 +12,12 @@
 #include <tamtypes.h>
 #include <string>
 #include <cstdlib>
-#include "renderer/3d/mesh/mesh_material.hpp"
+#include "renderer/3d/mesh/dynamic/dynamic_mesh_material.hpp"
 
 namespace Tyra {
 
-MeshMaterial::MeshMaterial(const MeshBuilderData& data,
-                           const u32& materialIndex)
+DynamicMeshMaterial::DynamicMeshMaterial(const MeshBuilderData& data,
+                                         const u32& materialIndex)
     : singleColor(false) {
   TYRA_ASSERT(materialIndex < data.materialsCount && materialIndex >= 0,
               "Provided index \"", materialIndex, "\" is out of range");
@@ -57,18 +57,18 @@ MeshMaterial::MeshMaterial(const MeshBuilderData& data,
   TYRA_ASSERT(facesCount > 0, "Faces count must be greater than 0");
 
   _name = data.materials[materialIndex]->name;
-  TYRA_ASSERT(_name.length() > 0, "MeshMaterial name cannot be empty");
+  TYRA_ASSERT(_name.length() > 0, "DynamicMeshMaterial name cannot be empty");
 
   framesCount = data.framesCount;
-  frames = new MeshMaterialFrame*[framesCount];
+  frames = new DynamicMeshMaterialFrame*[framesCount];
   for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new MeshMaterialFrame(data, i, materialIndex);
+    frames[i] = new DynamicMeshMaterialFrame(data, i, materialIndex);
   }
 
   _isMother = true;
 }
 
-MeshMaterial::MeshMaterial(const MeshMaterial& mesh) {
+DynamicMeshMaterial::DynamicMeshMaterial(const DynamicMeshMaterial& mesh) {
   id = rand() % 1000000;
 
   vertexFaces = mesh.vertexFaces;
@@ -82,15 +82,15 @@ MeshMaterial::MeshMaterial(const MeshMaterial& mesh) {
 
   singleColor.set(128.0F, 128.0F, 128.0F, 128.0F);
 
-  frames = new MeshMaterialFrame*[framesCount];
+  frames = new DynamicMeshMaterialFrame*[framesCount];
   for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new MeshMaterialFrame(*mesh.frames[i]);
+    frames[i] = new DynamicMeshMaterialFrame(*mesh.frames[i]);
   }
 
   _isMother = false;
 }
 
-MeshMaterial::~MeshMaterial() {
+DynamicMeshMaterial::~DynamicMeshMaterial() {
   if (_isMother) {
     delete[] vertexFaces;
     if (textureCoordFaces) delete[] textureCoordFaces;
@@ -104,11 +104,11 @@ MeshMaterial::~MeshMaterial() {
   delete[] frames;
 }
 
-const BBox& MeshMaterial::getBBox(const u32& frame) const {
+const BBox& DynamicMeshMaterial::getBBox(const u32& frame) const {
   return frames[frame]->getBBox();
 }
 
-void MeshMaterial::setSingleColorFlag(const u8& flag) {
+void DynamicMeshMaterial::setSingleColorFlag(const u8& flag) {
   TYRA_ASSERT(
       colorFaces != nullptr,
       "Colors and color faces are required to use color-per-vertex mode");
@@ -116,22 +116,22 @@ void MeshMaterial::setSingleColorFlag(const u8& flag) {
   singleColorFlag = flag;
 }
 
-void MeshMaterial::print() const {
+void DynamicMeshMaterial::print() const {
   auto text = getPrint(nullptr);
   printf("%s\n", text.c_str());
 }
 
-void MeshMaterial::print(const char* name) const {
+void DynamicMeshMaterial::print(const char* name) const {
   auto text = getPrint(name);
   printf("%s\n", text.c_str());
 }
 
-std::string MeshMaterial::getPrint(const char* name) const {
+std::string DynamicMeshMaterial::getPrint(const char* name) const {
   std::stringstream res;
   if (name) {
     res << name << "(";
   } else {
-    res << "MeshMaterial(";
+    res << "DynamicMeshMaterial(";
   }
 
   res << std::endl;

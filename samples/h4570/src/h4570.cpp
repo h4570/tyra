@@ -17,7 +17,7 @@ namespace Tyra {
 H4570::H4570(Engine* t_engine) { engine = t_engine; }
 H4570::~H4570() {}
 
-Mesh* getWarrior(Renderer* renderer);
+DynamicMesh* getWarrior(Renderer* renderer);
 StapipOptions* getRenderingOptions();
 Sprite* get2DPicture(Renderer* renderer);
 
@@ -38,19 +38,19 @@ void H4570::init() {
   auto* warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
       warrior->getMaterial(0)->getId());
 
-  warrior2 = new Mesh(*warrior);
+  warrior2 = new DynamicMesh(*warrior);
   warrior2->translation.translateX(-3.0F);
   warriorTex->addLink(warrior2->getMaterial(0)->getId());
   warrior2->playAnimation(0, warrior2->getFramesCount() - 1);
   warrior2->setAnimSpeed(0.10F);
 
-  warrior3 = new Mesh(*warrior);
+  warrior3 = new DynamicMesh(*warrior);
   warrior3->translation.translateX(-6.0F);
   warriorTex->addLink(warrior3->getMaterial(0)->getId());
   warrior3->playAnimation(0, warrior3->getFramesCount() - 1);
   warrior3->setAnimSpeed(0.7F);
 
-  warrior4 = new Mesh(*warrior);
+  warrior4 = new DynamicMesh(*warrior);
   warrior4->translation.translateX(3.0F);
   warriorTex->addLink(warrior4->getMaterial(0)->getId());
   warrior4->playAnimation(0, warrior4->getFramesCount() - 1);
@@ -151,10 +151,10 @@ void H4570::loop() {
   engine->renderer.endFrame();
 }
 
-Mesh* getWarrior(Renderer* renderer) {
+DynamicMesh* getWarrior(Renderer* renderer) {
   MD2Loader loader;
   auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), .08F, false);
-  auto* result = new Mesh(*data);
+  auto* result = new DynamicMesh(*data);
   // result->translation.translateZ(-30.0F);
   delete data;
 

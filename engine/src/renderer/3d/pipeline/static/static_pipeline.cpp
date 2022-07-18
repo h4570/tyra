@@ -23,16 +23,17 @@ void Stapipeline::init(RendererCore* t_core) {
 
 void Stapipeline::onUse() { core.reinitStandardVU1Programs(); }
 
-void Stapipeline::render(Mesh* mesh, const StapipOptions* options) {
+void Stapipeline::render(DynamicMesh* mesh, const StapipOptions* options) {
   auto model = mesh->getModelMatrix();
 
-  MeshFrame* frameFrom = mesh->getFramesCount() > 0
-                             ? mesh->getFrame(mesh->getCurrentAnimationFrame())
-                             : mesh->getFrame(0);
+  DynamicMeshFrame* frameFrom =
+      mesh->getFramesCount() > 0
+          ? mesh->getFrame(mesh->getCurrentAnimationFrame())
+          : mesh->getFrame(0);
 
-  MeshFrame* frameTo = mesh->getFramesCount() > 0
-                           ? mesh->getFrame(mesh->getNextAnimationFrame())
-                           : nullptr;
+  DynamicMeshFrame* frameTo =
+      mesh->getFramesCount() > 0 ? mesh->getFrame(mesh->getNextAnimationFrame())
+                                 : nullptr;
 
   auto* infoBag = getInfoBag(mesh, options, &model);
 
@@ -65,9 +66,9 @@ void Stapipeline::render(Mesh* mesh, const StapipOptions* options) {
   delete infoBag;
 }
 
-void Stapipeline::addVertices(Mesh* mesh, MeshMaterial* material,
-                              StapipBag* bag, MeshFrame* frameFrom,
-                              MeshFrame* frameTo) const {
+void Stapipeline::addVertices(DynamicMesh* mesh, DynamicMeshMaterial* material,
+                              StapipBag* bag, DynamicMeshFrame* frameFrom,
+                              DynamicMeshFrame* frameTo) const {
   bag->count = material->getFacesCount();
   bag->vertices = new Vec4[bag->count];
 
@@ -83,7 +84,8 @@ void Stapipeline::addVertices(Mesh* mesh, MeshMaterial* material,
   }
 }
 
-StapipInfoBag* Stapipeline::getInfoBag(Mesh* mesh, const StapipOptions* options,
+StapipInfoBag* Stapipeline::getInfoBag(DynamicMesh* mesh,
+                                       const StapipOptions* options,
                                        M4x4* model) const {
   auto* result = new StapipInfoBag();
 
@@ -104,9 +106,10 @@ StapipInfoBag* Stapipeline::getInfoBag(Mesh* mesh, const StapipOptions* options,
   return result;
 }
 
-StapipColorBag* Stapipeline::getColorBag(Mesh* mesh, MeshMaterial* material,
-                                         MeshFrame* frameFrom,
-                                         MeshFrame* frameTo) const {
+StapipColorBag* Stapipeline::getColorBag(DynamicMesh* mesh,
+                                         DynamicMeshMaterial* material,
+                                         DynamicMeshFrame* frameFrom,
+                                         DynamicMeshFrame* frameTo) const {
   auto* result = new StapipColorBag();
 
   if (material->isSingleColorActivated()) {
@@ -131,9 +134,10 @@ StapipColorBag* Stapipeline::getColorBag(Mesh* mesh, MeshMaterial* material,
   return result;
 }
 
-StapipTextureBag* Stapipeline::getTextureBag(Mesh* mesh, MeshMaterial* material,
-                                             MeshFrame* frameFrom,
-                                             MeshFrame* frameTo) {
+StapipTextureBag* Stapipeline::getTextureBag(DynamicMesh* mesh,
+                                             DynamicMeshMaterial* material,
+                                             DynamicMeshFrame* frameFrom,
+                                             DynamicMeshFrame* frameTo) {
   if (!material->getTextureCoordFaces()) return nullptr;
 
   auto* result = new StapipTextureBag();
@@ -161,8 +165,9 @@ StapipTextureBag* Stapipeline::getTextureBag(Mesh* mesh, MeshMaterial* material,
 }
 
 StapipLightingBag* Stapipeline::getLightingBag(
-    Mesh* mesh, MeshMaterial* material, M4x4* model, MeshFrame* frameFrom,
-    MeshFrame* frameTo, const StapipOptions* options) const {
+    DynamicMesh* mesh, DynamicMeshMaterial* material, M4x4* model,
+    DynamicMeshFrame* frameFrom, DynamicMeshFrame* frameTo,
+    const StapipOptions* options) const {
   if (!material->getNormalFaces() || options == nullptr ||
       options->lighting == nullptr)
     return nullptr;
@@ -199,7 +204,7 @@ void Stapipeline::setLightingColorsCache(
 }
 
 void Stapipeline::deallocDrawBags(StapipBag* bag,
-                                  MeshMaterial* material) const {
+                                  DynamicMeshMaterial* material) const {
   if (bag->color->many) {
     delete[] bag->color->many;
   }

@@ -14,12 +14,13 @@
 
 namespace Tyra {
 
-class MeshMaterialFrame {
+class DynamicMeshMaterialFrame {
  public:
-  explicit MeshMaterialFrame(const MeshBuilderData& data, const u32& frameIndex,
-                             const u32& materialIndex);
-  explicit MeshMaterialFrame(const MeshMaterialFrame& frame);
-  ~MeshMaterialFrame();
+  explicit DynamicMeshMaterialFrame(const MeshBuilderData& data,
+                                    const u32& frameIndex,
+                                    const u32& materialIndex);
+  explicit DynamicMeshMaterialFrame(const DynamicMeshMaterialFrame& frame);
+  ~DynamicMeshMaterialFrame();
 
   const u32& getId() const { return id; }
   const u8& isMother() const { return _isMother; }

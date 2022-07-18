@@ -28,7 +28,7 @@ class Wellinator : public Game {
  private:
   Engine* engine;
 
-  Mesh* warrior;
+  DynamicMesh* warrior;
   Sprite* picture;
   audsrv_adpcm_t* adpcmSample;
   Timer adpcmTimer;

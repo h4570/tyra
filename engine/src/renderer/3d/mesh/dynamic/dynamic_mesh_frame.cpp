@@ -14,11 +14,12 @@
 #include <string>
 #include "math/vec4.hpp"
 #include "renderer/models/color.hpp"
-#include "renderer/3d/mesh/mesh_frame.hpp"
+#include "renderer/3d/mesh/dynamic/dynamic_mesh_frame.hpp"
 
 namespace Tyra {
 
-MeshFrame::MeshFrame(const MeshBuilderData& data, const u32& index) {
+DynamicMeshFrame::DynamicMeshFrame(const MeshBuilderData& data,
+                                   const u32& index) {
   TYRA_ASSERT(index < data.framesCount && index >= 0, "Provided index \"",
               index, "\" is out of range");
 
@@ -62,7 +63,7 @@ MeshFrame::MeshFrame(const MeshBuilderData& data, const u32& index) {
   _isMother = true;
 }
 
-MeshFrame::MeshFrame(const MeshFrame& frame) {
+DynamicMeshFrame::DynamicMeshFrame(const DynamicMeshFrame& frame) {
   id = rand() % 1000000;
 
   vertices = frame.vertices;
@@ -80,7 +81,7 @@ MeshFrame::MeshFrame(const MeshFrame& frame) {
   _isMother = false;
 }
 
-MeshFrame::~MeshFrame() {
+DynamicMeshFrame::~DynamicMeshFrame() {
   if (_isMother) {
     delete[] vertices;
     if (normals) delete[] normals;
@@ -90,17 +91,17 @@ MeshFrame::~MeshFrame() {
   }
 }
 
-void MeshFrame::print() const {
+void DynamicMeshFrame::print() const {
   auto text = getPrint(nullptr);
   printf("%s\n", text.c_str());
 }
 
-void MeshFrame::print(const char* name) const {
+void DynamicMeshFrame::print(const char* name) const {
   auto text = getPrint(name);
   printf("%s\n", text.c_str());
 }
 
-std::string MeshFrame::getPrint(const char* name) const {
+std::string DynamicMeshFrame::getPrint(const char* name) const {
   std::stringstream res;
   if (name) {
     res << name << "(";
