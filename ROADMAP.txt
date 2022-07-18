@@ -1,9 +1,11 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 --- H4570
-- [Renderer] Move clipping algorithm into VU1
-- [Renderer] Move animation calcs into VU1
-- [Renderer] Dbufferring during mesh unroll
+- [Renderer] Rename stdRenderer -> staticRenderer
+- [Renderer] Mesh, StaticMesh, AnimMesh
+- [Renderer] dynamicRenderer, dbufferring during mesh unrolling, simple clip
+- [Renderer] staticRenderer -> remove animation, dbufferring during mesh unrolling, full plane clip
+- [Renderer] Add possibility to on/off frustum check in all pipelines (renderOptions?)
 - [Loaders] Think about ".tyrobj" format - implement it (add multicolor support)
 - [Loaders] DFF loader
 - [Texture] Test cache hits with large amount of textures (dolphin sample?)
