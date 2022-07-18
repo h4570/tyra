@@ -11,13 +11,16 @@
 #pragma once
 
 #include "math/m4x4.hpp"
+#include "./mesh_material.hpp"
 #include <tamtypes.h>
+#include "debug/debug.hpp"
 
 namespace Tyra {
 
 class Mesh {
  public:
-  Mesh(const u8& isMother);
+  explicit Mesh(const MeshBuilderData& data);
+  explicit Mesh(const Mesh& mesh);
   ~Mesh();
 
   /** Translation matrix */
@@ -38,14 +41,20 @@ class Mesh {
     return reinterpret_cast<Vec4*>(&translation.data[3 * 4]);
   }
 
-  inline void setPosition(const Vec4& v) {
-    TYRA_ASSERT(v.w == 1.0F, "Vec4 must be homogeneous");
-    reinterpret_cast<Vec4*>(&translation.data[3 * 4])->set(v);
-  }
+  void setPosition(const Vec4& v);
+
+  /** Returns material, which is a mesh "subgroup". */
+  MeshMaterial* getMaterial(const u32& i) const { return materials[i]; }
+
+  MeshMaterial** getMaterials() { return materials; }
+
+  const u32& getMaterialsCount() const { return materialsCount; }
 
  protected:
+  void init();
   u8 _isMother;
-  u32 id;
+  u32 id, materialsCount;
+  MeshMaterial** materials;
 };
 
 }  // namespace Tyra

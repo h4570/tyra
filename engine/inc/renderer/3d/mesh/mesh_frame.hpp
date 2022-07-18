@@ -10,17 +10,17 @@
 
 #pragma once
 
-#include "./dynamic_mesh_material.hpp"
+#include "./mesh_material.hpp"
 #include "loaders/3d/builder/mesh_builder_data.hpp"
 #include "renderer/3d/bbox/bbox.hpp"
 
 namespace Tyra {
 
-class DynamicMeshFrame {
+class MeshFrame {
  public:
-  explicit DynamicMeshFrame(const MeshBuilderData& data, const u32& index);
-  explicit DynamicMeshFrame(const DynamicMeshFrame& frame);
-  ~DynamicMeshFrame();
+  explicit MeshFrame(const MeshBuilderData& data, const u32& index);
+  explicit MeshFrame(const MeshFrame& frame);
+  ~MeshFrame();
 
   const u32& getId() const { return id; }
   const u32& getVertexCount() const { return vertexCount; }

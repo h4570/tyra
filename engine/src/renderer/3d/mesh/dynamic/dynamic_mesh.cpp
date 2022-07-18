@@ -15,41 +15,28 @@
 
 namespace Tyra {
 
-DynamicMesh::DynamicMesh(const MeshBuilderData& data) : Mesh(true) {
+DynamicMesh::DynamicMesh(const MeshBuilderData& data) : Mesh(data) {
+  TYRA_ASSERT(framesCount > 1, "Frames count must be greater than 1");
+
   framesCount = data.framesCount;
-  TYRA_ASSERT(framesCount > 0, "Frames count must be greater than 0");
 
-  materialsCount = data.materialsCount;
-  TYRA_ASSERT(materialsCount > 0, "Materials count must be greater than 0");
-
-  frames = new DynamicMeshFrame*[framesCount];
+  frames = new MeshFrame*[framesCount];
   for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new DynamicMeshFrame(data, i);
+    frames[i] = new MeshFrame(data, i);
   }
 
-  materials = new DynamicMeshMaterial*[materialsCount];
-  for (u32 i = 0; i < materialsCount; i++) {
-    materials[i] = new DynamicMeshMaterial(data, i);
-  }
-
-  initMesh();
+  initAnimation();
 }
 
-DynamicMesh::DynamicMesh(const DynamicMesh& mesh) : Mesh(false) {
+DynamicMesh::DynamicMesh(const DynamicMesh& mesh) : Mesh(mesh) {
   framesCount = mesh.framesCount;
-  materialsCount = mesh.materialsCount;
 
-  frames = new DynamicMeshFrame*[framesCount];
+  frames = new MeshFrame*[framesCount];
   for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new DynamicMeshFrame(*mesh.frames[i]);
+    frames[i] = new MeshFrame(*mesh.frames[i]);
   }
 
-  materials = new DynamicMeshMaterial*[materialsCount];
-  for (u32 i = 0; i < materialsCount; i++) {
-    materials[i] = new DynamicMeshMaterial(*mesh.materials[i]);
-  }
-
-  initMesh();
+  initAnimation();
 }
 
 DynamicMesh::~DynamicMesh() {
@@ -57,15 +44,9 @@ DynamicMesh::~DynamicMesh() {
     delete frames[i];
   }
   delete[] frames;
-
-  for (u32 i = 0; i < materialsCount; i++) {
-    delete materials[i];
-
-    delete[] materials;
-  }
 }
 
-void DynamicMesh::initMesh() {
+void DynamicMesh::initAnimation() {
   animState.startFrame = 0;
   animState.endFrame = 0;
   animState.interpolation = 0.0F;

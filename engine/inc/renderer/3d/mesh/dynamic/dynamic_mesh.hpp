@@ -11,8 +11,8 @@
 #pragma once
 
 #include "loaders/3d/builder/mesh_builder_data.hpp"
-#include "./dynamic_mesh_frame.hpp"
-#include "./dynamic_mesh_material_frame.hpp"
+#include "../mesh_frame.hpp"
+#include "../mesh_material_frame.hpp"
 #include "./dynamic_mesh_anim_state.hpp"
 #include "../mesh.hpp"
 
@@ -24,22 +24,12 @@ class DynamicMesh : public Mesh {
   explicit DynamicMesh(const DynamicMesh& mesh);
   ~DynamicMesh();
 
-  /** Returns material, which is a mesh "subgroup". */
-  DynamicMeshMaterial* getMaterial(const u32& i) const { return materials[i]; }
-
-  DynamicMeshMaterial** getMaterials() { return materials; }
-
-  const u32& getMaterialsCount() const { return materialsCount; }
-
   const DynamicMeshAnimState& getAnimState() const { return animState; }
 
-  /** Count of all vertices.  */
-  inline u32 getVertexCount() { return frames[0]->getVertexCount(); }
-
   /** Returns single frame. */
-  DynamicMeshFrame* getFrame(const u32& i) { return frames[i]; }
+  MeshFrame* getFrame(const u32& i) { return frames[i]; }
 
-  DynamicMeshFrame** getFrames() { return frames; }
+  MeshFrame** getFrames() { return frames; }
 
   /** Count of frames. Static object (not animated) will have only 1 frame. */
   const u32& getFramesCount() const { return framesCount; }
@@ -81,11 +71,10 @@ class DynamicMesh : public Mesh {
   const u8& isStayAnimationSet() const { return animState.isStayFrameSet; }
 
  private:
-  void initMesh();
+  void initAnimation();
   DynamicMeshAnimState animState;
-  u32 framesCount, materialsCount;
-  DynamicMeshFrame** frames;
-  DynamicMeshMaterial** materials;
+  u32 framesCount;
+  MeshFrame** frames;
 };
 
 }  // namespace Tyra

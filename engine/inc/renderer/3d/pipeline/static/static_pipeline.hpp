@@ -39,24 +39,19 @@ class Stapipeline : public Renderer3DPipeline {
   RendererCore* rendererCore;
   Vec4* colorsCache;
 
-  void addVertices(DynamicMesh* mesh, DynamicMeshMaterial* material,
-                   StapipBag* bag, DynamicMeshFrame* frameFrom,
-                   DynamicMeshFrame* frameTo) const;
+  void addVertices(DynamicMesh* mesh, MeshMaterial* material, StapipBag* bag,
+                   MeshFrame* frameFrom, MeshFrame* frameTo) const;
   StapipInfoBag* getInfoBag(DynamicMesh* mesh, const StapipOptions* options,
                             M4x4* model) const;
-  StapipColorBag* getColorBag(DynamicMesh* mesh, DynamicMeshMaterial* material,
-                              DynamicMeshFrame* frameFrom,
-                              DynamicMeshFrame* frameTo) const;
-  StapipTextureBag* getTextureBag(DynamicMesh* mesh,
-                                  DynamicMeshMaterial* material,
-                                  DynamicMeshFrame* frameFrom,
-                                  DynamicMeshFrame* frameTo);
-  StapipLightingBag* getLightingBag(DynamicMesh* mesh,
-                                    DynamicMeshMaterial* material, M4x4* model,
-                                    DynamicMeshFrame* frameFrom,
-                                    DynamicMeshFrame* frameTo,
+  StapipColorBag* getColorBag(DynamicMesh* mesh, MeshMaterial* material,
+                              MeshFrame* frameFrom, MeshFrame* frameTo) const;
+  StapipTextureBag* getTextureBag(DynamicMesh* mesh, MeshMaterial* material,
+                                  MeshFrame* frameFrom, MeshFrame* frameTo);
+  StapipLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
+                                    M4x4* model, MeshFrame* frameFrom,
+                                    MeshFrame* frameTo,
                                     const StapipOptions* options) const;
-  void deallocDrawBags(StapipBag* bag, DynamicMeshMaterial* material) const;
+  void deallocDrawBags(StapipBag* bag, MeshMaterial* material) const;
 
   void setLightingColorsCache(StapipLightingOptions* lightingOptions);
 };
