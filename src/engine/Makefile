@@ -24,6 +24,7 @@ EE_OBJS =								\
 	modules/vif_sender.o				\
 	utils/math.o						\
 	utils/string.o						\
+	utils/Tyra_version.o				\
 	loaders/bmp_loader.o				\
 	loaders/dff_loader.o				\
 	loaders/mdl_loader.o				\
