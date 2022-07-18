@@ -8,7 +8,7 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/3d/pipeline/static/core/static_pipeline_core.hpp"
+#include "renderer/3d/pipeline/static/core/stapip_core.hpp"
 #include "renderer/core/renderer_core.hpp"
 #include "thread/threading.hpp"
 
@@ -22,34 +22,32 @@
 
 namespace Tyra {
 
-StaPipelineCore::StaPipelineCore() { maxVertCount = 0; }
+StaPipCore::StaPipCore() { maxVertCount = 0; }
 
-StaPipelineCore::~StaPipelineCore() {}
+StaPipCore::~StaPipCore() {}
 
-void StaPipelineCore::init(RendererCore* t_core) {
+void StaPipCore::init(RendererCore* t_core) {
   rendererCore = t_core;
   qbufferRenderer.init(t_core);
   packager.init(&rendererCore->renderer3D.frustumPlanes);
 }
 
-void StaPipelineCore::reinitStandardVU1Programs() {
-  qbufferRenderer.reinitVU1();
-}
+void StaPipCore::reinitStandardVU1Programs() { qbufferRenderer.reinitVU1(); }
 
-u32 StaPipelineCore::getMaxVertCountByBag(const StaPipBag* bag) {
+u32 StaPipCore::getMaxVertCountByBag(const StaPipBag* bag) {
   return qbufferRenderer.getCullProgramByBag(bag)->getMaxVertCount(
       bag->color->many == nullptr, qbufferRenderer.getBufferSize());
 }
 
-u32 StaPipelineCore::getMaxVertCountByParams(const bool& isSingleColor,
-                                             const bool& isLightingEnabled,
-                                             const bool& isTextureEnabled) {
+u32 StaPipCore::getMaxVertCountByParams(const bool& isSingleColor,
+                                        const bool& isLightingEnabled,
+                                        const bool& isTextureEnabled) {
   return qbufferRenderer
       .getCullProgramByParams(isLightingEnabled, isTextureEnabled)
       ->getMaxVertCount(isSingleColor, qbufferRenderer.getBufferSize());
 }
 
-void StaPipelineCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
+void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   if (bag->count <= 0) return;
 
   TYRA_ASSERT(bag->vertices != nullptr,
@@ -143,7 +141,7 @@ void StaPipelineCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   Verbose("Render finished");
 }
 
-void StaPipelineCore::renderPkgs(StaPipBagPackage* packages, u16 count) {
+void StaPipCore::renderPkgs(StaPipBagPackage* packages, u16 count) {
   for (u16 i = 0; i < count; i++) {
     if (packages[i].isInFrustum == IN_FRUSTUM) {
       Verbose(i, " - package in frustum -> cull");
@@ -163,7 +161,7 @@ void StaPipelineCore::renderPkgs(StaPipBagPackage* packages, u16 count) {
   }
 }
 
-void StaPipelineCore::renderSubpkgs(StaPipBagPackage* subpkgs, u16 count) {
+void StaPipCore::renderSubpkgs(StaPipBagPackage* subpkgs, u16 count) {
   std::vector<u16> doneIndexes;
   std::vector<u16> loadedIndexes;
 
@@ -220,7 +218,7 @@ void StaPipelineCore::renderSubpkgs(StaPipBagPackage* subpkgs, u16 count) {
   }
 }
 
-void StaPipelineCore::setMaxVertCount(const u32& count) {
+void StaPipCore::setMaxVertCount(const u32& count) {
   maxVertCount = count;
   packager.setMaxVertCount(count);
   qbufferRenderer.setMaxVertCount(count);

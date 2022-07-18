@@ -10,29 +10,28 @@
 ; Triangle list
 ; Cull = Standard PS2 way. clipw polys are culled.
 ; Animation
-; Lighting, texture, colors
+; Directional lights
 ;---------------------------------------------------------------
 
 .syntax new
-.name DynPipVU1_TC
+.name DynPipVU1_D
 .vu
 .init_vf_all
 .init_vi_all
 
 #include "src/renderer/3d/pipeline/shared/vcl_sml.i"
 #include "src/renderer/3d/pipeline/shared/tyra_macros.i"
-#include "inc/renderer/3d/pipeline/dynamic/programs/dynpip_vu1_shared_defines.h"
+#include "inc/renderer/3d/pipeline/dynamic/core/programs/dynpip_vu1_shared_defines.h"
 
-#define STQ_STORE_OFFSET    0
-#define RGBA_STORE_OFFSET   1
-#define XYZ2_STORE_OFFSET   2
+#define RGBA_STORE_OFFSET   0
+#define XYZ2_STORE_OFFSET   1
 
 --enter
 --endenter
 
-#vuprog DynPipVU1TC
+#vuprog DynPipVU1D
 
---cont
+ --cont
 
 #endvuprog
 

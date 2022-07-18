@@ -8,7 +8,7 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/3d/pipeline/dynamic/dynpip_qbuffer.hpp"
+#include "renderer/3d/pipeline/dynamic/core/dynpip_qbuffer.hpp"
 #include <sstream>
 #include <iomanip>
 

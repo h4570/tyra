@@ -9,7 +9,7 @@
 */
 
 #include "debug/debug.hpp"
-#include "renderer/3d/pipeline/dynamic/programs/dynpip_d_vu1_program.hpp"
+#include "renderer/3d/pipeline/dynamic/core/programs/dynpip_d_vu1_program.hpp"
 
 extern u32 DynPipVU1_D_CodeStart __attribute__((section(".vudata")));
 extern u32 DynPipVU1_D_CodeEnd __attribute__((section(".vudata")));

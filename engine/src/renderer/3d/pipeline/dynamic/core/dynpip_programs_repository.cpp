@@ -8,7 +8,7 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/3d/pipeline/dynamic/dynpip_programs_repository.hpp"
+#include "renderer/3d/pipeline/dynamic/core/dynpip_programs_repository.hpp"
 
 namespace Tyra {
 

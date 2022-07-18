@@ -8,7 +8,7 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/3d/pipeline/dynamic/bag/dynpip_bag.hpp"
+#include "renderer/3d/pipeline/dynamic/core/bag/dynpip_bag.hpp"
 #include <sstream>
 #include <iomanip>
 

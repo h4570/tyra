@@ -15,7 +15,7 @@
 #include "./stapip_options.hpp"
 #include "renderer/core/renderer_core.hpp"
 #include "renderer/3d/mesh/dynamic/dynamic_mesh.hpp"
-#include "./core/static_pipeline_core.hpp"
+#include "./core/stapip_core.hpp"
 
 namespace Tyra {
 
@@ -23,6 +23,8 @@ class StaticPipeline : public Renderer3DPipeline {
  public:
   StaticPipeline();
   ~StaticPipeline();
+
+  StaPipCore core;
 
   void init(RendererCore* core);
 
@@ -35,7 +37,6 @@ class StaticPipeline : public Renderer3DPipeline {
   void render(DynamicMesh* mesh, const StaPipOptions* options = nullptr);
 
  private:
-  StaPipelineCore core;
   RendererCore* rendererCore;
   Vec4* colorsCache;
 

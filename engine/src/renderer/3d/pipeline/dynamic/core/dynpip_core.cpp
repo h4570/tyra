@@ -8,17 +8,20 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/3d/pipeline/dynamic/bag/dynpip_lighting_bag.hpp"
+#include "renderer/3d/pipeline/dynamic/core/dynpip_core.hpp"
+#include <sstream>
+#include <iomanip>
 
 namespace Tyra {
 
-DynPipLightingBag::DynPipLightingBag() {
-  lightMatrix = nullptr;
-  normalsFrom = nullptr;
-  normalsTo = nullptr;
-  dirLights = nullptr;
-}
+DynPipCore::DynPipCore() {}
 
-DynPipLightingBag::~DynPipLightingBag() {}
+DynPipCore::~DynPipCore() {}
+
+void DynPipCore::init(RendererCore* t_core) { rendererCore = t_core; }
+
+void DynPipCore::reinitStandardVU1Programs() {}
+
+void DynPipCore::render(DynPipBag* bag) {}
 
 }  // namespace Tyra
