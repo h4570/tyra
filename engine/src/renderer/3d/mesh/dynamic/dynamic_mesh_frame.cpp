@@ -11,6 +11,7 @@
 
 #include "debug/debug.hpp"
 #include <tamtypes.h>
+#include <iomanip>
 #include <string>
 #include "math/vec4.hpp"
 #include "renderer/models/color.hpp"

@@ -12,7 +12,6 @@
 
 #include <math3d.h>
 #include <string>
-#include <sstream>
 #include "debug/debug.hpp"
 #include "./bag/packaging/stapip_bag_package.hpp"
 #include "./bag/stapip_bag.hpp"

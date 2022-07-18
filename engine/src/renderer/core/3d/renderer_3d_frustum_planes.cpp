@@ -8,8 +8,9 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include <string>
 #include "debug/debug.hpp"
+#include <iomanip>
+#include <sstream>
 #include "renderer/core/3d/renderer_3d_frustum_planes.hpp"
 
 namespace Tyra {

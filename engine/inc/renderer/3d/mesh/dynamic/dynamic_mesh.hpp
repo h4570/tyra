@@ -14,25 +14,15 @@
 #include "./dynamic_mesh_frame.hpp"
 #include "./dynamic_mesh_material_frame.hpp"
 #include "./dynamic_mesh_anim_state.hpp"
+#include "../mesh.hpp"
 
 namespace Tyra {
 
-class DynamicMesh {
+class DynamicMesh : public Mesh {
  public:
   explicit DynamicMesh(const MeshBuilderData& data);
   explicit DynamicMesh(const DynamicMesh& mesh);
   ~DynamicMesh();
-
-  /** Translation matrix */
-  M4x4 translation;
-
-  /** Rotation matrix */
-  M4x4 rotation;
-
-  /** Scale matrix */
-  M4x4 scale;
-
-  const u32& getId() const { return id; }
 
   const u8& isMother() const { return _isMother; }
 
@@ -113,7 +103,7 @@ class DynamicMesh {
   void initMesh();
   DynamicMeshAnimState animState;
   u8 _isMother;
-  u32 id, framesCount, materialsCount;
+  u32 framesCount, materialsCount;
   DynamicMeshFrame** frames;
   DynamicMeshMaterial** materials;
 };

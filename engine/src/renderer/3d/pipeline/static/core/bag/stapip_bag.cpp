@@ -8,8 +8,9 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include <string>
 #include "renderer/3d/pipeline/static/core/bag/stapip_bag.hpp"
+#include <sstream>
+#include <iomanip>
 
 namespace Tyra {
 

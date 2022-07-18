@@ -16,8 +16,6 @@
 namespace Tyra {
 
 DynamicMesh::DynamicMesh(const MeshBuilderData& data) {
-  id = rand() % 1000000;
-
   framesCount = data.framesCount;
   TYRA_ASSERT(framesCount > 0, "Frames count must be greater than 0");
 
@@ -42,8 +40,6 @@ DynamicMesh::DynamicMesh(const MeshBuilderData& data) {
 }
 
 DynamicMesh::DynamicMesh(const DynamicMesh& mesh) {
-  id = rand() % 1000000;
-
   framesCount = mesh.framesCount;
   materialsCount = mesh.materialsCount;
 

@@ -12,6 +12,7 @@
 #include <tamtypes.h>
 #include <string>
 #include <cstdlib>
+#include <iomanip>
 #include "renderer/3d/mesh/dynamic/dynamic_mesh_material.hpp"
 
 namespace Tyra {

@@ -9,6 +9,8 @@
 */
 
 #include "renderer/3d/pipeline/static/core/stapip_qbuffer.hpp"
+#include <sstream>
+#include <iomanip>
 
 namespace Tyra {
 

@@ -11,6 +11,7 @@
 #include <tamtypes.h>
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include <vector>
 #include "debug/debug.hpp"
 #include "renderer/3d/pipeline/static/core/bag/packaging/stapip_bag_packages_bbox.hpp"

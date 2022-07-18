@@ -9,6 +9,7 @@
 */
 
 #include "math/vec2.hpp"
+#include <iomanip>
 
 namespace Tyra {
 

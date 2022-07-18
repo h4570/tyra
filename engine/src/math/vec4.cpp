@@ -9,6 +9,9 @@
 */
 
 #include "math/vec4.hpp"
+#include <iomanip>
+#include <cmath>
+#include <sstream>
 
 namespace Tyra {
 

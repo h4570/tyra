@@ -11,6 +11,7 @@
 #include <tamtypes.h>
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include "renderer/3d/pipeline/static/core/bag/packaging/stapip_bag_package.hpp"
 
 namespace Tyra {

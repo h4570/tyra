@@ -8,8 +8,9 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include <string>
 #include "math/vec4.hpp"
+#include <iomanip>
+#include <sstream>
 #include "math/plane.hpp"
 
 namespace Tyra {
