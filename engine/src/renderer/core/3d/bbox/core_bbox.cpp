@@ -166,4 +166,37 @@ std::string CoreBBox::getPrint(const char* name) const {
   return res.str();
 }
 
+CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,
+                                        const M4x4& model,
+                                        const float* margins) const {
+  CoreBBoxFrustum result = IN_FRUSTUM;
+  Vec4 boxCalcTemp;
+  u8 boxIn = 0, boxOut = 0;
+
+  for (u8 i = 0; i < 6; i++) {
+    const auto margin = margins == nullptr ? 0.0F : margins[i];
+    boxOut = 0;
+    boxIn = 0;
+    // for each corner of the box do ...
+    // get out of the cycle as soon as a box as corners
+    // both inside and out of the frustum
+    for (u8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
+      boxCalcTemp = model * _vertices[y];
+
+      auto isOut = frustumPlanes[i].distanceTo(boxCalcTemp) < margin;
+
+      if (isOut)
+        boxOut++;
+      else
+        boxIn++;
+    }
+    // if all corners are out
+    if (!boxIn)
+      return OUTSIDE_FRUSTUM;
+    else if (boxOut)
+      result = PARTIALLY_IN_FRUSTUM;
+  }
+  return result;
+}
+
 }  // namespace Tyra
