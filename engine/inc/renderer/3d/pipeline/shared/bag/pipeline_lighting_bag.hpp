@@ -16,12 +16,12 @@
 
 namespace Tyra {
 
-enum StaPipLightingBagMode { Auto, Manual };
+enum PipelineLightingBagMode { Auto, Manual };
 
-class StaPipLightingBag {
+class PipelineLightingBag {
  public:
-  explicit StaPipLightingBag(const bool& manual = false);
-  ~StaPipLightingBag();
+  explicit PipelineLightingBag(const bool& manual = false);
+  ~PipelineLightingBag();
 
   Vec4* normals;
   M4x4* lightMatrix;
@@ -47,7 +47,7 @@ class StaPipLightingBag {
   void deallocate();
   void forceDeallocate();
   u8 isAllocated;
-  StaPipLightingBagMode mode;
+  PipelineLightingBagMode mode;
 
   Vec4* lightColors;
   Vec4* lightDirections;

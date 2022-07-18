@@ -83,10 +83,10 @@ void StaticPipeline::addVertices(DynamicMesh* mesh, MeshMaterial* material,
   }
 }
 
-StaPipInfoBag* StaticPipeline::getInfoBag(DynamicMesh* mesh,
-                                          const StaPipOptions* options,
-                                          M4x4* model) const {
-  auto* result = new StaPipInfoBag();
+PipelineInfoBag* StaticPipeline::getInfoBag(DynamicMesh* mesh,
+                                            const StaPipOptions* options,
+                                            M4x4* model) const {
+  auto* result = new PipelineInfoBag();
 
   if (options) {
     result->antiAliasingEnabled = options->antiAliasingEnabled;
@@ -163,7 +163,7 @@ StaPipTextureBag* StaticPipeline::getTextureBag(DynamicMesh* mesh,
   return result;
 }
 
-StaPipLightingBag* StaticPipeline::getLightingBag(
+PipelineLightingBag* StaticPipeline::getLightingBag(
     DynamicMesh* mesh, MeshMaterial* material, M4x4* model,
     MeshFrame* frameFrom, MeshFrame* frameTo,
     const StaPipOptions* options) const {
@@ -171,7 +171,7 @@ StaPipLightingBag* StaticPipeline::getLightingBag(
       options->lighting == nullptr)
     return nullptr;
 
-  auto* result = new StaPipLightingBag(true);
+  auto* result = new PipelineLightingBag(true);
   result->lightMatrix = model;
 
   result->setLightsManually(colorsCache,

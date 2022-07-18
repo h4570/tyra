@@ -10,23 +10,21 @@
 
 #pragma once
 
-#include "renderer/3d/pipeline/shared/bag/pipeline_shading_type.hpp"
-#include "./stapip_lighting_options.hpp"
+#include "math/vec4.hpp"
+#include "renderer/core/texture/models/texture.hpp"
 
 namespace Tyra {
 
-class StaPipOptions {
+class DynPipTextureBag {
  public:
-  StaPipOptions() {}
-  ~StaPipOptions() {}
+  DynPipTextureBag();
+  ~DynPipTextureBag();
 
-  PipelineShadingType shadingType;
-  bool blendingEnabled;
-  bool antiAliasingEnabled;
-  bool noClipChecks;
+  /** Mandatory. Texture coordinates per vertex. */
+  Vec4* coordinates;
 
-  /** Optional */
-  StaPipLightingOptions* lighting;
+  /** Mandatory. Texture image. */
+  Texture* texture;
 };
 
 }  // namespace Tyra

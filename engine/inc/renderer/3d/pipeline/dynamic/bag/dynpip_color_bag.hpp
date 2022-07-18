@@ -10,25 +10,23 @@
 
 #pragma once
 
-#include <draw.h>
-#include "math/m4x4.hpp"
-#include "math/vec4.hpp"
-#include "../../stapip_shading_type.hpp"
+#include "renderer/models/color.hpp"
 
 namespace Tyra {
 
-class StaPipInfoBag {
+/**
+ * @brief Color data. At least one color data is required (single/many).
+ */
+class DynPipColorBag {
  public:
-  StaPipInfoBag();
-  ~StaPipInfoBag();
+  DynPipColorBag();
+  ~DynPipColorBag();
 
-  /** Mandatory. Model matrix */
-  M4x4* model;
+  /** Optional. Single color for all vertices. */
+  Color* single;
 
-  StaPipShadingType shadingType;
-  bool blendingEnabled;
-  bool antiAliasingEnabled;
-  bool noClipChecks;
+  /** Optional. Color per vertex. */
+  Color* many;
 };
 
 }  // namespace Tyra

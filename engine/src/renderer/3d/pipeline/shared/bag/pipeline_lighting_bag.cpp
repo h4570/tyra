@@ -9,11 +9,11 @@
 */
 
 #include "debug/debug.hpp"
-#include "renderer/3d/pipeline/static/core/bag/stapip_lighting_bag.hpp"
+#include "renderer/3d/pipeline/shared/bag/pipeline_lighting_bag.hpp"
 
 namespace Tyra {
 
-StaPipLightingBag::StaPipLightingBag(const bool& manual) {
+PipelineLightingBag::PipelineLightingBag(const bool& manual) {
   isAllocated = false;
   mode = Auto;
   normals = nullptr;
@@ -27,33 +27,33 @@ StaPipLightingBag::StaPipLightingBag(const bool& manual) {
   }
 }
 
-StaPipLightingBag::~StaPipLightingBag() { deallocate(); }
+PipelineLightingBag::~PipelineLightingBag() { deallocate(); }
 
-void StaPipLightingBag::setAmbientColor(const Color& color) {
+void PipelineLightingBag::setAmbientColor(const Color& color) {
   TYRA_ASSERT(mode != Manual, "Ambient color cannot be set in manual mode");
   lightColors[3].set(reinterpret_cast<const Vec4&>(color));
 }
 
-void StaPipLightingBag::setDirectionalLightColors(Color* colors,
-                                                  const u8& count) {
+void PipelineLightingBag::setDirectionalLightColors(Color* colors,
+                                                    const u8& count) {
   for (u8 i = 0; i < count; i++) setDirectionalLightColor(colors[i], i);
 }
 
-void StaPipLightingBag::setDirectionalLightDirections(Vec4* directions,
-                                                      const u8& count) {
+void PipelineLightingBag::setDirectionalLightDirections(Vec4* directions,
+                                                        const u8& count) {
   for (u8 i = 0; i < count; i++) setDirectionalLightDirection(directions[i], i);
 }
 
-void StaPipLightingBag::setDirectionalLightColor(const Color& color,
-                                                 const u8& index) {
+void PipelineLightingBag::setDirectionalLightColor(const Color& color,
+                                                   const u8& index) {
   TYRA_ASSERT(mode != Manual,
               "Directional lights cannot be set in manual mode");
   TYRA_ASSERT(index < 3, "There are max 3 directional lights");
   lightColors[index].set(reinterpret_cast<const Vec4&>(color));
 }
 
-void StaPipLightingBag::setDirectionalLightDirection(const Vec4& direction,
-                                                     const u8& index) {
+void PipelineLightingBag::setDirectionalLightDirection(const Vec4& direction,
+                                                       const u8& index) {
   TYRA_ASSERT(mode != Manual,
               "Directional lights cannot be set in manual mode");
   TYRA_ASSERT(index < 3, "There are max 3 directional lights");
@@ -61,19 +61,19 @@ void StaPipLightingBag::setDirectionalLightDirection(const Vec4& direction,
   lightDirections[index].set(direction);
 }
 
-void StaPipLightingBag::setLightsManually(Vec4* colors, Vec4* directions) {
+void PipelineLightingBag::setLightsManually(Vec4* colors, Vec4* directions) {
   deallocate();
   lightColors = colors;
   lightDirections = directions;
   mode = Manual;
 }
 
-void StaPipLightingBag::disableManualMode() {
+void PipelineLightingBag::disableManualMode() {
   allocate();
   mode = Auto;
 }
 
-void StaPipLightingBag::allocate() {
+void PipelineLightingBag::allocate() {
   if (isAllocated) return;
 
   lightColors = new Vec4[4];
@@ -92,27 +92,27 @@ void StaPipLightingBag::allocate() {
   isAllocated = true;
 }
 
-void StaPipLightingBag::deallocate() {
+void PipelineLightingBag::deallocate() {
   if (!isAllocated) return;
 
   forceDeallocate();
 }
 
-void StaPipLightingBag::forceDeallocate() {
+void PipelineLightingBag::forceDeallocate() {
   forceDeallocateColors();
   forceDeallocateDirections();
 
   isAllocated = false;
 }
 
-void StaPipLightingBag::forceDeallocateColors() {
+void PipelineLightingBag::forceDeallocateColors() {
   if (lightColors != nullptr) {
     delete[] lightColors;
     lightColors = nullptr;
   }
 }
 
-void StaPipLightingBag::forceDeallocateDirections() {
+void PipelineLightingBag::forceDeallocateDirections() {
   if (lightDirections != nullptr) {
     delete[] lightDirections;
     lightDirections = nullptr;

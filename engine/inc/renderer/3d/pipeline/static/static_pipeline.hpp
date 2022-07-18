@@ -41,16 +41,16 @@ class StaticPipeline : public Renderer3DPipeline {
 
   void addVertices(DynamicMesh* mesh, MeshMaterial* material, StaPipBag* bag,
                    MeshFrame* frameFrom, MeshFrame* frameTo) const;
-  StaPipInfoBag* getInfoBag(DynamicMesh* mesh, const StaPipOptions* options,
-                            M4x4* model) const;
+  PipelineInfoBag* getInfoBag(DynamicMesh* mesh, const StaPipOptions* options,
+                              M4x4* model) const;
   StaPipColorBag* getColorBag(DynamicMesh* mesh, MeshMaterial* material,
                               MeshFrame* frameFrom, MeshFrame* frameTo) const;
   StaPipTextureBag* getTextureBag(DynamicMesh* mesh, MeshMaterial* material,
                                   MeshFrame* frameFrom, MeshFrame* frameTo);
-  StaPipLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
-                                    M4x4* model, MeshFrame* frameFrom,
-                                    MeshFrame* frameTo,
-                                    const StaPipOptions* options) const;
+  PipelineLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
+                                      M4x4* model, MeshFrame* frameFrom,
+                                      MeshFrame* frameTo,
+                                      const StaPipOptions* options) const;
   void deallocDrawBags(StaPipBag* bag, MeshMaterial* material) const;
 
   void setLightingColorsCache(StaPipLightingOptions* lightingOptions);

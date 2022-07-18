@@ -8,17 +8,15 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/3d/pipeline/static/core/bag/stapip_info_bag.hpp"
+#include "renderer/3d/pipeline/dynamic/bag/dynpip_color_bag.hpp"
 
 namespace Tyra {
 
-StaPipInfoBag::StaPipInfoBag() {
-  shadingType = StaPipShadingFlat;
-  blendingEnabled = true;
-  antiAliasingEnabled = false;
-  model = nullptr;
+DynPipColorBag::DynPipColorBag() {
+  single = nullptr;
+  many = nullptr;
 }
 
-StaPipInfoBag::~StaPipInfoBag() {}
+DynPipColorBag::~DynPipColorBag() {}
 
 }  // namespace Tyra

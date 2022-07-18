@@ -46,7 +46,7 @@ class StaPipQBufferRenderer {
 
   void setMaxVertCount(const u32& count);
 
-  void setInfo(StaPipInfoBag* bag);
+  void setInfo(PipelineInfoBag* bag);
 
   /** Fast render with culling */
   void cull(StaPipQBuffer* buffer);

@@ -13,28 +13,27 @@
 #include "math/vec4.hpp"
 #include "renderer/3d/pipeline/shared/bag/pipeline_lighting_bag.hpp"
 #include "renderer/3d/pipeline/shared/bag/pipeline_info_bag.hpp"
-#include "./stapip_color_bag.hpp"
-#include "./stapip_texture_bag.hpp"
+#include "./dynpip_color_bag.hpp"
+#include "./dynpip_texture_bag.hpp"
 #include "renderer/core/texture/models/texture.hpp"
-#include "./packaging/stapip_bag_packages_bbox.hpp"
 
 namespace Tyra {
 
 /**
- * @brief 3D Render data bag.
- * Supports frustum culling, full plane clipping, lighting,
+ * @brief 3D Animated render data bag.
+ * Supports frustum culling, simple clipping (culling), lighting,
  * texture and single color / many colors.
  */
-class StaPipBag {
+class DynPipBag {
  public:
-  StaPipBag();
-  ~StaPipBag();
+  DynPipBag();
+  ~DynPipBag();
 
   /** Mandatory. Object info. */
   PipelineInfoBag* info;
 
   /** Mandatory. Object color(s). */
-  StaPipColorBag* color;
+  DynPipColorBag* color;
 
   /** Mandatory. Vertex count. */
   u32 count;
@@ -43,15 +42,10 @@ class StaPipBag {
   Vec4* vertices;
 
   /** Optional. Texture coordinates and image. */
-  StaPipTextureBag* texture;
+  DynPipTextureBag* texture;
 
   /** Optional. Object lighting. */
   PipelineLightingBag* lighting;
-
-  /**
-   * @param maxVertCount This parameter is available in renderer API.
-   */
-  StaPipBagPackagesBBox calculateBbox(const u32& maxVertCount);
 
   void print() const;
   void print(const char* name) const;

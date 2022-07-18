@@ -130,7 +130,7 @@ void StaPipQBufferRenderer::sendObjectData(
   dma_channel_send_packet2(objectDataPacket, DMA_CHANNEL_VIF1, true);
 }
 
-void StaPipQBufferRenderer::setInfo(StaPipInfoBag* bag) {
+void StaPipQBufferRenderer::setInfo(PipelineInfoBag* bag) {
   rendererCore->gs.prim.antialiasing = bag->antiAliasingEnabled;
   rendererCore->gs.prim.blending = bag->blendingEnabled;
   rendererCore->gs.prim.shading = bag->shadingType;

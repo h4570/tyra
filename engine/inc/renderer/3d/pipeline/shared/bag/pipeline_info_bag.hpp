@@ -10,23 +10,25 @@
 
 #pragma once
 
-#include "renderer/3d/pipeline/shared/bag/pipeline_shading_type.hpp"
-#include "./stapip_lighting_options.hpp"
+#include <draw.h>
+#include "math/m4x4.hpp"
+#include "math/vec4.hpp"
+#include "./pipeline_shading_type.hpp"
 
 namespace Tyra {
 
-class StaPipOptions {
+class PipelineInfoBag {
  public:
-  StaPipOptions() {}
-  ~StaPipOptions() {}
+  PipelineInfoBag();
+  ~PipelineInfoBag();
+
+  /** Mandatory. Model matrix */
+  M4x4* model;
 
   PipelineShadingType shadingType;
   bool blendingEnabled;
   bool antiAliasingEnabled;
   bool noClipChecks;
-
-  /** Optional */
-  StaPipLightingOptions* lighting;
 };
 
 }  // namespace Tyra
