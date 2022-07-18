@@ -22,7 +22,7 @@ McpipCullVU1Program::McpipCullVU1Program()
 McpipCullVU1Program::~McpipCullVU1Program() {}
 
 std::string McpipCullVU1Program::getStringName() const {
-  return std::string("Cull");
+  return std::string("McPip - Cull");
 }
 
 }  // namespace Tyra

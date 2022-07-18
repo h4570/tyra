@@ -9,7 +9,7 @@
 ;---------------------------------------------------------------
 ; Triangle list
 ; Cull = Standard PS2 way. clipw polys are culled.
-; Volors
+; Colors
 ;---------------------------------------------------------------
 
 .syntax new

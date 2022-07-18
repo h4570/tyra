@@ -26,7 +26,7 @@ StaPipAsIsTCVU1Program::StaPipAsIsTCVU1Program()
 StaPipAsIsTCVU1Program::~StaPipAsIsTCVU1Program() {}
 
 std::string StaPipAsIsTCVU1Program::getStringName() const {
-  return std::string("As is - TC");
+  return std::string("StaPip - As is - TC");
 }
 
 void StaPipAsIsTCVU1Program::addProgramQBufferDataToPacket(

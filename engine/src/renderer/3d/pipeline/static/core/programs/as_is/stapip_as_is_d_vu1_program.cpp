@@ -25,7 +25,7 @@ StaPipAsIsDVU1Program::StaPipAsIsDVU1Program()
 StaPipAsIsDVU1Program::~StaPipAsIsDVU1Program() {}
 
 std::string StaPipAsIsDVU1Program::getStringName() const {
-  return std::string("As is - LC");
+  return std::string("StaPip - As is - D");
 }
 
 void StaPipAsIsDVU1Program::addProgramQBufferDataToPacket(

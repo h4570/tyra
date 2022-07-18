@@ -24,7 +24,7 @@ StaPipCullCVU1Program::StaPipCullCVU1Program()
 StaPipCullCVU1Program::~StaPipCullCVU1Program() {}
 
 std::string StaPipCullCVU1Program::getStringName() const {
-  return std::string("Cull - C");
+  return std::string("StaPip - Cull - C");
 }
 
 void StaPipCullCVU1Program::addProgramQBufferDataToPacket(

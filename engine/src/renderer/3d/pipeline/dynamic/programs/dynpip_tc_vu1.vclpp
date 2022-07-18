@@ -1,0 +1,40 @@
+; ______       ____   ___
+;   |     \/   ____| |___|
+;   |     |   |   \  |   |
+;---------------------------------------------------------------
+; Copyright 2022, tyra - https://github.com/h4570/tyra
+; Licenced under Apache License 2.0
+; Sandro Sobczyński <sandro.sobczynski@gmail.com>
+;
+;---------------------------------------------------------------
+; Triangle list
+; Cull = Standard PS2 way. clipw polys are culled.
+; Animation
+; Lighting, texture, colors
+;---------------------------------------------------------------
+
+.syntax new
+.name DynPipVU1_TC
+.vu
+.init_vf_all
+.init_vi_all
+
+#include "src/renderer/3d/pipeline/shared_macros/vcl_sml.i"
+#include "src/renderer/3d/pipeline/shared_macros/tyra_macros.i"
+#include "inc/renderer/3d/pipeline/dynamic/programs/dynpip_vu1_shared_defines.h"
+
+#define STQ_STORE_OFFSET    0
+#define RGBA_STORE_OFFSET   1
+#define XYZ2_STORE_OFFSET   2
+
+--enter
+--endenter
+
+#vuprog DynPipVU1TC
+
+--cont
+
+#endvuprog
+
+--exit
+--endexit

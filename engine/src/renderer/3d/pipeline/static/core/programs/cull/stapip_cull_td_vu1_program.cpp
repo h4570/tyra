@@ -26,7 +26,7 @@ StaPipCullTDVU1Program::StaPipCullTDVU1Program()
 StaPipCullTDVU1Program::~StaPipCullTDVU1Program() {}
 
 std::string StaPipCullTDVU1Program::getStringName() const {
-  return std::string("Cull - LTC");
+  return std::string("StaPip - Cull - TD");
 }
 
 void StaPipCullTDVU1Program::addProgramQBufferDataToPacket(
