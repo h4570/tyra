@@ -29,7 +29,7 @@ class StaticPipeline : public Renderer3DPipeline {
   void onUse();
 
   /**
-   * Render 3D data via "meshes".
+   * Render 3D via "meshes".
    * This render() method is a bridge to core.render() method.
    */
   void render(DynamicMesh* mesh, const StaPipOptions* options = nullptr);
@@ -47,10 +47,10 @@ class StaticPipeline : public Renderer3DPipeline {
                               MeshFrame* frameFrom, MeshFrame* frameTo) const;
   StaPipTextureBag* getTextureBag(DynamicMesh* mesh, MeshMaterial* material,
                                   MeshFrame* frameFrom, MeshFrame* frameTo);
-  PipelineLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
-                                      M4x4* model, MeshFrame* frameFrom,
-                                      MeshFrame* frameTo,
-                                      const StaPipOptions* options) const;
+  StaPipLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
+                                    M4x4* model, MeshFrame* frameFrom,
+                                    MeshFrame* frameTo,
+                                    const StaPipOptions* options) const;
   void deallocDrawBags(StaPipBag* bag, MeshMaterial* material) const;
 
   void setLightingColorsCache(StaPipLightingOptions* lightingOptions);

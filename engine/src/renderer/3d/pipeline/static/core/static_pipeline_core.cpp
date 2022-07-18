@@ -65,8 +65,10 @@ void StaPipelineCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
                   (!bag->color->many && bag->lighting),
               "Multicolor is not supported with lighting, please choose one!");
   TYRA_ASSERT(
-      !bag->lighting || (bag->lighting->lightMatrix && bag->lighting->normals),
-      "If you want lighting, please provide light matrix and normals!");
+      !bag->lighting || (bag->lighting->lightMatrix && bag->lighting->normals &&
+                         bag->lighting->dirLights),
+      "If you want lighting, please provide light matrix normals and dir "
+      "lights!");
   TYRA_ASSERT(
       !bag->texture || (bag->texture->texture && bag->texture->coordinates),
       "If you want texture, please provide texture and coordinates!");

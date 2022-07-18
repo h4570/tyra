@@ -63,7 +63,8 @@ std::string StaPipBag::getPrint(const char* name) const {
   if (color->single) {
     res << "Color single: " << color->single->getPrint() << ", " << std::endl;
   } else {
-    res << "Color many: " << color->many->getPrint() << ", " << std::endl;
+    res << "Color many present: " << (color->many != nullptr ? "Yes" : "No")
+        << ", " << std::endl;
   }
   if (texture) {
     res << "Texture coords present: "

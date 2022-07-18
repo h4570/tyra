@@ -8,17 +8,16 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/3d/pipeline/dynamic/bag/dynpip_color_bag.hpp"
+#include "renderer/3d/pipeline/static/core/bag/stapip_lighting_bag.hpp"
 
 namespace Tyra {
 
-DynPipColorBag::DynPipColorBag() {
-  singleFrom = nullptr;
-  singleTo = nullptr;
-  manyFrom = nullptr;
-  manyTo = nullptr;
+StaPipLightingBag::StaPipLightingBag() {
+  lightMatrix = nullptr;
+  normals = nullptr;
+  dirLights = nullptr;
 }
 
-DynPipColorBag::~DynPipColorBag() {}
+StaPipLightingBag::~StaPipLightingBag() {}
 
 }  // namespace Tyra

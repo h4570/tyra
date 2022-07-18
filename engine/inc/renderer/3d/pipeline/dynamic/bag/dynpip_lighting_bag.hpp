@@ -11,21 +11,24 @@
 #pragma once
 
 #include "math/vec4.hpp"
-#include "renderer/core/texture/models/texture.hpp"
+#include "renderer/3d/pipeline/shared/bag/pipeline_dir_lights_bag.hpp"
 
 namespace Tyra {
 
-class DynPipTextureBag {
+class DynPipLightingBag {
  public:
-  DynPipTextureBag();
-  ~DynPipTextureBag();
+  DynPipLightingBag();
+  ~DynPipLightingBag();
 
-  /** Mandatory. Texture coordinates per vertex. */
-  Vec4* coordinatesFrom;
-  Vec4* coordinatesTo;
+  /** Mandatory. Model matrix for lights. */
+  M4x4* lightMatrix;
 
-  /** Mandatory. Texture image. */
-  Texture* texture;
+  /** Mandatory. Lighting normals per vertex. */
+  Vec4* normalsFrom;
+  Vec4* normalsTo;
+
+  /** Mandatory. Directional lights */
+  PipelineDirLightsBag* dirLights;
 };
 
 }  // namespace Tyra

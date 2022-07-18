@@ -13,7 +13,8 @@
 namespace Tyra {
 
 DynPipTextureBag::DynPipTextureBag() {
-  coordinates = nullptr;
+  coordinatesFrom = nullptr;
+  coordinatesTo = nullptr;
   texture = nullptr;
 }
 

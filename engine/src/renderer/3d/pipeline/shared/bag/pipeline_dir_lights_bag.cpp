@@ -9,15 +9,13 @@
 */
 
 #include "debug/debug.hpp"
-#include "renderer/3d/pipeline/shared/bag/pipeline_lighting_bag.hpp"
+#include "renderer/3d/pipeline/shared/bag/pipeline_dir_lights_bag.hpp"
 
 namespace Tyra {
 
-PipelineLightingBag::PipelineLightingBag(const bool& manual) {
+PipelineDirLightsBag::PipelineDirLightsBag(const bool& manual) {
   isAllocated = false;
   mode = Auto;
-  normals = nullptr;
-  lightMatrix = nullptr;
   lightColors = nullptr;
   lightDirections = nullptr;
   if (manual) {
@@ -27,33 +25,33 @@ PipelineLightingBag::PipelineLightingBag(const bool& manual) {
   }
 }
 
-PipelineLightingBag::~PipelineLightingBag() { deallocate(); }
+PipelineDirLightsBag::~PipelineDirLightsBag() { deallocate(); }
 
-void PipelineLightingBag::setAmbientColor(const Color& color) {
+void PipelineDirLightsBag::setAmbientColor(const Color& color) {
   TYRA_ASSERT(mode != Manual, "Ambient color cannot be set in manual mode");
   lightColors[3].set(reinterpret_cast<const Vec4&>(color));
 }
 
-void PipelineLightingBag::setDirectionalLightColors(Color* colors,
-                                                    const u8& count) {
+void PipelineDirLightsBag::setDirectionalLightColors(Color* colors,
+                                                     const u8& count) {
   for (u8 i = 0; i < count; i++) setDirectionalLightColor(colors[i], i);
 }
 
-void PipelineLightingBag::setDirectionalLightDirections(Vec4* directions,
-                                                        const u8& count) {
+void PipelineDirLightsBag::setDirectionalLightDirections(Vec4* directions,
+                                                         const u8& count) {
   for (u8 i = 0; i < count; i++) setDirectionalLightDirection(directions[i], i);
 }
 
-void PipelineLightingBag::setDirectionalLightColor(const Color& color,
-                                                   const u8& index) {
+void PipelineDirLightsBag::setDirectionalLightColor(const Color& color,
+                                                    const u8& index) {
   TYRA_ASSERT(mode != Manual,
               "Directional lights cannot be set in manual mode");
   TYRA_ASSERT(index < 3, "There are max 3 directional lights");
   lightColors[index].set(reinterpret_cast<const Vec4&>(color));
 }
 
-void PipelineLightingBag::setDirectionalLightDirection(const Vec4& direction,
-                                                       const u8& index) {
+void PipelineDirLightsBag::setDirectionalLightDirection(const Vec4& direction,
+                                                        const u8& index) {
   TYRA_ASSERT(mode != Manual,
               "Directional lights cannot be set in manual mode");
   TYRA_ASSERT(index < 3, "There are max 3 directional lights");
@@ -61,19 +59,19 @@ void PipelineLightingBag::setDirectionalLightDirection(const Vec4& direction,
   lightDirections[index].set(direction);
 }
 
-void PipelineLightingBag::setLightsManually(Vec4* colors, Vec4* directions) {
+void PipelineDirLightsBag::setLightsManually(Vec4* colors, Vec4* directions) {
   deallocate();
   lightColors = colors;
   lightDirections = directions;
   mode = Manual;
 }
 
-void PipelineLightingBag::disableManualMode() {
+void PipelineDirLightsBag::disableManualMode() {
   allocate();
   mode = Auto;
 }
 
-void PipelineLightingBag::allocate() {
+void PipelineDirLightsBag::allocate() {
   if (isAllocated) return;
 
   lightColors = new Vec4[4];
@@ -92,27 +90,27 @@ void PipelineLightingBag::allocate() {
   isAllocated = true;
 }
 
-void PipelineLightingBag::deallocate() {
+void PipelineDirLightsBag::deallocate() {
   if (!isAllocated) return;
 
   forceDeallocate();
 }
 
-void PipelineLightingBag::forceDeallocate() {
+void PipelineDirLightsBag::forceDeallocate() {
   forceDeallocateColors();
   forceDeallocateDirections();
 
   isAllocated = false;
 }
 
-void PipelineLightingBag::forceDeallocateColors() {
+void PipelineDirLightsBag::forceDeallocateColors() {
   if (lightColors != nullptr) {
     delete[] lightColors;
     lightColors = nullptr;
   }
 }
 
-void PipelineLightingBag::forceDeallocateDirections() {
+void PipelineDirLightsBag::forceDeallocateDirections() {
   if (lightDirections != nullptr) {
     delete[] lightDirections;
     lightDirections = nullptr;

@@ -43,8 +43,10 @@ std::string DynPipBag::getPrint(const char* name) const {
   res << std::fixed << std::setprecision(4);
   res << std::endl;
   res << "Count: " << count << ", " << std::endl;
-  res << "Vertices present: " << (vertices != nullptr ? "Yes" : "No") << ", "
-      << std::endl;
+  res << "Vertices from present: " << (verticesFrom != nullptr ? "Yes" : "No")
+      << ", " << std::endl;
+  res << "Vertices to present: " << (verticesTo != nullptr ? "Yes" : "No")
+      << ", " << std::endl;
   res << "Info present: " << (info != nullptr ? "Yes" : "No") << ", "
       << std::endl;
   res << "Color present: " << (color != nullptr ? "Yes" : "No") << ", "
@@ -54,20 +56,32 @@ std::string DynPipBag::getPrint(const char* name) const {
   res << "Lighting present: " << (lighting != nullptr ? "Yes" : "No") << ", "
       << std::endl;
   res << "Model matrix: " << info->model->getPrint() << ", " << std::endl;
-  if (color->single) {
-    res << "Color single: " << color->single->getPrint() << ", " << std::endl;
+  if (color->singleFrom) {
+    res << "Color from single: " << color->singleFrom->getPrint() << ", "
+        << std::endl;
+    res << "Color to single: " << color->singleTo->getPrint() << ", "
+        << std::endl;
   } else {
-    res << "Color many: " << color->many->getPrint() << ", " << std::endl;
+    res << "Color many from present: "
+        << (color->manyFrom != nullptr ? "Yes" : "No") << ", " << std::endl;
+    res << "Color many to present: "
+        << (color->manyTo != nullptr ? "Yes" : "No") << ", " << std::endl;
   }
   if (texture) {
-    res << "Texture coords present: "
-        << (texture->coordinates != nullptr ? "Yes" : "No") << ", "
+    res << "Texture coords from present: "
+        << (texture->coordinatesFrom != nullptr ? "Yes" : "No") << ", "
+        << std::endl;
+    res << "Texture coords to present: "
+        << (texture->coordinatesTo != nullptr ? "Yes" : "No") << ", "
         << std::endl;
     res << "Texture: " << texture->texture->getPrint() << ", " << std::endl;
   }
+
   if (lighting) {
-    res << "Lighting normals present: " << (lighting->normals ? "Yes" : "No")
-        << ", " << std::endl;
+    res << "Lighting normals from present: "
+        << (lighting->normalsFrom ? "Yes" : "No") << ", " << std::endl;
+    res << "Lighting normals to present: "
+        << (lighting->normalsTo ? "Yes" : "No") << ", " << std::endl;
     res << "Lighting matrix: " << lighting->lightMatrix->getPrint() << ", "
         << std::endl;
   }

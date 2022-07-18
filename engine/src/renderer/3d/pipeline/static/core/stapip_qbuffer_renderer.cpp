@@ -91,12 +91,13 @@ void StaPipQBufferRenderer::sendObjectData(
     packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_LIGHTS_MATRIX_ADDR,
                                      bag->lighting->lightMatrix, 3, false);
 
-    packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_LIGHTS_DIRS_ADDR,
-                                     bag->lighting->getLightDirections(), 3,
-                                     false);
+    packet2_utils_vu_add_unpack_data(
+        objectDataPacket, VU1_LIGHTS_DIRS_ADDR,
+        bag->lighting->dirLights->getLightDirections(), 3, false);
 
     packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_LIGHTS_COLORS_ADDR,
-                                     bag->lighting->getLightColors(), 4, false);
+                                     bag->lighting->dirLights->getLightColors(),
+                                     4, false);
   }
 
   u8 singleColorEnabled = bag->color->single != nullptr;

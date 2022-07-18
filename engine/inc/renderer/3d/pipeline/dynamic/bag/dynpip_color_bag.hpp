@@ -23,10 +23,12 @@ class DynPipColorBag {
   ~DynPipColorBag();
 
   /** Optional. Single color for all vertices. */
-  Color* single;
+  Color* singleFrom;
+  Color* singleTo;
 
   /** Optional. Color per vertex. */
-  Color* many;
+  Color* manyFrom;
+  Color* manyTo;
 };
 
 }  // namespace Tyra

@@ -11,9 +11,9 @@
 #pragma once
 
 #include "math/vec4.hpp"
-#include "renderer/3d/pipeline/shared/bag/pipeline_lighting_bag.hpp"
 #include "renderer/3d/pipeline/shared/bag/pipeline_info_bag.hpp"
 #include "./stapip_color_bag.hpp"
+#include "./stapip_lighting_bag.hpp"
 #include "./stapip_texture_bag.hpp"
 #include "renderer/core/texture/models/texture.hpp"
 #include "./packaging/stapip_bag_packages_bbox.hpp"
@@ -46,7 +46,7 @@ class StaPipBag {
   StaPipTextureBag* texture;
 
   /** Optional. Object lighting. */
-  PipelineLightingBag* lighting;
+  StaPipLightingBag* lighting;
 
   /**
    * @param maxVertCount This parameter is available in renderer API.

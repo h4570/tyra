@@ -16,15 +16,12 @@
 
 namespace Tyra {
 
-enum PipelineLightingBagMode { Auto, Manual };
+enum PipelineDirLightsBagMode { Auto, Manual };
 
-class PipelineLightingBag {
+class PipelineDirLightsBag {
  public:
-  explicit PipelineLightingBag(const bool& manual = false);
-  ~PipelineLightingBag();
-
-  Vec4* normals;
-  M4x4* lightMatrix;
+  explicit PipelineDirLightsBag(const bool& manual = false);
+  ~PipelineDirLightsBag();
 
   void setAmbientColor(const Color& color);
   void setDirectionalLightColors(Color* colors, const u8& count);
@@ -47,7 +44,7 @@ class PipelineLightingBag {
   void deallocate();
   void forceDeallocate();
   u8 isAllocated;
-  PipelineLightingBagMode mode;
+  PipelineDirLightsBagMode mode;
 
   Vec4* lightColors;
   Vec4* lightDirections;

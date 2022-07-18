@@ -163,7 +163,7 @@ StaPipTextureBag* StaticPipeline::getTextureBag(DynamicMesh* mesh,
   return result;
 }
 
-PipelineLightingBag* StaticPipeline::getLightingBag(
+StaPipLightingBag* StaticPipeline::getLightingBag(
     DynamicMesh* mesh, MeshMaterial* material, M4x4* model,
     MeshFrame* frameFrom, MeshFrame* frameTo,
     const StaPipOptions* options) const {
@@ -171,11 +171,14 @@ PipelineLightingBag* StaticPipeline::getLightingBag(
       options->lighting == nullptr)
     return nullptr;
 
-  auto* result = new PipelineLightingBag(true);
+  auto* result = new StaPipLightingBag();
+  auto* dirLightsBag = new PipelineDirLightsBag(true);
+  result->dirLights = dirLightsBag;
+
   result->lightMatrix = model;
 
-  result->setLightsManually(colorsCache,
-                            options->lighting->directionalDirections);
+  result->dirLights->setLightsManually(
+      colorsCache, options->lighting->directionalDirections);
 
   result->normals = new Vec4[material->getFacesCount()];
 
@@ -215,6 +218,7 @@ void StaticPipeline::deallocDrawBags(StaPipBag* bag,
 
   if (bag->lighting) {
     delete[] bag->lighting->normals;
+    delete bag->lighting->dirLights;
     delete bag->lighting;
   }
 

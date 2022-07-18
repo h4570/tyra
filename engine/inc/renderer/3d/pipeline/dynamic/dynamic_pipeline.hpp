@@ -27,10 +27,6 @@ class DynamicPipeline : public Renderer3DPipeline {
 
   void onUse();
 
-  /**
-   * Render 3D data via "meshes".
-   * This render() method is a bridge to core.render() method.
-   */
   void render(DynamicMesh* mesh, const DynPipOptions* options = nullptr);
 };
 
