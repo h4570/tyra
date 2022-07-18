@@ -8,26 +8,26 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/core/paths/path1/clipper/path1_ee_clip_algorithm.hpp"
+#include "renderer/core/3d/clipper/ee_clip_algorithm.hpp"
 
 namespace Tyra {
 
-Path1EEClipAlgorithm::Path1EEClipAlgorithm() {}
+EEClipAlgorithm::EEClipAlgorithm() {}
 
-Path1EEClipAlgorithm::~Path1EEClipAlgorithm() {}
+EEClipAlgorithm::~EEClipAlgorithm() {}
 
-float Path1EEClipAlgorithm::clipMargin = -10.0F;
+float EEClipAlgorithm::clipMargin = -10.0F;
 
-void Path1EEClipAlgorithm::init(const RendererSettings& settings) {
+void EEClipAlgorithm::init(const RendererSettings& settings) {
   halfWidth = settings.getWidth() / 2;
   halfHeight = settings.getHeight() / 2;
   near = settings.getNear() - (-clipMargin);
   far = -settings.getFar();
 }
 
-void Path1EEClipAlgorithm::clip(std::vector<Path1ClipVertex>* o_vertices,
-                                const std::vector<Path1ClipVertex>& vertices,
-                                const Path1EEClipAlgorithmSettings& settings) {
+void EEClipAlgorithm::clip(std::vector<EEClipVertex>* o_vertices,
+                           const std::vector<EEClipVertex>& vertices,
+                           const EEClipAlgorithmSettings& settings) {
   tempVertices.clear();
 
   for (u32 i = 0; i < vertices.size(); i++) {
@@ -42,8 +42,8 @@ void Path1EEClipAlgorithm::clip(std::vector<Path1ClipVertex>* o_vertices,
   clipAgainstPlane(tempVertices, o_vertices, 4, far, settings);
 }
 
-float Path1EEClipAlgorithm::getValueByPlane(const Path1ClipVertex& v,
-                                            const int& plane) {
+float EEClipAlgorithm::getValueByPlane(const EEClipVertex& v,
+                                       const int& plane) {
   switch (plane) {
     case 1:
       return v.position.x;  // x plane
@@ -57,9 +57,8 @@ float Path1EEClipAlgorithm::getValueByPlane(const Path1ClipVertex& v,
   }
 }
 
-bool Path1EEClipAlgorithm::isInside(const int& plane, const float& v,
-                                    const float& w,
-                                    const float& planeLimitValue) {
+bool EEClipAlgorithm::isInside(const int& plane, const float& v, const float& w,
+                               const float& planeLimitValue) {
   switch (plane) {
     case 3:
       return v <= planeLimitValue;  // near z plane
@@ -71,11 +70,10 @@ bool Path1EEClipAlgorithm::isInside(const int& plane, const float& v,
   }
 }
 
-void Path1EEClipAlgorithm::clipAgainstPlane(
-    const std::vector<Path1ClipVertex>& original,
-    std::vector<Path1ClipVertex>* clipped, const int& plane,
-    const float& planeLimitValue,
-    const Path1EEClipAlgorithmSettings& settings) {
+void EEClipAlgorithm::clipAgainstPlane(
+    const std::vector<EEClipVertex>& original,
+    std::vector<EEClipVertex>* clipped, const int& plane,
+    const float& planeLimitValue, const EEClipAlgorithmSettings& settings) {
   clipped->clear();
 
   for (u32 i = 0; i < original.size(); i++) {
@@ -98,7 +96,7 @@ void Path1EEClipAlgorithm::clipAgainstPlane(
                     ((b.position.w - a.position.w) * planeLimitValue -
                      (bpx - apx));
 
-      Path1ClipVertex nb = {
+      EEClipVertex nb = {
           Vec4::getByLerp(a.position, b.position, p),
           settings.lerpNormals ? Vec4::getByLerp(a.normal, b.normal, p)
                                : Vec4(),

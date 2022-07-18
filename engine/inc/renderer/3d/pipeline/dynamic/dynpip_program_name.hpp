@@ -12,20 +12,13 @@
 
 namespace Tyra {
 
-enum StaPipProgramName {
-  StaPipUndefinedProgram,
+enum DynPipProgramName {
+  DynPipUndefinedProgram,
 
-  StaPipCullColor,
-  StaPipAsIsColor,
-
-  StaPipCullDirLights,
-  StaPipAsIsDirLights,
-
-  StaPipCullTextureDirLights,
-  StaPipAsIsTextureDirLights,
-
-  StaPipCullTextureColor,
-  StaPipAsIsTextureColor,
+  DynPipColor,
+  DynPipDirLights,
+  DynPipTextureDirLights,
+  DynPipTextureColor,
 };
 
 }  // namespace Tyra

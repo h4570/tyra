@@ -36,7 +36,7 @@ namespace Tyra {
 
 StaPipQBufferRenderer::StaPipQBufferRenderer() {
   context = 0;
-  lastProgramName = StdipUndefinedProgram;
+  lastProgramName = StaPipUndefinedProgram;
   staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   programsPacket = nullptr;
@@ -221,7 +221,7 @@ void StaPipQBufferRenderer::clip(StaPipQBuffer* buffer) {
 }
 
 void StaPipQBufferRenderer::clearLastProgramName() {
-  lastProgramName = StdipUndefinedProgram;
+  lastProgramName = StaPipUndefinedProgram;
 }
 
 void StaPipQBufferRenderer::addBufferDataToPacket(StaPipVU1Program* program,

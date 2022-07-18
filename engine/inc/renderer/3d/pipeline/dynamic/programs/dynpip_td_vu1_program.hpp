@@ -12,17 +12,18 @@
 
 #include <packet2_utils.h>
 #include <string>
-#include "../../vu1_program.hpp"
+#include "../dynpip_vu1_program.hpp"
 
 namespace Tyra {
 
-class VU1DrawFinish : public VU1Program {
+class DynPipTDVU1Program : public DynPipVU1Program {
  public:
-  VU1DrawFinish();
-  ~VU1DrawFinish();
+  DynPipTDVU1Program();
+  ~DynPipTDVU1Program();
 
   std::string getStringName() const;
-  void addTag(packet2_t* packet, prim_t* prim) const;
+  void addProgramQBufferDataToPacket(packet2_t* packet,
+                                     DynPipQBuffer* qbuffer) const;
 };
 
 }  // namespace Tyra

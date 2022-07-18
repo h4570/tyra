@@ -10,22 +10,12 @@
 
 #pragma once
 
+#include "math/vec4.hpp"
+
 namespace Tyra {
 
-enum StaPipProgramName {
-  StaPipUndefinedProgram,
-
-  StaPipCullColor,
-  StaPipAsIsColor,
-
-  StaPipCullDirLights,
-  StaPipAsIsDirLights,
-
-  StaPipCullTextureDirLights,
-  StaPipAsIsTextureDirLights,
-
-  StaPipCullTextureColor,
-  StaPipAsIsTextureColor,
+struct EEClipVertex {
+  Vec4 position, normal, st, color;
 };
 
 }  // namespace Tyra

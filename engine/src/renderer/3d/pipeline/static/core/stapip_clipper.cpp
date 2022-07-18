@@ -27,16 +27,16 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
   TYRA_ASSERT(buffer->size <= maxVertCount / 3, "Buffer should have max ",
               maxVertCount / 3, " verts if we want to clip it.");
 
-  Path1EEClipAlgorithmSettings algoSettings = {
-      buffer->bag->lighting != nullptr, buffer->bag->texture != nullptr,
-      buffer->bag->color->many != nullptr};
+  EEClipAlgorithmSettings algoSettings = {buffer->bag->lighting != nullptr,
+                                          buffer->bag->texture != nullptr,
+                                          buffer->bag->color->many != nullptr};
 
-  std::vector<Path1ClipVertex> clippedVertices;
+  std::vector<EEClipVertex> clippedVertices;
 
   for (u32 i = 0; i < buffer->size / 3; i++) {
-    std::vector<Path1ClipVertex> inputTriangle;
+    std::vector<EEClipVertex> inputTriangle;
     for (u8 j = 0; j < 3; j++) {
-      Path1ClipVertex vert = {
+      EEClipVertex vert = {
           *mvp * buffer->vertices[i * 3 + j],
           buffer->bag->lighting ? buffer->normals[i * 3 + j] : Vec4(),
           buffer->bag->texture ? buffer->sts[i * 3 + j] : Vec4(),
@@ -45,7 +45,7 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
       inputTriangle.push_back(vert);
     }
 
-    std::vector<Path1ClipVertex> clippedTriangle;
+    std::vector<EEClipVertex> clippedTriangle;
     algorithm.clip(&clippedTriangle, inputTriangle, algoSettings);
 
     if (clippedTriangle.size() == 0) continue;
@@ -64,14 +64,14 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
   moveDataToBuffer(clippedVertices, buffer);
 }
 
-void StaPipClipper::perspectiveDivide(std::vector<Path1ClipVertex>* vertices) {
+void StaPipClipper::perspectiveDivide(std::vector<EEClipVertex>* vertices) {
   for (u32 i = 0; i < vertices->size(); i++) {
     (*vertices)[i].position /= (*vertices)[i].position.w;
   }
 }
 
-void StaPipClipper::moveDataToBuffer(
-    const std::vector<Path1ClipVertex>& vertices, StaPipQBuffer* buffer) {
+void StaPipClipper::moveDataToBuffer(const std::vector<EEClipVertex>& vertices,
+                                     StaPipQBuffer* buffer) {
   buffer->reallocateManually(vertices.size());
 
   for (u32 i = 0; i < vertices.size(); i++) {

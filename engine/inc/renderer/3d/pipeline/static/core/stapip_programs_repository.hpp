@@ -23,8 +23,6 @@
 #include "./programs/cull/stapip_cull_td_vu1_program.hpp"
 #include "./programs/cull/stapip_cull_tc_vu1_program.hpp"
 
-#include "renderer/core/paths/path1/programs/draw_finish/vu1_draw_finish.hpp"
-
 namespace Tyra {
 
 class StaPipProgramsRepository {
@@ -37,13 +35,12 @@ class StaPipProgramsRepository {
  private:
   StaPipAsIsCVU1Program asIsColor;
   StaPipCullCVU1Program cullColor;
-  StaPipAsIsDVU1Program asIsLightingColor;
-  StaPipCullDVU1Program cullLightingColor;
-  StaPipAsIsTDVU1Program asIsLightingTextureColor;
-  StaPipCullTDVU1Program cullLightingTextureColor;
+  StaPipAsIsDVU1Program asIsDirLights;
+  StaPipCullDVU1Program cullDirLights;
+  StaPipAsIsTDVU1Program asIsTextureDirLights;
+  StaPipCullTDVU1Program cullTextureDirLights;
   StaPipAsIsTCVU1Program asIsTextureColor;
   StaPipCullTCVU1Program cullTextureColor;
-  VU1DrawFinish drawFinish;
 };
 
 }  // namespace Tyra

@@ -25,14 +25,14 @@ StaPipVU1Program* StaPipProgramsRepository::getProgram(
       return &cullColor;
 
     case StaPipProgramName::StaPipAsIsDirLights:
-      return &asIsLightingColor;
+      return &asIsDirLights;
     case StaPipProgramName::StaPipCullDirLights:
-      return &cullLightingColor;
+      return &cullDirLights;
 
     case StaPipProgramName::StaPipAsIsTextureDirLights:
-      return &asIsLightingTextureColor;
+      return &asIsTextureDirLights;
     case StaPipProgramName::StaPipCullTextureDirLights:
-      return &cullLightingTextureColor;
+      return &cullTextureDirLights;
 
     case StaPipProgramName::StaPipAsIsTextureColor:
       return &asIsTextureColor;
@@ -41,7 +41,7 @@ StaPipVU1Program* StaPipProgramsRepository::getProgram(
 
     default:
       TYRA_TRAP("Unknown VU1 program name");
-      return &cullLightingTextureColor;
+      return &cullTextureDirLights;
   }
 }
 

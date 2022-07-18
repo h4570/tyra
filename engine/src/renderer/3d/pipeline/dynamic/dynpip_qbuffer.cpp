@@ -8,14 +8,14 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#pragma once
-
-#include "math/vec4.hpp"
+#include "renderer/3d/pipeline/dynamic/dynpip_qbuffer.hpp"
+#include <sstream>
+#include <iomanip>
 
 namespace Tyra {
 
-struct Path1ClipVertex {
-  Vec4 position, normal, st, color;
-};
+DynPipQBuffer::DynPipQBuffer() {}
+
+DynPipQBuffer::~DynPipQBuffer() {}
 
 }  // namespace Tyra

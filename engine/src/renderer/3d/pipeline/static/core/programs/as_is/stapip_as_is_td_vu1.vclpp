@@ -18,8 +18,8 @@
 .init_vf_all
 .init_vi_all
 
-#include "src/renderer/core/paths/path1/programs/vcl_sml.i"
-#include "src/renderer/core/paths/path1/programs/tyra_macros.i"
+#include "src/renderer/3d/pipeline/shared_macros/vcl_sml.i"
+#include "src/renderer/3d/pipeline/shared_macros/tyra_macros.i"
 #include "inc/renderer/3d/pipeline/static/core/programs/stapip_vu1_shared_defines.h"
 
 #define STQ_STORE_OFFSET    0

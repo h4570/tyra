@@ -12,20 +12,10 @@
 
 namespace Tyra {
 
-enum StaPipProgramName {
-  StaPipUndefinedProgram,
-
-  StaPipCullColor,
-  StaPipAsIsColor,
-
-  StaPipCullDirLights,
-  StaPipAsIsDirLights,
-
-  StaPipCullTextureDirLights,
-  StaPipAsIsTextureDirLights,
-
-  StaPipCullTextureColor,
-  StaPipAsIsTextureColor,
+class DynPipQBuffer {
+ public:
+  DynPipQBuffer();
+  ~DynPipQBuffer();
 };
 
 }  // namespace Tyra
