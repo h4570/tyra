@@ -12,18 +12,18 @@
 
 namespace Tyra {
 
-Stapipeline::Stapipeline() { colorsCache = new Vec4[4]; }
+StaticPipeline::StaticPipeline() { colorsCache = new Vec4[4]; }
 
-Stapipeline::~Stapipeline() { delete[] colorsCache; }
+StaticPipeline::~StaticPipeline() { delete[] colorsCache; }
 
-void Stapipeline::init(RendererCore* t_core) {
+void StaticPipeline::init(RendererCore* t_core) {
   rendererCore = t_core;
   core.init(t_core);
 }
 
-void Stapipeline::onUse() { core.reinitStandardVU1Programs(); }
+void StaticPipeline::onUse() { core.reinitStandardVU1Programs(); }
 
-void Stapipeline::render(DynamicMesh* mesh, const StapipOptions* options) {
+void StaticPipeline::render(DynamicMesh* mesh, const StaPipOptions* options) {
   auto model = mesh->getModelMatrix();
 
   MeshFrame* frameFrom = mesh->getFramesCount() > 0
@@ -49,7 +49,7 @@ void Stapipeline::render(DynamicMesh* mesh, const StapipOptions* options) {
     //     material->isSingleColorActivated(), material->getNormalFaces(),
     //     material->getTextureCoordFaces());
 
-    StapipBag bag;
+    StaPipBag bag;
     addVertices(mesh, material, &bag, frameFrom, frameTo);
     bag.info = infoBag;
     bag.color = getColorBag(mesh, material, frameFrom, frameTo);
@@ -65,9 +65,9 @@ void Stapipeline::render(DynamicMesh* mesh, const StapipOptions* options) {
   delete infoBag;
 }
 
-void Stapipeline::addVertices(DynamicMesh* mesh, MeshMaterial* material,
-                              StapipBag* bag, MeshFrame* frameFrom,
-                              MeshFrame* frameTo) const {
+void StaticPipeline::addVertices(DynamicMesh* mesh, MeshMaterial* material,
+                                 StaPipBag* bag, MeshFrame* frameFrom,
+                                 MeshFrame* frameTo) const {
   bag->count = material->getFacesCount();
   bag->vertices = new Vec4[bag->count];
 
@@ -83,10 +83,10 @@ void Stapipeline::addVertices(DynamicMesh* mesh, MeshMaterial* material,
   }
 }
 
-StapipInfoBag* Stapipeline::getInfoBag(DynamicMesh* mesh,
-                                       const StapipOptions* options,
-                                       M4x4* model) const {
-  auto* result = new StapipInfoBag();
+StaPipInfoBag* StaticPipeline::getInfoBag(DynamicMesh* mesh,
+                                          const StaPipOptions* options,
+                                          M4x4* model) const {
+  auto* result = new StaPipInfoBag();
 
   if (options) {
     result->antiAliasingEnabled = options->antiAliasingEnabled;
@@ -96,7 +96,7 @@ StapipInfoBag* Stapipeline::getInfoBag(DynamicMesh* mesh,
   } else {
     result->antiAliasingEnabled = false;
     result->blendingEnabled = true;
-    result->shadingType = StapipShadingFlat;
+    result->shadingType = StaPipShadingFlat;
     result->noClipChecks = true;
   }
 
@@ -105,11 +105,11 @@ StapipInfoBag* Stapipeline::getInfoBag(DynamicMesh* mesh,
   return result;
 }
 
-StapipColorBag* Stapipeline::getColorBag(DynamicMesh* mesh,
-                                         MeshMaterial* material,
-                                         MeshFrame* frameFrom,
-                                         MeshFrame* frameTo) const {
-  auto* result = new StapipColorBag();
+StaPipColorBag* StaticPipeline::getColorBag(DynamicMesh* mesh,
+                                            MeshMaterial* material,
+                                            MeshFrame* frameFrom,
+                                            MeshFrame* frameTo) const {
+  auto* result = new StaPipColorBag();
 
   if (material->isSingleColorActivated()) {
     result->single = &material->singleColor;
@@ -133,13 +133,13 @@ StapipColorBag* Stapipeline::getColorBag(DynamicMesh* mesh,
   return result;
 }
 
-StapipTextureBag* Stapipeline::getTextureBag(DynamicMesh* mesh,
-                                             MeshMaterial* material,
-                                             MeshFrame* frameFrom,
-                                             MeshFrame* frameTo) {
+StaPipTextureBag* StaticPipeline::getTextureBag(DynamicMesh* mesh,
+                                                MeshMaterial* material,
+                                                MeshFrame* frameFrom,
+                                                MeshFrame* frameTo) {
   if (!material->getTextureCoordFaces()) return nullptr;
 
-  auto* result = new StapipTextureBag();
+  auto* result = new StaPipTextureBag();
 
   result->texture =
       rendererCore->texture.repository.getBySpriteOrMesh(material->getId());
@@ -163,15 +163,15 @@ StapipTextureBag* Stapipeline::getTextureBag(DynamicMesh* mesh,
   return result;
 }
 
-StapipLightingBag* Stapipeline::getLightingBag(
+StaPipLightingBag* StaticPipeline::getLightingBag(
     DynamicMesh* mesh, MeshMaterial* material, M4x4* model,
     MeshFrame* frameFrom, MeshFrame* frameTo,
-    const StapipOptions* options) const {
+    const StaPipOptions* options) const {
   if (!material->getNormalFaces() || options == nullptr ||
       options->lighting == nullptr)
     return nullptr;
 
-  auto* result = new StapipLightingBag(true);
+  auto* result = new StaPipLightingBag(true);
   result->lightMatrix = model;
 
   result->setLightsManually(colorsCache,
@@ -193,8 +193,8 @@ StapipLightingBag* Stapipeline::getLightingBag(
   return result;
 }
 
-void Stapipeline::setLightingColorsCache(
-    StapipLightingOptions* lightingOptions) {
+void StaticPipeline::setLightingColorsCache(
+    StaPipLightingOptions* lightingOptions) {
   for (int i = 0; i < 3; i++) {
     colorsCache[i] =
         reinterpret_cast<Vec4&>(lightingOptions->directionalColors[i]);
@@ -202,8 +202,8 @@ void Stapipeline::setLightingColorsCache(
   colorsCache[3] = reinterpret_cast<Vec4&>(*lightingOptions->ambientColor);
 }
 
-void Stapipeline::deallocDrawBags(StapipBag* bag,
-                                  MeshMaterial* material) const {
+void StaticPipeline::deallocDrawBags(StaPipBag* bag,
+                                     MeshMaterial* material) const {
   if (bag->color->many) {
     delete[] bag->color->many;
   }

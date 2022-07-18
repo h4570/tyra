@@ -25,16 +25,16 @@ namespace Tyra {
  * Supports frustum culling, clipping, lighting,
  * texture and single color / many colors.
  */
-class StapipBag {
+class StaPipBag {
  public:
-  StapipBag();
-  ~StapipBag();
+  StaPipBag();
+  ~StaPipBag();
 
   /** Mandatory. Object info. */
-  StapipInfoBag* info;
+  StaPipInfoBag* info;
 
   /** Mandatory. Object color(s). */
-  StapipColorBag* color;
+  StaPipColorBag* color;
 
   /** Mandatory. Vertex count. */
   u32 count;
@@ -43,15 +43,15 @@ class StapipBag {
   Vec4* vertices;
 
   /** Optional. Texture coordinates and image. */
-  StapipTextureBag* texture;
+  StaPipTextureBag* texture;
 
   /** Optional. Object lighting. */
-  StapipLightingBag* lighting;
+  StaPipLightingBag* lighting;
 
   /**
    * @param maxVertCount This parameter is available in renderer API.
    */
-  StapipBagPackagesBBox calculateBbox(const u32& maxVertCount);
+  StaPipBagPackagesBBox calculateBbox(const u32& maxVertCount);
 
   void print() const;
   void print(const char* name) const;

@@ -12,11 +12,11 @@
 
 namespace Tyra {
 
-StapipColorBag::StapipColorBag() {
+StaPipColorBag::StaPipColorBag() {
   single = nullptr;
   many = nullptr;
 }
 
-StapipColorBag::~StapipColorBag() {}
+StaPipColorBag::~StaPipColorBag() {}
 
 }  // namespace Tyra

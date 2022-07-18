@@ -13,7 +13,7 @@
 ;---------------------------------------------------------------
 
 .syntax new
-.name StapipVU1As_Is_TD
+.name StaPipVU1As_Is_TD
 .vu
 .init_vf_all
 .init_vi_all
@@ -29,7 +29,7 @@
 --enter
 --endenter
 
-#vuprog StapipVU1AsIsTD
+#vuprog StaPipVU1AsIsTD
 
     LoadTyraStaticData{ gifSetTag }
     LoadTyraDirectionalLights{ lightMatrix, lightDirections, lightColors, ambientColor, VU1_LIGHTS_DIRS_ADDR, VU1_LIGHTS_COLORS_ADDR, VU1_LIGHTS_MATRIX_ADDR }

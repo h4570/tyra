@@ -12,13 +12,13 @@
 
 namespace Tyra {
 
-StapipInfoBag::StapipInfoBag() {
-  shadingType = StapipShadingFlat;
+StaPipInfoBag::StaPipInfoBag() {
+  shadingType = StaPipShadingFlat;
   blendingEnabled = true;
   antiAliasingEnabled = false;
   model = nullptr;
 }
 
-StapipInfoBag::~StapipInfoBag() {}
+StaPipInfoBag::~StaPipInfoBag() {}
 
 }  // namespace Tyra

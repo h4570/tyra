@@ -12,7 +12,7 @@
 
 namespace Tyra {
 
-StapipVU1Program::StapipVU1Program(const StapipProgramName& t_name,
+StaPipVU1Program::StaPipVU1Program(const StaPipProgramName& t_name,
                                    u32* t_start, u32* t_end,
                                    const u32& t_reglist,
                                    const u8& t_reglistCount,
@@ -26,21 +26,21 @@ StapipVU1Program::StapipVU1Program(const StapipProgramName& t_name,
   programSize = calculateProgramSize();
 }
 
-StapipVU1Program::~StapipVU1Program() {}
+StaPipVU1Program::~StaPipVU1Program() {}
 
-const StapipProgramName& StapipVU1Program::getName() const { return name; }
+const StaPipProgramName& StaPipVU1Program::getName() const { return name; }
 
-u32& StapipVU1Program::getReglist() { return reglist; }
+u32& StaPipVU1Program::getReglist() { return reglist; }
 
-void StapipVU1Program::addBufferDataToPacket(packet2_t* packet,
-                                             StapipQBuffer* buffer,
+void StaPipVU1Program::addBufferDataToPacket(packet2_t* packet,
+                                             StaPipQBuffer* buffer,
                                              prim_t* prim) {
   addStandardBufferDataToPacket(packet, buffer, prim);
   addProgramQBufferDataToPacket(packet, buffer);
 }
 
-void StapipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
-                                                     StapipQBuffer* buffer,
+void StaPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
+                                                     StaPipQBuffer* buffer,
                                                      prim_t* prim) {
   if (buffer->bag->texture)
     prim->mapping = 1;
@@ -61,7 +61,7 @@ void StapipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
   packet2_utils_vu_close_unpack(packet);
 }
 
-u16 StapipVU1Program::getMaxVertCount(const bool& singleColorEnabled,
+u16 StaPipVU1Program::getMaxVertCount(const bool& singleColorEnabled,
                                       const u16& bufferSize) const {
   u16 res = bufferSize - 4;
   u8 colorElementsPerVertex =

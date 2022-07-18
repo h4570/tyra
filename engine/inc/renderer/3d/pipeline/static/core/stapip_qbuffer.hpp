@@ -18,10 +18,10 @@
 
 namespace Tyra {
 
-class StapipQBuffer {
+class StaPipQBuffer {
  public:
-  StapipQBuffer();
-  ~StapipQBuffer();
+  StaPipQBuffer();
+  ~StaPipQBuffer();
 
   void setMaxVertCount(const u32& count);
 
@@ -29,27 +29,27 @@ class StapipQBuffer {
    * @brief Dont allocate any dynamic data in buffer.
    * Just copy pointers to input data.
    */
-  void fillByPointer(const StapipBagPackage& pkg);
+  void fillByPointer(const StaPipBagPackage& pkg);
 
   /**
    * @brief Allocate dynamic data in buffer
    * And copy input data to it.
    */
-  void fillByCopyMax(const StapipBagPackage& pkg1, const StapipBagPackage& pkg2,
-                     const StapipBagPackage& pkg3);
+  void fillByCopyMax(const StaPipBagPackage& pkg1, const StaPipBagPackage& pkg2,
+                     const StaPipBagPackage& pkg3);
 
   /**
    * @brief Allocate dynamic data in buffer
    * And copy input data to it.
    */
-  void fillByCopy1By2(const StapipBagPackage& pkg1,
-                      const StapipBagPackage& pkg2);
+  void fillByCopy1By2(const StaPipBagPackage& pkg1,
+                      const StaPipBagPackage& pkg2);
 
   /**
    * @brief Allocate dynamic data in buffer
    * And copy input data to it.
    */
-  void fillByCopy1By3(const StapipBagPackage& pkg);
+  void fillByCopy1By3(const StaPipBagPackage& pkg);
 
   /**
    * @brief Deallocate dynamic data if it was allocated and allocate new data
@@ -60,7 +60,7 @@ class StapipQBuffer {
 
   bool any() const;
 
-  StapipBag* bag;
+  StaPipBag* bag;
 
   Vec4* vertices;
   Vec4* sts;
@@ -76,7 +76,7 @@ class StapipQBuffer {
  private:
   u32 maxVertCount;
   void deallocateDynamicData();
-  void allocateDynamicData(u16 size, StapipBag* bag);
+  void allocateDynamicData(u16 size, StaPipBag* bag);
   u8 _isDynamicallyAllocated, _stAllocated, _colorAllocated, _normalAllocated;
 };
 

@@ -14,37 +14,37 @@
 
 namespace Tyra {
 
-StapipBag::StapipBag() {
+StaPipBag::StaPipBag() {
   info = nullptr;
   color = nullptr;
   texture = nullptr;
   lighting = nullptr;
 }
 
-StapipBag::~StapipBag() {}
+StaPipBag::~StaPipBag() {}
 
-StapipBagPackagesBBox StapipBag::calculateBbox(const u32& maxVertCount) {
+StaPipBagPackagesBBox StaPipBag::calculateBbox(const u32& maxVertCount) {
   TYRA_ASSERT(vertices != nullptr, "Vertices are required to calculate bbox");
   TYRA_ASSERT(count > 0, "Count must be greater than 0 to calculate bbox");
-  return StapipBagPackagesBBox(vertices, count, maxVertCount);
+  return StaPipBagPackagesBBox(vertices, count, maxVertCount);
 }
 
-void StapipBag::print() const {
+void StaPipBag::print() const {
   auto text = getPrint(nullptr);
   printf("%s\n", text.c_str());
 }
 
-void StapipBag::print(const char* name) const {
+void StaPipBag::print(const char* name) const {
   auto text = getPrint(name);
   printf("%s\n", text.c_str());
 }
 
-std::string StapipBag::getPrint(const char* name) const {
+std::string StaPipBag::getPrint(const char* name) const {
   std::stringstream res;
   if (name) {
     res << name << "(";
   } else {
-    res << "StapipBag(";
+    res << "StaPipBag(";
   }
   res << std::fixed << std::setprecision(4);
   res << std::endl;

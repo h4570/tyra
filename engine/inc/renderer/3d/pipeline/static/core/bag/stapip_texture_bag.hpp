@@ -15,10 +15,10 @@
 
 namespace Tyra {
 
-class StapipTextureBag {
+class StaPipTextureBag {
  public:
-  StapipTextureBag();
-  ~StapipTextureBag();
+  StaPipTextureBag();
+  ~StaPipTextureBag();
 
   /** Mandatory. Texture coordinates per vertex. */
   Vec4* coordinates;

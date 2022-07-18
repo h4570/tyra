@@ -19,13 +19,13 @@
 
 namespace Tyra {
 
-class StapipBagPackager {
+class StaPipBagPackager {
  public:
-  StapipBagPackager();
-  ~StapipBagPackager();
+  StaPipBagPackager();
+  ~StaPipBagPackager();
 
   void init(Renderer3DFrustumPlanes* frustumPlanes);
-  void setRenderBBox(StapipBagPackagesBBox* bbox) { renderBBox = bbox; }
+  void setRenderBBox(StaPipBagPackagesBBox* bbox) { renderBBox = bbox; }
   void setMaxVertCount(const u32& count);
 
   /**
@@ -33,20 +33,20 @@ class StapipBagPackager {
    *
    * @param size Max maxVertCount verts (VU1 buffer size)
    */
-  StapipBagPackage* create(u16* o_size, StapipBag* data, u16 size);
+  StaPipBagPackage* create(u16* o_size, StaPipBag* data, u16 size);
   /**
    * @brief Split render package to smaller packages
    *
    * @param size Max maxVertCount verts (VU1 buffer size)
    */
-  StapipBagPackage* create(u16* o_size, const StapipBagPackage& pkg, u16 size);
+  StaPipBagPackage* create(u16* o_size, const StaPipBagPackage& pkg, u16 size);
 
-  CoreBBoxFrustum checkFrustum(const StapipBagPackage& pkg);
+  CoreBBoxFrustum checkFrustum(const StaPipBagPackage& pkg);
 
  private:
   u32 maxVertCount;
   Renderer3DFrustumPlanes* frustumPlanes;
-  StapipBagPackagesBBox* renderBBox;
+  StaPipBagPackagesBBox* renderBBox;
 };
 
 }  // namespace Tyra

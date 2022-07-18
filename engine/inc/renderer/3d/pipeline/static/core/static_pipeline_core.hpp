@@ -19,15 +19,15 @@
 
 namespace Tyra {
 
-class StapipelineCore {
+class StaPipelineCore {
  public:
-  StapipelineCore();
-  ~StapipelineCore();
+  StaPipelineCore();
+  ~StaPipelineCore();
 
   void init(RendererCore* t_core);
 
   /** Render 3D data via "bags" */
-  void render(StapipBag* data, StapipBagPackagesBBox* bbox = nullptr);
+  void render(StaPipBag* data, StaPipBagPackagesBBox* bbox = nullptr);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
   u32 getMaxVertCountByParams(const bool& isSingleColor,
@@ -35,7 +35,7 @@ class StapipelineCore {
                               const bool& isTextureEnabled);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
-  u32 getMaxVertCountByBag(const StapipBag* bag);
+  u32 getMaxVertCountByBag(const StaPipBag* bag);
 
   /**
    * - Uploads standard VU1 programs.
@@ -50,10 +50,10 @@ class StapipelineCore {
   RendererCore* rendererCore;
 
   void setMaxVertCount(const u32& count);
-  StapipBagPackager packager;
-  StapipQBufferRenderer qbufferRenderer;
-  void renderPkgs(StapipBagPackage* packages, u16 count);
-  void renderSubpkgs(StapipBagPackage* packages, u16 count);
+  StaPipBagPackager packager;
+  StaPipQBufferRenderer qbufferRenderer;
+  void renderPkgs(StaPipBagPackage* packages, u16 count);
+  void renderSubpkgs(StaPipBagPackage* packages, u16 count);
 };
 
 }  // namespace Tyra

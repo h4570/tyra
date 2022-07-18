@@ -16,14 +16,14 @@
 
 namespace Tyra {
 
-class StapipCullDVU1Program : public StapipVU1Program {
+class StaPipCullDVU1Program : public StaPipVU1Program {
  public:
-  StapipCullDVU1Program();
-  ~StapipCullDVU1Program();
+  StaPipCullDVU1Program();
+  ~StaPipCullDVU1Program();
 
   std::string getStringName() const;
   void addProgramQBufferDataToPacket(packet2_t* packet,
-                                     StapipQBuffer* qbuffer) const;
+                                     StaPipQBuffer* qbuffer) const;
 };
 
 }  // namespace Tyra

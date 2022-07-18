@@ -15,10 +15,10 @@
 
 namespace Tyra {
 
-class StapipLightingOptions {
+class StaPipLightingOptions {
  public:
-  StapipLightingOptions() {}
-  ~StapipLightingOptions() {}
+  StaPipLightingOptions() {}
+  ~StaPipLightingOptions() {}
 
   /**
    * Mandatory.

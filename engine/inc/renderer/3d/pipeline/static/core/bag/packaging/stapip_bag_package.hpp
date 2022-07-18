@@ -15,12 +15,12 @@
 
 namespace Tyra {
 
-class StapipBagPackage {
+class StaPipBagPackage {
  public:
-  StapipBagPackage();
-  ~StapipBagPackage();
+  StaPipBagPackage();
+  ~StaPipBagPackage();
 
-  StapipBag* bag;
+  StaPipBag* bag;
 
   Vec4* vertices;
   Vec4* sts;
@@ -32,12 +32,12 @@ class StapipBagPackage {
   CoreBBoxFrustum isInFrustum;
 
   /**
-   * We are creating StapipBagPackagesBBox which checks CoreBBoxBBox for every
+   * We are creating StaPipBagPackagesBBox which checks CoreBBoxBBox for every
    * maxVertCount / 3. So this variable is index of starting
-   * StapipBagPackagesBBox's CoreBBoxBBox. If package have <= maxVertCount / 3
+   * StaPipBagPackagesBBox's CoreBBoxBBox. If package have <= maxVertCount / 3
    * verts, we will need only single (starting) bbox. if package have
    * maxVertCount verts, we will calculate CoreBBoxBBox from 3
-   * StapipBagPackagesBBox's bboxes.
+   * StaPipBagPackagesBBox's bboxes.
    */
   u32 indexOf1By3BBox;
 

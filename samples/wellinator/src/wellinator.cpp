@@ -18,7 +18,7 @@ Wellinator::Wellinator(Engine* t_engine) { engine = t_engine; }
 Wellinator::~Wellinator() {}
 
 DynamicMesh* getWarrior(Renderer* renderer);
-StapipOptions* getRenderingOptions();
+StaPipOptions* getRenderingOptions();
 Sprite* get2DPicture(Renderer* renderer);
 
 void Wellinator::init() {
@@ -150,8 +150,8 @@ Sprite* get2DPicture(Renderer* renderer) {
   return sprite;
 }
 
-StapipOptions* getRenderingOptions() {
-  auto* options = new StapipOptions();
+StaPipOptions* getRenderingOptions() {
+  auto* options = new StaPipOptions();
 
   auto* ambientColor = new Color(32.0F, 32.0F, 32.0F, 128.0F);
   auto* directionalColors = new Color[3];
@@ -160,12 +160,12 @@ StapipOptions* getRenderingOptions() {
   for (int i = 0; i < 3; i++)
     directionalDirections[i].set(1.0F, 1.0F, 1.0F, 1.0F);
 
-  auto* lightingOptions = new StapipLightingOptions();  // Memory leak!
+  auto* lightingOptions = new StaPipLightingOptions();  // Memory leak!
   lightingOptions->ambientColor = ambientColor;
   lightingOptions->directionalColors = directionalColors;
   lightingOptions->directionalDirections = directionalDirections;
 
-  options->shadingType = Tyra::StapipShadingGouraud;
+  options->shadingType = Tyra::StaPipShadingGouraud;
   options->blendingEnabled = true;
   options->antiAliasingEnabled = false;
   options->lighting = lightingOptions;

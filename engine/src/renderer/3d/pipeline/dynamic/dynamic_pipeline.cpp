@@ -8,25 +8,18 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#pragma once
-
-#include "./stapip_shading_type.hpp"
-#include "./stapip_lighting_options.hpp"
+#include "renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
 
 namespace Tyra {
 
-class StaPipOptions {
- public:
-  StaPipOptions() {}
-  ~StaPipOptions() {}
+DynamicPipeline::DynamicPipeline() {}
 
-  StaPipShadingType shadingType;
-  bool blendingEnabled;
-  bool antiAliasingEnabled;
-  bool noClipChecks;
+DynamicPipeline::~DynamicPipeline() {}
 
-  /** Optional */
-  StaPipLightingOptions* lighting;
-};
+void DynamicPipeline::init(RendererCore* t_core) {}
+
+void DynamicPipeline::onUse() {}
+
+void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {}
 
 }  // namespace Tyra

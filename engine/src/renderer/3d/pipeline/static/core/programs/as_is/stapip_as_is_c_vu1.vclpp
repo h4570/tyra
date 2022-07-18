@@ -13,7 +13,7 @@
 ;---------------------------------------------------------------
 
 .syntax new
-.name StapipVU1As_Is_C
+.name StaPipVU1As_Is_C
 .vu
 .init_vf_all
 .init_vi_all
@@ -28,7 +28,7 @@
 --enter
 --endenter
 
-#vuprog StapipVU1AsIsC
+#vuprog StaPipVU1AsIsC
 
     LoadTyraStaticData{ gifSetTag }
     LoadTyraSingleColor{ singleColor, singleColorEnabled, VU1_SINGLE_COLOR_ADDR, VU1_OPTIONS_ADDR }

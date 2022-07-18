@@ -12,20 +12,20 @@
 
 namespace Tyra {
 
-enum StapipProgramName {
+enum StaPipProgramName {
   StdipUndefinedProgram,
 
-  StapipCullColor,
-  StapipAsIsColor,
+  StaPipCullColor,
+  StaPipAsIsColor,
 
-  StapipCullDirLights,
-  StapipAsIsDirLights,
+  StaPipCullDirLights,
+  StaPipAsIsDirLights,
 
-  StapipCullTextureDirLights,
-  StapipAsIsTextureDirLights,
+  StaPipCullTextureDirLights,
+  StaPipAsIsTextureDirLights,
 
-  StapipCullTextureColor,
-  StapipAsIsTextureColor,
+  StaPipCullTextureColor,
+  StaPipAsIsTextureColor,
 };
 
 }  // namespace Tyra

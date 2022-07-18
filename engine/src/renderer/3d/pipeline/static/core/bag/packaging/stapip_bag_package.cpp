@@ -16,7 +16,7 @@
 
 namespace Tyra {
 
-StapipBagPackage::StapipBagPackage() {
+StaPipBagPackage::StaPipBagPackage() {
   size = 0;
   bag = nullptr;
   vertices = nullptr;
@@ -24,24 +24,24 @@ StapipBagPackage::StapipBagPackage() {
   normals = nullptr;
   colors = nullptr;
 }
-StapipBagPackage::~StapipBagPackage() {}
+StaPipBagPackage::~StaPipBagPackage() {}
 
-void StapipBagPackage::print() const {
+void StaPipBagPackage::print() const {
   auto text = getPrint(nullptr);
   printf("%s\n", text.c_str());
 }
 
-void StapipBagPackage::print(const char* name) const {
+void StaPipBagPackage::print(const char* name) const {
   auto text = getPrint(name);
   printf("%s\n", text.c_str());
 }
 
-std::string StapipBagPackage::getPrint(const char* name) const {
+std::string StaPipBagPackage::getPrint(const char* name) const {
   std::stringstream res;
   if (name) {
     res << name << "(";
   } else {
-    res << "StapipBagPackage(";
+    res << "StaPipBagPackage(";
   }
   res << std::fixed << std::setprecision(2);
   res << std::endl;

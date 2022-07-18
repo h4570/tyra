@@ -13,7 +13,7 @@
 
 namespace Tyra {
 
-StapipLightingBag::StapipLightingBag(const bool& manual) {
+StaPipLightingBag::StaPipLightingBag(const bool& manual) {
   isAllocated = false;
   mode = Auto;
   normals = nullptr;
@@ -27,24 +27,24 @@ StapipLightingBag::StapipLightingBag(const bool& manual) {
   }
 }
 
-StapipLightingBag::~StapipLightingBag() { deallocate(); }
+StaPipLightingBag::~StaPipLightingBag() { deallocate(); }
 
-void StapipLightingBag::setAmbientColor(const Color& color) {
+void StaPipLightingBag::setAmbientColor(const Color& color) {
   TYRA_ASSERT(mode != Manual, "Ambient color cannot be set in manual mode");
   lightColors[3].set(reinterpret_cast<const Vec4&>(color));
 }
 
-void StapipLightingBag::setDirectionalLightColors(Color* colors,
+void StaPipLightingBag::setDirectionalLightColors(Color* colors,
                                                   const u8& count) {
   for (u8 i = 0; i < count; i++) setDirectionalLightColor(colors[i], i);
 }
 
-void StapipLightingBag::setDirectionalLightDirections(Vec4* directions,
+void StaPipLightingBag::setDirectionalLightDirections(Vec4* directions,
                                                       const u8& count) {
   for (u8 i = 0; i < count; i++) setDirectionalLightDirection(directions[i], i);
 }
 
-void StapipLightingBag::setDirectionalLightColor(const Color& color,
+void StaPipLightingBag::setDirectionalLightColor(const Color& color,
                                                  const u8& index) {
   TYRA_ASSERT(mode != Manual,
               "Directional lights cannot be set in manual mode");
@@ -52,7 +52,7 @@ void StapipLightingBag::setDirectionalLightColor(const Color& color,
   lightColors[index].set(reinterpret_cast<const Vec4&>(color));
 }
 
-void StapipLightingBag::setDirectionalLightDirection(const Vec4& direction,
+void StaPipLightingBag::setDirectionalLightDirection(const Vec4& direction,
                                                      const u8& index) {
   TYRA_ASSERT(mode != Manual,
               "Directional lights cannot be set in manual mode");
@@ -61,19 +61,19 @@ void StapipLightingBag::setDirectionalLightDirection(const Vec4& direction,
   lightDirections[index].set(direction);
 }
 
-void StapipLightingBag::setLightsManually(Vec4* colors, Vec4* directions) {
+void StaPipLightingBag::setLightsManually(Vec4* colors, Vec4* directions) {
   deallocate();
   lightColors = colors;
   lightDirections = directions;
   mode = Manual;
 }
 
-void StapipLightingBag::disableManualMode() {
+void StaPipLightingBag::disableManualMode() {
   allocate();
   mode = Auto;
 }
 
-void StapipLightingBag::allocate() {
+void StaPipLightingBag::allocate() {
   if (isAllocated) return;
 
   lightColors = new Vec4[4];
@@ -92,27 +92,27 @@ void StapipLightingBag::allocate() {
   isAllocated = true;
 }
 
-void StapipLightingBag::deallocate() {
+void StaPipLightingBag::deallocate() {
   if (!isAllocated) return;
 
   forceDeallocate();
 }
 
-void StapipLightingBag::forceDeallocate() {
+void StaPipLightingBag::forceDeallocate() {
   forceDeallocateColors();
   forceDeallocateDirections();
 
   isAllocated = false;
 }
 
-void StapipLightingBag::forceDeallocateColors() {
+void StaPipLightingBag::forceDeallocateColors() {
   if (lightColors != nullptr) {
     delete[] lightColors;
     lightColors = nullptr;
   }
 }
 
-void StapipLightingBag::forceDeallocateDirections() {
+void StaPipLightingBag::forceDeallocateDirections() {
   if (lightDirections != nullptr) {
     delete[] lightDirections;
     lightDirections = nullptr;

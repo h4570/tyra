@@ -19,10 +19,10 @@
 
 namespace Tyra {
 
-class Stapipeline : public Renderer3DPipeline {
+class StaticPipeline : public Renderer3DPipeline {
  public:
-  Stapipeline();
-  ~Stapipeline();
+  StaticPipeline();
+  ~StaticPipeline();
 
   void init(RendererCore* core);
 
@@ -30,30 +30,30 @@ class Stapipeline : public Renderer3DPipeline {
 
   /**
    * Render 3D data via "meshes".
-   * This render() method is a bridge to core.renderer3D.render() method.
+   * This render() method is a bridge to core.render() method.
    */
-  void render(DynamicMesh* mesh, const StapipOptions* options = nullptr);
+  void render(DynamicMesh* mesh, const StaPipOptions* options = nullptr);
 
  private:
-  StapipelineCore core;
+  StaPipelineCore core;
   RendererCore* rendererCore;
   Vec4* colorsCache;
 
-  void addVertices(DynamicMesh* mesh, MeshMaterial* material, StapipBag* bag,
+  void addVertices(DynamicMesh* mesh, MeshMaterial* material, StaPipBag* bag,
                    MeshFrame* frameFrom, MeshFrame* frameTo) const;
-  StapipInfoBag* getInfoBag(DynamicMesh* mesh, const StapipOptions* options,
+  StaPipInfoBag* getInfoBag(DynamicMesh* mesh, const StaPipOptions* options,
                             M4x4* model) const;
-  StapipColorBag* getColorBag(DynamicMesh* mesh, MeshMaterial* material,
+  StaPipColorBag* getColorBag(DynamicMesh* mesh, MeshMaterial* material,
                               MeshFrame* frameFrom, MeshFrame* frameTo) const;
-  StapipTextureBag* getTextureBag(DynamicMesh* mesh, MeshMaterial* material,
+  StaPipTextureBag* getTextureBag(DynamicMesh* mesh, MeshMaterial* material,
                                   MeshFrame* frameFrom, MeshFrame* frameTo);
-  StapipLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
+  StaPipLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
                                     M4x4* model, MeshFrame* frameFrom,
                                     MeshFrame* frameTo,
-                                    const StapipOptions* options) const;
-  void deallocDrawBags(StapipBag* bag, MeshMaterial* material) const;
+                                    const StaPipOptions* options) const;
+  void deallocDrawBags(StaPipBag* bag, MeshMaterial* material) const;
 
-  void setLightingColorsCache(StapipLightingOptions* lightingOptions);
+  void setLightingColorsCache(StaPipLightingOptions* lightingOptions);
 };
 
 }  // namespace Tyra

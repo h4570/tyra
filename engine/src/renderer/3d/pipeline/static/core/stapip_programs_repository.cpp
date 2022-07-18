@@ -12,31 +12,31 @@
 
 namespace Tyra {
 
-StapipProgramsRepository::StapipProgramsRepository() {}
+StaPipProgramsRepository::StaPipProgramsRepository() {}
 
-StapipProgramsRepository::~StapipProgramsRepository() {}
+StaPipProgramsRepository::~StaPipProgramsRepository() {}
 
-StapipVU1Program* StapipProgramsRepository::getProgram(
-    const StapipProgramName& name) {
+StaPipVU1Program* StaPipProgramsRepository::getProgram(
+    const StaPipProgramName& name) {
   switch (name) {
-    case StapipProgramName::StapipAsIsColor:
+    case StaPipProgramName::StaPipAsIsColor:
       return &asIsColor;
-    case StapipProgramName::StapipCullColor:
+    case StaPipProgramName::StaPipCullColor:
       return &cullColor;
 
-    case StapipProgramName::StapipAsIsDirLights:
+    case StaPipProgramName::StaPipAsIsDirLights:
       return &asIsLightingColor;
-    case StapipProgramName::StapipCullDirLights:
+    case StaPipProgramName::StaPipCullDirLights:
       return &cullLightingColor;
 
-    case StapipProgramName::StapipAsIsTextureDirLights:
+    case StaPipProgramName::StaPipAsIsTextureDirLights:
       return &asIsLightingTextureColor;
-    case StapipProgramName::StapipCullTextureDirLights:
+    case StaPipProgramName::StaPipCullTextureDirLights:
       return &cullLightingTextureColor;
 
-    case StapipProgramName::StapipAsIsTextureColor:
+    case StaPipProgramName::StaPipAsIsTextureColor:
       return &asIsTextureColor;
-    case StapipProgramName::StapipCullTextureColor:
+    case StaPipProgramName::StaPipCullTextureColor:
       return &cullTextureColor;
 
     default:

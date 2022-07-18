@@ -12,11 +12,11 @@
 
 namespace Tyra {
 
-enum StapipProgramType {
-  StapipVU1Color,
-  StapipVU1DirLights,
-  StapipVU1TextureDirLights,
-  StapipVU1TextureColor,
+enum StaPipProgramType {
+  StaPipVU1Color,
+  StaPipVU1DirLights,
+  StaPipVU1TextureDirLights,
+  StaPipVU1TextureColor,
 };
 
 }  // namespace Tyra

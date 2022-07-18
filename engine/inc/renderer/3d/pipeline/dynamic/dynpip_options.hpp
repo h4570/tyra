@@ -10,23 +10,12 @@
 
 #pragma once
 
-#include "./stapip_shading_type.hpp"
-#include "./stapip_lighting_options.hpp"
-
 namespace Tyra {
 
-class StaPipOptions {
+class DynPipOptions {
  public:
-  StaPipOptions() {}
-  ~StaPipOptions() {}
-
-  StaPipShadingType shadingType;
-  bool blendingEnabled;
-  bool antiAliasingEnabled;
-  bool noClipChecks;
-
-  /** Optional */
-  StaPipLightingOptions* lighting;
+  DynPipOptions() {}
+  ~DynPipOptions() {}
 };
 
 }  // namespace Tyra

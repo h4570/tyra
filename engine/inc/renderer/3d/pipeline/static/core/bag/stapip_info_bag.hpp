@@ -17,15 +17,15 @@
 
 namespace Tyra {
 
-class StapipInfoBag {
+class StaPipInfoBag {
  public:
-  StapipInfoBag();
-  ~StapipInfoBag();
+  StaPipInfoBag();
+  ~StaPipInfoBag();
 
   /** Mandatory. Model matrix */
   M4x4* model;
 
-  StapipShadingType shadingType;
+  StaPipShadingType shadingType;
   bool blendingEnabled;
   bool antiAliasingEnabled;
   bool noClipChecks;

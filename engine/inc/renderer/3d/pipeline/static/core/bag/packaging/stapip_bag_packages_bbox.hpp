@@ -18,13 +18,13 @@ namespace Tyra {
  * Splits all 3D input vertices into 16vert parts and creates child bboxes for
  * it
  */
-class StapipBagPackagesBBox {
+class StaPipBagPackagesBBox {
  public:
-  StapipBagPackagesBBox(Vec4* t_vertices, u32* t_faces, const u32& t_facesCount,
+  StaPipBagPackagesBBox(Vec4* t_vertices, u32* t_faces, const u32& t_facesCount,
                         const u32& t_maxVertCount);
-  StapipBagPackagesBBox(Vec4* t_vertices, const u32& t_counts,
+  StaPipBagPackagesBBox(Vec4* t_vertices, const u32& t_counts,
                         const u32& t_maxVertCount);
-  ~StapipBagPackagesBBox();
+  ~StaPipBagPackagesBBox();
 
   void setMaxVertCount(const u32& count);
 

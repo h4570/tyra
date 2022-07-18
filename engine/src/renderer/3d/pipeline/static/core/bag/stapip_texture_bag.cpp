@@ -12,11 +12,11 @@
 
 namespace Tyra {
 
-StapipTextureBag::StapipTextureBag() {
+StaPipTextureBag::StaPipTextureBag() {
   coordinates = nullptr;
   texture = nullptr;
 }
 
-StapipTextureBag::~StapipTextureBag() {}
+StaPipTextureBag::~StaPipTextureBag() {}
 
 }  // namespace Tyra

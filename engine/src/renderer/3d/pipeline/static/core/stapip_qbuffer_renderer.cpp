@@ -34,14 +34,14 @@ namespace Tyra {
  *
  */
 
-StapipQBufferRenderer::StapipQBufferRenderer() {
+StaPipQBufferRenderer::StaPipQBufferRenderer() {
   context = 0;
   lastProgramName = StdipUndefinedProgram;
   staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   programsPacket = nullptr;
 }
-StapipQBufferRenderer::~StapipQBufferRenderer() {
+StaPipQBufferRenderer::~StaPipQBufferRenderer() {
   packet2_free(packets[0]);
   packet2_free(packets[1]);
   packet2_free(staticDataPacket);
@@ -50,7 +50,7 @@ StapipQBufferRenderer::~StapipQBufferRenderer() {
   if (programsPacket) packet2_free(programsPacket);
 }
 
-void StapipQBufferRenderer::init(RendererCore* t_core) {
+void StaPipQBufferRenderer::init(RendererCore* t_core) {
   path1 = t_core->getPath1();
   clipper.init(t_core->getSettings());
   rendererCore = t_core;
@@ -73,16 +73,16 @@ void StapipQBufferRenderer::init(RendererCore* t_core) {
   TYRA_LOG("Renderer3DQBufferRenderer initialized");
 }
 
-void StapipQBufferRenderer::reinitVU1() {
+void StaPipQBufferRenderer::reinitVU1() {
   sendStaticData();
   uploadPrograms();
   setDoubleBuffer();
 }
 
-StapipQBuffer* StapipQBufferRenderer::getBuffer() { return &buffers[context]; }
+StaPipQBuffer* StaPipQBufferRenderer::getBuffer() { return &buffers[context]; }
 
-void StapipQBufferRenderer::sendObjectData(
-    StapipBag* bag, M4x4* mvp, RendererCoreTextureBuffers* texBuffers) const {
+void StaPipQBufferRenderer::sendObjectData(
+    StaPipBag* bag, M4x4* mvp, RendererCoreTextureBuffers* texBuffers) const {
   packet2_reset(objectDataPacket, false);
   packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_MVP_MATRIX_ADDR,
                                    mvp->data, 4, false);
@@ -130,13 +130,13 @@ void StapipQBufferRenderer::sendObjectData(
   dma_channel_send_packet2(objectDataPacket, DMA_CHANNEL_VIF1, true);
 }
 
-void StapipQBufferRenderer::setInfo(StapipInfoBag* bag) {
+void StaPipQBufferRenderer::setInfo(StaPipInfoBag* bag) {
   rendererCore->gs.prim.antialiasing = bag->antiAliasingEnabled;
   rendererCore->gs.prim.blending = bag->blendingEnabled;
   rendererCore->gs.prim.shading = bag->shadingType;
 }
 
-void StapipQBufferRenderer::sendStaticData() const {
+void StaPipQBufferRenderer::sendStaticData() const {
   packet2_reset(staticDataPacket, false);
   packet2_utils_vu_open_unpack(staticDataPacket, VU1_SET_GIFTAG_ADDR, false);
   { packet2_utils_gif_add_set(staticDataPacket, 1); }
@@ -147,27 +147,27 @@ void StapipQBufferRenderer::sendStaticData() const {
   dma_channel_send_packet2(staticDataPacket, DMA_CHANNEL_VIF1, true);
 }
 
-void StapipQBufferRenderer::setProgramsCache() {
+void StaPipQBufferRenderer::setProgramsCache() {
   VU1Program** programs = new VU1Program*[8];
-  programs[0] = repository.getProgram(StapipCullColor);
-  programs[1] = repository.getProgram(StapipAsIsColor);
-  programs[2] = repository.getProgram(StapipCullDirLights);
-  programs[3] = repository.getProgram(StapipAsIsDirLights);
-  programs[4] = repository.getProgram(StapipCullTextureDirLights);
-  programs[5] = repository.getProgram(StapipAsIsTextureDirLights);
-  programs[6] = repository.getProgram(StapipCullTextureColor);
-  programs[7] = repository.getProgram(StapipAsIsTextureColor);
+  programs[0] = repository.getProgram(StaPipCullColor);
+  programs[1] = repository.getProgram(StaPipAsIsColor);
+  programs[2] = repository.getProgram(StaPipCullDirLights);
+  programs[3] = repository.getProgram(StaPipAsIsDirLights);
+  programs[4] = repository.getProgram(StaPipCullTextureDirLights);
+  programs[5] = repository.getProgram(StaPipAsIsTextureDirLights);
+  programs[6] = repository.getProgram(StaPipCullTextureColor);
+  programs[7] = repository.getProgram(StaPipAsIsTextureColor);
   programsPacket = path1->createProgramsCache(programs, 8, 0);
   delete[] programs;
 }
 
-void StapipQBufferRenderer::uploadPrograms() {
+void StaPipQBufferRenderer::uploadPrograms() {
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
   dma_channel_send_packet2(programsPacket, DMA_CHANNEL_VIF1, true);
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
 }
 
-void StapipQBufferRenderer::setDoubleBuffer() {
+void StaPipQBufferRenderer::setDoubleBuffer() {
   u16 startingAddr = VU1_LAST_ITEM_ADDR + 1;
   const u16 bufferMaxSize = 1000;
   bufferSize = (bufferMaxSize - startingAddr) / 2;
@@ -178,7 +178,7 @@ void StapipQBufferRenderer::setDoubleBuffer() {
                     // buffer, to first addr of second buffer
 }
 
-void StapipQBufferRenderer::cull(StapipQBuffer* buffer) {
+void StaPipQBufferRenderer::cull(StaPipQBuffer* buffer) {
   if (buffer->size == 0) {
     return;
   }
@@ -188,8 +188,8 @@ void StapipQBufferRenderer::cull(StapipQBuffer* buffer) {
   sendPacket();
 }
 
-// void StapipQBufferRenderer::sendFinishTag() {
-// StapipQBufferRenderer way proposition
+// void StaPipQBufferRenderer::sendFinishTag() {
+// StaPipQBufferRenderer way proposition
 // auto program = path1->getProgramByName(Draw_Finish);
 // addBufferDataToPacket(program, nullptr);
 // sendPacket();
@@ -206,7 +206,7 @@ void StapipQBufferRenderer::cull(StapipQBuffer* buffer) {
 // packet2_free(packet2);
 // }
 
-void StapipQBufferRenderer::clip(StapipQBuffer* buffer) {
+void StaPipQBufferRenderer::clip(StaPipQBuffer* buffer) {
   if (buffer->size == 0) {
     return;
   }
@@ -220,12 +220,12 @@ void StapipQBufferRenderer::clip(StapipQBuffer* buffer) {
   }
 }
 
-void StapipQBufferRenderer::clearLastProgramName() {
+void StaPipQBufferRenderer::clearLastProgramName() {
   lastProgramName = StdipUndefinedProgram;
 }
 
-void StapipQBufferRenderer::addBufferDataToPacket(StapipVU1Program* program,
-                                                  StapipQBuffer* buffer) {
+void StaPipQBufferRenderer::addBufferDataToPacket(StaPipVU1Program* program,
+                                                  StaPipQBuffer* buffer) {
   currentPacket = packets[context];
   packet2_reset(currentPacket, false);
 
@@ -241,7 +241,7 @@ void StapipQBufferRenderer::addBufferDataToPacket(StapipVU1Program* program,
   packet2_utils_vu_add_end_tag(currentPacket);
 }
 
-void StapipQBufferRenderer::sendPacket() {
+void StaPipQBufferRenderer::sendPacket() {
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
 
@@ -249,72 +249,72 @@ void StapipQBufferRenderer::sendPacket() {
   context = !context;
 }
 
-void StapipQBufferRenderer::setMaxVertCount(const u32& count) {
+void StaPipQBufferRenderer::setMaxVertCount(const u32& count) {
   buffers[0].setMaxVertCount(count);
   buffers[1].setMaxVertCount(count);
   clipper.setMaxVertCount(count);
 }
 
-StapipVU1Program* StapipQBufferRenderer::getAsIsProgramByBag(
-    const StapipBag* bag) {
+StaPipVU1Program* StaPipQBufferRenderer::getAsIsProgramByBag(
+    const StaPipBag* bag) {
   auto programType = getDrawProgramTypeByBag(bag);
 
-  if (programType == StapipVU1TextureDirLights)
-    return getProgramByName(StapipAsIsTextureDirLights);
-  else if (programType == StapipVU1DirLights)
-    return getProgramByName(StapipAsIsDirLights);
-  else if (programType == StapipVU1TextureColor)
-    return getProgramByName(StapipAsIsTextureColor);
+  if (programType == StaPipVU1TextureDirLights)
+    return getProgramByName(StaPipAsIsTextureDirLights);
+  else if (programType == StaPipVU1DirLights)
+    return getProgramByName(StaPipAsIsDirLights);
+  else if (programType == StaPipVU1TextureColor)
+    return getProgramByName(StaPipAsIsTextureColor);
   else
-    return getProgramByName(StapipAsIsColor);
+    return getProgramByName(StaPipAsIsColor);
 }
 
-StapipVU1Program* StapipQBufferRenderer::getCullProgramByBag(
-    const StapipBag* bag) {
+StaPipVU1Program* StaPipQBufferRenderer::getCullProgramByBag(
+    const StaPipBag* bag) {
   auto programType = getDrawProgramTypeByBag(bag);
   return getCullProgramByType(programType);
 }
 
-StapipVU1Program* StapipQBufferRenderer::getProgramByName(
-    const StapipProgramName& name) {
+StaPipVU1Program* StaPipQBufferRenderer::getProgramByName(
+    const StaPipProgramName& name) {
   return repository.getProgram(name);
 }
 
-StapipVU1Program* StapipQBufferRenderer::getCullProgramByParams(
+StaPipVU1Program* StaPipQBufferRenderer::getCullProgramByParams(
     const bool& isLightingEnabled, const bool& isTextureEnabled) {
   auto type = getDrawProgramTypeByParams(isLightingEnabled, isTextureEnabled);
   return getCullProgramByType(type);
 }
 
-StapipVU1Program* StapipQBufferRenderer::getCullProgramByType(
-    const StapipProgramType& programType) {
-  if (programType == StapipVU1TextureDirLights)
-    return getProgramByName(StapipCullTextureDirLights);
-  else if (programType == StapipVU1DirLights)
-    return getProgramByName(StapipCullDirLights);
-  else if (programType == StapipVU1TextureColor)
-    return getProgramByName(StapipCullTextureColor);
+StaPipVU1Program* StaPipQBufferRenderer::getCullProgramByType(
+    const StaPipProgramType& programType) {
+  if (programType == StaPipVU1TextureDirLights)
+    return getProgramByName(StaPipCullTextureDirLights);
+  else if (programType == StaPipVU1DirLights)
+    return getProgramByName(StaPipCullDirLights);
+  else if (programType == StaPipVU1TextureColor)
+    return getProgramByName(StaPipCullTextureColor);
   else
-    return getProgramByName(StapipCullColor);
+    return getProgramByName(StaPipCullColor);
 }
 
-StapipProgramType StapipQBufferRenderer::getDrawProgramTypeByBag(
-    const StapipBag* bag) const {
+StaPipProgramType StaPipQBufferRenderer::getDrawProgramTypeByBag(
+    const StaPipBag* bag) const {
   auto isLightingEnabled = bag->lighting != nullptr;
   auto isTextureEnabled = bag->texture != nullptr;
   return getDrawProgramTypeByParams(isLightingEnabled, isTextureEnabled);
 }
 
-StapipProgramType StapipQBufferRenderer::getDrawProgramTypeByParams(
+StaPipProgramType StaPipQBufferRenderer::getDrawProgramTypeByParams(
     const bool& isLightingEnabled, const bool& isTextureEnabled) const {
   if (isLightingEnabled && isTextureEnabled)
-    return StapipVU1TextureDirLights;
+    return StaPipVU1TextureDirLights;
   else if (isLightingEnabled)
-    return StapipVU1DirLights;
+    return StaPipVU1DirLights;
   else if (isTextureEnabled)
-    return StapipVU1TextureColor;
+    return StaPipVU1TextureColor;
   else
-    return StapipVU1Color;
+    return StaPipVU1Color;
 }
 
 }  // namespace Tyra

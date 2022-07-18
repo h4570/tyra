@@ -13,7 +13,7 @@
 ;---------------------------------------------------------------
 
 .syntax new
-.name StapipVU1Cull_D
+.name StaPipVU1Cull_D
 .vu
 .init_vf_all
 .init_vi_all
@@ -28,7 +28,7 @@
 --enter
 --endenter
 
-#vuprog StapipVU1CullD
+#vuprog StaPipVU1CullD
 
     ResetClipFlags{ }
     LoadTyraStaticData{ gifSetTag }

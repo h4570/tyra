@@ -25,11 +25,11 @@ namespace Tyra {
  * To be honest clipping algorithm should be moved to VU1 and "AsIs" VU1 program
  * should be renamed to "Clip" - I don't want to do it now, too much time.
  */
-class StapipClipper {
+class StaPipClipper {
  public:
-  StapipClipper();
-  ~StapipClipper();
-  void clip(StapipQBuffer* buffer);
+  StaPipClipper();
+  ~StaPipClipper();
+  void clip(StaPipQBuffer* buffer);
   void init(const RendererSettings& settings);
   void setMaxVertCount(const u32& count);
   void setMVP(M4x4* mvp);
@@ -41,7 +41,7 @@ class StapipClipper {
 
   void perspectiveDivide(std::vector<Path1ClipVertex>* vertices);
   void moveDataToBuffer(const std::vector<Path1ClipVertex>& vertices,
-                        StapipQBuffer* buffer);
+                        StaPipQBuffer* buffer);
 };
 
 }  // namespace Tyra

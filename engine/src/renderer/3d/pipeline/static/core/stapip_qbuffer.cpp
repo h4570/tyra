@@ -14,7 +14,7 @@
 
 namespace Tyra {
 
-StapipQBuffer::StapipQBuffer() {
+StaPipQBuffer::StaPipQBuffer() {
   size = 0;
   _isDynamicallyAllocated = false;
   _stAllocated = false;
@@ -27,11 +27,11 @@ StapipQBuffer::StapipQBuffer() {
   normals = nullptr;
 }
 
-StapipQBuffer::~StapipQBuffer() { deallocateDynamicData(); }
+StaPipQBuffer::~StaPipQBuffer() { deallocateDynamicData(); }
 
-void StapipQBuffer::setMaxVertCount(const u32& count) { maxVertCount = count; }
+void StaPipQBuffer::setMaxVertCount(const u32& count) { maxVertCount = count; }
 
-void StapipQBuffer::fillByPointer(const StapipBagPackage& pkg) {
+void StaPipQBuffer::fillByPointer(const StaPipBagPackage& pkg) {
   TYRA_ASSERT(pkg.size <= maxVertCount, "VU1 buffer supports only ",
               maxVertCount, " verts. Provided: ", pkg.size);
 
@@ -45,9 +45,9 @@ void StapipQBuffer::fillByPointer(const StapipBagPackage& pkg) {
   bag = pkg.bag;
 }
 
-void StapipQBuffer::fillByCopyMax(const StapipBagPackage& pkg1,
-                                  const StapipBagPackage& pkg2,
-                                  const StapipBagPackage& pkg3) {
+void StaPipQBuffer::fillByCopyMax(const StaPipBagPackage& pkg1,
+                                  const StaPipBagPackage& pkg2,
+                                  const StaPipBagPackage& pkg3) {
   TYRA_ASSERT(pkg1.size <= maxVertCount / 3,
               "Wrong package size (1). Provided: ", pkg1.size);
   TYRA_ASSERT(pkg2.size <= maxVertCount / 3,
@@ -97,8 +97,8 @@ void StapipQBuffer::fillByCopyMax(const StapipBagPackage& pkg1,
   bag = pkg1.bag;
 }
 
-void StapipQBuffer::fillByCopy1By2(const StapipBagPackage& pkg1,
-                                   const StapipBagPackage& pkg2) {
+void StaPipQBuffer::fillByCopy1By2(const StaPipBagPackage& pkg1,
+                                   const StaPipBagPackage& pkg2) {
   TYRA_ASSERT(pkg1.size <= maxVertCount / 3,
               "Wrong package size (1). Provided: ", pkg1.size);
   TYRA_ASSERT(pkg2.size <= maxVertCount / 3,
@@ -133,7 +133,7 @@ void StapipQBuffer::fillByCopy1By2(const StapipBagPackage& pkg1,
   bag = pkg1.bag;
 }
 
-void StapipQBuffer::fillByCopy1By3(const StapipBagPackage& pkg) {
+void StaPipQBuffer::fillByCopy1By3(const StaPipBagPackage& pkg) {
   TYRA_ASSERT(pkg.size <= maxVertCount / 3,
               "Wrong package size (1). Provided: ", pkg.size);
 
@@ -155,13 +155,13 @@ void StapipQBuffer::fillByCopy1By3(const StapipBagPackage& pkg) {
   bag = pkg.bag;
 }
 
-void StapipQBuffer::reallocateManually(const u16& t_size) {
+void StaPipQBuffer::reallocateManually(const u16& t_size) {
   deallocateDynamicData();
   allocateDynamicData(t_size, bag);
   size = t_size;
 }
 
-void StapipQBuffer::deallocateDynamicData() {
+void StaPipQBuffer::deallocateDynamicData() {
   if (_isDynamicallyAllocated) {
     delete[] vertices;
 
@@ -186,7 +186,7 @@ void StapipQBuffer::deallocateDynamicData() {
 
 /** When we not receive maxVertCount vertices, we must align it by ourself.
  * Too bad - not efficient. */
-void StapipQBuffer::allocateDynamicData(u16 size, StapipBag* bag) {
+void StaPipQBuffer::allocateDynamicData(u16 size, StaPipBag* bag) {
   TYRA_ASSERT(size <= maxVertCount, "Wrong size. Max buffer size in VU1 is ",
               maxVertCount, ". Provided: ", size);
   TYRA_ASSERT(!_isDynamicallyAllocated, "Buffer is already allocated");
@@ -211,19 +211,19 @@ void StapipQBuffer::allocateDynamicData(u16 size, StapipBag* bag) {
   _isDynamicallyAllocated = true;
 }
 
-bool StapipQBuffer::any() const { return size > 0; }
+bool StaPipQBuffer::any() const { return size > 0; }
 
-void StapipQBuffer::print() const {
+void StaPipQBuffer::print() const {
   auto text = getPrint(nullptr);
   printf("%s\n", text.c_str());
 }
 
-void StapipQBuffer::print(const char* name) const {
+void StaPipQBuffer::print(const char* name) const {
   auto text = getPrint(name);
   printf("%s\n", text.c_str());
 }
 
-std::string StapipQBuffer::getPrint(const char* name) const {
+std::string StaPipQBuffer::getPrint(const char* name) const {
   std::stringstream res;
   if (name) {
     res << name << "(";

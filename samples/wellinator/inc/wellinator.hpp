@@ -36,8 +36,8 @@ class Wellinator : public Game {
   Vec4 cameraPosition, cameraLookAt;
 
   MinecraftPipeline mcPip;
-  Stapipeline stapip;
-  StapipOptions* renderOptions;
+  StaticPipeline stapip;
+  StaPipOptions* renderOptions;
   Texture* blocksTex;
 
   u32 blocksCount;

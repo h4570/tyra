@@ -12,18 +12,18 @@
 
 namespace Tyra {
 
-StapipClipper::StapipClipper() {}
-StapipClipper::~StapipClipper() {}
+StaPipClipper::StaPipClipper() {}
+StaPipClipper::~StaPipClipper() {}
 
-void StapipClipper::setMVP(M4x4* t_mvp) { mvp = t_mvp; }
+void StaPipClipper::setMVP(M4x4* t_mvp) { mvp = t_mvp; }
 
-void StapipClipper::init(const RendererSettings& settings) {
+void StaPipClipper::init(const RendererSettings& settings) {
   algorithm.init(settings);
 }
 
-void StapipClipper::setMaxVertCount(const u32& count) { maxVertCount = count; }
+void StaPipClipper::setMaxVertCount(const u32& count) { maxVertCount = count; }
 
-void StapipClipper::clip(StapipQBuffer* buffer) {
+void StaPipClipper::clip(StaPipQBuffer* buffer) {
   TYRA_ASSERT(buffer->size <= maxVertCount / 3, "Buffer should have max ",
               maxVertCount / 3, " verts if we want to clip it.");
 
@@ -64,14 +64,14 @@ void StapipClipper::clip(StapipQBuffer* buffer) {
   moveDataToBuffer(clippedVertices, buffer);
 }
 
-void StapipClipper::perspectiveDivide(std::vector<Path1ClipVertex>* vertices) {
+void StaPipClipper::perspectiveDivide(std::vector<Path1ClipVertex>* vertices) {
   for (u32 i = 0; i < vertices->size(); i++) {
     (*vertices)[i].position /= (*vertices)[i].position.w;
   }
 }
 
-void StapipClipper::moveDataToBuffer(
-    const std::vector<Path1ClipVertex>& vertices, StapipQBuffer* buffer) {
+void StaPipClipper::moveDataToBuffer(
+    const std::vector<Path1ClipVertex>& vertices, StaPipQBuffer* buffer) {
   buffer->reallocateManually(vertices.size());
 
   for (u32 i = 0; i < vertices.size(); i++) {

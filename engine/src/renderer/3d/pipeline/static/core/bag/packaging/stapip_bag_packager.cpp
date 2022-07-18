@@ -15,10 +15,10 @@
 
 namespace Tyra {
 
-StapipBagPackager::StapipBagPackager() {}
-StapipBagPackager::~StapipBagPackager() {}
+StaPipBagPackager::StaPipBagPackager() {}
+StaPipBagPackager::~StaPipBagPackager() {}
 
-void StapipBagPackager::init(Renderer3DFrustumPlanes* t_frustumPlanes) {
+void StaPipBagPackager::init(Renderer3DFrustumPlanes* t_frustumPlanes) {
   frustumPlanes = t_frustumPlanes;
 }
 
@@ -27,13 +27,13 @@ void StapipBagPackager::init(Renderer3DFrustumPlanes* t_frustumPlanes) {
  *
  * @param size Max maxVertCount verts (VU1 buffer size)
  */
-StapipBagPackage* StapipBagPackager::create(u16* o_size, StapipBag* data,
+StaPipBagPackage* StaPipBagPackager::create(u16* o_size, StaPipBag* data,
                                             u16 size) {
-  TYRA_ASSERT(size <= maxVertCount, "StapipBagPackage can have max ",
+  TYRA_ASSERT(size <= maxVertCount, "StaPipBagPackage can have max ",
               maxVertCount, " verts. Provided \"", size, "\"");
 
   *o_size = ceil(data->count / static_cast<float>(size));
-  StapipBagPackage* result = new StapipBagPackage[*o_size];
+  StaPipBagPackage* result = new StaPipBagPackage[*o_size];
 
   for (u16 i = 0; i < *o_size; i++) {
     result[i].bag = data;
@@ -65,14 +65,14 @@ StapipBagPackage* StapipBagPackager::create(u16* o_size, StapipBag* data,
  *
  * @param size Max maxVertCount verts (VU1 buffer size)
  */
-StapipBagPackage* StapipBagPackager::create(u16* o_count,
-                                            const StapipBagPackage& pkg,
+StaPipBagPackage* StaPipBagPackager::create(u16* o_count,
+                                            const StaPipBagPackage& pkg,
                                             u16 size) {
-  TYRA_ASSERT(size <= maxVertCount, "StapipBagPackage can have max ",
+  TYRA_ASSERT(size <= maxVertCount, "StaPipBagPackage can have max ",
               maxVertCount, " verts. Provided \"", size, "\"");
 
   *o_count = ceil(pkg.size / static_cast<float>(size));
-  auto* result = new StapipBagPackage[*o_count];
+  auto* result = new StaPipBagPackage[*o_count];
 
   for (u16 i = 0; i < *o_count; i++) {
     result[i].bag = pkg.bag;
@@ -99,7 +99,7 @@ StapipBagPackage* StapipBagPackager::create(u16* o_count,
   return result;
 }
 
-CoreBBoxFrustum StapipBagPackager::checkFrustum(const StapipBagPackage& pkg) {
+CoreBBoxFrustum StaPipBagPackager::checkFrustum(const StaPipBagPackage& pkg) {
   if (pkg.size <= (maxVertCount / 3)) {  // Is subpackage
     auto& bbox = renderBBox->getChildBBox1By3(pkg.indexOf1By3BBox);
     return bbox.clipIsInFrustum(frustumPlanes->getAll(), *pkg.bag->info->model);
@@ -112,7 +112,7 @@ CoreBBoxFrustum StapipBagPackager::checkFrustum(const StapipBagPackage& pkg) {
   }
 }
 
-void StapipBagPackager::setMaxVertCount(const u32& count) {
+void StaPipBagPackager::setMaxVertCount(const u32& count) {
   maxVertCount = count;
 }
 

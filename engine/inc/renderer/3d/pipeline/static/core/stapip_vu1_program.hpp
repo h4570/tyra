@@ -17,33 +17,33 @@
 
 namespace Tyra {
 
-class StapipVU1Program : public VU1Program {
+class StaPipVU1Program : public VU1Program {
  public:
-  StapipVU1Program(const StapipProgramName& name, u32* start, u32* end,
+  StaPipVU1Program(const StaPipProgramName& name, u32* start, u32* end,
                    const u32& t_reglist, const u8& t_reglistCount,
                    const u8& t_elementsPerVertex);
-  ~StapipVU1Program();
+  ~StaPipVU1Program();
 
   u32& getReglist();
 
-  const StapipProgramName& getName() const;
+  const StaPipProgramName& getName() const;
 
   u16 getMaxVertCount(const bool& singleColorEnabled,
                       const u16& vu1DBufferSize) const;
 
-  void addBufferDataToPacket(packet2_t* packet, StapipQBuffer* buffer,
+  void addBufferDataToPacket(packet2_t* packet, StaPipQBuffer* buffer,
                              prim_t* prim);
 
  protected:
-  StapipProgramName name;
+  StaPipProgramName name;
   u8 reglistCount, elementsPerVertex;
   u32 destinationAddress, reglist;
 
   virtual void addProgramQBufferDataToPacket(packet2_t* packet,
-                                             StapipQBuffer* qbuffer) const = 0;
+                                             StaPipQBuffer* qbuffer) const = 0;
 
  private:
-  void addStandardBufferDataToPacket(packet2_t* packet, StapipQBuffer* buffer,
+  void addStandardBufferDataToPacket(packet2_t* packet, StaPipQBuffer* buffer,
                                      prim_t* prim);
 };
 

@@ -11,25 +11,25 @@
 #include "debug/debug.hpp"
 #include "renderer/3d/pipeline/static/core/programs/cull/stapip_cull_d_vu1_program.hpp"
 
-extern u32 StapipVU1Cull_D_CodeStart __attribute__((section(".vudata")));
-extern u32 StapipVU1Cull_D_CodeEnd __attribute__((section(".vudata")));
+extern u32 StaPipVU1Cull_D_CodeStart __attribute__((section(".vudata")));
+extern u32 StaPipVU1Cull_D_CodeEnd __attribute__((section(".vudata")));
 
 namespace Tyra {
 
-StapipCullDVU1Program::StapipCullDVU1Program()
-    : StapipVU1Program(StapipCullDirLights, &StapipVU1Cull_D_CodeStart,
-                       &StapipVU1Cull_D_CodeEnd,
+StaPipCullDVU1Program::StaPipCullDVU1Program()
+    : StaPipVU1Program(StaPipCullDirLights, &StaPipVU1Cull_D_CodeStart,
+                       &StaPipVU1Cull_D_CodeEnd,
                        ((u64)GIF_REG_RGBAQ) << 0 | ((u64)GIF_REG_XYZ2) << 4, 2,
                        3) {}
 
-StapipCullDVU1Program::~StapipCullDVU1Program() {}
+StaPipCullDVU1Program::~StaPipCullDVU1Program() {}
 
-std::string StapipCullDVU1Program::getStringName() const {
+std::string StaPipCullDVU1Program::getStringName() const {
   return std::string("Cull - LC");
 }
 
-void StapipCullDVU1Program::addProgramQBufferDataToPacket(
-    packet2_t* packet, StapipQBuffer* qbuffer) const {
+void StaPipCullDVU1Program::addProgramQBufferDataToPacket(
+    packet2_t* packet, StaPipQBuffer* qbuffer) const {
   u32 addr = VU1_VERT_DATA_ADDR;
 
   // Add vertices

@@ -28,10 +28,10 @@
 
 namespace Tyra {
 
-class StapipQBufferRenderer {
+class StaPipQBufferRenderer {
  public:
-  StapipQBufferRenderer();
-  ~StapipQBufferRenderer();
+  StaPipQBufferRenderer();
+  ~StaPipQBufferRenderer();
 
   void init(RendererCore* t_core);
 
@@ -39,26 +39,26 @@ class StapipQBufferRenderer {
 
   void setClipperMVP(M4x4* mvp) { clipper.setMVP(mvp); }
 
-  StapipQBuffer* getBuffer();
+  StaPipQBuffer* getBuffer();
 
-  void sendObjectData(StapipBag* bag, M4x4* mvp,
+  void sendObjectData(StaPipBag* bag, M4x4* mvp,
                       RendererCoreTextureBuffers* texBuffers) const;
 
   void setMaxVertCount(const u32& count);
 
-  void setInfo(StapipInfoBag* bag);
+  void setInfo(StaPipInfoBag* bag);
 
   /** Fast render with culling */
-  void cull(StapipQBuffer* buffer);
+  void cull(StaPipQBuffer* buffer);
 
   /** Slower render with clipping */
-  void clip(StapipQBuffer* buffer);
+  void clip(StaPipQBuffer* buffer);
 
   void clearLastProgramName();
 
-  StapipVU1Program* getCullProgramByBag(const StapipBag* bag);
+  StaPipVU1Program* getCullProgramByBag(const StaPipBag* bag);
 
-  StapipVU1Program* getCullProgramByParams(const bool& isLightingEnabled,
+  StaPipVU1Program* getCullProgramByParams(const bool& isLightingEnabled,
                                            const bool& isTextureEnabled);
 
   const u16& getBufferSize() { return bufferSize; }
@@ -69,27 +69,27 @@ class StapipQBufferRenderer {
   void uploadPrograms();
   void setDoubleBuffer();
 
-  StapipVU1Program* getProgramByName(const StapipProgramName& name);
-  void addBufferDataToPacket(StapipVU1Program* program, StapipQBuffer* buffer);
+  StaPipVU1Program* getProgramByName(const StaPipProgramName& name);
+  void addBufferDataToPacket(StaPipVU1Program* program, StaPipQBuffer* buffer);
   void sendPacket();
-  StapipVU1Program* getAsIsProgramByBag(const StapipBag* bag);
-  StapipVU1Program* getCullProgramByType(const StapipProgramType& programType);
-  StapipProgramType getDrawProgramTypeByBag(const StapipBag* bag) const;
-  StapipProgramType getDrawProgramTypeByParams(
+  StaPipVU1Program* getAsIsProgramByBag(const StaPipBag* bag);
+  StaPipVU1Program* getCullProgramByType(const StaPipProgramType& programType);
+  StaPipProgramType getDrawProgramTypeByBag(const StaPipBag* bag) const;
+  StaPipProgramType getDrawProgramTypeByParams(
       const bool& isLightingEnabled, const bool& isTextureEnabled) const;
   packet2_t* packets[2];
   packet2_t* programsPacket;
-  StapipQBuffer buffers[2];
+  StaPipQBuffer buffers[2];
   packet2_t* currentPacket;
   packet2_t* staticDataPacket;
   packet2_t* objectDataPacket;
 
   RendererCore* rendererCore;
 
-  StapipProgramName lastProgramName;
+  StaPipProgramName lastProgramName;
   Path1* path1;
-  StapipClipper clipper;
-  StapipProgramsRepository repository;
+  StaPipClipper clipper;
+  StaPipProgramsRepository repository;
 
   u16 bufferSize;
   u8 context;

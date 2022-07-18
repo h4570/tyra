@@ -17,10 +17,10 @@ namespace Tyra {
 /**
  * @brief Color data. At least one color data is required (single/many).
  */
-class StapipColorBag {
+class StaPipColorBag {
  public:
-  StapipColorBag();
-  ~StapipColorBag();
+  StaPipColorBag();
+  ~StaPipColorBag();
 
   /** Optional. Single color for all vertices. */
   Color* single;

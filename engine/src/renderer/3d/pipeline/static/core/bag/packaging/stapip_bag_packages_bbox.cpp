@@ -18,7 +18,7 @@
 
 namespace Tyra {
 
-StapipBagPackagesBBox::StapipBagPackagesBBox(Vec4* t_vertices, u32* t_faces,
+StaPipBagPackagesBBox::StaPipBagPackagesBBox(Vec4* t_vertices, u32* t_faces,
                                              const u32& t_facesCount,
                                              const u32& t_maxVertCount) {
   u32 splitPartSize = t_maxVertCount / 3;
@@ -35,7 +35,7 @@ StapipBagPackagesBBox::StapipBagPackagesBBox(Vec4* t_vertices, u32* t_faces,
   mainBBox = new RenderBBox(*bboxParts, 0, partsCount);
 }
 
-StapipBagPackagesBBox::StapipBagPackagesBBox(Vec4* t_vertices,
+StaPipBagPackagesBBox::StaPipBagPackagesBBox(Vec4* t_vertices,
                                              const u32& t_count,
                                              const u32& t_maxVertCount) {
   u32 splitPartSize = t_maxVertCount / 3;
@@ -52,40 +52,40 @@ StapipBagPackagesBBox::StapipBagPackagesBBox(Vec4* t_vertices,
   mainBBox = new RenderBBox(*bboxParts, 0, partsCount);
 }
 
-const RenderBBox& StapipBagPackagesBBox::getChildBBox1By3(
+const RenderBBox& StaPipBagPackagesBBox::getChildBBox1By3(
     const u32& index) const {
   TYRA_ASSERT(index < partsCount,
               "Index out of range. Provided index: ", index);
   return static_cast<RenderBBox&>(bboxParts->at(index));
 }
 
-RenderBBox* StapipBagPackagesBBox::getMainBBox() { return mainBBox; }
+RenderBBox* StaPipBagPackagesBBox::getMainBBox() { return mainBBox; }
 
-const u32& StapipBagPackagesBBox::getPartsCount() const { return partsCount; }
+const u32& StaPipBagPackagesBBox::getPartsCount() const { return partsCount; }
 
-const u32& StapipBagPackagesBBox::getVertexCount() const { return vertexCount; }
+const u32& StaPipBagPackagesBBox::getVertexCount() const { return vertexCount; }
 
-RenderBBox StapipBagPackagesBBox::createChildBBox(const u32& index,
+RenderBBox StaPipBagPackagesBBox::createChildBBox(const u32& index,
                                                   const u16& partsSize) const {
   return RenderBBox(*bboxParts, index, partsSize);
 }
 
-void StapipBagPackagesBBox::print() const {
+void StaPipBagPackagesBBox::print() const {
   auto text = getPrint(nullptr);
   printf("%s\n", text.c_str());
 }
 
-void StapipBagPackagesBBox::print(const char* name) const {
+void StaPipBagPackagesBBox::print(const char* name) const {
   auto text = getPrint(name);
   printf("%s\n", text.c_str());
 }
 
-std::string StapipBagPackagesBBox::getPrint(const char* name) const {
+std::string StaPipBagPackagesBBox::getPrint(const char* name) const {
   std::stringstream res;
   if (name) {
     res << name << "(";
   } else {
-    res << "StapipBagPackagesBBox(";
+    res << "StaPipBagPackagesBBox(";
   }
   res << std::fixed << std::setprecision(2);
   res << std::endl;
@@ -106,7 +106,7 @@ std::string StapipBagPackagesBBox::getPrint(const char* name) const {
   return res.str();
 }
 
-StapipBagPackagesBBox::~StapipBagPackagesBBox() {
+StaPipBagPackagesBBox::~StaPipBagPackagesBBox() {
   delete bboxParts;
   delete mainBBox;
 }

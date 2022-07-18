@@ -27,22 +27,22 @@
 
 namespace Tyra {
 
-class StapipProgramsRepository {
+class StaPipProgramsRepository {
  public:
-  StapipProgramsRepository();
-  ~StapipProgramsRepository();
+  StaPipProgramsRepository();
+  ~StaPipProgramsRepository();
 
-  StapipVU1Program* getProgram(const StapipProgramName& name);
+  StaPipVU1Program* getProgram(const StaPipProgramName& name);
 
  private:
-  StapipAsIsCVU1Program asIsColor;
-  StapipCullCVU1Program cullColor;
-  StapipAsIsDVU1Program asIsLightingColor;
-  StapipCullDVU1Program cullLightingColor;
-  StapipAsIsTDVU1Program asIsLightingTextureColor;
-  StapipCullTDVU1Program cullLightingTextureColor;
-  StapipAsIsTCVU1Program asIsTextureColor;
-  StapipCullTCVU1Program cullTextureColor;
+  StaPipAsIsCVU1Program asIsColor;
+  StaPipCullCVU1Program cullColor;
+  StaPipAsIsDVU1Program asIsLightingColor;
+  StaPipCullDVU1Program cullLightingColor;
+  StaPipAsIsTDVU1Program asIsLightingTextureColor;
+  StaPipCullTDVU1Program cullLightingTextureColor;
+  StaPipAsIsTCVU1Program asIsTextureColor;
+  StaPipCullTCVU1Program cullTextureColor;
   VU1DrawFinish drawFinish;
 };
 

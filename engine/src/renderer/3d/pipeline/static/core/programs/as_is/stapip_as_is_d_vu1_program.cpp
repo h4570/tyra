@@ -11,25 +11,25 @@
 #include "debug/debug.hpp"
 #include "renderer/3d/pipeline/static/core/programs/as_is/stapip_as_is_d_vu1_program.hpp"
 
-extern u32 StapipVU1As_Is_D_CodeStart __attribute__((section(".vudata")));
-extern u32 StapipVU1As_Is_D_CodeEnd __attribute__((section(".vudata")));
+extern u32 StaPipVU1As_Is_D_CodeStart __attribute__((section(".vudata")));
+extern u32 StaPipVU1As_Is_D_CodeEnd __attribute__((section(".vudata")));
 
 namespace Tyra {
 
-StapipAsIsDVU1Program::StapipAsIsDVU1Program()
-    : StapipVU1Program(StapipAsIsDirLights, &StapipVU1As_Is_D_CodeStart,
-                       &StapipVU1As_Is_D_CodeEnd,
+StaPipAsIsDVU1Program::StaPipAsIsDVU1Program()
+    : StaPipVU1Program(StaPipAsIsDirLights, &StaPipVU1As_Is_D_CodeStart,
+                       &StaPipVU1As_Is_D_CodeEnd,
                        ((u64)GIF_REG_RGBAQ) << 0 | ((u64)GIF_REG_XYZ2) << 4, 2,
                        3) {}
 
-StapipAsIsDVU1Program::~StapipAsIsDVU1Program() {}
+StaPipAsIsDVU1Program::~StaPipAsIsDVU1Program() {}
 
-std::string StapipAsIsDVU1Program::getStringName() const {
+std::string StaPipAsIsDVU1Program::getStringName() const {
   return std::string("As is - LC");
 }
 
-void StapipAsIsDVU1Program::addProgramQBufferDataToPacket(
-    packet2_t* packet, StapipQBuffer* qbuffer) const {
+void StaPipAsIsDVU1Program::addProgramQBufferDataToPacket(
+    packet2_t* packet, StaPipQBuffer* qbuffer) const {
   u32 addr = VU1_VERT_DATA_ADDR;
 
   // Add vertices
