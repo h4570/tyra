@@ -69,7 +69,7 @@ u16 StaPipVU1Program::getMaxVertCount(const bool& singleColorEnabled,
   res /= (colorElementsPerVertex + reglistCount);
 
   // Buffer size = VU1 double buffer size (xtop)
-  // res = qbuffer size (directly inside VU1)
+  // QBufferSize = res (it is placed inside VU1)
 
   // Must be dividable by 3 and the result also dividable by 3. Why?
   // 1st dividable reason - triangle, and packaging system in 3d rendering

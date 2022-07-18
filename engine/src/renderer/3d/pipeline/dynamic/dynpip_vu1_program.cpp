@@ -63,24 +63,21 @@ void DynPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
 
 u16 DynPipVU1Program::getMaxVertCount(const bool& singleColorEnabled,
                                       const u16& bufferSize) const {
-  return 0;  // TODO
+  u16 res = bufferSize - 4;
+  u8 colorElementsPerVertex =
+      singleColorEnabled ? (elementsPerVertex - 1) : elementsPerVertex;
+  res /= (colorElementsPerVertex + reglistCount);
 
-  // u16 res = bufferSize - 4;
-  // u8 colorElementsPerVertex =
-  //     singleColorEnabled ? (elementsPerVertex - 1) : elementsPerVertex;
-  // res /= (colorElementsPerVertex + reglistCount);
+  // Buffer size = VU1 double buffer size (xtop)
+  // QBufferSize = res (it is placed inside VU1)
 
-  // // Buffer size = VU1 double buffer size (xtop)
-  // // res = qbuffer size (directly inside VU1)
+  // Animation = 2 verts for final vert
+  res = res / 2;
 
-  // // Must be dividable by 3 and the result also dividable by 3. Why?
-  // // 1st dividable reason - triangle, and packaging system in 3d rendering
-  // // 2nd dividable reason - subpackaging system. We are splitting packages
-  // into
-  // // 3 subpackages in 3d renderer.
-  // res = res / 3 / 3;
-  // res = res * 3 * 3;
-  // return res;
+  // Triangle = 3 verts
+  res = res / 3;
+  res = res * 3;
+  return res;
 }
 
 }  // namespace Tyra
