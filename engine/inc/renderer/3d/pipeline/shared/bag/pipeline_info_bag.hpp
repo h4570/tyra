@@ -28,7 +28,16 @@ class PipelineInfoBag {
   PipelineShadingType shadingType;
   bool blendingEnabled;
   bool antiAliasingEnabled;
-  bool noClipChecks;
+
+  /**
+   * @brief True -> disables "clip against each plane" algorithm.
+   * Mandatory, default: false.
+   *
+   * Full clip checks are slow, but they are
+   * preventing visual artifacts, which can happen
+   * for big 3D objects (or objects near camera eyes)
+   */
+  bool noFullClipChecks;
 };
 
 }  // namespace Tyra

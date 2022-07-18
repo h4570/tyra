@@ -32,7 +32,7 @@ void StaPipCore::init(RendererCore* t_core) {
   packager.init(&rendererCore->renderer3D.frustumPlanes);
 }
 
-void StaPipCore::reinitStandardVU1Programs() { qbufferRenderer.reinitVU1(); }
+void StaPipCore::reinitVU1Programs() { qbufferRenderer.reinitVU1(); }
 
 u32 StaPipCore::getMaxVertCountByBag(const StaPipBag* bag) {
   return qbufferRenderer.getCullProgramByBag(bag)->getMaxVertCount(
@@ -106,7 +106,7 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   qbufferRenderer.setInfo(bag->info);
 
   if (frustumCheck == IN_FRUSTUM ||
-      (frustumCheck == PARTIALLY_IN_FRUSTUM && bag->info->noClipChecks)) {
+      (frustumCheck == PARTIALLY_IN_FRUSTUM && bag->info->noFullClipChecks)) {
     u16 packagesCount = 0;
     auto biggerPkgs = packager.create(&packagesCount, bag, maxVertCount);
     Verbose("Material - in frustum. Pkgs: ", packagesCount,

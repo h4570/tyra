@@ -20,7 +20,7 @@ DynPipCore::~DynPipCore() {}
 
 void DynPipCore::init(RendererCore* t_core) { rendererCore = t_core; }
 
-void DynPipCore::reinitStandardVU1Programs() {}
+void DynPipCore::reinitVU1Programs() {}
 
 void DynPipCore::render(DynPipBag* bag) {}
 

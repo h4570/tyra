@@ -21,7 +21,7 @@ void StaticPipeline::init(RendererCore* t_core) {
   core.init(t_core);
 }
 
-void StaticPipeline::onUse() { core.reinitStandardVU1Programs(); }
+void StaticPipeline::onUse() { core.reinitVU1Programs(); }
 
 void StaticPipeline::render(DynamicMesh* mesh, const StaPipOptions* options) {
   auto model = mesh->getModelMatrix();
@@ -92,12 +92,12 @@ PipelineInfoBag* StaticPipeline::getInfoBag(DynamicMesh* mesh,
     result->antiAliasingEnabled = options->antiAliasingEnabled;
     result->blendingEnabled = options->blendingEnabled;
     result->shadingType = options->shadingType;
-    result->noClipChecks = options->noClipChecks;
+    result->noFullClipChecks = options->noFullClipChecks;
   } else {
     result->antiAliasingEnabled = false;
     result->blendingEnabled = true;
     result->shadingType = StaPipShadingFlat;
-    result->noClipChecks = true;
+    result->noFullClipChecks = false;
   }
 
   result->model = model;

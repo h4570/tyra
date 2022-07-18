@@ -43,7 +43,7 @@ class StaPipCore {
    * - Sets double buffers exactly for "Tyra Renderer3D"
    * Should be called if VU1 was used by your non standard programs.
    */
-  void reinitStandardVU1Programs();
+  void reinitVU1Programs();
 
  private:
   u32 maxVertCount;
