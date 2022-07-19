@@ -3,7 +3,7 @@
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
-# Copyright 2020 - 2022, tyra - https://github.com/h4570/tyra
+# Copyright 2020 - 2022 - 2022, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # Wellington Carvalho <wellcoj@gmail.com>
 */

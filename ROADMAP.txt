@@ -1,16 +1,18 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 --- H4570
-- [Renderer] Move clipping algorithm into VU1
-- [Renderer] Move animation calcs into VU1
-- [Renderer] Dbufferring during mesh unroll
+- [Renderer] Static and dynamic pipeline
+- [Renderer] Add possibility to on/off frustum check in all pipelines (renderOptions?)
 - [Loaders] Think about ".tyrobj" format - implement it (add multicolor support)
-- [Loaders] DFF loader
+- [Loaders] DFF loader as static Mesh loader
 - [Texture] Test cache hits with large amount of textures (dolphin sample?)
 - [Demo] Create cool demo which will show all features of Tyra (I will take this one)
 
 --- Wellinator
 - [General] Physics and stuff from threeJS
+
+--- Wolf3s
+- [General] All Copyrights to 2020-2022 and add clang format check(Codacy) 
 
 --- Unassigned
 
@@ -25,11 +27,9 @@
 - [General] Check all TYRA_ASSERT() if there are no asserts like (TYRA_ASSERT(!audsrv_load_adpcm(result, data, adpcmFileSize)))
 because this lines will be removed on make-release. Only debug stuff should be checked in assert
 
-- [General] All Copyrights to 2020-2022
-
-- [General] CI in Github via docker image
-
 - [General] Add cpp lint checker in GitHub
+
+- [General] CI in Github via docker image + 
 
 - [Tutorials] 1. Hello world! - explain init(), loop() and what should be inside them (every tutorial should be well commented!)
 
@@ -37,10 +37,10 @@ because this lines will be removed on make-release. Only debug stuff should be c
 
 - [Tutorials] 3. Minecraft cube - explain this pipeline, and explain that there are many 3D pipelines
 
-- [Tutorials] 4. Mesh rendering - explain stdPipeline, render .tyrobj file via Mesh class, explain that this is high-level 
+- [Tutorials] 4. Mesh rendering - explain staticPipeline, render .tyrobj file via Mesh class, explain that this is high-level 
 abstract 3D object class, and what it have (animation etc)
 
-- [Tutorials] 5. Manual rendering via stdPipeline - via Render3DBag (core.render()), render simple poly,
+- [Tutorials] 5. Manual rendering via staticPipeline - via Render3DBag (core.render()), render simple poly,
 explain that this is lower-level abstract rendering, it have the all the features as Mesh rendering, 
 because Mesh rendering uses only core.render()
 
