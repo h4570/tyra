@@ -65,6 +65,7 @@ void H4570::init() {
       FileUtils::fromCwd("blocks.png"));
 
   mcPip.init(&engine->renderer.core);
+  dynpip.init(&engine->renderer.core);
   stapip.init(&engine->renderer.core);
 
   picture = get2DPicture(&engine->renderer);
@@ -137,13 +138,16 @@ void H4570::loop() {
 
     // engine->renderer.renderer2D.render(picture);
 
-    engine->renderer.renderer3D.usePipeline(&stapip);
-    {
-      stapip.render(warrior, renderOptions);
-      // stapip.render(warrior2, renderOptions);
-      // stapip.render(warrior3, renderOptions);
-      // stapip.render(warrior4, renderOptions);
-    }
+    // engine->renderer.renderer3D.usePipeline(&stapip);
+    // {
+    //   stapip.render(warrior, renderOptions);
+    //   // stapip.render(warrior2, renderOptions);
+    //   // stapip.render(warrior3, renderOptions);
+    //   // stapip.render(warrior4, renderOptions);
+    // }
+
+    engine->renderer.renderer3D.usePipeline(&dynpip);
+    { dynpip.render(warrior); }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);
     { mcPip.render(blocks, blocksCount, blocksTex, false); }
@@ -189,12 +193,12 @@ StaPipOptions* getRenderingOptions() {
   for (int i = 0; i < 3; i++)
     directionalDirections[i].set(1.0F, 1.0F, 1.0F, 1.0F);
 
-  auto* lightingOptions = new StaPipLightingOptions();  // Memory leak!
+  auto* lightingOptions = new PipelineLightingOptions();  // Memory leak!
   lightingOptions->ambientColor = ambientColor;
   lightingOptions->directionalColors = directionalColors;
   lightingOptions->directionalDirections = directionalDirections;
 
-  options->shadingType = Tyra::StaPipShadingGouraud;
+  options->shadingType = Tyra::TyraShadingGouraud;
   options->blendingEnabled = true;
   options->antiAliasingEnabled = false;
   options->lighting = lightingOptions;

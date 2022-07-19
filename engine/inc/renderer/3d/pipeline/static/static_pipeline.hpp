@@ -12,10 +12,11 @@
 
 #include <tamtypes.h>
 #include "../renderer_3d_pipeline.hpp"
-#include "./stapip_options.hpp"
+#include "../shared/pipeline_lighting_options.hpp"
 #include "renderer/core/renderer_core.hpp"
 #include "renderer/3d/mesh/dynamic/dynamic_mesh.hpp"
 #include "./core/stapip_core.hpp"
+#include "./stapip_options.hpp"
 
 namespace Tyra {
 
@@ -54,7 +55,7 @@ class StaticPipeline : public Renderer3DPipeline {
                                     const StaPipOptions* options) const;
   void deallocDrawBags(StaPipBag* bag, MeshMaterial* material) const;
 
-  void setLightingColorsCache(StaPipLightingOptions* lightingOptions);
+  void setLightingColorsCache(PipelineLightingOptions* lightingOptions);
 };
 
 }  // namespace Tyra

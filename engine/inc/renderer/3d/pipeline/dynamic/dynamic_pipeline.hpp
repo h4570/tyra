@@ -12,7 +12,7 @@
 
 #include <tamtypes.h>
 #include "../renderer_3d_pipeline.hpp"
-#include "./core/dynpip_options.hpp"
+#include "./dynpip_options.hpp"
 #include "./core/dynpip_core.hpp"
 #include "renderer/core/renderer_core.hpp"
 #include "renderer/3d/mesh/dynamic/dynamic_mesh.hpp"
@@ -35,6 +35,26 @@ class DynamicPipeline : public Renderer3DPipeline {
    * This render() method is a bridge to core.render() method.
    */
   void render(DynamicMesh* mesh, const DynPipOptions* options = nullptr);
+
+ private:
+  RendererCore* rendererCore;
+  Vec4* colorsCache;
+
+  void addVertices(DynamicMesh* mesh, MeshMaterial* material, DynPipBag* bag,
+                   MeshFrame* frameFrom, MeshFrame* frameTo) const;
+  PipelineInfoBag* getInfoBag(DynamicMesh* mesh, const DynPipOptions* options,
+                              M4x4* model) const;
+  DynPipColorBag* getColorBag(DynamicMesh* mesh, MeshMaterial* material,
+                              MeshFrame* frameFrom, MeshFrame* frameTo) const;
+  DynPipTextureBag* getTextureBag(DynamicMesh* mesh, MeshMaterial* material,
+                                  MeshFrame* frameFrom, MeshFrame* frameTo);
+  DynPipLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
+                                    M4x4* model, MeshFrame* frameFrom,
+                                    MeshFrame* frameTo,
+                                    const DynPipOptions* options) const;
+  void deallocDrawBags(DynPipBag* bag, MeshMaterial* material) const;
+
+  void setLightingColorsCache(PipelineLightingOptions* lightingOptions);
 };
 
 }  // namespace Tyra

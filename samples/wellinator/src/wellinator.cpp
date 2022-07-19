@@ -160,12 +160,12 @@ StaPipOptions* getRenderingOptions() {
   for (int i = 0; i < 3; i++)
     directionalDirections[i].set(1.0F, 1.0F, 1.0F, 1.0F);
 
-  auto* lightingOptions = new StaPipLightingOptions();  // Memory leak!
+  auto* lightingOptions = new PipelineLightingOptions();  // Memory leak!
   lightingOptions->ambientColor = ambientColor;
   lightingOptions->directionalColors = directionalColors;
   lightingOptions->directionalDirections = directionalDirections;
 
-  options->shadingType = Tyra::StaPipShadingGouraud;
+  options->shadingType = Tyra::TyraShadingGouraud;
   options->blendingEnabled = true;
   options->antiAliasingEnabled = false;
   options->lighting = lightingOptions;

@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "renderer/3d/pipeline/shared/bag/pipeline_shading_type.hpp"
-#include "./stapip_lighting_options.hpp"
+#include "renderer/3d/pipeline/shared/pipeline_shading_type.hpp"
+#include "../shared/pipeline_lighting_options.hpp"
 
 namespace Tyra {
 
@@ -35,7 +35,7 @@ class StaPipOptions {
   bool noFullClipChecks;
 
   /** Optional */
-  StaPipLightingOptions* lighting;
+  PipelineLightingOptions* lighting;
 };
 
 }  // namespace Tyra

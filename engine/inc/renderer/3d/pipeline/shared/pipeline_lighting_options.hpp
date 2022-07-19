@@ -15,10 +15,10 @@
 
 namespace Tyra {
 
-class StaPipLightingOptions {
+class PipelineLightingOptions {
  public:
-  StaPipLightingOptions() {}
-  ~StaPipLightingOptions() {}
+  PipelineLightingOptions() {}
+  ~PipelineLightingOptions() {}
 
   /**
    * Mandatory.

@@ -13,8 +13,8 @@
 namespace Tyra {
 
 enum PipelineShadingType {
-  StaPipShadingFlat,
-  StaPipShadingGouraud,
+  TyraShadingFlat,
+  TyraShadingGouraud,
 };
 
 }  // namespace Tyra

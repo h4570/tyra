@@ -13,7 +13,7 @@
 namespace Tyra {
 
 PipelineInfoBag::PipelineInfoBag() {
-  shadingType = StaPipShadingFlat;
+  shadingType = TyraShadingFlat;
   blendingEnabled = true;
   antiAliasingEnabled = false;
   model = nullptr;

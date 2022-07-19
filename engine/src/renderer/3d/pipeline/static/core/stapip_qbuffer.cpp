@@ -228,13 +228,13 @@ std::string StaPipQBuffer::getPrint(const char* name) const {
   if (name) {
     res << name << "(";
   } else {
-    res << "Path1Buffer(";
+    res << "StaPipQBuffer(";
   }
   res << std::fixed << std::setprecision(2);
   res << std::endl;
   res << "Size: " << static_cast<int>(size) << std::endl;
 
-  res << "Vectors: " << std::endl;
+  res << "Vertices: " << std::endl;
   for (u32 i = 0; i < size; i++)
     res << i << ": " << vertices[i].getPrint() << std::endl;
 

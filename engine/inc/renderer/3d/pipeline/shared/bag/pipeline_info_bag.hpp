@@ -13,7 +13,7 @@
 #include <draw.h>
 #include "math/m4x4.hpp"
 #include "math/vec4.hpp"
-#include "./pipeline_shading_type.hpp"
+#include "../pipeline_shading_type.hpp"
 
 namespace Tyra {
 
@@ -36,6 +36,7 @@ class PipelineInfoBag {
    * Full clip checks are slow, but they are
    * preventing visual artifacts, which can happen
    * for big 3D objects (or objects near camera eyes)
+   * Force enabled in dynamic pipe, because of efficiency.
    */
   bool noFullClipChecks;
 };

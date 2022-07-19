@@ -14,6 +14,7 @@
 #include <game.hpp>
 #include "renderer/3d/pipeline/minecraft/minecraft_pipeline.hpp"
 #include "renderer/3d/pipeline/static/static_pipeline.hpp"
+#include "renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
 
 namespace Tyra {
 
@@ -39,6 +40,7 @@ class H4570 : public Game {
   Vec4 cameraPosition, cameraLookAt;
 
   MinecraftPipeline mcPip;
+  DynamicPipeline dynpip;
   StaticPipeline stapip;
   StaPipOptions* renderOptions;
   Texture* blocksTex;

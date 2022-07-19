@@ -36,7 +36,7 @@ void StaticPipeline::render(DynamicMesh* mesh, const StaPipOptions* options) {
 
   auto* infoBag = getInfoBag(mesh, options, &model);
 
-  if (options->lighting) setLightingColorsCache(options->lighting);
+  if (options && options->lighting) setLightingColorsCache(options->lighting);
 
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
@@ -96,7 +96,7 @@ PipelineInfoBag* StaticPipeline::getInfoBag(DynamicMesh* mesh,
   } else {
     result->antiAliasingEnabled = false;
     result->blendingEnabled = true;
-    result->shadingType = StaPipShadingFlat;
+    result->shadingType = TyraShadingFlat;
     result->noFullClipChecks = false;
   }
 
@@ -197,7 +197,7 @@ StaPipLightingBag* StaticPipeline::getLightingBag(
 }
 
 void StaticPipeline::setLightingColorsCache(
-    StaPipLightingOptions* lightingOptions) {
+    PipelineLightingOptions* lightingOptions) {
   for (int i = 0; i < 3; i++) {
     colorsCache[i] =
         reinterpret_cast<Vec4&>(lightingOptions->directionalColors[i]);
