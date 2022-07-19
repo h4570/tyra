@@ -1,0 +1,15 @@
+LIB         += -ltyra
+LIBDIRS     += -L$(ENGINEDIR)/bin
+INC         += -I$(ENGINEDIR)/inc
+INCDEP		+= -I$(ENGINEDIR)/inc
+
+include ../../Makefile.base
+
+clean-engine:
+	cd $(ENGINEDIR) && $(MAKE) cleaner
+
+build-engine:
+	cd $(ENGINEDIR) && $(MAKE)
+
+build-release-engine:
+	cd $(ENGINEDIR) && $(MAKE) release

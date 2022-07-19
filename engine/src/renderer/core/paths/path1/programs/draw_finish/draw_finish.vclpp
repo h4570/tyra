@@ -1,0 +1,45 @@
+; ______       ____   ___
+;   |     \/   ____| |___|
+;   |     |   |   \  |   |
+;---------------------------------------------------------------
+; Copyright 2022, tyra - https://github.com/h4570/tyra
+; Licenced under Apache License 2.0
+; Sandro Sobczyński <sandro.sobczynski@gmail.com>
+;
+;---------------------------------------------------------------
+; Needed for synchronization with draw_wait_finish()
+;---------------------------------------------------------------
+
+.syntax new
+.name VU1DrawFinish
+.vu
+.init_vf_all
+.init_vi_all
+
+#include "src/renderer/core/paths/path1/programs/vcl_sml.i"
+#include "src/renderer/core/paths/path1/programs/tyra_macros.i"
+#include "inc/renderer/3d/pipeline/std/core/path1/programs/stdpip_vu1_shared_defines.h"
+
+--enter
+--endenter
+
+#vuprog VU1DrawFinish
+
+    LoadTyraStaticData{ gifSetTag }
+    
+    xtop buffer
+    lq      drawFinishTag,      0(buffer)
+    lq      primTag,            1(buffer)
+
+    iaddiu  kickAddress,        buffer,  2
+
+    sq      gifSetTag,          0(kickAddress)
+    sq      drawFinishTag,      1(kickAddress)
+    sq      primTag,            2(kickAddress)
+
+    xgkick  kickAddress
+
+#endvuprog
+
+--exit
+--endexit
