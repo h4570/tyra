@@ -19,80 +19,59 @@ namespace Tyra {
  */
 class Ray {
  public:
-  /**
-   * Constructor create a ampty ray
-   *
-   */
+  /** @brief Constructor create a ampty ray */
   Ray();
 
-  /**
-   * Constructor
+  /** 
    * @param origin The origin of the ray
    * @param direction The direction of the ray (normalized Vec4)
-   *
    */
-  Ray(Vec4* origin, Vec4* direction);
+  Ray(const Vec4& origin, const Vec4& direction);
   ~Ray();
-
-  Vec4 origin;
-  Vec4 direction;
 
   // Methods
 
   /**
-   * Set origin and direction
+   * @param origin Vec4 starting point of the ray;  
+   * @param direction Vec4 normalized vector pointing to direction;
    */
-  void set(Vec4 origin, Vec4 direction);
+  void set(const Vec4& origin, const Vec4& direction);
+
+  /** 
+   * @brief Set origin of the ray;
+   * @param origin Vec4 starting point of the ray;   
+   */
+  void setOrigin(const Vec4& origin);
+
+  /** 
+   * @brief Set direction of the ray;
+   * @param direction Vec4 normalized vector pointing to direction;
+   */
+  void setDirection(const Vec4& direction);
 
   /**
-   * Set origin only
-   */
-  void setOrigin(Vec4 origin);
-  void setOrigin(const float& t_x, const float& t_y, const float& t_z);
-
-  /**
-   * Set direction only
-   */
-  void setDirection(Vec4 origin);
-  void setDirection(const float& t_x, const float& t_y, const float& t_z);
-
-  /**
-   * Return Vec4 that is a given distance along this Ray
+   * @return Vec4 that is a given distance along this Ray
    * @param t - the distance along the Ray to retrieve a position for.
    */
-  Vec4 at(float t);
+  Vec4 at(const float& t);
+
+  /** @return Distance from the Vec4 point to the origin */
+  float distanceToPoint(const Vec4& point);
 
   /**
-   * Return the distance from the Vec4 point to the origin
-   */
-  float distanceToPoint(Vec4 point);
-
-  /**
-   * Returns distance from origin to intersected mesh
-   */
-  float distanceTo(const Vec4& v) const;
-
-  /**
-   * Returns Vec4 of intersection position
    * @param minCorner - pointer to min corner position. (bottom left)
    * @param maxCorner - pointer to max corner position. (top right)
    * @param distance - the box to intersect with.
-   *
+   * @return Vec4 point of intersection
    */
-  u8 intersectBox(Vec4* minCorner, Vec4* maxCorner, float& distance);
+  u8 intersectBox(const Vec4& minCorner, const Vec4& maxCorner, float& distance);
 
-  /**
-   * Returns distance from origin to intersected mesh
-   */
-  inline const Vec4 getPosition() { return _position; };
-
-  /**
-   * Returns inverse direction
-   */
-  Vec4 invDir();
+  /** Returns inverse direction */
+  const Vec4 invDir();
 
  private:
-  Vec4 _position;
+  Vec4 _origin;
+  Vec4 _direction;
 };
 
 }  // namespace Tyra

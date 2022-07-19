@@ -16,43 +16,40 @@
 namespace Tyra {
 
 Ray::Ray() {}
-Ray::Ray(Vec4* origin, Vec4* direction) {
-  this->origin.set(origin->x, origin->y, origin->z);
-  this->direction.set(direction->x, direction->y, direction->z);
+Ray::Ray(const Vec4& origin, const Vec4& direction) {
+  this->_origin.set(origin);
+  this->_direction.set(direction);
 }
 
 Ray::~Ray() {}
 
-void Ray::set(Vec4 origin, Vec4 direction) {
-  this->origin.set(origin);
-  this->direction.set(direction);
+void Ray::set(const Vec4& origin, const Vec4& direction) {
+  this->_origin.set(origin);
+  this->_direction.set(direction);
 }
 
-void Ray::setOrigin(Vec4 origin) { this->origin.set(origin); }
+void Ray::setOrigin(const Vec4& origin) { this->_origin.set(origin); }
 
-void Ray::setOrigin(const float& t_x, const float& t_y, const float& t_z) {
-  this->origin.set(t_x, t_y, t_z);
+void Ray::setDirection(const Vec4& direction) {
+  this->_direction.set(direction);
 }
 
-void Ray::setDirection(Vec4 direction) { this->direction.set(direction); }
+Vec4 Ray::at(const float& t) { return (this->_direction * t) + this->_origin; }
 
-void Ray::setDirection(const float& t_x, const float& t_y, const float& t_z) {
-  this->direction.set(t_x, t_y, t_z);
+float Ray::distanceToPoint(const Vec4& point) {
+  return this->_origin.distanceTo(point);
 }
 
-float Ray::distanceToPoint(Vec4 point) { return origin.distanceTo(point); }
-
-Vec4 Ray::at(float t) { return (this->direction * t) + this->origin; }
-
-u8 Ray::intersectBox(Vec4* minCorner, Vec4* maxCorner, float& distance) {
+u8 Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
+                     float& distance) {
   float tmin, tmax, tymin, tymax, tzmin, tzmax;
   Vec4 invDir = this->invDir();
   invDir.normalize();
 
-  tmin = (minCorner->x - this->origin.x) * invDir.x;
-  tmax = (maxCorner->x - this->origin.x) * invDir.x;
-  tymin = (minCorner->y - this->origin.y) * invDir.y;
-  tymax = (maxCorner->y - this->origin.y) * invDir.y;
+  tmin = (minCorner.x - this->_origin.x) * invDir.x;
+  tmax = (maxCorner.x - this->_origin.x) * invDir.x;
+  tymin = (minCorner.y - this->_origin.y) * invDir.y;
+  tymax = (maxCorner.y - this->_origin.y) * invDir.y;
 
   if ((tmin > tymax) || (tymin > tmax)) {
     distance = -1.0f;
@@ -63,8 +60,8 @@ u8 Ray::intersectBox(Vec4* minCorner, Vec4* maxCorner, float& distance) {
 
   if (tymax < tmax) tmax = tymax;
 
-  tzmin = (minCorner->z - this->origin.z) * invDir.z;
-  tzmax = (maxCorner->z - this->origin.z) * invDir.z;
+  tzmin = (minCorner.z - this->_origin.z) * invDir.z;
+  tzmax = (maxCorner.z - this->_origin.z) * invDir.z;
 
   if ((tmin > tzmax) || (tzmin > tmax)) {
     distance = -1.0f;
@@ -84,9 +81,9 @@ u8 Ray::intersectBox(Vec4* minCorner, Vec4* maxCorner, float& distance) {
   return 1;
 }
 
-Vec4 Ray::invDir() {
-  return Vec4(1 / this->direction.x, 1 / this->direction.y,
-                 1 / this->direction.z);
+const Vec4 Ray::invDir() {
+  return Vec4(1 / this->_direction.x, 1 / this->_direction.y,
+              1 / this->_direction.z, 1);
 }
 
 }  // Namespace Tyra
