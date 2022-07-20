@@ -21,7 +21,7 @@ Tyra_Version::~Tyra_Version()
 
 }
 
-void Tyra_Version::GetVersion(Tyra_Version &version)
+void Tyra_Version::Get()
 {
   Tyra_Version::MAJOR = TYRA_MAJOR_VERSION;
   Tyra_Version::MINOR = TYRA_MINOR_VERSION;

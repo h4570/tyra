@@ -20,7 +20,7 @@
 #include "modules/pad.hpp"
 #include "modules/audio.hpp"
 #include "modules/file_service.hpp"
-
+#include "utils/Tyra_version.hpp"
 class Engine
 {
 
@@ -36,7 +36,7 @@ public:
     ScreenSettings screen;
     Pad pad;
     float fps;
-
+    Tyra_Version version;
 private:
     void firePS2();
     u8 fpsDelayer;

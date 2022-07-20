@@ -29,7 +29,7 @@ class Tyra_Version
 public:   
      Tyra_Version();
     ~Tyra_Version();  
-    void GetVersion(Tyra_Version &version);
+    void Get();
 private:  
     u32 MAJOR; 
     u32 MINOR;

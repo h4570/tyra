@@ -76,6 +76,7 @@ void Engine::firePS2()
     // fileService.startThread();
     // audio.startThread(&fileService);
     audio.startThread(NULL);
+    version.Get();
     isInitialized = 0;
     mainThreadId = GetThreadId();
 }
