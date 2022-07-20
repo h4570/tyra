@@ -9,21 +9,32 @@
 */
 
 #include "../include/utils/Tyra_version.hpp"
+#include "../include/utils/debug.hpp"
 
-Tyra_VersionSelect::Tyra_Version()
+Tyra_Version::Tyra_Version()
 {
 
 }
 
-Tyra_VersionSelect::~Tyra_Version()
+Tyra_Version::~Tyra_Version()
 {
 
 }
 
-Tyra_VersionSelect::GetVersion(Tyra_number &version)
+void Tyra_Version::GetVersion(Tyra_Version &version)
 {
-  version->MAJOR = TYRA_MAJOR_VERSION;
-  version->MINOR = TYRA_MINOR_VERSION;
-  version->PATCH_LEVEL = TYRA_PATCH_LEVEL;
-  version->VERSION = TYRA_NAME;
+  Tyra_Version::MAJOR = TYRA_MAJOR_VERSION;
+  Tyra_Version::MINOR = TYRA_MINOR_VERSION;
+  Tyra_Version::PATCH_LEVEL = TYRA_PATCH_LEVEL;
+#ifdef ENABLE_STRING  
+  Tyra_Version::VERSION = TYRA_NAME;
+#else
+
+#endif
+
+#ifdef ENABLE_STRING
+  printf("You are using tyra engine version: %u.%u.%u %s", Tyra_Version::MAJOR, Tyra_Version::MINOR, Tyra_Version::PATCH_LEVEL, Tyra_Version::VERSION); 
+#else
+  printf("You are using tyra engine version: %u.%u.%u", Tyra_Version::MAJOR, Tyra_Version::MINOR, Tyra_Version::PATCH_LEVEL); 
+#endif
 }

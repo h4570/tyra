@@ -2,7 +2,7 @@
 #   |     \/   ____| |___|    
 #   |     |   |   \  |   |       
 #-----------------------------------------------------------------------
-# Copyright 2021, tyra - https://github.com/h4570/tyra
+# Copyright 2021 - 2022, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # André Guilherme <andregui17@outlook.com>
 
@@ -34,6 +34,7 @@ ENGINE_OBJS = src/engine/engine.o \
 	      src/engine/models/texture.o \
 	      src/engine/utils/math.o \
 	      src/engine/utils/string.o \
+		  src/engine/utils/Tyra_version.o \
               src/engine/loaders/bmp_loader.o \
               src/engine/loaders/dff_loader.o \
 	      src/engine/loaders/mdl_loader.o \
@@ -47,7 +48,7 @@ EE_INCS := -I$(TYRA)/src/engine/include -I$(PS2SDK)/ports/include $(EE_INCS)
 
 EE_LDFLAGS := -L$(PS2SDK)/ports/lib -L$(TYRA)/src/engine $(EE_LDFLAGS)
 
-EE_CXXFLAGS := -DHAVE_LIBJPEG -DHAVE_LIBTIFF -DHAVE_LIBPNG -DHAVE_ZLIB -D_XCDVD $(EE_CXXFLAGS)
+EE_CXXFLAGS := -DHAVE_LIBJPEG -DHAVE_LIBTIFF -DHAVE_LIBPNG -DHAVE_ZLIB -D_XCDVD -DENABLE_STRING $(EE_CXXFLAGS)
 
 EE_DVP = dvp-as
 

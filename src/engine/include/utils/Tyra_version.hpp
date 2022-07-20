@@ -8,27 +8,35 @@
 # André Guilherme <andregui17@outlook.com>
 */
 
-#include "string.hpp"
+#ifndef TYRA_VERSION_HPP
+#define TYRA_VERSION_HPP
+
 #include <tamtypes.h>
+#include <string>
+#include "string.hpp"
 
 #define TYRA_MAJOR_VERSION 1
 #define TYRA_MINOR_VERSION 31 
 #define TYRA_PATCH_LEVEL 3
+
+#ifdef ENABLE_STRING
 #define TYRA_NAME "Alpha"
+#else
+#endif
 
-typedef struct
+class Tyra_Version
 {
-  u32 MAJOR; 
-  u32 MINOR;
-  u32 PATCH_LEVEL;
-  u32 STRING;
-} Tyra_number;
-
-class Tyra_VersionSelect
-{
-   Tyra_Version();
-   ~Tyra_Version();  
-   void GetVersion(Tyra_version &version)
+public:   
+     Tyra_Version();
+    ~Tyra_Version();  
+    void GetVersion(Tyra_Version &version);
+private:  
+    u32 MAJOR; 
+    u32 MINOR;
+    u32 PATCH_LEVEL;
+#ifdef ENABLE_STRING    
+    std::string VERSION;  
+#endif
 };
 
 
