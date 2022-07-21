@@ -20,7 +20,7 @@
 #include "modules/pad.hpp"
 #include "modules/audio.hpp"
 #include "modules/file_service.hpp"
-#include "utils/Tyra_version.hpp"
+#include "utils/tyra_version.hpp"
 class Engine
 {
 

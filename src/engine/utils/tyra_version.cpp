@@ -8,7 +8,7 @@
 # André Guilherme <andregui17@outlook.com>
 */
 
-#include "../include/utils/Tyra_version.hpp"
+#include "../include/utils/tyra_version.hpp"
 #include "../include/utils/debug.hpp"
 
 Tyra_Version::Tyra_Version()

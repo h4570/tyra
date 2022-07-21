@@ -58,6 +58,7 @@ void Engine::init(Game *t_game, u32 t_gifPacketSize)
     isInitialized = true;
     game->onInit();
     gameLoop();
+    version.Get();
 }
 
 /** Do not call this method. This is used in gameLoop() to maintain multithreading */
@@ -76,7 +77,6 @@ void Engine::firePS2()
     // fileService.startThread();
     // audio.startThread(&fileService);
     audio.startThread(NULL);
-    version.Get();
     isInitialized = 0;
     mainThreadId = GetThreadId();
 }
