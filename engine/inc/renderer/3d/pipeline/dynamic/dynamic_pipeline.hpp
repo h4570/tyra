@@ -41,20 +41,27 @@ class DynamicPipeline : public Renderer3DPipeline {
   Vec4* colorsCache;
 
   void addVertices(DynamicMesh* mesh, MeshMaterial* material, DynPipBag* bag,
-                   MeshFrame* frameFrom, MeshFrame* frameTo) const;
+                   MeshFrame* frameFrom, MeshFrame* frameTo,
+                   const u32& startIndex) const;
   PipelineInfoBag* getInfoBag(DynamicMesh* mesh, const DynPipOptions* options,
                               M4x4* model) const;
-  DynPipColorBag* getColorBag(DynamicMesh* mesh, MeshMaterial* material,
-                              MeshFrame* frameFrom, MeshFrame* frameTo) const;
+  DynPipColorBag* getColorBag(MeshMaterial* material) const;
   DynPipTextureBag* getTextureBag(DynamicMesh* mesh, MeshMaterial* material,
-                                  MeshFrame* frameFrom, MeshFrame* frameTo);
+                                  MeshFrame* frameFrom, MeshFrame* frameTo,
+                                  const u32& count, const u32& startIndex);
   DynPipLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
                                     M4x4* model, MeshFrame* frameFrom,
                                     MeshFrame* frameTo,
-                                    const DynPipOptions* options) const;
-  void deallocDrawBags(DynPipBag* bag, MeshMaterial* material) const;
+                                    const DynPipOptions* options,
+                                    PipelineDirLightsBag* dirLightsBag,
+                                    const u32& count,
+                                    const u32& startIndex) const;
 
   void setLightingColorsCache(PipelineLightingOptions* lightingOptions);
+  void freeBuffer(DynPipBag* bag);
+  void setBuffersDefaultVars(DynPipBag* buffers, DynamicMesh* mesh,
+                             PipelineInfoBag* infoBag);
+  void setBuffersColorBag(DynPipBag* buffers, DynPipColorBag* colorBag);
 };
 
 }  // namespace Tyra

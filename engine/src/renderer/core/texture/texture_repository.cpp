@@ -22,9 +22,24 @@ TextureRepository::~TextureRepository() {
   }
 }
 
-// ----
-// Methods
-// ----
+Texture* TextureRepository::getBySpriteOrMesh(const u32& t_id) const {
+  for (u32 i = 0; i < textures.size(); i++) {
+    if (textures[i]->isLinkedWith(t_id)) return textures[i];
+  }
+  return nullptr;
+}
+
+Texture* TextureRepository::getByTextureId(const u32& t_id) const {
+  for (u32 i = 0; i < textures.size(); i++)
+    if (t_id == textures[i]->getId()) return textures[i];
+  return nullptr;
+}
+
+const s32 TextureRepository::getIndexOf(const u32& t_texId) const {
+  for (u32 i = 0; i < textures.size(); i++)
+    if (textures[i]->getId() == t_texId) return i;
+  return -1;
+}
 
 Texture* TextureRepository::add(Texture* texture) {
   textures.push_back(texture);

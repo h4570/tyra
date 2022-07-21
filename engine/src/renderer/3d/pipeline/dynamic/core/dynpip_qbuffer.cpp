@@ -59,18 +59,6 @@ std::string DynPipQBuffer::getPrint(const char* name) const {
       res << i << ": " << stsTo[i].getPrint() << std::endl;
   }
 
-  if (bag->color->manyFrom != nullptr) {
-    res << "Colors from: " << std::endl;
-    for (u32 i = 0; i < size; i++)
-      res << i << ": " << colorsFrom[i].getPrint() << std::endl;
-  }
-
-  if (bag->color->manyTo != nullptr) {
-    res << "Colors to: " << std::endl;
-    for (u32 i = 0; i < size; i++)
-      res << i << ": " << colorsTo[i].getPrint() << std::endl;
-  }
-
   if (bag->lighting != nullptr) {
     res << "Normals from: " << std::endl;
     for (u32 i = 0; i < size; i++) {

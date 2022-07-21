@@ -29,9 +29,6 @@ class DynPipQBuffer {
   Vec4* stsFrom;
   Vec4* stsTo;
 
-  Vec4* colorsFrom;
-  Vec4* colorsTo;
-
   Vec4* normalsFrom;
   Vec4* normalsTo;
 

@@ -20,4 +20,9 @@ DynPipTextureBag::DynPipTextureBag() {
 
 DynPipTextureBag::~DynPipTextureBag() {}
 
+void DynPipTextureBag::freeCoords() {
+  if (coordinatesFrom) delete[] coordinatesFrom;
+  if (coordinatesTo) delete[] coordinatesTo;
+}
+
 }  // namespace Tyra

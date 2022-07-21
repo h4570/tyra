@@ -12,6 +12,7 @@
 
 #include "debug/debug.hpp"
 #include "renderer/core/paths/path1/vu1_program.hpp"
+#include "./bag/dynpip_bag.hpp"
 
 #include "./programs/dynpip_c_vu1_program.hpp"
 #include "./programs/dynpip_d_vu1_program.hpp"
@@ -26,6 +27,9 @@ class DynPipProgramsRepository {
   ~DynPipProgramsRepository();
 
   DynPipVU1Program* getProgram(const DynPipProgramName& name);
+  DynPipVU1Program* getProgramByParams(const bool& isLightingEnabled,
+                                       const bool& isTextureEnabled);
+  DynPipVU1Program* getProgramByBag(const DynPipBag* bag);
 
  private:
   DynPipCVU1Program color;

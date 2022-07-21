@@ -26,6 +26,8 @@ class DynPipTextureBag {
 
   /** Mandatory. Texture image. */
   Texture* texture;
+
+  void freeCoords();
 };
 
 }  // namespace Tyra

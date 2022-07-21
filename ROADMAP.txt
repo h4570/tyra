@@ -21,6 +21,8 @@
 
 - [General] Control generated id to avoid duplication. Maybe Just increment from 0? Add interface IIdentificable?
 
+- [General] rsync is excluding folder like "objects" lol XD
+
 - [DMA] Check if all chain transfers have end tag!
 
 - [General] Change libs of sample? (remove -lpng, -lz...), probably they are not required

@@ -29,6 +29,8 @@ class DynPipLightingBag {
 
   /** Mandatory. Directional lights */
   PipelineDirLightsBag* dirLights;
+
+  void freeNormals();
 };
 
 }  // namespace Tyra

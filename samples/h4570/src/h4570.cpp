@@ -18,7 +18,9 @@ H4570::H4570(Engine* t_engine) { engine = t_engine; }
 H4570::~H4570() {}
 
 DynamicMesh* getWarrior(Renderer* renderer);
-StaPipOptions* getRenderingOptions();
+StaPipOptions* getStaPipOptions();
+DynPipOptions* getDynPipOptions();
+void setPipelineOptions(PipelineOptions* options);
 Sprite* get2DPicture(Renderer* renderer);
 
 void H4570::init() {
@@ -34,8 +36,7 @@ void H4570::init() {
   engine->renderer.setClearScreenColor(Color(64.0F, 64.0F, 64.0F));
 
   warrior = getWarrior(&engine->renderer);
-
-  auto* warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
+  warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
       warrior->getMaterial(0)->getId());
 
   warrior2 = new DynamicMesh(*warrior);
@@ -56,7 +57,8 @@ void H4570::init() {
   warrior4->playAnimation(0, warrior4->getFramesCount() - 1);
   warrior4->setAnimSpeed(0.5F);
 
-  renderOptions = getRenderingOptions();
+  staOptions = getStaPipOptions();
+  dynOptions = getDynPipOptions();
 
   cameraPosition = Vec4(0.0F, 0.0F, 20.0F);
   cameraLookAt = *warrior->getPosition();
@@ -140,14 +142,14 @@ void H4570::loop() {
 
     // engine->renderer.renderer3D.usePipeline(&stapip);
     // {
-    //   stapip.render(warrior, renderOptions);
-    //   // stapip.render(warrior2, renderOptions);
-    //   // stapip.render(warrior3, renderOptions);
-    //   // stapip.render(warrior4, renderOptions);
+    //   stapip.render(warrior, staOptions);
+    //   // stapip.render(warrior2, staOptions);
+    //   // stapip.render(warrior3, staOptions);
+    //   // stapip.render(warrior4, staOptions);
     // }
 
     engine->renderer.renderer3D.usePipeline(&dynpip);
-    { dynpip.render(warrior); }
+    { dynpip.render(warrior, dynOptions); }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);
     { mcPip.render(blocks, blocksCount, blocksTex, false); }
@@ -183,9 +185,19 @@ Sprite* get2DPicture(Renderer* renderer) {
   return sprite;
 }
 
-StaPipOptions* getRenderingOptions() {
+StaPipOptions* getStaPipOptions() {
   auto* options = new StaPipOptions();
+  setPipelineOptions(options);
+  return options;
+}
 
+DynPipOptions* getDynPipOptions() {
+  auto* options = new DynPipOptions();
+  setPipelineOptions(options);
+  return options;
+}
+
+void setPipelineOptions(PipelineOptions* options) {
   auto* ambientColor = new Color(32.0F, 32.0F, 32.0F, 32.0F);
   auto* directionalColors = new Color[3];
   for (int i = 0; i < 3; i++) directionalColors[i].set(0.0F, 0.0F, 0.0F, 1.0F);
@@ -208,8 +220,6 @@ StaPipOptions* getRenderingOptions() {
 
   directionalDirections[1].set(1.0F, 0.0F, 0.0F);
   directionalColors[1].set(96.0F, 0.0F, 0.0F);
-
-  return options;
 }
 
 }  // namespace Tyra

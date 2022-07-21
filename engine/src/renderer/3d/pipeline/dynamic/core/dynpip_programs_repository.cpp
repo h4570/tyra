@@ -16,6 +16,18 @@ DynPipProgramsRepository::DynPipProgramsRepository() {}
 
 DynPipProgramsRepository::~DynPipProgramsRepository() {}
 
+DynPipVU1Program* DynPipProgramsRepository::getProgramByParams(
+    const bool& isLightingEnabled, const bool& isTextureEnabled) {
+  if (isLightingEnabled && isTextureEnabled)
+    return &textureDirLights;
+  else if (isLightingEnabled)
+    return &dirLights;
+  else if (isTextureEnabled)
+    return &textureColor;
+  else
+    return &color;
+}
+
 DynPipVU1Program* DynPipProgramsRepository::getProgram(
     const DynPipProgramName& name) {
   switch (name) {

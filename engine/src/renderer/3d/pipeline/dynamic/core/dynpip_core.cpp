@@ -22,6 +22,16 @@ void DynPipCore::init(RendererCore* t_core) { rendererCore = t_core; }
 
 void DynPipCore::reinitVU1Programs() {}
 
-void DynPipCore::render(DynPipBag* bag) {}
+u32 DynPipCore::getMaxVertCountByParams(const bool& isSingleColor,
+                                        const bool& isLightingEnabled,
+                                        const bool& isTextureEnabled) {
+  return repository.getProgramByParams(isLightingEnabled, isTextureEnabled)
+      ->getMaxVertCount(isSingleColor, qbufferRenderer.getBufferSize());
+}
+
+void DynPipCore::render(DynPipBag* bag) {
+  // Zrobic bbox
+  // TODO: Potem wrzucic programy i obliczyc bufferSize w qbufferrenderer
+}
 
 }  // namespace Tyra

@@ -12,12 +12,7 @@
 
 namespace Tyra {
 
-DynPipColorBag::DynPipColorBag() {
-  singleFrom = nullptr;
-  singleTo = nullptr;
-  manyFrom = nullptr;
-  manyTo = nullptr;
-}
+DynPipColorBag::DynPipColorBag() { single = nullptr; }
 
 DynPipColorBag::~DynPipColorBag() {}
 

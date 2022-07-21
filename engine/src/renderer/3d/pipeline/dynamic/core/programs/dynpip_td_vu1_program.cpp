@@ -56,14 +56,6 @@ void DynPipTDVU1Program::addProgramQBufferDataToPacket(
   packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->normalsTo,
                                    qbuffer->size, true);
   addr += qbuffer->size;
-
-  // Add colors
-  if (qbuffer->bag->color->singleFrom == nullptr) {
-    packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->colorsFrom,
-                                     qbuffer->size, true);
-    packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->colorsTo,
-                                     qbuffer->size, true);
-  }
 }
 
 }  // namespace Tyra

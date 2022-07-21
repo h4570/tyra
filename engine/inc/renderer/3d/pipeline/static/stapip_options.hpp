@@ -10,19 +10,14 @@
 
 #pragma once
 
-#include "renderer/3d/pipeline/shared/pipeline_shading_type.hpp"
-#include "../shared/pipeline_lighting_options.hpp"
+#include "renderer/3d/pipeline/shared/pipeline_options.hpp"
 
 namespace Tyra {
 
-class StaPipOptions {
+class StaPipOptions : public PipelineOptions {
  public:
   StaPipOptions() {}
   ~StaPipOptions() {}
-
-  PipelineShadingType shadingType;
-  bool blendingEnabled;
-  bool antiAliasingEnabled;
 
   /**
    * @brief True -> disables "clip against each plane" algorithm.
@@ -33,9 +28,6 @@ class StaPipOptions {
    * for big 3D objects (or objects near camera eyes)
    */
   bool noFullClipChecks;
-
-  /** Optional */
-  PipelineLightingOptions* lighting;
 };
 
 }  // namespace Tyra

@@ -144,7 +144,7 @@ StaPipTextureBag* StaticPipeline::getTextureBag(DynamicMesh* mesh,
   result->texture =
       rendererCore->texture.repository.getBySpriteOrMesh(material->getId());
   TYRA_ASSERT(result->texture, "Texture for material id: ", material->getId(),
-              " was not found in texture repository!");
+              "was not found in texture repository!");
 
   result->coordinates = new Vec4[material->getFacesCount()];
 
@@ -172,7 +172,8 @@ StaPipLightingBag* StaticPipeline::getLightingBag(
     return nullptr;
 
   auto* result = new StaPipLightingBag();
-  auto* dirLightsBag = new PipelineDirLightsBag(true);
+  auto* dirLightsBag = new PipelineDirLightsBag(true);  // TODO: 1 dir
+  //   lights per obiekt, dealokowac recznie
   result->dirLights = dirLightsBag;
 
   result->lightMatrix = model;
@@ -218,7 +219,7 @@ void StaticPipeline::deallocDrawBags(StaPipBag* bag,
 
   if (bag->lighting) {
     delete[] bag->lighting->normals;
-    delete bag->lighting->dirLights;
+    delete bag->lighting->dirLights;  // TODO
     delete bag->lighting;
   }
 

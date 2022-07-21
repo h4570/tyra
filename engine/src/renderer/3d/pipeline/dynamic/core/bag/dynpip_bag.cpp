@@ -19,6 +19,8 @@ DynPipBag::DynPipBag() {
   color = nullptr;
   texture = nullptr;
   lighting = nullptr;
+  verticesFrom = nullptr;
+  verticesTo = nullptr;
 }
 
 DynPipBag::~DynPipBag() {}
@@ -56,16 +58,8 @@ std::string DynPipBag::getPrint(const char* name) const {
   res << "Lighting present: " << (lighting != nullptr ? "Yes" : "No") << ", "
       << std::endl;
   res << "Model matrix: " << info->model->getPrint() << ", " << std::endl;
-  if (color->singleFrom) {
-    res << "Color from single: " << color->singleFrom->getPrint() << ", "
-        << std::endl;
-    res << "Color to single: " << color->singleTo->getPrint() << ", "
-        << std::endl;
-  } else {
-    res << "Color many from present: "
-        << (color->manyFrom != nullptr ? "Yes" : "No") << ", " << std::endl;
-    res << "Color many to present: "
-        << (color->manyTo != nullptr ? "Yes" : "No") << ", " << std::endl;
+  if (color->single) {
+    res << "Color single: " << color->single->getPrint() << ", " << std::endl;
   }
   if (texture) {
     res << "Texture coords from present: "

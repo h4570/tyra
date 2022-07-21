@@ -36,31 +36,19 @@ class TextureRepository {
    * For 3D: MeshMaterial id.
    * For 2D: Sprite id.
    */
-  Texture* getBySpriteOrMesh(const u32& t_id) {
-    for (u32 i = 0; i < textures.size(); i++)
-      if (textures[i]->isLinkedWith(t_id)) return textures[i];
-    return nullptr;
-  }
+  Texture* getBySpriteOrMesh(const u32& t_id) const;
 
   /**
    * Returns single texture.
    * nullptr if not found.
    */
-  Texture* getByTextureId(const u32& t_id) const {
-    for (u32 i = 0; i < textures.size(); i++)
-      if (t_id == textures[i]->getId()) return textures[i];
-    return nullptr;
-  }
+  Texture* getByTextureId(const u32& t_id) const;
 
   /**
    * Returns index of link.
    * -1 if not found.
    */
-  const s32 getIndexOf(const u32& t_texId) const {
-    for (u32 i = 0; i < textures.size(); i++)
-      if (textures[i]->getId() == t_texId) return i;
-    return -1;
-  }
+  const s32 getIndexOf(const u32& t_texId) const;
 
   // ----
   //  Setters

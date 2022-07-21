@@ -42,7 +42,9 @@ class H4570 : public Game {
   MinecraftPipeline mcPip;
   DynamicPipeline dynpip;
   StaticPipeline stapip;
-  StaPipOptions* renderOptions;
+  StaPipOptions* staOptions;
+  DynPipOptions* dynOptions;
+  Texture* warriorTex;
   Texture* blocksTex;
 
   u32 blocksCount;

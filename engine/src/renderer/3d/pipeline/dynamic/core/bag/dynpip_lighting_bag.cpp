@@ -21,4 +21,9 @@ DynPipLightingBag::DynPipLightingBag() {
 
 DynPipLightingBag::~DynPipLightingBag() {}
 
+void DynPipLightingBag::freeNormals() {
+  if (normalsFrom) delete[] normalsFrom;
+  if (normalsTo) delete[] normalsTo;
+}
+
 }  // namespace Tyra

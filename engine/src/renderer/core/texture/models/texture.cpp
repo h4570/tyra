@@ -162,10 +162,15 @@ std::string Texture::getPrint(const char* objectName) const {
   else if (wrap.horizontal == WRAP_CLAMP)
     wrapString = "WRAP_CLAMP";
 
-  res << "id: " << id << ", ";
-  res << "name: " << name << ", ";
-  res << "core: " << core->getPrint() << ", ";
-  if (clut != nullptr) res << "clut: " << clut->getPrint() << ", ";
+  res << "id: " << id << ", " << std::endl;
+  res << "name: " << name << ", " << std::endl;
+  res << "core: " << core->getPrint() << ", " << std::endl;
+  if (clut != nullptr) res << "clut: " << clut->getPrint() << ", " << std::endl;
+  if (links.size()) {
+    for (size_t i = 0; i < links.size(); i++) {
+      res << "link " << i << " for id: " << links[i].id << ", " << std::endl;
+    }
+  }
   res << "wrap: " << wrapString << ")";
   return res.str();
 }

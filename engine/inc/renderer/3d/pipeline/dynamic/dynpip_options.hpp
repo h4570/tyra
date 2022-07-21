@@ -10,22 +10,14 @@
 
 #pragma once
 
-#include "renderer/3d/pipeline/shared/pipeline_shading_type.hpp"
-#include "../shared/pipeline_lighting_options.hpp"
+#include "renderer/3d/pipeline/shared/pipeline_options.hpp"
 
 namespace Tyra {
 
-class DynPipOptions {
+class DynPipOptions : public PipelineOptions {
  public:
   DynPipOptions() {}
   ~DynPipOptions() {}
-
-  PipelineShadingType shadingType;
-  bool blendingEnabled;
-  bool antiAliasingEnabled;
-
-  /** Optional */
-  PipelineLightingOptions* lighting;
 };
 
 }  // namespace Tyra

@@ -12,72 +12,108 @@
 
 namespace Tyra {
 
-DynamicPipeline::DynamicPipeline() {}
+DynamicPipeline::DynamicPipeline() { colorsCache = new Vec4[4]; }
 
-DynamicPipeline::~DynamicPipeline() {}
+DynamicPipeline::~DynamicPipeline() { delete[] colorsCache; }
 
-void DynamicPipeline::init(RendererCore* t_core) {}
+void DynamicPipeline::init(RendererCore* t_core) { rendererCore = t_core; }
 
 void DynamicPipeline::onUse() {}
 
 void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   auto model = mesh->getModelMatrix();
+  auto* frameFrom = mesh->getFrame(mesh->getCurrentAnimationFrame());
+  auto* frameTo = mesh->getFrame(mesh->getNextAnimationFrame());
+  auto* infoBag = getInfoBag(mesh, options, &model);
+  PipelineDirLightsBag* dirLights = nullptr;
 
-  MeshFrame* frameFrom = mesh->getFramesCount() > 0
-                             ? mesh->getFrame(mesh->getCurrentAnimationFrame())
-                             : mesh->getFrame(0);
+  if (options && options->lighting) {
+    setLightingColorsCache(options->lighting);
+    dirLights = new PipelineDirLightsBag(true);
+    dirLights->setLightsManually(colorsCache,
+                                 options->lighting->directionalDirections);
+  }
 
-  MeshFrame* frameTo = mesh->getFramesCount() > 0
-                           ? mesh->getFrame(mesh->getNextAnimationFrame())
-                           : nullptr;
+  DynPipBag buffers[2];
+  u8 context = 0;
 
-  //   auto* infoBag = getInfoBag(mesh, options, &model);
-
-  if (options && options->lighting) setLightingColorsCache(options->lighting);
+  setBuffersDefaultVars(buffers, mesh, infoBag);
 
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
+    auto partSize = core.getMaxVertCountByParams(
+        material->isSingleColorActivated(), options && options->lighting,
+        material->getTextureCoordFaces());
+    u32 partsCount =
+        ceil(material->getFacesCount() / static_cast<float>(partSize));
+    auto* colorBag = getColorBag(material);
+    setBuffersColorBag(buffers, colorBag);
 
-    // 2x bufory[maxVertCount*2] -> pętla po mniejszych częściach i czestsze
-    // rendery
+    for (u32 j = 0; j < partsCount; j++) {
+      auto& buffer = buffers[context];
 
-    // TODO: Double buffering in future
-    // auto maxVertCount = core->renderer3D.getMaxVertCountByParams(
-    //     material->isSingleColorActivated(), material->getNormalFaces(),
-    //     material->getTextureCoordFaces());
+      freeBuffer(&buffer);
+      buffer.count = j == partsCount - 1
+                         ? material->getFacesCount() - j * partSize
+                         : partSize;
 
-    DynPipBag bag;
-    addVertices(mesh, material, &bag, frameFrom, frameTo);
-    // bag.info = infoBag;
-    // bag.color = getColorBag(mesh, material, frameFrom, frameTo);
-    // bag.texture = getTextureBag(mesh, material, frameFrom, frameTo);
-    // bag.lighting =
-    //     getLightingBag(mesh, material, &model, frameFrom, frameTo, options);
+      u32 startIndex = j * partSize;
 
-    core.render(&bag);
+      addVertices(mesh, material, &buffer, frameFrom, frameTo, startIndex);
+      buffer.texture = getTextureBag(mesh, material, frameFrom, frameTo,
+                                     buffer.count, startIndex);
+      buffer.lighting =
+          getLightingBag(mesh, material, &model, frameFrom, frameTo, options,
+                         dirLights, buffer.count, startIndex);
 
-    // deallocDrawBags(&bag, material);
+      core.render(&buffer);
+
+      context = !context;
+    }
+
+    freeBuffer(&buffers[context]);
+    freeBuffer(&buffers[!context]);
+
+    delete colorBag;
   }
 
-  //   delete infoBag; // TODO
+  delete infoBag;
 }
 
-void DynamicPipeline::addVertices(DynamicMesh* mesh, MeshMaterial* material,
-                                  DynPipBag* bag, MeshFrame* frameFrom,
-                                  MeshFrame* frameTo) const {
-  //   bag->count = material->getFacesCount();
-  //   bag->vertices = new Vec4[bag->count];
+void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
+                                            DynamicMesh* mesh,
+                                            PipelineInfoBag* infoBag) {
+  for (int i = 0; i < 2; i++) {
+    buffers[i].info = infoBag;
+    buffers[i].interpolation = mesh->getAnimState().interpolation;
+  }
+}
 
-  //   for (u32 i = 0; i < bag->count; i++) {
-  //     auto& face = material->getVertexFaces()[i];
-  //     if (frameTo == nullptr) {
-  //       bag->vertices[i] = frameFrom->getVertices()[face];
-  //     } else {
-  //       Vec4::setLerp(&bag->vertices[i], frameFrom->getVertices()[face],
-  //                     frameTo->getVertices()[face],
-  //                     mesh->getAnimState().interpolation);
-  //     }
-  //   }
+void DynamicPipeline::setBuffersColorBag(DynPipBag* buffers,
+                                         DynPipColorBag* colorBag) {
+  for (int i = 0; i < 2; i++) {
+    buffers[i].color = colorBag;
+  }
+}
+
+void DynamicPipeline::freeBuffer(DynPipBag* bag) {
+  if (bag->texture) {
+    bag->texture->freeCoords();
+    delete bag->texture;
+  }
+
+  if (bag->lighting) {
+    bag->lighting->freeNormals();
+    delete bag->lighting;
+  }
+
+  if (bag->verticesFrom) {
+    delete[] bag->verticesFrom;
+  }
+
+  if (bag->verticesTo) {
+    delete[] bag->verticesTo;
+  }
 }
 
 PipelineInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
@@ -100,99 +136,71 @@ PipelineInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
   return result;
 }
 
-DynPipColorBag* DynamicPipeline::getColorBag(DynamicMesh* mesh,
-                                             MeshMaterial* material,
-                                             MeshFrame* frameFrom,
-                                             MeshFrame* frameTo) const {
-  //   auto* result = new DynPipColorBag();
+void DynamicPipeline::addVertices(DynamicMesh* mesh, MeshMaterial* material,
+                                  DynPipBag* bag, MeshFrame* frameFrom,
+                                  MeshFrame* frameTo,
+                                  const u32& startIndex) const {
+  bag->verticesFrom = new Vec4[bag->count];
+  bag->verticesTo = new Vec4[bag->count];
 
-  //   if (material->isSingleColorActivated()) {
-  //     result->single = &material->singleColor;
-  //   } else {
-  //     result->many = new Color[material->getFacesCount()];
-
-  //     for (u32 i = 0; i < material->getFacesCount(); i++) {
-  //       auto& face = material->getColorFaces()[i];
-  //       if (frameTo == nullptr) {
-  //         result->many[i] = frameFrom->getColors()[face];
-  //       } else {
-  //         Vec4::setLerp(
-  //             reinterpret_cast<Vec4*>(&result->many[i]),
-  //             reinterpret_cast<const Vec4&>(frameFrom->getColors()[face]),
-  //             reinterpret_cast<const Vec4&>(frameTo->getColors()[face]),
-  //             mesh->getAnimState().interpolation);
-  //       }
-  //     }
-  //   }
-
-  //   return result;
-  return nullptr;  // TODO
+  for (u32 i = startIndex; i < startIndex + bag->count; i++) {
+    auto& face = material->getVertexFaces()[i];
+    bag->verticesFrom[i] = frameFrom->getVertices()[face];
+    bag->verticesTo[i] = frameTo->getVertices()[face];
+  }
 }
 
-DynPipTextureBag* DynamicPipeline::getTextureBag(DynamicMesh* mesh,
-                                                 MeshMaterial* material,
-                                                 MeshFrame* frameFrom,
-                                                 MeshFrame* frameTo) {
-  //   if (!material->getTextureCoordFaces()) return nullptr;
+DynPipColorBag* DynamicPipeline::getColorBag(MeshMaterial* material) const {
+  auto* result = new DynPipColorBag();
+  result->single = &material->singleColor;
+  return result;
+}
 
-  //   auto* result = new DynPipTextureBag();
+DynPipTextureBag* DynamicPipeline::getTextureBag(
+    DynamicMesh* mesh, MeshMaterial* material, MeshFrame* frameFrom,
+    MeshFrame* frameTo, const u32& count, const u32& startIndex) {
+  if (!material->getTextureCoordFaces()) return nullptr;
 
-  //   result->texture =
-  //       rendererCore->texture.repository.getBySpriteOrMesh(material->getId());
-  //   TYRA_ASSERT(result->texture, "Texture for material id: ",
-  //   material->getId(),
-  //               " was not found in texture repository!");
+  auto* result = new DynPipTextureBag();
+  result->texture =
+      rendererCore->texture.repository.getBySpriteOrMesh(material->getId());
+  TYRA_ASSERT(result->texture, "Texture for material id: ", material->getId(),
+              "was not found in texture repository!");
 
-  //   result->coordinates = new Vec4[material->getFacesCount()];
+  result->coordinatesFrom = new Vec4[count];
+  result->coordinatesTo = new Vec4[count];
 
-  //   for (u32 i = 0; i < material->getFacesCount(); i++) {
-  //     auto& face = material->getTextureCoordFaces()[i];
-  //     if (frameTo == nullptr) {
-  //       result->coordinates[i] = frameFrom->getTextureCoords()[face];
-  //     } else {
-  //       Vec4::setLerp(&result->coordinates[i],
-  //                     frameFrom->getTextureCoords()[face],
-  //                     frameTo->getTextureCoords()[face],
-  //                     mesh->getAnimState().interpolation);
-  //     }
-  //   }
+  for (u32 i = startIndex; i < startIndex + count; i++) {
+    auto& face = material->getTextureCoordFaces()[i];
+    result->coordinatesFrom[i] = frameFrom->getTextureCoords()[face];
+    result->coordinatesTo[i] = frameTo->getTextureCoords()[face];
+  }
 
-  //   return result;
-  return nullptr;  // TODO
+  return result;
 }
 
 DynPipLightingBag* DynamicPipeline::getLightingBag(
     DynamicMesh* mesh, MeshMaterial* material, M4x4* model,
-    MeshFrame* frameFrom, MeshFrame* frameTo,
-    const DynPipOptions* options) const {
-  //   if (!material->getNormalFaces() || options == nullptr ||
-  //       options->lighting == nullptr)
-  //     return nullptr;
+    MeshFrame* frameFrom, MeshFrame* frameTo, const DynPipOptions* options,
+    PipelineDirLightsBag* dirLightsBag, const u32& count,
+    const u32& startIndex) const {
+  if (!material->getNormalFaces() || options == nullptr ||
+      options->lighting == nullptr)
+    return nullptr;
 
-  //   auto* result = new DynPipLightingBag();
-  //   auto* dirLightsBag = new PipelineDirLightsBag(true);
-  //   result->dirLights = dirLightsBag;
+  auto* result = new DynPipLightingBag();
 
-  //   result->lightMatrix = model;
+  result->lightMatrix = model;
+  result->normalsFrom = new Vec4[count];
+  result->normalsTo = new Vec4[count];
 
-  //   result->dirLights->setLightsManually(
-  //       colorsCache, options->lighting->directionalDirections);
+  for (u32 i = startIndex; i < startIndex + count; i++) {
+    auto& face = material->getNormalFaces()[i];
+    result->normalsFrom[i] = frameFrom->getNormals()[face];
+    result->normalsTo[i] = frameTo->getNormals()[face];
+  }
 
-  //   result->normals = new Vec4[material->getFacesCount()];
-
-  //   for (u32 i = 0; i < material->getFacesCount(); i++) {
-  //     auto& face = material->getNormalFaces()[i];
-  //     if (frameTo == nullptr) {
-  //       result->normals[i] = frameFrom->getNormals()[face];
-  //     } else {
-  //       Vec4::setLerp(&result->normals[i], frameFrom->getNormals()[face],
-  //                     frameTo->getNormals()[face],
-  //                     mesh->getAnimState().interpolation);
-  //     }
-  //   }
-
-  //   return result;
-  return nullptr;  // TODO
+  return result;
 }
 
 void DynamicPipeline::setLightingColorsCache(
@@ -202,31 +210,6 @@ void DynamicPipeline::setLightingColorsCache(
         reinterpret_cast<Vec4&>(lightingOptions->directionalColors[i]);
   }
   colorsCache[3] = reinterpret_cast<Vec4&>(*lightingOptions->ambientColor);
-}
-
-void DynamicPipeline::deallocDrawBags(DynPipBag* bag,
-                                      MeshMaterial* material) const {
-  if (bag->color->manyFrom) {
-    delete[] bag->color->manyFrom;
-    delete[] bag->color->manyTo;
-  }
-
-  if (bag->texture) {
-    delete[] bag->texture->coordinatesFrom;
-    delete[] bag->texture->coordinatesTo;
-    delete bag->texture;
-  }
-
-  if (bag->lighting) {
-    delete[] bag->lighting->normalsFrom;
-    delete[] bag->lighting->normalsTo;
-    delete bag->lighting->dirLights;
-    delete bag->lighting;
-  }
-
-  delete[] bag->verticesFrom;
-  delete[] bag->verticesTo;
-  delete bag->color;
 }
 
 }  // namespace Tyra
