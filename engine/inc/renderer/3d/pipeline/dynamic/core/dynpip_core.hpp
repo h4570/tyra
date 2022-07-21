@@ -36,6 +36,9 @@ class DynPipCore {
    */
   void initParts(DynPipBag* data);
 
+  // TODO: TEST!
+  void renderTEST(DynPipBag** bags, const u32& count);
+
   /** Render 3D via "bags" */
   void renderPart(DynPipBag* data, const bool& frustumCull = true);
 

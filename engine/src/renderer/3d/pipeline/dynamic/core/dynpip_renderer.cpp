@@ -41,7 +41,7 @@ void DynPipRenderer::init(RendererCore* t_core,
   dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
   dma_channel_fast_waits(DMA_CHANNEL_VIF1);
 
-  const u32 VU1_PACKET_SIZE = 16;
+  const u32 VU1_PACKET_SIZE = 256;
 
   packets[0] =
       packet2_create(VU1_PACKET_SIZE, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
@@ -143,10 +143,40 @@ void DynPipRenderer::render(DynPipBag* bag) {
   sendPacket();
 }
 
+void DynPipRenderer::renderTEST(DynPipBag** bags, const u32& count) {
+  if (count <= 0) return;
+
+  auto* program = programsRepo->getProgramByBag(bags[0]);
+  addBufferDataToPacketTEST(program, bags, count);
+  sendPacket();
+}
+
+void DynPipRenderer::addBufferDataToPacketTEST(DynPipVU1Program* program,
+                                               DynPipBag** bags,
+                                               const u32& count) {
+  currentPacket = packets[context];
+  packet2_reset(currentPacket, false);
+
+  for (u32 i = 0; i < count; i++) {
+    program->addBufferDataToPacket(currentPacket, bags[i],
+                                   &rendererCore->gs.prim);
+  }
+
+  if (lastProgramName != program->getName()) {
+    packet2_utils_vu_add_start_program(currentPacket,
+                                       program->getDestinationAddress());
+    lastProgramName = program->getName();
+  } else {
+    packet2_utils_vu_add_continue_program(currentPacket);
+  }
+  packet2_utils_vu_add_end_tag(currentPacket);
+}
+
 void DynPipRenderer::addBufferDataToPacket(DynPipVU1Program* program,
                                            DynPipBag* bag) {
   currentPacket = packets[context];
   packet2_reset(currentPacket, false);
+
   program->addBufferDataToPacket(currentPacket, bag, &rendererCore->gs.prim);
 
   if (lastProgramName != program->getName()) {
@@ -162,6 +192,9 @@ void DynPipRenderer::addBufferDataToPacket(DynPipVU1Program* program,
 void DynPipRenderer::sendPacket() {
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
+
+  // TODO
+  // TYRA_LOG(packet2_get_qw_count(currentPacket));
 
   // Switch packet, so we can proceed during DMA transfer
   context = !context;

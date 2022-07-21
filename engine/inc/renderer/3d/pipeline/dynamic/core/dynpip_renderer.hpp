@@ -29,6 +29,7 @@ class DynPipRenderer {
                       RendererCoreTextureBuffers* texBuffers) const;
 
   void render(DynPipBag* bag);
+  void renderTEST(DynPipBag** bags, const u32& count);
 
   void clearLastProgramName();
 
@@ -40,6 +41,8 @@ class DynPipRenderer {
   void uploadPrograms();
   void setDoubleBuffer();
 
+  void addBufferDataToPacketTEST(DynPipVU1Program* program, DynPipBag** bags,
+                                 const u32& count);
   void addBufferDataToPacket(DynPipVU1Program* program, DynPipBag* bag);
   void sendPacket();
 

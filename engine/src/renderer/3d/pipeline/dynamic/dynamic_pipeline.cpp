@@ -23,16 +23,17 @@ void DynamicPipeline::init(RendererCore* t_core) {
 
 void DynamicPipeline::onUse() { core.reinitVU1Programs(); }
 
+#define BUFFER_COUNT 64
+
 void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   auto model = mesh->getModelMatrix();
-  auto* frameFrom = mesh->getFrame(mesh->getCurrentAnimationFrame());
-  auto* frameTo = mesh->getFrame(mesh->getNextAnimationFrame());
   auto* infoBag = getInfoBag(mesh, options, &model);
   PipelineDirLightsBag* dirLights = nullptr;
   auto frustumCulling =
       options ? options->frustumCulling : DynPipFrustumCulling_Simple;
 
   if (frustumCulling == DynPipFrustumCulling_Simple) {
+    auto* frameTo = mesh->getFrame(mesh->getNextAnimationFrame());
     if (frameTo->getBBox().isInFrustum(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
         CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
@@ -47,7 +48,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
                                  options->lighting->directionalDirections);
   }
 
-  DynPipBag buffers[2];
+  DynPipBag buffers[BUFFER_COUNT];
   u8 context = 0;
 
   setBuffersDefaultVars(buffers, mesh, infoBag);
@@ -55,45 +56,69 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
 
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
-    auto partSize = core.getMaxVertCountByParams(
-        options && options->lighting, material->getTextureCoordFaces());
+    auto* frameFrom = material->getFrame(mesh->getCurrentAnimationFrame());
+    auto* frameTo = material->getFrame(mesh->getNextAnimationFrame());
+
+    auto partSize =
+        core.getMaxVertCountByParams(options && options->lighting,
+                                     material->getFrame(0)->getTextureCoords());
+
     u32 partsCount =
-        ceil(material->getFacesCount() / static_cast<float>(partSize));
+        ceil(frameFrom->getVertexCount() / static_cast<float>(partSize));
+
     auto* colorBag = getColorBag(material);
+
     setBuffersColorBag(buffers, colorBag);
     u8 isPartInitialized = false;
 
-    for (u32 j = 0; j < partsCount; j++) {
-      auto& buffer = buffers[context];
+    for (u32 k = 0; k < partsCount; k++) {
+      auto& buffer = buffers[context++];
 
       freeBuffer(&buffer);
-      buffer.count = j == partsCount - 1
-                         ? material->getFacesCount() - j * partSize
+      buffer.count = k == partsCount - 1
+                         ? frameFrom->getVertexCount() - k * partSize
                          : partSize;
 
-      u32 startIndex = j * partSize;
+      u32 startIndex = k * partSize;
 
-      addVertices(mesh, material, &buffer, frameFrom, frameTo, startIndex);
-      buffer.texture = getTextureBag(mesh, material, frameFrom, frameTo,
-                                     buffer.count, startIndex);
-      buffer.lighting =
-          getLightingBag(mesh, material, &model, frameFrom, frameTo, options,
-                         dirLights, buffer.count, startIndex);
+      addVertices(frameFrom, frameTo, &buffer, startIndex);
+      buffer.texture = getTextureBag(material, frameFrom, frameTo, startIndex);
+      buffer.lighting = getLightingBag(frameFrom, frameTo, &model, options,
+                                       dirLights, startIndex);
 
       if (!isPartInitialized) {
         core.initParts(&buffer);
         isPartInitialized = true;
       }
 
-      core.renderPart(&buffer, frustumCulling == DynPipFrustumCulling_Precise);
+      // core.renderPart(&buffer, frustumCulling ==
+      // DynPipFrustumCulling_Precise);
 
-      context = !context;
+      if (context == BUFFER_COUNT / 2 || context == BUFFER_COUNT) {
+        DynPipBag** sendBuffers = new DynPipBag*[BUFFER_COUNT / 2];
+        for (u32 i = 0; i < BUFFER_COUNT / 2; i++) {
+          sendBuffers[i] = &buffers[context - ((BUFFER_COUNT / 2) - i)];
+        }
+        core.renderTEST(sendBuffers, BUFFER_COUNT / 2);
+
+        delete[] sendBuffers;
+        if (context == BUFFER_COUNT) context = 0;
+      }
     }
 
-    freeBuffer(&buffers[context]);
-    freeBuffer(&buffers[!context]);
-
     delete colorBag;
+  }
+
+  // TODO: Refactor (define itd, wywalic te wszystkie TEST i poprawic)
+  // TODO: Rozmiar pakietu VU1 na podstawie rozmiaru buforow
+  // TODO: Dorenderowac brakujace (np gdy context == 1-buffersize-1 itd)
+  // TODO: Program renderujacy w VU1
+  // TODO: Github: Ten sam myk zrobic w static pipeline?
+
+  for (u32 i = 0; i < BUFFER_COUNT; i++) freeBuffer(&buffers[i]);
+
+  if (dirLights) {
+    delete dirLights;
   }
 
   delete infoBag;
@@ -102,7 +127,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
 void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
                                             DynamicMesh* mesh,
                                             PipelineInfoBag* infoBag) {
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < BUFFER_COUNT; i++) {
     buffers[i].info = infoBag;
     buffers[i].interpolation = mesh->getAnimState().interpolation;
   }
@@ -110,28 +135,18 @@ void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
 
 void DynamicPipeline::setBuffersColorBag(DynPipBag* buffers,
                                          DynPipColorBag* colorBag) {
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < BUFFER_COUNT; i++) {
     buffers[i].color = colorBag;
   }
 }
 
 void DynamicPipeline::freeBuffer(DynPipBag* bag) {
   if (bag->texture) {
-    bag->texture->freeCoords();
     delete bag->texture;
   }
 
   if (bag->lighting) {
-    bag->lighting->freeNormals();
     delete bag->lighting;
-  }
-
-  if (bag->verticesFrom) {
-    delete[] bag->verticesFrom;
-  }
-
-  if (bag->verticesTo) {
-    delete[] bag->verticesTo;
   }
 }
 
@@ -155,57 +170,42 @@ PipelineInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
   return result;
 }
 
-void DynamicPipeline::addVertices(DynamicMesh* mesh, MeshMaterial* material,
-                                  DynPipBag* bag, MeshFrame* frameFrom,
-                                  MeshFrame* frameTo,
-                                  const u32& startIndex) const {
-  bag->verticesFrom = new Vec4[bag->count];
-  bag->verticesTo = new Vec4[bag->count];
-
-  for (u32 i = startIndex; i < startIndex + bag->count; i++) {
-    auto& face = material->getVertexFaces()[i];
-    auto offset = i - startIndex;
-    bag->verticesFrom[offset] = frameFrom->getVertices()[face];
-    bag->verticesTo[offset] = frameTo->getVertices()[face];
-  }
+void DynamicPipeline::addVertices(MeshMaterialFrame* materialFrameFrom,
+                                  MeshMaterialFrame* materialFrameTo,
+                                  DynPipBag* bag, const u32& startIndex) const {
+  bag->verticesFrom = &materialFrameFrom->getVertices()[startIndex];
+  bag->verticesTo = &materialFrameTo->getVertices()[startIndex];
 }
 
 DynPipColorBag* DynamicPipeline::getColorBag(MeshMaterial* material) const {
   auto* result = new DynPipColorBag();
-  result->single = &material->singleColor;
+  result->single = &material->color;
   return result;
 }
 
 DynPipTextureBag* DynamicPipeline::getTextureBag(
-    DynamicMesh* mesh, MeshMaterial* material, MeshFrame* frameFrom,
-    MeshFrame* frameTo, const u32& count, const u32& startIndex) {
-  if (!material->getTextureCoordFaces()) return nullptr;
+    MeshMaterial* material, MeshMaterialFrame* materialFrameFrom,
+    MeshMaterialFrame* materialFrameTo, const u32& startIndex) {
+  if (!materialFrameFrom->getTextureCoords()) return nullptr;
 
   auto* result = new DynPipTextureBag();
+
   result->texture =
       rendererCore->texture.repository.getBySpriteOrMesh(material->getId());
   TYRA_ASSERT(result->texture, "Texture for material id: ", material->getId(),
               "was not found in texture repository!");
 
-  result->coordinatesFrom = new Vec4[count];
-  result->coordinatesTo = new Vec4[count];
-
-  for (u32 i = startIndex; i < startIndex + count; i++) {
-    auto& face = material->getTextureCoordFaces()[i];
-    auto offset = i - startIndex;
-    result->coordinatesFrom[offset] = frameFrom->getTextureCoords()[face];
-    result->coordinatesTo[offset] = frameTo->getTextureCoords()[face];
-  }
+  result->coordinatesFrom = &materialFrameFrom->getTextureCoords()[startIndex];
+  result->coordinatesTo = &materialFrameTo->getTextureCoords()[startIndex];
 
   return result;
 }
 
 DynPipLightingBag* DynamicPipeline::getLightingBag(
-    DynamicMesh* mesh, MeshMaterial* material, M4x4* model,
-    MeshFrame* frameFrom, MeshFrame* frameTo, const DynPipOptions* options,
-    PipelineDirLightsBag* dirLightsBag, const u32& count,
-    const u32& startIndex) const {
-  if (!material->getNormalFaces() || options == nullptr ||
+    MeshMaterialFrame* materialFrameFrom, MeshMaterialFrame* materialFrameTo,
+    M4x4* model, const DynPipOptions* options,
+    PipelineDirLightsBag* dirLightsBag, const u32& startIndex) const {
+  if (!materialFrameFrom->getNormals() || options == nullptr ||
       options->lighting == nullptr)
     return nullptr;
 
@@ -213,15 +213,9 @@ DynPipLightingBag* DynamicPipeline::getLightingBag(
 
   result->lightMatrix = model;
   result->dirLights = dirLightsBag;
-  result->normalsFrom = new Vec4[count];
-  result->normalsTo = new Vec4[count];
 
-  for (u32 i = startIndex; i < startIndex + count; i++) {
-    auto& face = material->getNormalFaces()[i];
-    auto offset = i - startIndex;
-    result->normalsFrom[offset] = frameFrom->getNormals()[face];
-    result->normalsTo[offset] = frameTo->getNormals()[face];
-  }
+  result->normalsFrom = &materialFrameFrom->getNormals()[startIndex];
+  result->normalsTo = &materialFrameTo->getNormals()[startIndex];
 
   return result;
 }

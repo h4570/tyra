@@ -104,7 +104,7 @@ void H4570::init() {
   }
 
   engine->audio.playSong();
-  // engine->renderer.setFrameLimit(false);
+  engine->renderer.setFrameLimit(false);
 }
 
 u32 counter = 0;
@@ -149,9 +149,34 @@ void H4570::loop() {
     engine->renderer.renderer3D.usePipeline(&dynpip);
     {
       dynpip.render(warrior, dynOptions);
+
       // dynpip.render(warrior2, dynOptions);
       // dynpip.render(warrior3, dynOptions);
       // dynpip.render(warrior4, dynOptions);
+
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
     }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);

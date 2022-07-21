@@ -22,18 +22,18 @@ class MeshMaterial {
   explicit MeshMaterial(const MeshMaterial& material);
   ~MeshMaterial();
 
-  Color singleColor;
+  Color color;
 
   const u32& getId() const { return id; }
   const std::string& getName() const { return _name; }
-  const u32& getFacesCount() const { return facesCount; }
   const u8& isMother() const { return _isMother; }
-  const u8& isSingleColorActivated() const { return singleColorFlag; }
-  u32* getVertexFaces() const { return vertexFaces; }
-  u32* getTextureCoordFaces() const { return textureCoordFaces; }
-  u32* getNormalFaces() const { return normalFaces; }
-  u32* getColorFaces() const { return normalFaces; }
-  MeshMaterialFrame* getFrames() const { return *frames; }
+  const u32& getFramesCount() const { return framesCount; }
+  const u8& isSingleColorActivated() const {
+    return singleColorFlag;
+  }  // TODO: colormode -> color / lightmap
+
+  MeshMaterialFrame** getFrames() const { return frames; }
+  MeshMaterialFrame* getFrame(const u32& i) const { return frames[i]; }
 
   const BBox& getBBox(const u32& frame) const;
   void setSingleColorFlag(const u8& flag);
@@ -48,8 +48,7 @@ class MeshMaterial {
 
   std::string _name;
   u8 _isMother, singleColorFlag;
-  u32 id, facesCount, framesCount;
-  u32 *vertexFaces, *textureCoordFaces, *normalFaces, *colorFaces;
+  u32 id, framesCount;
 };
 
 }  // namespace Tyra

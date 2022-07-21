@@ -40,21 +40,24 @@ class DynamicPipeline : public Renderer3DPipeline {
   RendererCore* rendererCore;
   Vec4* colorsCache;
 
-  void addVertices(DynamicMesh* mesh, MeshMaterial* material, DynPipBag* bag,
-                   MeshFrame* frameFrom, MeshFrame* frameTo,
+  void addVertices(MeshMaterialFrame* materialFrameFrom,
+                   MeshMaterialFrame* materialFrameTo, DynPipBag* bag,
                    const u32& startIndex) const;
+
   PipelineInfoBag* getInfoBag(DynamicMesh* mesh, const DynPipOptions* options,
                               M4x4* model) const;
+
   DynPipColorBag* getColorBag(MeshMaterial* material) const;
-  DynPipTextureBag* getTextureBag(DynamicMesh* mesh, MeshMaterial* material,
-                                  MeshFrame* frameFrom, MeshFrame* frameTo,
-                                  const u32& count, const u32& startIndex);
-  DynPipLightingBag* getLightingBag(DynamicMesh* mesh, MeshMaterial* material,
-                                    M4x4* model, MeshFrame* frameFrom,
-                                    MeshFrame* frameTo,
-                                    const DynPipOptions* options,
+
+  DynPipTextureBag* getTextureBag(MeshMaterial* material,
+                                  MeshMaterialFrame* materialFrameFrom,
+                                  MeshMaterialFrame* materialFrameTo,
+                                  const u32& startIndex);
+
+  DynPipLightingBag* getLightingBag(MeshMaterialFrame* materialFrameFrom,
+                                    MeshMaterialFrame* materialFrameTo,
+                                    M4x4* model, const DynPipOptions* options,
                                     PipelineDirLightsBag* dirLightsBag,
-                                    const u32& count,
                                     const u32& startIndex) const;
 
   void setLightingColorsCache(PipelineLightingOptions* lightingOptions);

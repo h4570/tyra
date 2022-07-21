@@ -22,7 +22,20 @@ MeshBuilderMaterialData::MeshBuilderMaterialData() {
   count = 0;
 }
 
-MeshBuilderMaterialData::~MeshBuilderMaterialData() {}
+MeshBuilderMaterialData::~MeshBuilderMaterialData() {
+  if (vertexFaces) {
+    delete[] vertexFaces;
+  }
+  if (textureCoordFaces) {
+    delete[] textureCoordFaces;
+  }
+  if (normalFaces) {
+    delete[] normalFaces;
+  }
+  if (colorFaces) {
+    delete[] colorFaces;
+  }
+}
 
 void MeshBuilderMaterialData::allocateFaces(const u32& t_count) {
   vertexFaces = new u32[t_count];

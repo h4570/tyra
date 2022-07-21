@@ -23,17 +23,8 @@ class MeshFrame {
   ~MeshFrame();
 
   const u32& getId() const { return id; }
-  const u32& getVertexCount() const { return vertexCount; }
-  const u32& getTextureCoordsCount() const { return textureCoordsCount; }
-  const u32& getNormalsCount() const { return normalsCount; }
-  const u32& getColorsCount() const { return colorsCount; }
   const u8& isMother() const { return _isMother; }
   const BBox& getBBox() const { return *bbox; }
-
-  Vec4* getVertices() const { return vertices; }
-  Vec4* getNormals() const { return normals; }
-  Vec4* getTextureCoords() const { return textureCoords; }
-  Color* getColors() const { return colors; }
 
   void print() const;
   void print(const char* name) const;
@@ -43,9 +34,7 @@ class MeshFrame {
  private:
   u8 _isMother;
   BBox* bbox;
-  u32 id, vertexCount, textureCoordsCount, normalsCount, colorsCount;
-  Vec4 *vertices, *textureCoords, *normals;
-  Color* colors;
+  u32 id;
 };
 
 }  // namespace Tyra

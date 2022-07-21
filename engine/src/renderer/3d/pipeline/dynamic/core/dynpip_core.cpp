@@ -46,6 +46,10 @@ void DynPipCore::initParts(DynPipBag* bag) {
   delete texBuffers;
 }
 
+void DynPipCore::renderTEST(DynPipBag** bags, const u32& count) {
+  qbufferRenderer.renderTEST(bags, count);
+}
+
 void DynPipCore::renderPart(DynPipBag* bag, const bool& frustumCull) {
   if (bag->count <= 0) return;
 
