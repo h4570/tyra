@@ -70,7 +70,7 @@ void StaPipQBufferRenderer::init(RendererCore* t_core) {
 
   reinitVU1();
 
-  TYRA_LOG("Renderer3DQBufferRenderer initialized");
+  TYRA_LOG("StaPipQBufferRenderer initialized");
 }
 
 void StaPipQBufferRenderer::reinitVU1() {

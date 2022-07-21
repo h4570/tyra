@@ -21,7 +21,7 @@ void DynamicPipeline::init(RendererCore* t_core) {
   core.init(t_core);
 }
 
-void DynamicPipeline::onUse() {}
+void DynamicPipeline::onUse() { core.reinitVU1Programs(); }
 
 void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   auto model = mesh->getModelMatrix();
@@ -29,6 +29,16 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   auto* frameTo = mesh->getFrame(mesh->getNextAnimationFrame());
   auto* infoBag = getInfoBag(mesh, options, &model);
   PipelineDirLightsBag* dirLights = nullptr;
+  auto frustumCulling =
+      options ? options->frustumCulling : DynPipFrustumCulling_Simple;
+
+  if (frustumCulling == DynPipFrustumCulling_Simple) {
+    if (frameTo->getBBox().isInFrustum(
+            rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
+        CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
+      return;
+    }
+  }
 
   if (options && options->lighting) {
     setLightingColorsCache(options->lighting);
@@ -46,8 +56,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
     auto partSize = core.getMaxVertCountByParams(
-        material->isSingleColorActivated(), options && options->lighting,
-        material->getTextureCoordFaces());
+        options && options->lighting, material->getTextureCoordFaces());
     u32 partsCount =
         ceil(material->getFacesCount() / static_cast<float>(partSize));
     auto* colorBag = getColorBag(material);
@@ -76,7 +85,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
         isPartInitialized = true;
       }
 
-      core.renderPart(&buffer);
+      core.renderPart(&buffer, frustumCulling == DynPipFrustumCulling_Precise);
 
       context = !context;
     }
@@ -155,8 +164,9 @@ void DynamicPipeline::addVertices(DynamicMesh* mesh, MeshMaterial* material,
 
   for (u32 i = startIndex; i < startIndex + bag->count; i++) {
     auto& face = material->getVertexFaces()[i];
-    bag->verticesFrom[i] = frameFrom->getVertices()[face];
-    bag->verticesTo[i] = frameTo->getVertices()[face];
+    auto offset = i - startIndex;
+    bag->verticesFrom[offset] = frameFrom->getVertices()[face];
+    bag->verticesTo[offset] = frameTo->getVertices()[face];
   }
 }
 
@@ -182,8 +192,9 @@ DynPipTextureBag* DynamicPipeline::getTextureBag(
 
   for (u32 i = startIndex; i < startIndex + count; i++) {
     auto& face = material->getTextureCoordFaces()[i];
-    result->coordinatesFrom[i] = frameFrom->getTextureCoords()[face];
-    result->coordinatesTo[i] = frameTo->getTextureCoords()[face];
+    auto offset = i - startIndex;
+    result->coordinatesFrom[offset] = frameFrom->getTextureCoords()[face];
+    result->coordinatesTo[offset] = frameTo->getTextureCoords()[face];
   }
 
   return result;
@@ -201,13 +212,15 @@ DynPipLightingBag* DynamicPipeline::getLightingBag(
   auto* result = new DynPipLightingBag();
 
   result->lightMatrix = model;
+  result->dirLights = dirLightsBag;
   result->normalsFrom = new Vec4[count];
   result->normalsTo = new Vec4[count];
 
   for (u32 i = startIndex; i < startIndex + count; i++) {
     auto& face = material->getNormalFaces()[i];
-    result->normalsFrom[i] = frameFrom->getNormals()[face];
-    result->normalsTo[i] = frameTo->getNormals()[face];
+    auto offset = i - startIndex;
+    result->normalsFrom[offset] = frameFrom->getNormals()[face];
+    result->normalsTo[offset] = frameTo->getNormals()[face];
   }
 
   return result;

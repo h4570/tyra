@@ -22,8 +22,7 @@ class DynPipTDVU1Program : public DynPipVU1Program {
   ~DynPipTDVU1Program();
 
   std::string getStringName() const;
-  void addProgramQBufferDataToPacket(packet2_t* packet,
-                                     DynPipQBuffer* qbuffer) const;
+  void addProgramQBufferDataToPacket(packet2_t* packet, DynPipBag* bag) const;
 };
 
 }  // namespace Tyra

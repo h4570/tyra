@@ -21,7 +21,7 @@ DynPipTDVU1Program::DynPipTDVU1Program()
                        &DynPipVU1_TD_CodeEnd,
                        ((u64)GIF_REG_ST) << 0 | ((u64)GIF_REG_RGBAQ) << 4 |
                            ((u64)GIF_REG_XYZ2) << 8,
-                       3, 4) {}
+                       3, 3) {}
 
 DynPipTDVU1Program::~DynPipTDVU1Program() {}
 
@@ -29,33 +29,37 @@ std::string DynPipTDVU1Program::getStringName() const {
   return std::string("DynPip - TD");
 }
 
-void DynPipTDVU1Program::addProgramQBufferDataToPacket(
-    packet2_t* packet, DynPipQBuffer* qbuffer) const {
+void DynPipTDVU1Program::addProgramQBufferDataToPacket(packet2_t* packet,
+                                                       DynPipBag* bag) const {
   u32 addr = VU1_VERT_DATA_ADDR;
 
   // Add vertices
-  packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->verticesFrom,
-                                   qbuffer->size, true);
-  addr += qbuffer->size;
-  packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->verticesTo,
-                                   qbuffer->size, true);
-  addr += qbuffer->size;
-
-  // Add sts
-  packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->stsFrom,
-                                   qbuffer->size, true);
-  addr += qbuffer->size;
-  packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->stsTo, qbuffer->size,
+  packet2_utils_vu_add_unpack_data(packet, addr, bag->verticesFrom, bag->count,
                                    true);
-  addr += qbuffer->size;
+  addr += bag->count;
+  packet2_utils_vu_add_unpack_data(packet, addr, bag->verticesTo, bag->count,
+                                   true);
+  addr += bag->count;
 
-  // Add normal
-  packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->normalsFrom,
-                                   qbuffer->size, true);
-  addr += qbuffer->size;
-  packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->normalsTo,
-                                   qbuffer->size, true);
-  addr += qbuffer->size;
+  if (bag->texture) {
+    // Add sts
+    packet2_utils_vu_add_unpack_data(
+        packet, addr, bag->texture->coordinatesFrom, bag->count, true);
+    addr += bag->count;
+    packet2_utils_vu_add_unpack_data(packet, addr, bag->texture->coordinatesTo,
+                                     bag->count, true);
+    addr += bag->count;
+  }
+
+  if (bag->lighting) {
+    // Add normal
+    packet2_utils_vu_add_unpack_data(packet, addr, bag->lighting->normalsFrom,
+                                     bag->count, true);
+    addr += bag->count;
+    packet2_utils_vu_add_unpack_data(packet, addr, bag->lighting->normalsTo,
+                                     bag->count, true);
+    addr += bag->count;
+  }
 }
 
 }  // namespace Tyra

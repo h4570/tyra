@@ -25,16 +25,10 @@ class DynPipRenderer {
 
   void reinitVU1();
 
-  // DynPipQBuffer* getBuffer();
-
   void sendObjectData(DynPipBag* bag, M4x4* mvp,
                       RendererCoreTextureBuffers* texBuffers) const;
 
-  // void setMaxVertCount(const u32& count);
-
-  // void setInfo(PipelineInfoBag* bag);
-
-  // void render(DynPipQBuffer* buffer);
+  void render(DynPipBag* bag);
 
   void clearLastProgramName();
 
@@ -46,9 +40,8 @@ class DynPipRenderer {
   void uploadPrograms();
   void setDoubleBuffer();
 
-  // void addBufferDataToPacket(DynPipVU1Program* program, DynPipQBuffer*
-  // buffer); void sendPacket();
-  // DynPipQBuffer buffers[2];
+  void addBufferDataToPacket(DynPipVU1Program* program, DynPipBag* bag);
+  void sendPacket();
 
   packet2_t* packets[2];
   packet2_t* programsPacket;

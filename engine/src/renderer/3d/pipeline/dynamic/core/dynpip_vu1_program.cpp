@@ -32,15 +32,14 @@ const DynPipProgramName& DynPipVU1Program::getName() const { return name; }
 
 u32& DynPipVU1Program::getReglist() { return reglist; }
 
-void DynPipVU1Program::addBufferDataToPacket(packet2_t* packet,
-                                             DynPipQBuffer* buffer,
+void DynPipVU1Program::addBufferDataToPacket(packet2_t* packet, DynPipBag* bag,
                                              prim_t* prim) {
-  addStandardBufferDataToPacket(packet, buffer, prim);
-  addProgramQBufferDataToPacket(packet, buffer);
+  addStandardBufferDataToPacket(packet, bag, prim);
+  addProgramQBufferDataToPacket(packet, bag);
 }
 
 void DynPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
-                                                     DynPipQBuffer* buffer,
+                                                     DynPipBag* bag,
                                                      prim_t* prim) {
   // if (buffer->bag->texture)
   //   prim->mapping = 1;
@@ -61,12 +60,9 @@ void DynPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
   // packet2_utils_vu_close_unpack(packet);
 }
 
-u16 DynPipVU1Program::getMaxVertCount(const bool& singleColorEnabled,
-                                      const u16& bufferSize) const {
+u16 DynPipVU1Program::getMaxVertCount(const u16& bufferSize) const {
   u16 res = bufferSize - 4;
-  u8 colorElementsPerVertex =
-      singleColorEnabled ? (elementsPerVertex - 1) : elementsPerVertex;
-  res /= (colorElementsPerVertex + reglistCount);
+  res /= (elementsPerVertex + reglistCount);
 
   // Buffer size = VU1 double buffer size (xtop)
   // QBufferSize = res (it is placed inside VU1)

@@ -21,7 +21,7 @@ DynPipTCVU1Program::DynPipTCVU1Program()
                        &DynPipVU1_TC_CodeEnd,
                        ((u64)GIF_REG_ST) << 0 | ((u64)GIF_REG_RGBAQ) << 4 |
                            ((u64)GIF_REG_XYZ2) << 8,
-                       3, 3) {}
+                       3, 2) {}
 
 DynPipTCVU1Program::~DynPipTCVU1Program() {}
 
@@ -29,8 +29,8 @@ std::string DynPipTCVU1Program::getStringName() const {
   return std::string("DynPip - TC");
 }
 
-void DynPipTCVU1Program::addProgramQBufferDataToPacket(
-    packet2_t* packet, DynPipQBuffer* qbuffer) const {
+void DynPipTCVU1Program::addProgramQBufferDataToPacket(packet2_t* packet,
+                                                       DynPipBag* bag) const {
   // u32 addr = VU1_VERT_DATA_ADDR;
 
   // // Add vertices

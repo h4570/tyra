@@ -19,7 +19,7 @@ namespace Tyra {
 DynPipDVU1Program::DynPipDVU1Program()
     : DynPipVU1Program(
           DynPipDirLights, &DynPipVU1_D_CodeStart, &DynPipVU1_D_CodeEnd,
-          ((u64)GIF_REG_RGBAQ) << 0 | ((u64)GIF_REG_XYZ2) << 4, 2, 3) {}
+          ((u64)GIF_REG_RGBAQ) << 0 | ((u64)GIF_REG_XYZ2) << 4, 2, 2) {}
 
 DynPipDVU1Program::~DynPipDVU1Program() {}
 
@@ -27,8 +27,8 @@ std::string DynPipDVU1Program::getStringName() const {
   return std::string("DynPip - D");
 }
 
-void DynPipDVU1Program::addProgramQBufferDataToPacket(
-    packet2_t* packet, DynPipQBuffer* qbuffer) const {
+void DynPipDVU1Program::addProgramQBufferDataToPacket(packet2_t* packet,
+                                                      DynPipBag* bag) const {
   // u32 addr = VU1_VERT_DATA_ADDR;
 
   // // Add vertices

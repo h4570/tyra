@@ -104,6 +104,7 @@ void H4570::init() {
   }
 
   engine->audio.playSong();
+  // engine->renderer.setFrameLimit(false);
 }
 
 u32 counter = 0;
@@ -142,17 +143,19 @@ void H4570::loop() {
 
     // engine->renderer.renderer3D.usePipeline(&stapip);
     // {
-    //   stapip.render(warrior, staOptions);
-    //   // stapip.render(warrior2, staOptions);
-    //   // stapip.render(warrior3, staOptions);
-    //   // stapip.render(warrior4, staOptions);
+    //   stapip.render(terrain, staOptions);
     // }
 
     engine->renderer.renderer3D.usePipeline(&dynpip);
-    { dynpip.render(warrior, dynOptions); }
+    {
+      dynpip.render(warrior, dynOptions);
+      // dynpip.render(warrior2, dynOptions);
+      // dynpip.render(warrior3, dynOptions);
+      // dynpip.render(warrior4, dynOptions);
+    }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);
-    { mcPip.render(blocks, blocksCount, blocksTex, false); }
+    { mcPip.render(blocks, blocksCount, blocksTex); }
   }
   engine->renderer.endFrame();
 }

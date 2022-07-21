@@ -70,8 +70,6 @@ void MinecraftPipeline::render(McpipBlock* blocks, const u32& count,
     if (culled > 0) cull(blocks, cullIndexes, &texBuffers, isMulti);
     if (clipped > 0) clip(blocks, clipIndexes, &texBuffers, isMulti);
   }
-
-  Threading::switchThread();
 }
 
 CoreBBoxFrustum MinecraftPipeline::isInFrustum(const McpipBlock& block) const {

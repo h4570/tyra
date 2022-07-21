@@ -16,6 +16,11 @@ DynPipProgramsRepository::DynPipProgramsRepository() {}
 
 DynPipProgramsRepository::~DynPipProgramsRepository() {}
 
+DynPipVU1Program* DynPipProgramsRepository::getProgramByBag(
+    const DynPipBag* bag) {
+  return getProgramByParams(bag->lighting, bag->texture);
+}
+
 DynPipVU1Program* DynPipProgramsRepository::getProgramByParams(
     const bool& isLightingEnabled, const bool& isTextureEnabled) {
   if (isLightingEnabled && isTextureEnabled)

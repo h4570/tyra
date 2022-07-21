@@ -40,8 +40,7 @@ class DynPipCore {
   void renderPart(DynPipBag* data, const bool& frustumCull = true);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
-  u32 getMaxVertCountByParams(const bool& isSingleColor,
-                              const bool& isLightingEnabled,
+  u32 getMaxVertCountByParams(const bool& isLightingEnabled,
                               const bool& isTextureEnabled);
 
   /**

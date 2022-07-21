@@ -32,8 +32,14 @@
 
 #vuprog DynPipVU1TD
 
---cont
+ResetClipFlags{ }
 
+begin:
+    xtop buffer
+
+
+; --cont
+    
 #endvuprog
 
 --exit
