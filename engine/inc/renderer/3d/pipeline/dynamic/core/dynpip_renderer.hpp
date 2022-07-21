@@ -11,22 +11,24 @@
 #pragma once
 
 #include <tamtypes.h>
+#include "renderer/core/renderer_core.hpp"
+#include "./dynpip_programs_repository.hpp"
 
 namespace Tyra {
 
-class DynPipQBufferRenderer {
+class DynPipRenderer {
  public:
-  DynPipQBufferRenderer();
-  ~DynPipQBufferRenderer();
+  DynPipRenderer();
+  ~DynPipRenderer();
 
-  // void init(RendererCore* t_core);
+  void init(RendererCore* t_core, DynPipProgramsRepository* t_programRepo);
 
-  // void reinitVU1();
+  void reinitVU1();
 
   // DynPipQBuffer* getBuffer();
 
-  // void sendObjectData(DynPipBag* bag, M4x4* mvp,
-  //                     RendererCoreTextureBuffers* texBuffers) const;
+  void sendObjectData(DynPipBag* bag, M4x4* mvp,
+                      RendererCoreTextureBuffers* texBuffers) const;
 
   // void setMaxVertCount(const u32& count);
 
@@ -34,35 +36,34 @@ class DynPipQBufferRenderer {
 
   // void render(DynPipQBuffer* buffer);
 
-  // void clearLastProgramName();
+  void clearLastProgramName();
 
   const u16& getBufferSize() { return bufferSize; }
 
  private:
-  // void sendStaticData() const;
-  // void setProgramsCache();
-  // void uploadPrograms();
-  // void setDoubleBuffer();
+  void sendStaticData() const;
+  void setProgramsCache();
+  void uploadPrograms();
+  void setDoubleBuffer();
 
   // void addBufferDataToPacket(DynPipVU1Program* program, DynPipQBuffer*
   // buffer); void sendPacket();
-
-  // packet2_t* packets[2];
-  // packet2_t* programsPacket;
   // DynPipQBuffer buffers[2];
-  // packet2_t* currentPacket;
-  // packet2_t* staticDataPacket;
-  // packet2_t* objectDataPacket;
 
-  // RendererCore* rendererCore;
+  packet2_t* packets[2];
+  packet2_t* programsPacket;
+  packet2_t* currentPacket;
+  packet2_t* staticDataPacket;
+  packet2_t* objectDataPacket;
 
-  // DynPipProgramName lastProgramName;
-  // Path1* path1;
-  // DynPipClipper clipper;
-  // DynPipProgramsRepository repository;
+  DynPipProgramsRepository* programsRepo;
+  RendererCore* rendererCore;
+  Path1* path1;
+
+  DynPipProgramName lastProgramName;
 
   u16 bufferSize;
-  // u8 context;
+  u8 context;
 };
 
 }  // namespace Tyra

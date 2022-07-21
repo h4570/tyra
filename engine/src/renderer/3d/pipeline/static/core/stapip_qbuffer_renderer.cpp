@@ -189,24 +189,6 @@ void StaPipQBufferRenderer::cull(StaPipQBuffer* buffer) {
   sendPacket();
 }
 
-// void StaPipQBufferRenderer::sendFinishTag() {
-// StaPipQBufferRenderer way proposition
-// auto program = path1->getProgramByName(Draw_Finish);
-// addBufferDataToPacket(program, nullptr);
-// sendPacket();
-
-// packet2_t* packet2 = packet2_create(8, P2_TYPE_NORMAL, P2_MODE_CHAIN,
-// true); auto program =
-//     static_cast<VU1DrawFinish*>(getProgramByName(Draw_Finish));
-
-// program->addTag(packet2, prim);
-// packet2_utils_vu_add_start_program(packet2,
-// program->getDestinationAddress()); packet2_utils_vu_add_end_tag(packet2);
-// dma_channel_wait(DMA_CHANNEL_VIF1, 0);
-// dma_channel_send_packet2(packet2, DMA_CHANNEL_VIF1, true);
-// packet2_free(packet2);
-// }
-
 void StaPipQBufferRenderer::clip(StaPipQBuffer* buffer) {
   if (buffer->size == 0) {
     return;

@@ -18,7 +18,7 @@
 // #define VU1_LIGHTS_DIRS_ADDR 11
 // #define VU1_LIGHTS_COLORS_ADDR 14
 // #define VU1_SET_GIFTAG_ADDR 18
-// #define VU1_LAST_ITEM_ADDR 18
+#define VU1_LAST_ITEM_ADDR 18
 
 // Buffer data (xtop)
 #define VU1_VERT_DATA_ADDR 2

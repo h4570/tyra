@@ -14,7 +14,7 @@
 #include "./bag/dynpip_bag.hpp"
 #include "renderer/core/renderer_core.hpp"
 #include "./dynpip_programs_repository.hpp"
-#include "./dynpip_qbuffer_renderer.hpp"
+#include "./dynpip_renderer.hpp"
 
 namespace Tyra {
 
@@ -27,8 +27,17 @@ class DynPipCore {
 
   void init(RendererCore* t_core);
 
+  /** Force starting VU1 program instead of continueing */
+  void clear() { qbufferRenderer.clearLastProgramName(); }
+
+  /**
+   * Send model matrix, lighting data and other
+   * repetitve stuff to VU1
+   */
+  void initParts(DynPipBag* data);
+
   /** Render 3D via "bags" */
-  void render(DynPipBag* data);
+  void renderPart(DynPipBag* data, const bool& frustumCull = true);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
   u32 getMaxVertCountByParams(const bool& isSingleColor,
@@ -44,8 +53,9 @@ class DynPipCore {
   void reinitVU1Programs();
 
  private:
+  M4x4 mvp;
   RendererCore* rendererCore;
-  DynPipQBufferRenderer qbufferRenderer;
+  DynPipRenderer qbufferRenderer;
 };
 
 }  // namespace Tyra

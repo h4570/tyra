@@ -16,7 +16,10 @@ DynamicPipeline::DynamicPipeline() { colorsCache = new Vec4[4]; }
 
 DynamicPipeline::~DynamicPipeline() { delete[] colorsCache; }
 
-void DynamicPipeline::init(RendererCore* t_core) { rendererCore = t_core; }
+void DynamicPipeline::init(RendererCore* t_core) {
+  rendererCore = t_core;
+  core.init(t_core);
+}
 
 void DynamicPipeline::onUse() {}
 
@@ -38,6 +41,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   u8 context = 0;
 
   setBuffersDefaultVars(buffers, mesh, infoBag);
+  core.clear();
 
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
@@ -48,6 +52,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
         ceil(material->getFacesCount() / static_cast<float>(partSize));
     auto* colorBag = getColorBag(material);
     setBuffersColorBag(buffers, colorBag);
+    u8 isPartInitialized = false;
 
     for (u32 j = 0; j < partsCount; j++) {
       auto& buffer = buffers[context];
@@ -66,7 +71,12 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
           getLightingBag(mesh, material, &model, frameFrom, frameTo, options,
                          dirLights, buffer.count, startIndex);
 
-      core.render(&buffer);
+      if (!isPartInitialized) {
+        core.initParts(&buffer);
+        isPartInitialized = true;
+      }
+
+      core.renderPart(&buffer);
 
       context = !context;
     }
