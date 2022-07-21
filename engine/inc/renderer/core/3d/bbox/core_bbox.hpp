@@ -37,6 +37,9 @@ class CoreBBox {
   void print(const std::string& name) const { print(name.c_str()); }
   std::string getPrint(const char* name = nullptr) const;
 
+  CoreBBoxFrustum isInFrustum(const Plane* frustumPlanes, const M4x4& model,
+                              const float* margins = nullptr) const;
+
  protected:
   Vec4 _vertices[8];
 };

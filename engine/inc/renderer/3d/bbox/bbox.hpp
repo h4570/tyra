@@ -41,6 +41,17 @@ class BBox : public CoreBBox {
   /** @returns the bottom face (nearer on y-axis) */
   const BBoxFace& getBottomFace() { return _bottomFace; }
 
+  /** @returns the lower (x, y, z) boundary of the box. */
+  Vec4 min();
+  /** @returns the upper (x, y, z) boundary of the box. */
+  Vec4 max();
+  /**
+   * @param res_min Vec4 to store the min result
+   * @param res_max Vec4 to store the min result
+   * @brief Calc and stores the min and max points of box at a single loop
+   * */
+  void getMinMax(Vec4* res_min, Vec4* res_max);
+
  protected:
   float _height, _depth, _width;
   Vec4 _centerVector;

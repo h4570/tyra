@@ -50,4 +50,68 @@ void BBox::setData() {
   _bottomFace = BBoxFace(_vertices[0], _vertices[5], _vertices[0].y);
 }
 
+Vec4 BBox::min() {
+  Vec4 temp, _min;
+  u8 isInitialized = 0;
+
+  const Vec4* vertices = getVertices();
+  for (u8 i = 0; i < 8; i++) {
+    temp.set(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
+    if (isInitialized == 0) {
+      isInitialized = 1;
+      _min.set(temp);
+    }
+
+    if (_min.x > temp.x) _min.x = temp.x;
+    if (_min.y > temp.y) _min.y = temp.y;
+    if (_min.z > temp.z) _min.z = temp.z;
+  }
+
+  return _min;
+}
+
+Vec4 BBox::max() {
+  Vec4 temp, _max;
+  u8 isInitialized = 0;
+
+  const Vec4* vertices = getVertices();
+  for (u8 i = 0; i < 8; i++) {
+    temp.set(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
+    if (isInitialized == 0) {
+      isInitialized = 1;
+      _max.set(temp);
+    }
+
+    if (temp.x > _max.x) _max.x = temp.x;
+    if (temp.y > _max.y) _max.y = temp.y;
+    if (temp.z > _max.z) _max.z = temp.z;
+  }
+
+  return _max;
+}
+
+void BBox::getMinMax(Vec4* res_min, Vec4* res_max) {
+  Vec4 temp = Vec4();
+
+  u8 isInitialized = 0;
+  const Vec4* vertices = getVertices();
+  for (u8 i = 0; i < 8; i++) {
+    temp.set(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
+    if (isInitialized == 0) {
+      isInitialized = 1;
+      res_min->set(temp);
+      res_max->set(temp);
+    }
+
+    if (res_min->x > temp.x) res_min->x = temp.x;
+    if (temp.x > res_max->x) res_max->x = temp.x;
+
+    if (res_min->y > temp.y) res_min->y = temp.y;
+    if (temp.y > res_max->y) res_max->y = temp.y;
+
+    if (res_min->z > temp.z) res_min->z = temp.z;
+    if (temp.z > res_max->z) res_max->z = temp.z;
+  }
+}
+
 }  // namespace Tyra

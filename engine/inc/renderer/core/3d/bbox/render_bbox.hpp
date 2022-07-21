@@ -25,9 +25,6 @@ class RenderBBox : public CoreBBox {
   explicit RenderBBox(const std::vector<CoreBBox>& t_bboxes,
                       const u32& startIndex, const u32& stopIndex);
 
-  CoreBBoxFrustum isInFrustum(const Plane* frustumPlanes, const M4x4& model,
-                              const float* margins = nullptr) const;
-
   CoreBBoxFrustum clipIsInFrustum(const Plane* frustumPlanes,
                                   const M4x4& model) const;
 };

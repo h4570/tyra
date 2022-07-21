@@ -3,14 +3,13 @@
 --- H4570
 - [DynPip] TD VU1 program
 - [DynPip] C++ pipeline
-- [DynPip] Dbufferring during mesh unrolling
 - [DynPip] Info about: simple clip
 - [StaPip] Remove animation
 - [StaPip] Dbufferring during mesh unrolling
 - [StaPip] Info about: full plane clip
 - [Renderer] Add possibility to on/off frustum check in all pipelines (renderOptions?)
 - [Loaders] Think about ".tyrobj" format - implement it (add multicolor support)
-- [Loaders] DFF loader
+- [Loaders] DFF loader as static Mesh loader
 - [Texture] Test cache hits with large amount of textures (dolphin sample?)
 - [Demo] Create cool demo which will show all features of Tyra (I will take this one)
 
@@ -44,10 +43,10 @@ because this lines will be removed on make-release. Only debug stuff should be c
 
 - [Tutorials] 3. Minecraft cube - explain this pipeline, and explain that there are many 3D pipelines
 
-- [Tutorials] 4. Mesh rendering - explain stdPipeline, render .tyrobj file via Mesh class, explain that this is high-level 
+- [Tutorials] 4. Mesh rendering - explain staticPipeline, render .tyrobj file via Mesh class, explain that this is high-level 
 abstract 3D object class, and what it have (animation etc)
 
-- [Tutorials] 5. Manual rendering via stdPipeline - via Render3DBag (core.render()), render simple poly,
+- [Tutorials] 5. Manual rendering via staticPipeline - via Render3DBag (core.render()), render simple poly,
 explain that this is lower-level abstract rendering, it have the all the features as Mesh rendering, 
 because Mesh rendering uses only core.render()
 
