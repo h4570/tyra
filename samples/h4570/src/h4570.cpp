@@ -11,8 +11,18 @@
 #include "h4570.hpp"
 #include "file/file_utils.hpp"
 #include "loaders/3d/md2/md2_loader.hpp"
+#include "thread/threading.hpp"
 
 namespace Tyra {
+
+float getRandomFloat(float a, float b) {
+  float random = ((float)rand()) / (float)RAND_MAX;
+  float diff = b - a;
+  float r = random * diff;
+  return a + r;
+}
+
+int getRandomInt(int a, int b) { return (rand() % (b - a + 1)) + a; }
 
 H4570::H4570(Engine* t_engine) { engine = t_engine; }
 H4570::~H4570() {}
@@ -39,23 +49,20 @@ void H4570::init() {
   warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
       warrior->getMaterial(0)->getId());
 
-  warrior2 = new DynamicMesh(*warrior);
-  warrior2->translation.translateX(-3.0F);
-  warriorTex->addLink(warrior2->getMaterial(0)->getId());
-  warrior2->playAnimation(0, warrior2->getFramesCount() - 1);
-  warrior2->setAnimSpeed(0.10F);
-
-  warrior3 = new DynamicMesh(*warrior);
-  warrior3->translation.translateX(-6.0F);
-  warriorTex->addLink(warrior3->getMaterial(0)->getId());
-  warrior3->playAnimation(0, warrior3->getFramesCount() - 1);
-  warrior3->setAnimSpeed(0.7F);
-
-  warrior4 = new DynamicMesh(*warrior);
-  warrior4->translation.translateX(3.0F);
-  warriorTex->addLink(warrior4->getMaterial(0)->getId());
-  warrior4->playAnimation(0, warrior4->getFramesCount() - 1);
-  warrior4->setAnimSpeed(0.5F);
+  warriorsCount = 22;
+  warriors = new DynamicMesh*[warriorsCount];
+  for (u8 i = 0; i < warriorsCount; i++) {
+    warriors[i] = new DynamicMesh(*warrior);
+    warriors[i]->translation.translateX(-40.0F + static_cast<float>(i) * 4);
+    warriors[i]->translation.translateY(30.0F);
+    warriors[i]->translation.translateZ(-10.0F);
+    warriors[i]->translation.rotateX(-1.5F);
+    warriorTex->addLink(warriors[i]->getMaterial(0)->getId());
+    warriors[i]->playAnimation(0, warriors[i]->getFramesCount() - 1);
+    warriors[i]->setCurrentAnimationFrame(
+        getRandomInt(0, warriors[i]->getFramesCount() - 1));
+    warriors[i]->setAnimSpeed(getRandomFloat(0.1F, 0.9F));
+  }
 
   staOptions = getStaPipOptions();
   dynOptions = getDynPipOptions();
@@ -107,27 +114,8 @@ void H4570::init() {
   engine->renderer.setFrameLimit(false);
 }
 
-u32 counter = 0;
-
 void H4570::loop() {
-  if (counter++ > 100) {
-    counter = 0;
-    TYRA_LOG(engine->info.getFps());
-  }
-
-  warrior->animate();
-  warrior2->animate();
-  warrior3->animate();
-  warrior4->animate();
-
-  // if ((engine->pad.getPressed().DpadUp || engine->pad.getPressed().DpadDown
-  // ||
-  //      engine->pad.getPressed().DpadLeft ||
-  //      engine->pad.getPressed().DpadRight) &&
-  //     adpcmTimer.getTimeDelta() > 8000) {
-  //   adpcmTimer.prime();
-  //   engine->audio.playADPCM(adpcmSample, 1);
-  // }
+  for (u8 i = 0; i < warriorsCount; i++) warriors[i]->animate();
 
   engine->renderer.beginFrame(CameraInfo3D(&cameraPosition, &cameraLookAt));
   {
@@ -139,44 +127,15 @@ void H4570::loop() {
       blocks[i].model = translations[i] * rotations[i] * scales[i];
     }
 
-    // engine->renderer.renderer2D.render(picture);
-
-    // engine->renderer.renderer3D.usePipeline(&stapip);
-    // {
-    //   stapip.render(terrain, staOptions);
-    // }
-
     engine->renderer.renderer3D.usePipeline(&dynpip);
     {
-      dynpip.render(warrior, dynOptions);
-
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior4, dynOptions);
-
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-      // dynpip.render(warrior2, dynOptions);
-
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
-      // dynpip.render(warrior3, dynOptions);
+      Threading::switchThread();
+      for (u8 i = 0; i < warriorsCount; i++) {
+        dynpip.render(warriors[i], dynOptions);
+        if (i == 5) Threading::switchThread();
+        if (i == 10) Threading::switchThread();
+        if (i == 15) Threading::switchThread();
+      }
     }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);

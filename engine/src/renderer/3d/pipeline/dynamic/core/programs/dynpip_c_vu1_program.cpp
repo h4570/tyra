@@ -29,18 +29,14 @@ std::string DynPipCVU1Program::getStringName() const {
 
 void DynPipCVU1Program::addProgramQBufferDataToPacket(packet2_t* packet,
                                                       DynPipBag* bag) const {
-  // u32 addr = VU1_VERT_DATA_ADDR;
+  u32 addr = VU1_VERT_DATA_ADDR;
 
-  // // Add vertices
-  // packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->vertices,
-  //                                  qbuffer->size, true);
-
-  // // Add colors
-  // if (qbuffer->bag->color->single == nullptr) {
-  //   addr += qbuffer->size;
-  //   packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->colors,
-  //                                    qbuffer->size, true);
-  // }
+  // Add vertices
+  packet2_utils_vu_add_unpack_data(packet, addr, bag->verticesFrom, bag->count,
+                                   true);
+  addr += bag->count;
+  packet2_utils_vu_add_unpack_data(packet, addr, bag->verticesTo, bag->count,
+                                   true);
 }
 
 }  // namespace Tyra

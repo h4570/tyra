@@ -2,11 +2,13 @@
 
 --- H4570
 - [DynPip] TD VU1 program
-- [DynPip] C++ pipeline
 - [DynPip] Info about: simple clip
 - [StaPip] Remove animation
 - [StaPip] Dbufferring during mesh unrolling
+- [StaPip] VU1 packets spamming
+- [McPip] VU1 packets spamming
 - [StaPip] Info about: full plane clip
+- [Renderer] Github: Allocate dynamic pipeline memory only in "onUse" (core,qbuffrenderer,pipeline..)
 - [Game] Update intellisense from docker
 - [Renderer] Add possibility to on/off frustum check in all pipelines (renderOptions?)
 - [Loaders] Think about ".tyrobj" format - implement it (add multicolor support)

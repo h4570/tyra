@@ -17,7 +17,7 @@ namespace Tyra {
 
 class PipelineOptions {
  public:
-  PipelineOptions() {}
+  PipelineOptions() { lighting = nullptr; }
   ~PipelineOptions() {}
 
   PipelineShadingType shadingType;

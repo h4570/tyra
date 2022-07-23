@@ -35,14 +35,16 @@ class DynamicMesh : public Mesh {
   const u32& getFramesCount() const { return framesCount; }
 
   const u32& getCurrentAnimationFrame() const { return animState.currentFrame; }
-
   const u32& getNextAnimationFrame() const { return animState.nextFrame; }
-
   const u32& getStartAnimationFrame() const { return animState.startFrame; }
-
   const u32& getEndAnimationFrame() const { return animState.endFrame; }
-
   const u32& getStayAnimationFrame() const { return animState.stayFrame; }
+
+  void setCurrentAnimationFrame(const u32& v) { animState.currentFrame = v; }
+  void setNextAnimationFrame(const u32& v) { animState.nextFrame = v; }
+  void setStartAnimationFrame(const u32& v) { animState.startFrame = v; }
+  void setEndAnimationFrame(const u32& v) { animState.endFrame = v; }
+  void setStayAnimationFrame(const u32& v) { animState.stayFrame = v; }
 
   /** @returns bounding box object of current frame. */
   const BBox& getCurrentBoundingBox() const {

@@ -61,19 +61,21 @@ begin:
     ;--- Loop
     iadd vertexCounter, buffer, vertexCount
 vertexLoop:
+
+        iadd    vertexDataTo,   vertexDataFrom, vertexCount
+        iadd    stqDataTo,      stqDataFrom,    vertexCount
+        iadd    normalDataTo,   normalDataFrom, vertexCount
+
         ;--- Vertex 1 - from-to -> lerp
         lq      vertex1From,    (vertexDataFrom)
-        iadd    vertexDataTo,   vertexDataFrom, vertexCount
         lq      vertex1To,      (vertexDataTo)
         Lerp{ vertex1, vertex1From, vertex1To, interp }
 
         lq      stq1From,       (stqDataFrom)
-        iadd    stqDataTo,      stqDataFrom,    vertexCount
         lq      stq1To,         (stqDataTo)
         Lerp{ stq1, stq1From, stq1To, interp }
 
-        lq.xyz  normal1From,    (normalDataFrom) 
-        iadd    normalDataTo,   normalDataFrom, vertexCount
+        lq.xyz  normal1From,    (normalDataFrom)
         lq.xyz  normal1To,      (normalDataTo) 
         LerpXYZ{ normal1, normal1From, normal1To, interp }
 
@@ -96,18 +98,14 @@ vertexLoop:
 
         ;--- Vertex 2 - from-to -> lerp
         lq      vertex2From,    1(vertexDataFrom)
-        ; TODO: Move DataTo upper!!!!!!!!!!!!!!
-        iadd    vertexDataTo,   vertexDataFrom, vertexCount
         lq      vertex2To,      1(vertexDataTo)
         Lerp{ vertex2, vertex2From, vertex2To, interp }
 
         lq      stq2From,       1(stqDataFrom)
-        iadd    stqDataTo,      stqDataFrom,    vertexCount
         lq      stq2To,         1(stqDataTo)
         Lerp{ stq2, stq2From, stq2To, interp }
 
         lq.xyz  normal2From,    1(normalDataFrom) 
-        iadd    normalDataTo,   normalDataFrom, vertexCount
         lq.xyz  normal2To,      1(normalDataTo) 
         LerpXYZ{ normal2, normal2From, normal2To, interp }
 
@@ -130,17 +128,14 @@ vertexLoop:
 
         ;--- Vertex 3 - from-to -> lerp
         lq      vertex3From,    2(vertexDataFrom)
-        iadd    vertexDataTo,   vertexDataFrom, vertexCount
         lq      vertex3To,      2(vertexDataTo)
         Lerp{ vertex3, vertex3From, vertex3To, interp }
 
         lq      stq3From,       2(stqDataFrom)
-        iadd    stqDataTo,      stqDataFrom,    vertexCount
         lq      stq3To,         2(stqDataTo)
         Lerp{ stq3, stq3From, stq3To, interp }
 
         lq.xyz  normal3From,    2(normalDataFrom) 
-        iadd    normalDataTo,   normalDataFrom, vertexCount
         lq.xyz  normal3To,      2(normalDataTo) 
         LerpXYZ{ normal3, normal3From, normal3To, interp }
 

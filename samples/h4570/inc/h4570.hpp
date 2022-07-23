@@ -30,9 +30,8 @@ class H4570 : public Game {
   Engine* engine;
 
   DynamicMesh* warrior;
-  DynamicMesh* warrior2;
-  DynamicMesh* warrior3;
-  DynamicMesh* warrior4;
+  u8 warriorsCount;
+  DynamicMesh** warriors;
   Sprite* picture;
   audsrv_adpcm_t* adpcmSample;
   Timer adpcmTimer;

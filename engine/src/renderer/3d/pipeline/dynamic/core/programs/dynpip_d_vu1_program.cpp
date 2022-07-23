@@ -29,23 +29,25 @@ std::string DynPipDVU1Program::getStringName() const {
 
 void DynPipDVU1Program::addProgramQBufferDataToPacket(packet2_t* packet,
                                                       DynPipBag* bag) const {
-  // u32 addr = VU1_VERT_DATA_ADDR;
+  u32 addr = VU1_VERT_DATA_ADDR;
 
-  // // Add vertices
-  // packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->vertices,
-  //                                  qbuffer->size, true);
-  // addr += qbuffer->size;
+  // Add vertices
+  packet2_utils_vu_add_unpack_data(packet, addr, bag->verticesFrom, bag->count,
+                                   true);
+  addr += bag->count;
+  packet2_utils_vu_add_unpack_data(packet, addr, bag->verticesTo, bag->count,
+                                   true);
+  addr += bag->count;
 
-  // // Add normal
-  // packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->normals,
-  //                                  qbuffer->size, true);
-
-  // // Add colors
-  // if (qbuffer->bag->color->single == nullptr) {
-  //   addr += qbuffer->size;
-  //   packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->colors,
-  //                                    qbuffer->size, true);
-  // }
+  if (bag->lighting) {
+    // Add normal
+    packet2_utils_vu_add_unpack_data(packet, addr, bag->lighting->normalsFrom,
+                                     bag->count, true);
+    addr += bag->count;
+    packet2_utils_vu_add_unpack_data(packet, addr, bag->lighting->normalsTo,
+                                     bag->count, true);
+    addr += bag->count;
+  }
 }
 
 }  // namespace Tyra

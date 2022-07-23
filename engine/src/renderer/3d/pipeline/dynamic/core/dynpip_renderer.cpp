@@ -146,31 +146,28 @@ void DynPipRenderer::addBufferDataToPacket(DynPipVU1Program* program,
                                            DynPipBag** bags, const u32& count) {
   currentPacket = packets[context];
   packet2_reset(currentPacket, false);
-  u32 sent = 0;
 
   for (u32 i = 0; i < count; i++) {
     if (bags[i]->count <= 0) continue;
+
     program->addBufferDataToPacket(currentPacket, bags[i],
                                    &rendererCore->gs.prim);
-    sent++;
+
+    if (lastProgramName != program->getName()) {
+      packet2_utils_vu_add_start_program(currentPacket,
+                                         program->getDestinationAddress());
+      lastProgramName = program->getName();
+    } else {
+      packet2_utils_vu_add_continue_program(currentPacket);
+    }
   }
 
-  if (sent == 0) return;
-
-  if (lastProgramName != program->getName()) {
-    packet2_utils_vu_add_start_program(currentPacket,
-                                       program->getDestinationAddress());
-    lastProgramName = program->getName();
-  } else {
-    packet2_utils_vu_add_continue_program(currentPacket);
-  }
   packet2_utils_vu_add_end_tag(currentPacket);
 }
 
 void DynPipRenderer::sendPacket() {
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
-
   // Switch packet, so we can proceed during DMA transfer
   context = !context;
 }
