@@ -7,6 +7,7 @@
 - [StaPip] Remove animation
 - [StaPip] Dbufferring during mesh unrolling
 - [StaPip] Info about: full plane clip
+- [Game] Update intellisense from docker
 - [Renderer] Add possibility to on/off frustum check in all pipelines (renderOptions?)
 - [Loaders] Think about ".tyrobj" format - implement it (add multicolor support)
 - [Loaders] DFF loader as static Mesh loader

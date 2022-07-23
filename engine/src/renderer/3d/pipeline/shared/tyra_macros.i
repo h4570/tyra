@@ -18,6 +18,20 @@
 #endmacro
 
 ;//---------------------------------------------------------
+;// LoadTyraLerpValue - Loads interpolation value.
+;//---------------------------------------------------------
+#macro LoadTyraLerpValue: t_lerpValue, t_optionsAddr
+   lq.y  t_lerpValue, t_optionsAddr(vi00)
+#endmacro
+
+;//---------------------------------------------------------
+;// LoadTyraScaleValue - Loads screen scales.
+;//---------------------------------------------------------
+#macro LoadTyraScaleValue: t_scale, t_buffer
+   lq.xyz  t_scale,  0(t_buffer)
+#endmacro
+
+;//---------------------------------------------------------
 ;// LoadTyraTags - Load lod, texture buffer and clut
 ;// 1 - GIF tag - texture LOD
 ;// 2 - GIF tag - texture buffer & CLUT
@@ -25,6 +39,14 @@
 #macro LoadTyraTags: t_lodGifTag, t_texBufferClutGifTag, t_lodAddr, t_ClutAddr
    lq      t_lodGifTag,              t_lodAddr(vi00)
    lq      t_texBufferClutGifTag,    t_ClutAddr(vi00)
+#endmacro
+
+;//---------------------------------------------------------
+;// LoadTyraPrimTag - Load prim tag
+;// 2 - GIF tag - tell GS how many data we will send
+;//---------------------------------------------------------
+#macro LoadTyraPrimTag: t_primTag, t_buffer
+   lq      t_primTag,   1(t_buffer)
 #endmacro
 
 ;//---------------------------------------------------------
@@ -96,4 +118,22 @@
    madd.xyz    t_outputColor,    t_ambientColor,         vf00[w]
    loi         128
 	addi.w      t_outputColor,    vf00,    i
+#endmacro
+
+;//---------------------------------------------------------
+;// LerpXYZ - Linear interpolation between two points
+;//---------------------------------------------------------
+#macro LerpXYZ: t_output, t_from, t_to, t_interp
+   sub.xyz   temp1,      t_to,    t_from
+   mul.xyz   temp2,      temp1,   t_interp[y]
+   add.xyz   t_output,   temp2,   t_from
+#endmacro
+
+;//---------------------------------------------------------
+;// Lerp - Linear interpolation between two points
+;//---------------------------------------------------------
+#macro Lerp: t_output, t_from, t_to, t_interp
+   sub   temp1,      t_to,    t_from
+   mul   temp2,      temp1,   t_interp[y]
+   add   t_output,   temp2,   t_from
 #endmacro

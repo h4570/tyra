@@ -73,67 +73,65 @@ void DynPipRenderer::setProgramsCache() {
 }
 
 void DynPipRenderer::sendStaticData() const {
-  //   packet2_reset(staticDataPacket, false);
-  //   packet2_utils_vu_open_unpack(staticDataPacket, VU1_SET_GIFTAG_ADDR,
-  //   false); { packet2_utils_gif_add_set(staticDataPacket, 1); }
-  //   packet2_utils_vu_close_unpack(staticDataPacket);
+  packet2_reset(staticDataPacket, false);
+  packet2_utils_vu_open_unpack(staticDataPacket, VU1_SET_GIFTAG_ADDR, false);
+  { packet2_utils_gif_add_set(staticDataPacket, 1); }
+  packet2_utils_vu_close_unpack(staticDataPacket);
 
-  //   packet2_utils_vu_add_end_tag(staticDataPacket);
-  //   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
-  //   dma_channel_send_packet2(staticDataPacket, DMA_CHANNEL_VIF1, true);
+  packet2_utils_vu_add_end_tag(staticDataPacket);
+  dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+  dma_channel_send_packet2(staticDataPacket, DMA_CHANNEL_VIF1, true);
 }
 
 void DynPipRenderer::sendObjectData(
     DynPipBag* bag, M4x4* mvp, RendererCoreTextureBuffers* texBuffers) const {
-  //   packet2_reset(objectDataPacket, false);
-  //   packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_MVP_MATRIX_ADDR,
-  //                                    mvp->data, 4, false);
+  packet2_reset(objectDataPacket, false);
+  packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_MVP_MATRIX_ADDR,
+                                   mvp->data, 4, false);
 
-  //   if (bag->lighting) {
-  //     packet2_utils_vu_add_unpack_data(objectDataPacket,
-  //     VU1_LIGHTS_MATRIX_ADDR,
-  //                                      bag->lighting->lightMatrix, 3, false);
+  if (bag->lighting) {
+    packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_LIGHTS_MATRIX_ADDR,
+                                     bag->lighting->lightMatrix, 3, false);
 
-  //     packet2_utils_vu_add_unpack_data(
-  //         objectDataPacket, VU1_LIGHTS_DIRS_ADDR,
-  //         bag->lighting->dirLights->getLightDirections(), 3, false);
+    packet2_utils_vu_add_unpack_data(
+        objectDataPacket, VU1_LIGHTS_DIRS_ADDR,
+        bag->lighting->dirLights->getLightDirections(), 3, false);
 
-  //     packet2_utils_vu_add_unpack_data(objectDataPacket,
-  //     VU1_LIGHTS_COLORS_ADDR,
-  //                                      bag->lighting->dirLights->getLightColors(),
-  //                                      4, false);
-  //   }
+    packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_LIGHTS_COLORS_ADDR,
+                                     bag->lighting->dirLights->getLightColors(),
+                                     4, false);
+  }
 
-  //   u8 singleColorEnabled = bag->color->single != nullptr;
+  u8 singleColorEnabled = bag->color->single != nullptr;
 
-  //   if (singleColorEnabled)  // Color is placed in 4th slot of
-  //                            // VU1_LIGHTS_MATRIX_ADDR
-  //     packet2_utils_vu_add_unpack_data(objectDataPacket,
-  //     VU1_SINGLE_COLOR_ADDR,
-  //                                      bag->color->single->rgba, 1, false);
+  if (singleColorEnabled)  // Color is placed in 4th slot of
+                           // VU1_LIGHTS_MATRIX_ADDR
+    packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_SINGLE_COLOR_ADDR,
+                                     bag->color->single->rgba, 1, false);
 
-  //   packet2_utils_vu_open_unpack(objectDataPacket, VU1_OPTIONS_ADDR, false);
-  //   {
-  //     packet2_add_u32(objectDataPacket,
-  //                     singleColorEnabled);   // Single color enabled.
-  //     packet2_add_u32(objectDataPacket, 0);  // not used, padding
-  //     packet2_add_u32(objectDataPacket, 0);  // not used, padding
-  //     packet2_add_u32(objectDataPacket, 0);  // not used, padding
+  packet2_utils_vu_open_unpack(objectDataPacket, VU1_OPTIONS_ADDR, false);
+  {
+    packet2_add_u32(objectDataPacket,
+                    singleColorEnabled);  // Single color enabled.
+    packet2_add_float(objectDataPacket,
+                      bag->interpolation);  // Interpolation value
+    packet2_add_u32(objectDataPacket, 0);   // not used, padding
+    packet2_add_u32(objectDataPacket, 0);   // not used, padding
 
-  //     packet2_utils_gs_add_lod(objectDataPacket, &rendererCore->gs.lod);
+    packet2_utils_gs_add_lod(objectDataPacket, &rendererCore->gs.lod);
 
-  //     if (texBuffers != nullptr) {
-  //       packet2_utils_gs_add_texbuff_clut(objectDataPacket, texBuffers->core,
-  //                                         &rendererCore->texture.clut);
+    if (texBuffers != nullptr) {
+      packet2_utils_gs_add_texbuff_clut(objectDataPacket, texBuffers->core,
+                                        &rendererCore->texture.clut);
 
-  //       rendererCore->texture.updateClutBuffer(texBuffers->clut);
-  //     }
-  //   }
-  //   packet2_utils_vu_close_unpack(objectDataPacket);
+      rendererCore->texture.updateClutBuffer(texBuffers->clut);
+    }
+  }
+  packet2_utils_vu_close_unpack(objectDataPacket);
 
-  //   packet2_utils_vu_add_end_tag(objectDataPacket);
-  //   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
-  //   dma_channel_send_packet2(objectDataPacket, DMA_CHANNEL_VIF1, true);
+  packet2_utils_vu_add_end_tag(objectDataPacket);
+  dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+  dma_channel_send_packet2(objectDataPacket, DMA_CHANNEL_VIF1, true);
 }
 
 void DynPipRenderer::render(DynPipBag** bags, const u32& count) {

@@ -28,7 +28,7 @@ DynamicPipeline::~DynamicPipeline() {
 
 void DynamicPipeline::init(RendererCore* t_core) {
   rendererCore = t_core;
-  auto packetSize = buffersCount * 3.1F;
+  auto packetSize = buffersCount * 4.8F;
   core.init(t_core, static_cast<u32>(packetSize));
 }
 
@@ -123,22 +123,21 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
 void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
                                 u16* bufferIndex,
                                 const DynPipFrustumCulling& frustumCulling) {
-  auto isHalf = *bufferIndex == halfBuffersCount - 1;
+  // auto isHalf = *bufferIndex == halfBuffersCount - 1;
   auto isFull = *bufferIndex == buffersCount - 1;
 
-  if (isHalf || isFull) {
-    u32 offset = isHalf ? 0 : halfBuffersCount;
+  // if (isHalf || isFull) {
+  //   u32 offset = isHalf ? 0 : halfBuffersCount;
 
-    DynPipBag** sendBuffers = new DynPipBag*[halfBuffersCount];
+  DynPipBag** sendBuffers = new DynPipBag*[1];
 
-    for (u32 i = 0; i < halfBuffersCount; i++)
-      sendBuffers[i] = &buffers[offset + i];
+  sendBuffers[0] = buffer;
 
-    core.renderPart(sendBuffers, halfBuffersCount,
-                    frustumCulling == DynPipFrustumCulling_Precise);
+  core.renderPart(sendBuffers, 1,
+                  frustumCulling == DynPipFrustumCulling_Precise);
 
-    delete[] sendBuffers;
-  }
+  delete[] sendBuffers;
+  // }
 
   if (isFull)
     *bufferIndex = 0;
@@ -149,22 +148,22 @@ void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
 void DynamicPipeline::sendRestOfBuffers(
     DynPipBag* buffers, u16* bufferIndex,
     const DynPipFrustumCulling& frustumCulling) {
-  auto isHalf = *bufferIndex == halfBuffersCount - 1;
+  // auto isHalf = *bufferIndex == halfBuffersCount - 1;
 
-  u32 offset = isHalf ? 0 : halfBuffersCount;
-  u32 size = *bufferIndex - offset;
+  // u32 offset = isHalf ? 0 : halfBuffersCount;
+  // u32 size = *bufferIndex - offset;
 
-  if (size <= 0) return;
+  // if (size <= 0) return;
 
-  DynPipBag** sendBuffers = new DynPipBag*[size];
-  for (u32 i = 0; i < size; i++) {
-    sendBuffers[i] = &buffers[offset + i];
-  }
+  // DynPipBag** sendBuffers = new DynPipBag*[size];
+  // for (u32 i = 0; i < size; i++) {
+  //   sendBuffers[i] = &buffers[offset + i];
+  // }
 
-  core.renderPart(sendBuffers, size,
-                  frustumCulling == DynPipFrustumCulling_Precise);
+  // core.renderPart(sendBuffers, size,
+  //                 frustumCulling == DynPipFrustumCulling_Precise);
 
-  delete[] sendBuffers;
+  // delete[] sendBuffers;
 }
 
 void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,

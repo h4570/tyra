@@ -41,23 +41,23 @@ void DynPipVU1Program::addBufferDataToPacket(packet2_t* packet, DynPipBag* bag,
 void DynPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
                                                      DynPipBag* bag,
                                                      prim_t* prim) {
-  // if (buffer->bag->texture)
-  //   prim->mapping = 1;
-  // else
-  //   prim->mapping = 0;
+  if (bag->texture)
+    prim->mapping = 1;
+  else
+    prim->mapping = 0;
 
-  // packet2_utils_vu_open_unpack(packet, 0, true);
-  // {
-  //   packet2_add_float(packet, 2048.0F);  // scale
-  //   packet2_add_float(packet, 2048.0F);  // scale
-  //   packet2_add_float(packet,
-  //                     static_cast<float>(0xFFFFFF) / 32.0F);  // scale
-  //   packet2_add_u32(packet, buffer->size);                    // vertex count
+  packet2_utils_vu_open_unpack(packet, 0, true);
+  {
+    packet2_add_float(packet, 2048.0F);  // scale
+    packet2_add_float(packet, 2048.0F);  // scale
+    packet2_add_float(packet,
+                      static_cast<float>(0xFFFFFF) / 32.0F);  // scale
+    packet2_add_u32(packet, bag->count);                      // vertex count
 
-  //   packet2_utils_gs_add_prim_giftag(packet, prim, buffer->size, reglist,
-  //                                    reglistCount, 0);
-  // }
-  // packet2_utils_vu_close_unpack(packet);
+    packet2_utils_gs_add_prim_giftag(packet, prim, bag->count, reglist,
+                                     reglistCount, 0);
+  }
+  packet2_utils_vu_close_unpack(packet);
 }
 
 u16 DynPipVU1Program::getMaxVertCount(const u16& bufferSize) const {
