@@ -48,7 +48,7 @@ remake: cleaner all
 
 #Copy Resources from Resources Directory to Target Directory
 resources: directories
-	@cp $(RESDIR)/* $(TARGETDIR)/ || true
+	@cp -r $(RESDIR)/* $(TARGETDIR)/ || true
 
 #Make the Directories
 directories:
