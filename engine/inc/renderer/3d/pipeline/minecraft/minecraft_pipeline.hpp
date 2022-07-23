@@ -18,6 +18,10 @@
 
 namespace Tyra {
 
+/**
+ * Pipeline specialized in fast rendering of voxels
+ * Supports full "against each plane" clipping
+ */
 class MinecraftPipeline : public Renderer3DPipeline {
  public:
   MinecraftPipeline();
@@ -27,8 +31,18 @@ class MinecraftPipeline : public Renderer3DPipeline {
 
   void onUse();
 
+  /**
+   * @brief Render voxels
+   *
+   * @param blocks blocks to render
+   * @param count number of blocks to render
+   * @param t_tex texture to use
+   * @param isMulti is this a 6 texture voxel?
+   * @param noFullClipChecks true = faster, simple PS2 clipping. False = slower
+   * "against each plane" clipping.
+   */
   void render(McpipBlock* blocks, const u32& count, Texture* t_tex,
-              const bool& isMulti = false, const bool& noClipChecks = true);
+              const bool& isMulti = false, const bool& noFullClipChecks = true);
 
   inline const float& getTextureOffset() const {
     return manager.getTextureOffset();

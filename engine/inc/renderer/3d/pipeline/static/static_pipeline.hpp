@@ -20,6 +20,12 @@
 
 namespace Tyra {
 
+/**
+ * Pipeline for static models (StaticMesh).
+ * Supports:
+ * - Full "against each plane" clipping,
+ * - Modes: color(s), texture+color(s), dir lights, texture + dir lights
+ */
 class StaticPipeline : public Renderer3DPipeline {
  public:
   StaticPipeline();
@@ -32,7 +38,7 @@ class StaticPipeline : public Renderer3DPipeline {
   void onUse();
 
   /**
-   * Render 3D via "meshes".
+   * Render static model
    * This render() method is a bridge to core.render() method.
    */
   void render(DynamicMesh* mesh, const StaPipOptions* options = nullptr);

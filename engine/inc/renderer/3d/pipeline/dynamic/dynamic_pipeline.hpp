@@ -19,6 +19,12 @@
 
 namespace Tyra {
 
+/**
+ * Pipeline for animated models (DynamicMesh).
+ * Supports:
+ * - Simple PS2 clipping (culling)
+ * - Modes: color, texture+color, dir lights, texture + dir lights
+ */
 class DynamicPipeline : public Renderer3DPipeline {
  public:
   DynamicPipeline();
@@ -33,7 +39,7 @@ class DynamicPipeline : public Renderer3DPipeline {
   void onUse();
 
   /**
-   * Render 3D via "meshes".
+   * Render dynamic model.
    * This render() method is a bridge to core.render() method.
    */
   void render(DynamicMesh* mesh, const DynPipOptions* options = nullptr);

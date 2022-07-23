@@ -42,14 +42,14 @@ void MinecraftPipeline::initBBox() {
 
 void MinecraftPipeline::render(McpipBlock* blocks, const u32& count,
                                Texture* t_tex, const bool& isMulti,
-                               const bool& noClipChecks) {
+                               const bool& noFullClipChecks) {
   auto texBuffers = rendererCore->texture.useTexture(t_tex);
   rendererCore->gs.prim.mapping = 1;
 
   manager.clearLastProgram();
   std::vector<u32> cullIndexes;
 
-  if (noClipChecks) {
+  if (noFullClipChecks) {
     for (u32 i = 0; i < count; i++) cullIndexes.push_back(i);
     cull(blocks, cullIndexes, &texBuffers, isMulti);
   } else {
