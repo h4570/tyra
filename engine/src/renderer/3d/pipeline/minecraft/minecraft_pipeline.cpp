@@ -52,6 +52,7 @@ void MinecraftPipeline::render(McpipBlock* blocks, const u32& count,
   if (noFullClipChecks) {
     for (u32 i = 0; i < count; i++) cullIndexes.push_back(i);
     cull(blocks, cullIndexes, &texBuffers, isMulti);
+    return;
   } else {
     u32 culled = 0, clipped = 0;
     std::vector<u32> clipIndexes;

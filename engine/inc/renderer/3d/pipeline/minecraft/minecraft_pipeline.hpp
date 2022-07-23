@@ -20,7 +20,9 @@ namespace Tyra {
 
 /**
  * Pipeline specialized in fast rendering of voxels
- * Supports full "against each plane" clipping
+ * Supports:
+ * - Full "against each plane" clipping
+ * - Frustum culling (on noFullClipChecks = false)
  */
 class MinecraftPipeline : public Renderer3DPipeline {
  public:

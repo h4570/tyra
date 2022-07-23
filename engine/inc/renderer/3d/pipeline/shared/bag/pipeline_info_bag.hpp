@@ -31,7 +31,7 @@ class PipelineInfoBag {
 
   /**
    * @brief True -> disables "clip against each plane" algorithm.
-   * Mandatory, default: false.
+   * Default: false.
    *
    * Full clip checks are slow, but they are
    * preventing visual artifacts, which can happen

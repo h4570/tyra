@@ -23,6 +23,7 @@ namespace Tyra {
  * Pipeline for animated models (DynamicMesh).
  * Supports:
  * - Simple PS2 clipping (culling)
+ * - Frustum culling
  * - Modes: color, texture+color, dir lights, texture + dir lights
  */
 class DynamicPipeline : public Renderer3DPipeline {

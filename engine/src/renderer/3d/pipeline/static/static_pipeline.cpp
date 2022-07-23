@@ -23,7 +23,6 @@ void StaticPipeline::init(RendererCore* t_core) {
 
 void StaticPipeline::onUse() { core.reinitVU1Programs(); }
 
-// TODO - Clipping mode
 // TODO - StaPipCore::render(StaPipBag* bags, StaPipBagPackagesBBox* bboxes,
 // const u32& count)
 // TODO - MD2 loader - choose between static/dynamic mesh
