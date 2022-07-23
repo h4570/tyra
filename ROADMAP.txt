@@ -1,9 +1,8 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 --- H4570
+- [McPip] Clipping mode
 - [McPip] VU1 packets spamming
-- [Renderer] Github: Allocate dynamic pipeline memory only in "onUse" (core,qbuffrenderer,pipeline..)
-- [Renderer] Add possibility to on/off frustum check in all pipelines (renderOptions?)
 - [Loaders] Think about ".tyrobj" format - implement it (add multicolor support)
 - [Loaders] DFF loader as static Mesh loader
 - [Game] Update intellisense from docker
@@ -58,3 +57,4 @@ because Mesh rendering uses only core.render()
 ------------ Github issues for Tyra v2 ------------
 - [3D] Add drawLine(x, y , color, size)
 - [3D] Add drawBBox(x, y , color, size)
+- [Renderer] Github: Allocate dynamic pipeline memory only in "onUse" (core,qbuffrenderer,pipeline..)
