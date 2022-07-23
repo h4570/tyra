@@ -15,6 +15,12 @@
 
 namespace Tyra {
 
+CoreBBox::CoreBBox() {
+  for (u32 i = 0; i < 8; i++) {
+    _vertices[i] = Vec4(0.0F, 0.0F, 0.0F, 1.0F);
+  }
+}
+
 CoreBBox::CoreBBox(CoreBBox** t_bboxes, const u32& count) {
   float lowX = t_bboxes[0]->_vertices[0].x;
   float lowY = t_bboxes[0]->_vertices[0].y;
@@ -132,6 +138,11 @@ CoreBBox::CoreBBox(Vec4* t_vertices, u32 count) {
   _vertices[7].set(hiX, hiY, hiZ);
 }
 
+CoreBBox::CoreBBox(const CoreBBox& t_bbox) {
+  for (auto i = 0; i < 8; i++)
+    Vec4::copy(&_vertices[i], t_bbox._vertices[i].xyzw);
+}
+
 CoreBBox::CoreBBox(Vec4* t_vertices) {
   for (auto i = 0; i < 8; i++) Vec4::copy(&_vertices[i], t_vertices[i].xyzw);
 }
@@ -168,8 +179,8 @@ std::string CoreBBox::getPrint(const char* name) const {
 }
 
 CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,
-                                        const M4x4& model,
-                                        const float* margins) const {
+                                      const M4x4& model,
+                                      const float* margins) const {
   CoreBBoxFrustum result = IN_FRUSTUM;
   Vec4 boxCalcTemp;
   u8 boxIn = 0, boxOut = 0;

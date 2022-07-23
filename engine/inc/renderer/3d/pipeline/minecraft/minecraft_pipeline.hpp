@@ -34,6 +34,8 @@ class MinecraftPipeline : public Renderer3DPipeline {
     return manager.getTextureOffset();
   }
 
+  const McpipBlockData& getBlockData() const { return manager.getBlockData(); }
+
  private:
   BlockizerProgramsManager manager;
   RendererCore* rendererCore;

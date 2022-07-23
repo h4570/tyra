@@ -22,6 +22,8 @@ class BBox : public CoreBBox {
   explicit BBox(CoreBBox** t_bboxes, const u32& count);
   explicit BBox(Vec4* t_vertices, u32* faces, u32 t_count);
   explicit BBox(Vec4* t_vertices, u32 t_count);
+  explicit BBox(const BBox& t_bbox, const M4x4& t_matrix);
+  explicit BBox(const BBox& t_bbox);
   explicit BBox(Vec4* t_vertices);
   const float& getHeight() { return _height; }
   const float& getDepth() { return _depth; }
@@ -51,6 +53,9 @@ class BBox : public CoreBBox {
    * @brief Calc and stores the min and max points of box at a single loop
    * */
   void getMinMax(Vec4* res_min, Vec4* res_max);
+
+  /** Get new transformed BBox by model matrix */
+  BBox getTransformed(const M4x4& t_matrix);
 
  protected:
   float _height, _depth, _width;

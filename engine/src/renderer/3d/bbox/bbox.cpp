@@ -25,7 +25,21 @@ BBox::BBox(Vec4* t_vertices, u32* faces, u32 count)
   setData();
 }
 
+BBox::BBox(const BBox& t_bbox) : CoreBBox(t_bbox) { setData(); }
+
+BBox::BBox(const BBox& t_bbox, const M4x4& t_matrix) {
+  for (u32 i = 0; i < 8; i++) {
+    _vertices[i] = t_matrix * _vertices[i];
+  }
+
+  setData();
+}
+
 BBox::BBox(Vec4* t_vertices) : CoreBBox(t_vertices) { setData(); }
+
+BBox BBox::getTransformed(const M4x4& t_matrix) {
+  return BBox(*this, t_matrix);
+}
 
 void BBox::setData() {
   // This might be shortened with Vec4 operator overloading, but current
