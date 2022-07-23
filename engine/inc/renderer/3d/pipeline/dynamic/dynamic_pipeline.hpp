@@ -24,6 +24,8 @@ class DynamicPipeline : public Renderer3DPipeline {
   DynamicPipeline();
   ~DynamicPipeline();
 
+  static const u32 buffersCount;
+
   DynPipCore core;
 
   void init(RendererCore* core);
@@ -39,6 +41,14 @@ class DynamicPipeline : public Renderer3DPipeline {
  private:
   RendererCore* rendererCore;
   Vec4* colorsCache;
+  DynPipBag* buffers;
+  static const u32 halfBuffersCount;
+
+  void setBuffer(DynPipBag* buffers, DynPipBag* buffer, u16* bufferIndex,
+                 const DynPipFrustumCulling& frustumCulling);
+
+  void sendRestOfBuffers(DynPipBag* buffers, u16* bufferIndex,
+                         const DynPipFrustumCulling& frustumCulling);
 
   void addVertices(MeshMaterialFrame* materialFrameFrom,
                    MeshMaterialFrame* materialFrameTo, DynPipBag* bag,

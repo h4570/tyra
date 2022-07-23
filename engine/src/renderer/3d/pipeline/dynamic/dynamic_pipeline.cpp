@@ -12,18 +12,27 @@
 
 namespace Tyra {
 
-DynamicPipeline::DynamicPipeline() { colorsCache = new Vec4[4]; }
+const u32 DynamicPipeline::buffersCount = 64;
+const u32 DynamicPipeline::halfBuffersCount = buffersCount / 2;
 
-DynamicPipeline::~DynamicPipeline() { delete[] colorsCache; }
+DynamicPipeline::DynamicPipeline() {
+  colorsCache = new Vec4[4];
+  buffers = new DynPipBag[buffersCount];
+}
+
+DynamicPipeline::~DynamicPipeline() {
+  delete[] colorsCache;
+  for (u32 i = 0; i < buffersCount; i++) freeBuffer(&buffers[i]);
+  delete[] buffers;
+}
 
 void DynamicPipeline::init(RendererCore* t_core) {
   rendererCore = t_core;
-  core.init(t_core);
+  auto packetSize = buffersCount * 3.1F;
+  core.init(t_core, static_cast<u32>(packetSize));
 }
 
 void DynamicPipeline::onUse() { core.reinitVU1Programs(); }
-
-#define BUFFER_COUNT 64
 
 void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   auto model = mesh->getModelMatrix();
@@ -48,8 +57,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
                                  options->lighting->directionalDirections);
   }
 
-  DynPipBag buffers[BUFFER_COUNT];
-  u8 context = 0;
+  u16 bufferIndex = 0;
 
   setBuffersDefaultVars(buffers, mesh, infoBag);
   core.clear();
@@ -72,7 +80,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
     u8 isPartInitialized = false;
 
     for (u32 k = 0; k < partsCount; k++) {
-      auto& buffer = buffers[context++];
+      auto& buffer = buffers[bufferIndex];
 
       freeBuffer(&buffer);
       buffer.count = k == partsCount - 1
@@ -91,31 +99,19 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
         isPartInitialized = true;
       }
 
-      // core.renderPart(&buffer, frustumCulling ==
-      // DynPipFrustumCulling_Precise);
-
-      if (context == BUFFER_COUNT / 2 || context == BUFFER_COUNT) {
-        DynPipBag** sendBuffers = new DynPipBag*[BUFFER_COUNT / 2];
-        for (u32 i = 0; i < BUFFER_COUNT / 2; i++) {
-          sendBuffers[i] = &buffers[context - ((BUFFER_COUNT / 2) - i)];
-        }
-        core.renderTEST(sendBuffers, BUFFER_COUNT / 2);
-
-        delete[] sendBuffers;
-        if (context == BUFFER_COUNT) context = 0;
-      }
+      setBuffer(buffers, &buffer, &bufferIndex, frustumCulling);
     }
 
     delete colorBag;
   }
 
-  // TODO: Refactor (define itd, wywalic te wszystkie TEST i poprawic)
-  // TODO: Rozmiar pakietu VU1 na podstawie rozmiaru buforow
-  // TODO: Dorenderowac brakujace (np gdy context == 1-buffersize-1 itd)
-  // TODO: Program renderujacy w VU1
-  // TODO: Github: Ten sam myk zrobic w static pipeline?
+  sendRestOfBuffers(buffers, &bufferIndex, frustumCulling);
 
-  for (u32 i = 0; i < BUFFER_COUNT; i++) freeBuffer(&buffers[i]);
+  // TODO: Program renderujacy w VU1
+  // TODO: Github: Ten sam myk zrobic w static pipeline
+  // TODO: Github: Ten sam myk zrobic w mc pipeline
+  // TODO: Github: Allocate dynamic pipeline memory only in "onUse"
+  // (core,qbuffrenderer,pipeline..)
 
   if (dirLights) {
     delete dirLights;
@@ -124,10 +120,57 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   delete infoBag;
 }
 
+void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
+                                u16* bufferIndex,
+                                const DynPipFrustumCulling& frustumCulling) {
+  auto isHalf = *bufferIndex == halfBuffersCount - 1;
+  auto isFull = *bufferIndex == buffersCount - 1;
+
+  if (isHalf || isFull) {
+    u32 offset = isHalf ? 0 : halfBuffersCount;
+
+    DynPipBag** sendBuffers = new DynPipBag*[halfBuffersCount];
+
+    for (u32 i = 0; i < halfBuffersCount; i++)
+      sendBuffers[i] = &buffers[offset + i];
+
+    core.renderPart(sendBuffers, halfBuffersCount,
+                    frustumCulling == DynPipFrustumCulling_Precise);
+
+    delete[] sendBuffers;
+  }
+
+  if (isFull)
+    *bufferIndex = 0;
+  else
+    *bufferIndex += 1;
+}
+
+void DynamicPipeline::sendRestOfBuffers(
+    DynPipBag* buffers, u16* bufferIndex,
+    const DynPipFrustumCulling& frustumCulling) {
+  auto isHalf = *bufferIndex == halfBuffersCount - 1;
+
+  u32 offset = isHalf ? 0 : halfBuffersCount;
+  u32 size = *bufferIndex - offset;
+
+  if (size <= 0) return;
+
+  DynPipBag** sendBuffers = new DynPipBag*[size];
+  for (u32 i = 0; i < size; i++) {
+    sendBuffers[i] = &buffers[offset + i];
+  }
+
+  core.renderPart(sendBuffers, size,
+                  frustumCulling == DynPipFrustumCulling_Precise);
+
+  delete[] sendBuffers;
+}
+
 void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
                                             DynamicMesh* mesh,
                                             PipelineInfoBag* infoBag) {
-  for (int i = 0; i < BUFFER_COUNT; i++) {
+  for (u32 i = 0; i < buffersCount; i++) {
     buffers[i].info = infoBag;
     buffers[i].interpolation = mesh->getAnimState().interpolation;
   }
@@ -135,7 +178,7 @@ void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
 
 void DynamicPipeline::setBuffersColorBag(DynPipBag* buffers,
                                          DynPipColorBag* colorBag) {
-  for (int i = 0; i < BUFFER_COUNT; i++) {
+  for (u32 i = 0; i < buffersCount; i++) {
     buffers[i].color = colorBag;
   }
 }

@@ -21,15 +21,15 @@ class DynPipRenderer {
   DynPipRenderer();
   ~DynPipRenderer();
 
-  void init(RendererCore* t_core, DynPipProgramsRepository* t_programRepo);
+  void init(RendererCore* t_core, DynPipProgramsRepository* t_programRepo,
+            const u32& t_packetSize);
 
   void reinitVU1();
 
   void sendObjectData(DynPipBag* bag, M4x4* mvp,
                       RendererCoreTextureBuffers* texBuffers) const;
 
-  void render(DynPipBag* bag);
-  void renderTEST(DynPipBag** bags, const u32& count);
+  void render(DynPipBag** bags, const u32& count);
 
   void clearLastProgramName();
 
@@ -41,9 +41,8 @@ class DynPipRenderer {
   void uploadPrograms();
   void setDoubleBuffer();
 
-  void addBufferDataToPacketTEST(DynPipVU1Program* program, DynPipBag** bags,
-                                 const u32& count);
-  void addBufferDataToPacket(DynPipVU1Program* program, DynPipBag* bag);
+  void addBufferDataToPacket(DynPipVU1Program* program, DynPipBag** bags,
+                             const u32& count);
   void sendPacket();
 
   packet2_t* packets[2];

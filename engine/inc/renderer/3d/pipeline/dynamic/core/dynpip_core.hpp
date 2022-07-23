@@ -25,7 +25,7 @@ class DynPipCore {
 
   DynPipProgramsRepository repository;
 
-  void init(RendererCore* t_core);
+  void init(RendererCore* t_core, const u32& t_packetSize);
 
   /** Force starting VU1 program instead of continueing */
   void clear() { qbufferRenderer.clearLastProgramName(); }
@@ -36,11 +36,9 @@ class DynPipCore {
    */
   void initParts(DynPipBag* data);
 
-  // TODO: TEST!
-  void renderTEST(DynPipBag** bags, const u32& count);
-
   /** Render 3D via "bags" */
-  void renderPart(DynPipBag* data, const bool& frustumCull = true);
+  void renderPart(DynPipBag** bags, const u32& count,
+                  const bool& frustumCull = true);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
   u32 getMaxVertCountByParams(const bool& isLightingEnabled,
