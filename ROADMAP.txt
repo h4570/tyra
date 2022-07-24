@@ -4,7 +4,6 @@
 - [StaPip] FPS spamming: 190
 
 --- H4570
-- [Renderer] Fix current visual bug
 - [StaPip] Te same parametry frustumcheck jak w dynamic
 - [StaPip] No frustum check -> bez
 - [StaPip] Simple frustum check -> check bboxa z Mesh
