@@ -22,6 +22,7 @@ ENGINE_OBJS = src/engine/engine.o \
 	      src/engine/modules/texture_repository.o \
 	      src/engine/modules/timer.o \
               src/engine/modules/vif_sender.o \
+	      src/engine/video/mpeg.o \
 	      src/engine/models/math/matrix.o \
 	      src/engine/models/math/plane.o \
 	      src/engine/models/math/point.o \
@@ -40,9 +41,10 @@ ENGINE_OBJS = src/engine/engine.o \
 	      src/engine/loaders/mdl_loader.o \
 	      src/engine/loaders/obj_loader.o \
 	      src/engine/loaders/png_loader.o \
-	      src/engine/vu1_progs/draw3D.o \
+	      src/engine/loaders/txd_loader.o \
+		  src/engine/vu1_progs/draw3D.o \
 
-EE_LIBS := $(EE_LIBS) -ldraw -lcdvd -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++ -lpng -lz
+EE_LIBS := $(EE_LIBS) -ldraw -lcdvd -lgraph -lmath3d -lpacket -ldma -lpacket2 -lpad -laudsrv -lc -lstdc++ -lpng -lz -lmpeg
 
 EE_INCS := -I$(TYRA)/src/engine/include -I$(PS2SDK)/ports/include $(EE_INCS)
 

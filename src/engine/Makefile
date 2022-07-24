@@ -22,6 +22,7 @@ EE_OBJS =								\
 	modules/texture_repository.o		\
 	modules/timer.o						\
 	modules/vif_sender.o				\
+	video/mpeg.o                       \
 	utils/math.o						\
 	utils/string.o						\
 	utils/Tyra_version.o				\
@@ -30,6 +31,7 @@ EE_OBJS =								\
 	loaders/mdl_loader.o				\
 	loaders/obj_loader.o				\
 	loaders/png_loader.o				\
+	loaders/txd_loader.o                \
 	vu1_progs/draw3D.o					\
 	engine.o
 
