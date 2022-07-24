@@ -52,12 +52,12 @@ void RendererCoreGS::initChannels() {
 }
 
 void RendererCoreGS::allocateBuffers() {
-  const u16 psm = 24;
+  const u16 psm = 32;
 
   frameBuffers[0].width = static_cast<unsigned int>(settings->getWidth());
-  frameBuffers[0].height = static_cast<unsigned int>(settings->getHeight());
+  frameBuffers[0].height = settings->getInterlacedHeightUI();
   frameBuffers[0].mask = 0;
-  frameBuffers[0].psm = GS_PSM_24;
+  frameBuffers[0].psm = GS_PSM_32;
   frameBuffers[0].address =
       graph_vram_allocate(frameBuffers[0].width, frameBuffers[0].height,
                           frameBuffers[0].psm, GRAPH_ALIGN_PAGE);
@@ -73,15 +73,20 @@ void RendererCoreGS::allocateBuffers() {
   zBuffer.enable = DRAW_ENABLE;
   zBuffer.mask = 0;
   zBuffer.method = ZTEST_METHOD_GREATER_EQUAL;
-  zBuffer.zsm = GS_ZBUF_24;
+  zBuffer.zsm = GS_ZBUF_32;
   zBuffer.address =
       graph_vram_allocate(frameBuffers[0].width, frameBuffers[0].height,
                           zBuffer.zsm, GRAPH_ALIGN_PAGE);
   TYRA_LOG("Framebuffers, zBuffer set and allocated!");
 
-  // Initialize the screen and tie the first framebuffer to the read circuits.
-  graph_initialize(frameBuffers[1].address, frameBuffers[1].width,
-                   frameBuffers[1].height, frameBuffers[1].psm, 0, 0);
+  graph_set_mode(GRAPH_MODE_INTERLACED, GRAPH_MODE_NTSC, GRAPH_MODE_FRAME,
+                 GRAPH_ENABLE);
+  graph_set_screen(0, 0, static_cast<int>(settings->getWidth()),
+                   static_cast<int>(settings->getHeight()));
+  graph_set_bgcolor(0, 0, 0);
+  graph_set_framebuffer_filtered(frameBuffers[1].address, frameBuffers[1].width,
+                                 frameBuffers[1].psm, 0, 0);
+  graph_enable_output();
 
   spaceOccupiedByFrameBuffers =
       ((frameBuffers[0].width / 100.0F) * (frameBuffers[0].height / 100.0F) *
@@ -96,10 +101,11 @@ void RendererCoreGS::initDrawingEnvironment() {
   packet2_t* packet2 = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
   packet2_update(packet2, draw_setup_environment(packet2->base, 0, frameBuffers,
                                                  &zBuffer));
-  packet2_update(packet2, draw_primitive_xyoffset(
-                              packet2->next, 0,
-                              screenCenter - (settings->getWidth() / 2.0F),
-                              screenCenter - (settings->getHeight() / 2.0F)));
+  packet2_update(
+      packet2,
+      draw_primitive_xyoffset(
+          packet2->next, 0, screenCenter - (settings->getWidth() / 2.0F),
+          screenCenter - (settings->getInterlacedHeightF() / 2.0F)));
   packet2_update(packet2, draw_finish(packet2->next));
   dma_channel_send_packet2(packet2, DMA_CHANNEL_GIF, true);
   dma_channel_wait(DMA_CHANNEL_GIF, 0);

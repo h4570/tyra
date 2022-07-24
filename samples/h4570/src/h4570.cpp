@@ -113,7 +113,7 @@ void H4570::init() {
     blocks[i].color = Color(128.0F, 128.0F, 128.0F, 128.0F);
   }
 
-  engine->audio.playSong();
+  // engine->audio.playSong();
   engine->renderer.setFrameLimit(false);
 }
 
