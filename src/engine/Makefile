@@ -25,7 +25,7 @@ EE_OBJS =								\
 	video/mpeg.o                       \
 	utils/math.o						\
 	utils/string.o						\
-	utils/Tyra_version.o				\
+	utils/tyra_version.o				\
 	loaders/bmp_loader.o				\
 	loaders/dff_loader.o				\
 	loaders/mdl_loader.o				\

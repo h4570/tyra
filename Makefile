@@ -35,7 +35,7 @@ ENGINE_OBJS = src/engine/engine.o \
 	      src/engine/models/texture.o \
 	      src/engine/utils/math.o \
 	      src/engine/utils/string.o \
-		  src/engine/utils/Tyra_version.o \
+		  src/engine/utils/tyra_version.o \
               src/engine/loaders/bmp_loader.o \
               src/engine/loaders/dff_loader.o \
 	      src/engine/loaders/mdl_loader.o \
