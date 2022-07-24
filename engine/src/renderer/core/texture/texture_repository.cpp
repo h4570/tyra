@@ -57,7 +57,7 @@ Texture* TextureRepository::add(const char* fullpath) {
   return texture;
 }
 
-void TextureRepository::addByMesh(DynamicMesh* mesh, const char* directory,
+void TextureRepository::addByMesh(Mesh* mesh, const char* directory,
                                   const char* extension) {
   auto& loader = texLoaderSelector.getLoaderByExtension(extension);
 

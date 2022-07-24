@@ -27,6 +27,7 @@ int getRandomInt(int a, int b) { return (rand() % (b - a + 1)) + a; }
 H4570::H4570(Engine* t_engine) { engine = t_engine; }
 H4570::~H4570() {}
 
+StaticMesh* getStaticMesh(Renderer* renderer);
 DynamicMesh* getWarrior(Renderer* renderer);
 StaPipOptions* getStaPipOptions();
 DynPipOptions* getDynPipOptions();
@@ -44,6 +45,8 @@ void H4570::init() {
   engine->audio.setADPCMVolume(80, 1);
 
   engine->renderer.setClearScreenColor(Color(64.0F, 64.0F, 64.0F));
+
+  staticMesh = getStaticMesh(&engine->renderer);
 
   warrior = getWarrior(&engine->renderer);
   warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
@@ -114,7 +117,14 @@ void H4570::init() {
   engine->renderer.setFrameLimit(false);
 }
 
+u32 counter = 0;
+
 void H4570::loop() {
+  if (counter++ > 30) {
+    TYRA_LOG(engine->info.getFps());
+    counter = 0;
+  }
+
   for (u8 i = 0; i < warriorsCount; i++) warriors[i]->animate();
 
   engine->renderer.beginFrame(CameraInfo3D(&cameraPosition, &cameraLookAt));
@@ -126,6 +136,9 @@ void H4570::loop() {
 
       blocks[i].model = translations[i] * rotations[i] * scales[i];
     }
+
+    engine->renderer.renderer3D.usePipeline(&stapip);
+    { stapip.render(staticMesh, staOptions); }
 
     engine->renderer.renderer3D.usePipeline(&dynpip);
     {
@@ -142,6 +155,19 @@ void H4570::loop() {
     { mcPip.render(blocks, blocksCount, blocksTex); }
   }
   engine->renderer.endFrame();
+}
+
+StaticMesh* getStaticMesh(Renderer* renderer) {
+  MD2Loader loader;
+  auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), .08F, false);
+  auto* result = new StaticMesh(*data);
+  // result->translation.translateZ(-30.0F);
+  delete data;
+
+  renderer->core.texture.repository.addByMesh(result, FileUtils::getCwd(),
+                                              "png");
+
+  return result;
 }
 
 DynamicMesh* getWarrior(Renderer* renderer) {

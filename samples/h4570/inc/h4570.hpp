@@ -15,6 +15,7 @@
 #include "renderer/3d/pipeline/minecraft/minecraft_pipeline.hpp"
 #include "renderer/3d/pipeline/static/static_pipeline.hpp"
 #include "renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
+#include "renderer/3d/mesh/static/static_mesh.hpp"
 
 namespace Tyra {
 
@@ -29,6 +30,7 @@ class H4570 : public Game {
  private:
   Engine* engine;
 
+  StaticMesh* staticMesh;
   DynamicMesh* warrior;
   u8 warriorsCount;
   DynamicMesh** warriors;

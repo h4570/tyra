@@ -23,13 +23,7 @@ void StaticPipeline::init(RendererCore* t_core) {
 
 void StaticPipeline::onUse() { core.reinitVU1Programs(); }
 
-// TODO - StaPipCore::render(StaPipBag* bags, StaPipBagPackagesBBox* bboxes,
-// const u32& count)
-// TODO - MD2 loader - choose between static/dynamic mesh
-// TODO - Dynamic -> StaticMesh
-// TODO - DBuffering + spamming
-
-void StaticPipeline::render(DynamicMesh* mesh, const StaPipOptions* options) {
+void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
   auto model = mesh->getModelMatrix();
   auto* infoBag = getInfoBag(mesh, options, &model);
 
@@ -68,7 +62,7 @@ void StaticPipeline::addVertices(MeshMaterialFrame* materialFrame,
   bag->vertices = materialFrame->getVertices();
 }
 
-PipelineInfoBag* StaticPipeline::getInfoBag(DynamicMesh* mesh,
+PipelineInfoBag* StaticPipeline::getInfoBag(StaticMesh* mesh,
                                             const StaPipOptions* options,
                                             M4x4* model) const {
   auto* result = new PipelineInfoBag();

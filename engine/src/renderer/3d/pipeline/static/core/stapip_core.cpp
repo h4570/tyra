@@ -136,6 +136,8 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   if (!bbox) delete renderBbox;
   if (texBuffers) delete texBuffers;
 
+  qbufferRenderer.flushBuffers();
+
   Verbose("Render finished");
 }
 

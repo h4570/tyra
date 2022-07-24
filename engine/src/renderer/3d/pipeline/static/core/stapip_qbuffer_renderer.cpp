@@ -34,18 +34,45 @@ namespace Tyra {
  *
  */
 
+const u16 StaPipQBufferRenderer::buffersCount = 16;
+
 StaPipQBufferRenderer::StaPipQBufferRenderer() {
+  currentBufferIndex = 0;
+  nextBufferIndex = 0;
   context = 0;
   lastProgramName = StaPipUndefinedProgram;
+
+  u32 qbuffersPacketSize = 4 * buffersCount;
+
+  packets = new packet2_t*[buffersCount];
+  packets[0] =
+      packet2_create(qbuffersPacketSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  packets[1] =
+      packet2_create(qbuffersPacketSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+
   staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+
   programsPacket = nullptr;
+
+  buffers = new StaPipQBuffer*[buffersCount];
+  programs = new StaPipVU1Program*[buffersCount];
+  for (u16 i = 0; i < buffersCount; i++) {
+    buffers[i] = new StaPipQBuffer();
+  }
 }
 StaPipQBufferRenderer::~StaPipQBufferRenderer() {
-  packet2_free(packets[0]);
-  packet2_free(packets[1]);
   packet2_free(staticDataPacket);
   packet2_free(objectDataPacket);
+  packet2_free(packets[0]);
+  packet2_free(packets[1]);
+
+  for (u16 i = 0; i < buffersCount; i++) {
+    delete buffers[i];
+  }
+
+  delete[] packets;
+  delete[] buffers;
 
   if (programsPacket) packet2_free(programsPacket);
 }
@@ -57,14 +84,6 @@ void StaPipQBufferRenderer::init(RendererCore* t_core) {
 
   dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
   dma_channel_fast_waits(DMA_CHANNEL_VIF1);
-
-  const u32 VU1_PACKET_SIZE = 16;
-
-  packets[0] =
-      packet2_create(VU1_PACKET_SIZE, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-
-  packets[1] =
-      packet2_create(VU1_PACKET_SIZE, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
   setProgramsCache();
 
@@ -78,8 +97,6 @@ void StaPipQBufferRenderer::reinitVU1() {
   uploadPrograms();
   setDoubleBuffer();
 }
-
-StaPipQBuffer* StaPipQBufferRenderer::getBuffer() { return &buffers[context]; }
 
 void StaPipQBufferRenderer::sendObjectData(
     StaPipBag* bag, M4x4* mvp, RendererCoreTextureBuffers* texBuffers) const {
@@ -179,14 +196,59 @@ void StaPipQBufferRenderer::setDoubleBuffer() {
                     // buffer, to first addr of second buffer
 }
 
+StaPipQBuffer* StaPipQBufferRenderer::getBuffer() {
+  currentBufferIndex = nextBufferIndex++;
+  auto* result = buffers[currentBufferIndex];
+  if (nextBufferIndex >= buffersCount) nextBufferIndex = 0;
+  return result;
+}
+
+u16 StaPipQBufferRenderer::getQBufferIndex(StaPipQBuffer* buffer) {
+  for (u16 i = 0; i < buffersCount; i++) {
+    if (buffers[i] == buffer) return i;
+  }
+  return 0;
+}
+
+bool StaPipQBufferRenderer::is1stDBufferFlushTime() {
+  return nextBufferIndex == buffersCount / 2;
+}
+
+bool StaPipQBufferRenderer::is2ndDBufferFlushTime() {
+  return nextBufferIndex == 0;
+}
+
+void StaPipQBufferRenderer::flushBuffers() {
+  auto is1stDBuffer = is1stDBufferFlushTime();
+  auto is2ndDBuffer = is2ndDBufferFlushTime();
+
+  if (!is1stDBuffer && !is2ndDBuffer) {
+    auto offset = currentBufferIndex >= buffersCount / 2 ? buffersCount / 2 : 0;
+    auto size = (currentBufferIndex + 1) - offset;
+    auto dbuffer = &buffers[offset];
+    addBufferDataToPacket(dbuffer, size);
+    sendPacket();
+  }
+
+  currentBufferIndex = 0;
+  nextBufferIndex = 0;
+}
+
 void StaPipQBufferRenderer::cull(StaPipQBuffer* buffer) {
   if (buffer->size == 0) {
     return;
   }
 
-  auto program = getCullProgramByBag(buffer->bag);
-  addBufferDataToPacket(program, buffer);
-  sendPacket();
+  programs[getQBufferIndex(buffer)] = getCullProgramByBag(buffer->bag);
+
+  auto is1stDBuffer = is1stDBufferFlushTime();
+  auto is2ndDBuffer = is2ndDBufferFlushTime();
+
+  if (is1stDBuffer || is2ndDBuffer) {
+    auto dbuffer = &buffers[is1stDBuffer ? 0 : buffersCount / 2];
+    addBufferDataToPacket(dbuffer, buffersCount / 2);
+    sendPacket();
+  }
 }
 
 void StaPipQBufferRenderer::clip(StaPipQBuffer* buffer) {
@@ -194,11 +256,16 @@ void StaPipQBufferRenderer::clip(StaPipQBuffer* buffer) {
     return;
   }
 
-  auto program = getAsIsProgramByBag(buffer->bag);
+  programs[getQBufferIndex(buffer)] = getAsIsProgramByBag(buffer->bag);
+
   clipper.clip(buffer);
 
-  if (buffer->any()) {
-    if (buffer) addBufferDataToPacket(program, buffer);
+  auto is1stDBuffer = is1stDBufferFlushTime();
+  auto is2ndDBuffer = is2ndDBufferFlushTime();
+
+  if (is1stDBuffer || is2ndDBuffer) {
+    auto dbuffer = &buffers[is1stDBuffer ? 0 : buffersCount / 2];
+    addBufferDataToPacket(dbuffer, buffersCount / 2);
     sendPacket();
   }
 }
@@ -207,20 +274,26 @@ void StaPipQBufferRenderer::clearLastProgramName() {
   lastProgramName = StaPipUndefinedProgram;
 }
 
-void StaPipQBufferRenderer::addBufferDataToPacket(StaPipVU1Program* program,
-                                                  StaPipQBuffer* buffer) {
+void StaPipQBufferRenderer::addBufferDataToPacket(StaPipQBuffer** buffers,
+                                                  const u32& count) {
   currentPacket = packets[context];
   packet2_reset(currentPacket, false);
 
-  program->addBufferDataToPacket(currentPacket, buffer, &rendererCore->gs.prim);
+  for (u32 i = 0; i < count; i++) {
+    if (!buffers[i]->any()) continue;
 
-  if (lastProgramName != program->getName()) {
-    packet2_utils_vu_add_start_program(currentPacket,
-                                       program->getDestinationAddress());
-    lastProgramName = program->getName();
-  } else {
-    packet2_utils_vu_add_continue_program(currentPacket);
+    programs[i]->addBufferDataToPacket(currentPacket, buffers[i],
+                                       &rendererCore->gs.prim);
+
+    if (lastProgramName != programs[i]->getName()) {
+      packet2_utils_vu_add_start_program(currentPacket,
+                                         programs[i]->getDestinationAddress());
+      lastProgramName = programs[i]->getName();
+    } else {
+      packet2_utils_vu_add_continue_program(currentPacket);
+    }
   }
+
   packet2_utils_vu_add_end_tag(currentPacket);
 }
 
@@ -233,8 +306,9 @@ void StaPipQBufferRenderer::sendPacket() {
 }
 
 void StaPipQBufferRenderer::setMaxVertCount(const u32& count) {
-  buffers[0].setMaxVertCount(count);
-  buffers[1].setMaxVertCount(count);
+  for (u32 i = 0; i < buffersCount; i++) {
+    buffers[i]->setMaxVertCount(count);
+  }
   clipper.setMaxVertCount(count);
 }
 

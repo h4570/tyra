@@ -1,6 +1,16 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
+- [StaPip] FPS before: 175
+- [StaPip] FPS spamming: 190
+
 --- H4570
+- [Renderer] Fix current visual bug
+- [StaPip] Te same parametry frustumcheck jak w dynamic
+- [StaPip] No frustum check -> bez
+- [StaPip] Simple frustum check -> check bboxa z Mesh
+- [StaPip] Precise frustum check -> tak jak teraz?
+- [StaPip] Poprawic opis od noFullClipChecks, ze bedzie tylko dzialac na PreciseFrustumCheck
+- [Renderer] Allocate dynamic pipeline memory only in "onUse" (core,qbuffrenderer,pipeline..)
 - [McPip] Clipping mode
 - [McPip] VU1 packets spamming
 - [Loaders] Think about ".tyrobj" format - implement it (add multicolor support)
@@ -57,4 +67,3 @@ because Mesh rendering uses only core.render()
 ------------ Github issues for Tyra v2 ------------
 - [3D] Add drawLine(x, y , color, size)
 - [3D] Add drawBBox(x, y , color, size)
-- [Renderer] Github: Allocate dynamic pipeline memory only in "onUse" (core,qbuffrenderer,pipeline..)

@@ -54,6 +54,8 @@ class StaPipQBufferRenderer {
   /** Slower render with clipping */
   void clip(StaPipQBuffer* buffer);
 
+  void flushBuffers();
+
   void clearLastProgramName();
 
   StaPipVU1Program* getCullProgramByBag(const StaPipBag* bag);
@@ -64,22 +66,30 @@ class StaPipQBufferRenderer {
   const u16& getBufferSize() { return bufferSize; }
 
  private:
+  bool is1stDBufferFlushTime();
+  bool is2ndDBufferFlushTime();
+
   void sendStaticData() const;
   void setProgramsCache();
   void uploadPrograms();
   void setDoubleBuffer();
+  u16 getQBufferIndex(StaPipQBuffer* buffer);
+
+  static const u16 buffersCount;
 
   StaPipVU1Program* getProgramByName(const StaPipProgramName& name);
-  void addBufferDataToPacket(StaPipVU1Program* program, StaPipQBuffer* buffer);
+  void addBufferDataToPacket(StaPipQBuffer** buffers, const u32& count);
   void sendPacket();
   StaPipVU1Program* getAsIsProgramByBag(const StaPipBag* bag);
   StaPipVU1Program* getCullProgramByType(const StaPipProgramType& programType);
   StaPipProgramType getDrawProgramTypeByBag(const StaPipBag* bag) const;
   StaPipProgramType getDrawProgramTypeByParams(
       const bool& isLightingEnabled, const bool& isTextureEnabled) const;
-  packet2_t* packets[2];
   packet2_t* programsPacket;
-  StaPipQBuffer buffers[2];
+
+  packet2_t** packets;
+  StaPipVU1Program** programs;  // dbuffer
+  StaPipQBuffer** buffers;
   packet2_t* currentPacket;
   packet2_t* staticDataPacket;
   packet2_t* objectDataPacket;
@@ -91,7 +101,7 @@ class StaPipQBufferRenderer {
   StaPipClipper clipper;
   StaPipProgramsRepository repository;
 
-  u16 bufferSize;
+  u16 bufferSize, nextBufferIndex, currentBufferIndex;
   u8 context;
 };
 
