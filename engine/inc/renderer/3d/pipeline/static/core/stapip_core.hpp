@@ -16,6 +16,7 @@
 #include "./bag/packaging/stapip_bag_package.hpp"
 #include "./bag/packaging/stapip_bag_packager.hpp"
 #include "./stapip_qbuffer_renderer.hpp"
+#include "renderer/3d/pipeline/shared/pipeline_frustum_culling.hpp"
 
 namespace Tyra {
 
@@ -27,7 +28,8 @@ class StaPipCore {
   void init(RendererCore* t_core);
 
   /** Render 3D via "bags" */
-  void render(StaPipBag* bag, StaPipBagPackagesBBox* bbox = nullptr);
+  void render(StaPipBag* bag, const bool& frustumCull,
+              StaPipBagPackagesBBox* bbox = nullptr);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
   u32 getMaxVertCountByParams(const bool& isSingleColor,
@@ -52,7 +54,7 @@ class StaPipCore {
   void setMaxVertCount(const u32& count);
   StaPipBagPackager packager;
   StaPipQBufferRenderer qbufferRenderer;
-  void renderPkgs(StaPipBagPackage* packages, u16 count);
+  void renderPkgs(StaPipBagPackage* packages, const bool& doClip, u16 count);
   void renderSubpkgs(StaPipBagPackage* packages, u16 count);
 };
 

@@ -16,18 +16,18 @@ namespace Tyra {
 
 class StaPipOptions : public PipelineOptions {
  public:
-  StaPipOptions() {}
+  StaPipOptions() { fullClipChecks = false; }
   ~StaPipOptions() {}
 
   /**
-   * @brief True -> disables "clip against each plane" algorithm.
-   * Mandatory, default: false.
+   * @brief False -> disables "clip against each plane" algorithm.
+   * Mandatory, default: True.
    *
    * Full clip checks are slow, but they are
    * preventing visual artifacts, which can happen
    * for big 3D objects (or objects near camera eyes)
    */
-  bool noFullClipChecks;
+  bool fullClipChecks;
 };
 
 }  // namespace Tyra

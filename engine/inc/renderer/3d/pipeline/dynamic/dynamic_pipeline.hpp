@@ -52,10 +52,10 @@ class DynamicPipeline : public Renderer3DPipeline {
   static const u32 halfBuffersCount;
 
   void setBuffer(DynPipBag* buffers, DynPipBag* buffer, u16* bufferIndex,
-                 const DynPipFrustumCulling& frustumCulling);
+                 const PipelineFrustumCulling& frustumCulling);
 
   void sendRestOfBuffers(DynPipBag* buffers, u16* bufferIndex,
-                         const DynPipFrustumCulling& frustumCulling);
+                         const PipelineFrustumCulling& frustumCulling);
 
   void addVertices(MeshMaterialFrame* materialFrameFrom,
                    MeshMaterialFrame* materialFrameTo, DynPipBag* bag,

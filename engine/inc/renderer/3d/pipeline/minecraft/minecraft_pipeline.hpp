@@ -22,7 +22,7 @@ namespace Tyra {
  * Pipeline specialized in fast rendering of voxels
  * Supports:
  * - Full "against each plane" clipping
- * - Frustum culling (on noFullClipChecks = false)
+ * - Frustum culling (on fullClipChecks = true)
  */
 class MinecraftPipeline : public Renderer3DPipeline {
  public:
@@ -40,11 +40,11 @@ class MinecraftPipeline : public Renderer3DPipeline {
    * @param count number of blocks to render
    * @param t_tex texture to use
    * @param isMulti is this a 6 texture voxel?
-   * @param noFullClipChecks true = faster, simple PS2 clipping. False = slower
+   * @param fullClipChecks false = faster, simple PS2 clipping. True = slower
    * "against each plane" clipping.
    */
   void render(McpipBlock* blocks, const u32& count, Texture* t_tex,
-              const bool& isMulti = false, const bool& noFullClipChecks = true);
+              const bool& isMulti = false, const bool& fullClipChecks = false);
 
   inline const float& getTextureOffset() const {
     return manager.getTextureOffset();
@@ -58,12 +58,17 @@ class MinecraftPipeline : public Renderer3DPipeline {
   RenderBBox* bbox;
   McpipProgramName latestMode;
 
+  McpipBlock*** spamBuffers;
+  u32* spamCounts;
+  u32 spamBuffersCount;
+  u32 spammerIndex;
+
   void initBBox();
 
   void changeMode(const McpipProgramName& requestedMode, const u8& force);
 
   void cull(McpipBlock* blocks, const std::vector<u32>& indexes,
-            RendererCoreTextureBuffers* texBuffers,
+            RendererCoreTextureBuffers* texBuffers, const bool& isCullOnly,
             const bool& isMulti = false);
 
   void clip(McpipBlock* blocks, const std::vector<u32>& indexes,
@@ -71,6 +76,12 @@ class MinecraftPipeline : public Renderer3DPipeline {
             const bool& isMulti = false);
 
   Tyra::CoreBBoxFrustum isInFrustum(const McpipBlock& block) const;
+
+  void addToSpammer(McpipBlock** blockPointerArray, const u32& count,
+                    RendererCoreTextureBuffers* texBuffers,
+                    const bool& isMulti);
+  void flushSpammer(RendererCoreTextureBuffers* texBuffers,
+                    const bool& isMulti);
 };
 
 }  // namespace Tyra

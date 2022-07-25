@@ -47,7 +47,8 @@ u32 StaPipCore::getMaxVertCountByParams(const bool& isSingleColor,
       ->getMaxVertCount(isSingleColor, qbufferRenderer.getBufferSize());
 }
 
-void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
+void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
+                        StaPipBagPackagesBBox* bbox) {
   if (bag->count <= 0) return;
 
   TYRA_ASSERT(bag->vertices != nullptr,
@@ -70,24 +71,32 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   TYRA_ASSERT(
       !bag->texture || (bag->texture->texture && bag->texture->coordinates),
       "If you want texture, please provide texture and coordinates!");
-
-  StaPipBagPackagesBBox* renderBbox;
+  TYRA_ASSERT(!(frustumCull == false && bag->info->fullClipChecks == true),
+              "Full clip checks are not supported with frustum culling = off!");
 
   u32 maxVertCount = getMaxVertCountByBag(bag);
-
   setMaxVertCount(maxVertCount);
 
-  if (!bbox)
-    renderBbox =
-        new StaPipBagPackagesBBox(bag->vertices, bag->count, maxVertCount);
-  else
-    renderBbox = bbox;
+  StaPipBagPackagesBBox* renderBbox = nullptr;
 
-  auto frustumCheck = renderBbox->getMainBBox()->clipIsInFrustum(
-      rendererCore->renderer3D.frustumPlanes.getAll(), *bag->info->model);
+  CoreBBoxFrustum frustumCheck = OUTSIDE_FRUSTUM;
+
+  if (frustumCull) {
+    if (!bbox)
+      renderBbox =
+          new StaPipBagPackagesBBox(bag->vertices, bag->count, maxVertCount);
+    else
+      renderBbox = bbox;
+
+    frustumCheck = renderBbox->getMainBBox()->clipIsInFrustum(
+        rendererCore->renderer3D.frustumPlanes.getAll(), *bag->info->model);
+
+    if (frustumCheck == OUTSIDE_FRUSTUM) return;
+  }
+
+  packager.setRenderBBox(renderBbox);
+
   auto mvp = rendererCore->renderer3D.getViewProj() * *bag->info->model;
-
-  if (frustumCheck == OUTSIDE_FRUSTUM) return;
 
   RendererCoreTextureBuffers* texBuffers = nullptr;
   if (bag->texture) {
@@ -99,14 +108,28 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
 
   qbufferRenderer.sendObjectData(bag, &mvp, texBuffers);
 
-  packager.setRenderBBox(renderBbox);
-
   qbufferRenderer.setClipperMVP(&mvp);
 
   qbufferRenderer.setInfo(bag->info);
 
-  if (frustumCheck == IN_FRUSTUM ||
-      (frustumCheck == PARTIALLY_IN_FRUSTUM && bag->info->noFullClipChecks)) {
+  auto checkYesFrustumInClipYes =  // cull all
+      frustumCull && frustumCheck == IN_FRUSTUM && bag->info->fullClipChecks;
+
+  auto checkYesFrustumPartialClipYes =  // pkgs, cull + clip
+      frustumCull && frustumCheck == PARTIALLY_IN_FRUSTUM &&
+      bag->info->fullClipChecks;
+
+  auto checkYesFrustumInClipNo =  // cull all
+      frustumCull && frustumCheck == IN_FRUSTUM && !bag->info->fullClipChecks;
+
+  auto checkYesFrustumPartialClipNo =  // pkgs, cull all
+      frustumCull && frustumCheck == PARTIALLY_IN_FRUSTUM &&
+      !bag->info->fullClipChecks;
+
+  auto checkNoClipNo =  // cull all
+      !frustumCull && !bag->info->fullClipChecks;
+
+  if (checkYesFrustumInClipYes || checkYesFrustumInClipNo || checkNoClipNo) {
     u16 packagesCount = 0;
     auto biggerPkgs = packager.create(&packagesCount, bag, maxVertCount);
     Verbose("Material - in frustum. Pkgs: ", packagesCount,
@@ -118,12 +141,13 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
       qbufferRenderer.cull(buffer);
     }
     delete[] biggerPkgs;
-  } else if (frustumCheck == PARTIALLY_IN_FRUSTUM) {
+  } else if (checkYesFrustumPartialClipYes || checkYesFrustumPartialClipNo) {
     u16 packagesCount = 0;
-    if (bag->count >= maxVertCount * 2) {
+    auto doClip = checkYesFrustumPartialClipYes;
+    if (!doClip || bag->count >= maxVertCount * 2) {
       auto packages = packager.create(&packagesCount, bag, maxVertCount);
       Verbose("Material - partial. Packages: ", packagesCount);
-      renderPkgs(packages, packagesCount);
+      renderPkgs(packages, doClip, packagesCount);
       delete[] packages;
     } else {
       auto subpkgs = packager.create(&packagesCount, bag, maxVertCount / 3);
@@ -133,7 +157,7 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
     }
   }
 
-  if (!bbox) delete renderBbox;
+  if (frustumCull && !bbox) delete renderBbox;
   if (texBuffers) delete texBuffers;
 
   qbufferRenderer.flushBuffers();
@@ -141,14 +165,18 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   Verbose("Render finished");
 }
 
-void StaPipCore::renderPkgs(StaPipBagPackage* packages, u16 count) {
+void StaPipCore::renderPkgs(StaPipBagPackage* packages, const bool& doClip,
+                            u16 count) {
   for (u16 i = 0; i < count; i++) {
-    if (packages[i].isInFrustum == IN_FRUSTUM) {
+    auto cull = (doClip && packages[i].isInFrustum == IN_FRUSTUM) || !doClip;
+    auto doSubpkgs = doClip && packages[i].isInFrustum == PARTIALLY_IN_FRUSTUM;
+
+    if (cull) {
       Verbose(i, " - package in frustum -> cull");
       auto buffer = qbufferRenderer.getBuffer();
       buffer->fillByPointer(packages[i]);
       qbufferRenderer.cull(buffer);
-    } else if (packages[i].isInFrustum == PARTIALLY_IN_FRUSTUM) {
+    } else if (doSubpkgs) {
       u16 subpkgsSize = 0;
       auto packages1By3 =
           packager.create(&subpkgsSize, packages[i], maxVertCount / 3);

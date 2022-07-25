@@ -40,9 +40,9 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   auto* infoBag = getInfoBag(mesh, options, &model);
   PipelineDirLightsBag* dirLights = nullptr;
   auto frustumCulling =
-      options ? options->frustumCulling : DynPipFrustumCulling_Simple;
+      options ? options->frustumCulling : PipelineFrustumCulling_Simple;
 
-  if (frustumCulling == DynPipFrustumCulling_Simple) {
+  if (frustumCulling == PipelineFrustumCulling_Simple) {
     auto* frameTo = mesh->getFrame(mesh->getNextAnimationFrame());
     if (frameTo->getBBox().isInFrustum(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
@@ -117,7 +117,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
 
 void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
                                 u16* bufferIndex,
-                                const DynPipFrustumCulling& frustumCulling) {
+                                const PipelineFrustumCulling& frustumCulling) {
   auto isEndOf1stDBuffer = *bufferIndex == halfBuffersCount - 1;
   auto isEndOf2ndDBuffer = *bufferIndex == buffersCount - 1;
 
@@ -130,7 +130,7 @@ void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
       sendBuffers[i] = &buffers[offset + i];
 
     core.renderPart(sendBuffers, halfBuffersCount,
-                    frustumCulling == DynPipFrustumCulling_Precise);
+                    frustumCulling == PipelineFrustumCulling_Precise);
 
     delete[] sendBuffers;
   }
@@ -143,7 +143,7 @@ void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
 
 void DynamicPipeline::sendRestOfBuffers(
     DynPipBag* buffers, u16* bufferIndex,
-    const DynPipFrustumCulling& frustumCulling) {
+    const PipelineFrustumCulling& frustumCulling) {
   auto isEndOf1stDBuffer = *bufferIndex <= halfBuffersCount - 1;
 
   u32 offset = isEndOf1stDBuffer ? 0 : halfBuffersCount;
@@ -157,7 +157,7 @@ void DynamicPipeline::sendRestOfBuffers(
   }
 
   core.renderPart(sendBuffers, size,
-                  frustumCulling == DynPipFrustumCulling_Precise);
+                  frustumCulling == PipelineFrustumCulling_Precise);
 
   delete[] sendBuffers;
 }

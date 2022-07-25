@@ -14,19 +14,10 @@
 
 namespace Tyra {
 
-enum DynPipFrustumCulling {
-  DynPipFrustumCulling_None = 0,
-  DynPipFrustumCulling_Simple = 1,
-  DynPipFrustumCulling_Precise = 2,
-};
-
 class DynPipOptions : public PipelineOptions {
  public:
   DynPipOptions() {}
   ~DynPipOptions() {}
-
-  /** Default: Simple */
-  DynPipFrustumCulling frustumCulling;
 };
 
 }  // namespace Tyra

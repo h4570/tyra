@@ -12,6 +12,7 @@
 
 #include "renderer/3d/pipeline/shared/pipeline_shading_type.hpp"
 #include "../shared/pipeline_lighting_options.hpp"
+#include "./pipeline_frustum_culling.hpp"
 
 namespace Tyra {
 
@@ -20,6 +21,7 @@ class PipelineOptions {
   PipelineOptions() { lighting = nullptr; }
   ~PipelineOptions() {}
 
+  PipelineFrustumCulling frustumCulling;
   PipelineShadingType shadingType;
   bool blendingEnabled;
   bool antiAliasingEnabled;

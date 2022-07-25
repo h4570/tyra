@@ -1,17 +1,10 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [StaPip] FPS before: 175
-- [StaPip] FPS spamming: 190
-
 --- H4570
-- [StaPip] Te same parametry frustumcheck jak w dynamic
-- [StaPip] No frustum check -> bez
-- [StaPip] Simple frustum check -> check bboxa z Mesh
-- [StaPip] Precise frustum check -> tak jak teraz?
-- [StaPip] Poprawic opis od noFullClipChecks, ze bedzie tylko dzialac na PreciseFrustumCheck
 - [Renderer] Allocate dynamic pipeline memory only in "onUse" (core,qbuffrenderer,pipeline..)
-- [McPip] Clipping mode
-- [McPip] VU1 packets spamming
+- [Texture] Unload texture
+- [Texture] Dont load loaded texture by name
+
 - [Loaders] Think about ".tyrobj" format - implement it (add multicolor support)
 - [Loaders] DFF loader as static Mesh loader
 - [Game] Update intellisense from docker
@@ -25,8 +18,6 @@
 
 - [General] Control generated id to avoid duplication. Maybe Just increment from 0? Add interface IIdentificable?
 
-- [General] rsync is excluding folder like "objects" lol XD
-
 - [DMA] Check if all chain transfers have end tag!
 
 - [General] Change libs of sample? (remove -lpng, -lz...), probably they are not required
@@ -36,7 +27,7 @@
 - [General] Check all TYRA_ASSERT() if there are no asserts like (TYRA_ASSERT(!audsrv_load_adpcm(result, data, adpcmFileSize)))
 because this lines will be removed on make-release. Only debug stuff should be checked in assert
 
-- [General] All Copyrights to 2020-2022
+- [General] All Copyrights to 2022
 
 - [General] CI in Github via docker image
 
@@ -66,3 +57,4 @@ because Mesh rendering uses only core.render()
 ------------ Github issues for Tyra v2 ------------
 - [3D] Add drawLine(x, y , color, size)
 - [3D] Add drawBBox(x, y , color, size)
+- [File] Async file loading

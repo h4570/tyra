@@ -16,8 +16,8 @@ BlockizerProgramsManager::BlockizerProgramsManager() {
   lastProgramName = UndefinedMcpipProgram;
   context = 0;
   vu1BlockData = BlockNotUploaded;
-  dynamicPackets[0] = packet2_create(100, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-  dynamicPackets[1] = packet2_create(100, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  dynamicPackets[0] = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  dynamicPackets[1] = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   staticPacket = packet2_create(2, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   setProgramsCache();
 }
@@ -79,6 +79,32 @@ void BlockizerProgramsManager::uploadBlock(bool isMulti) {
   dma_channel_send_packet2(staticPacket, DMA_CHANNEL_VIF1, true);
 }
 
+void BlockizerProgramsManager::cullSpam(McpipBlock*** blockPointerArrays,
+                                        u32* blockPointerArrayCounts,
+                                        u32 blockPointerArraysCount,
+                                        RendererCoreTextureBuffers* texBuffers,
+                                        const bool& isMulti) {
+  uploadBlock(isMulti);
+
+  auto* currentPacket = dynamicPackets[context];
+
+  auto* program = repo.getProgram(McpipProgramName::McPipCull);
+
+  packet2_reset(currentPacket, false);
+
+  for (u32 i = 0; i < blockPointerArraysCount; i++) {
+    auto* blockPointerArray = blockPointerArrays[i];
+    auto blockPointerArrayCount = blockPointerArrayCounts[i];
+
+    culler.addData(currentPacket, blockPointerArray, blockPointerArrayCount,
+                   texBuffers, isMulti);
+
+    addProgram(program);
+  }
+
+  sendPacket(program);
+}
+
 void BlockizerProgramsManager::cull(McpipBlock** blockPointerArray,
                                     u32 blockPointerArrayCount,
                                     RendererCoreTextureBuffers* texBuffers,
@@ -89,9 +115,12 @@ void BlockizerProgramsManager::cull(McpipBlock** blockPointerArray,
 
   auto* program = repo.getProgram(McpipProgramName::McPipCull);
 
+  packet2_reset(currentPacket, false);
+
   culler.addData(currentPacket, blockPointerArray, blockPointerArrayCount,
                  texBuffers, isMulti);
 
+  addProgram(program);
   sendPacket(program);
 }
 
@@ -106,10 +135,11 @@ void BlockizerProgramsManager::clip(McpipBlock* block,
 
   clipper.addData(block, isMulti, texBuffers, currentPacket, context);
 
+  addProgram(program);
   sendPacket(program);
 }
 
-void BlockizerProgramsManager::sendPacket(McpipProgram* program) {
+void BlockizerProgramsManager::addProgram(McpipProgram* program) {
   auto* currentPacket = dynamicPackets[context];
 
   if (lastProgramName != program->getName()) {
@@ -119,6 +149,10 @@ void BlockizerProgramsManager::sendPacket(McpipProgram* program) {
   } else {
     packet2_utils_vu_add_continue_program(currentPacket);
   }
+}
+
+void BlockizerProgramsManager::sendPacket(McpipProgram* program) {
+  auto* currentPacket = dynamicPackets[context];
 
   packet2_utils_vu_add_end_tag(currentPacket);
 

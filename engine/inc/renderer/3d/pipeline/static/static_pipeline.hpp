@@ -24,7 +24,7 @@ namespace Tyra {
  * Pipeline for static models (StaticMesh).
  * Supports:
  * - Full "against each plane" clipping and simple PS2 clipping
- * (noFullClipChecks),
+ * (fullClipChecks),
  * - Force enabled precise frustum culling (checks parts of given mesh)
  * - Modes: color(s), texture+color(s), dir lights, texture + dir lights
  */

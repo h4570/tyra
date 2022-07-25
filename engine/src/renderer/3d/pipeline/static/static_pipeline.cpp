@@ -9,6 +9,7 @@
 */
 
 #include "renderer/3d/pipeline/static/static_pipeline.hpp"
+#include "debug/debug.hpp"
 
 namespace Tyra {
 
@@ -27,19 +28,28 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
   auto model = mesh->getModelMatrix();
   auto* infoBag = getInfoBag(mesh, options, &model);
 
+  auto frustumCulling =
+      options ? options->frustumCulling : PipelineFrustumCulling_Simple;
+
+  TYRA_ASSERT(
+      !(frustumCulling != PipelineFrustumCulling_Precise &&
+        infoBag->fullClipChecks == true),
+      "Full clip checks are only supported with frustum culling == Precise!");
+
+  if (frustumCulling == PipelineFrustumCulling_Simple) {
+    auto* frame = mesh->getFrame();
+    if (frame->getBBox().isInFrustum(
+            rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
+        CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
+      return;
+    }
+  }
+
   if (options && options->lighting) setLightingColorsCache(options->lighting);
 
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
     auto* materialFrame = material->getFrame(0);
-
-    // 2x bufory[maxVertCount*2] -> pętla po mniejszych częściach i czestsze
-    // rendery
-
-    // TODO: Double buffering in future
-    // auto maxVertCount = core->renderer3D.getMaxVertCountByParams(
-    //     material->isSingleColorActivated(), material->getNormalFaces(),
-    //     material->getTextureCoordFaces());
 
     StaPipBag bag;
     addVertices(materialFrame, &bag);
@@ -48,7 +58,7 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
     bag.texture = getTextureBag(material, materialFrame);
     bag.lighting = getLightingBag(materialFrame, &model, options);
 
-    core.render(&bag);
+    core.render(&bag, frustumCulling == PipelineFrustumCulling_Precise);
 
     deallocDrawBags(&bag, material);
   }
@@ -71,12 +81,12 @@ PipelineInfoBag* StaticPipeline::getInfoBag(StaticMesh* mesh,
     result->antiAliasingEnabled = options->antiAliasingEnabled;
     result->blendingEnabled = options->blendingEnabled;
     result->shadingType = options->shadingType;
-    result->noFullClipChecks = options->noFullClipChecks;
+    result->fullClipChecks = options->fullClipChecks;
   } else {
     result->antiAliasingEnabled = false;
     result->blendingEnabled = true;
     result->shadingType = TyraShadingFlat;
-    result->noFullClipChecks = false;
+    result->fullClipChecks = false;
   }
 
   result->model = model;

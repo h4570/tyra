@@ -100,6 +100,8 @@ StaPipBagPackage* StaPipBagPackager::create(u16* o_count,
 }
 
 CoreBBoxFrustum StaPipBagPackager::checkFrustum(const StaPipBagPackage& pkg) {
+  if (!renderBBox) return CoreBBoxFrustum::OUTSIDE_FRUSTUM;
+
   if (pkg.size <= (maxVertCount / 3)) {  // Is subpackage
     auto& bbox = renderBBox->getChildBBox1By3(pkg.indexOf1By3BBox);
     return bbox.clipIsInFrustum(frustumPlanes->getAll(), *pkg.bag->info->model);
