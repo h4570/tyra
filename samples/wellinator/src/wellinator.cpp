@@ -11,6 +11,7 @@
 #include "wellinator.hpp"
 #include "file/file_utils.hpp"
 #include "loaders/3d/md2/md2_loader.hpp"
+#include "renderer/3d/mesh/dynamic/dynamic_mesh.hpp"
 
 namespace Tyra {
 
@@ -18,7 +19,9 @@ Wellinator::Wellinator(Engine* t_engine) { engine = t_engine; }
 Wellinator::~Wellinator() {}
 
 DynamicMesh* getWarrior(Renderer* renderer);
-StaPipOptions* getRenderingOptions();
+StaPipOptions* getStaPipOptions();
+DynPipOptions* getDynPipOptions();
+void setPipelineOptions(PipelineOptions* options);
 Sprite* get2DPicture(Renderer* renderer);
 
 void Wellinator::init() {
@@ -33,7 +36,9 @@ void Wellinator::init() {
 
   engine->renderer.setClearScreenColor(Color(64.0F, 64.0F, 64.0F));
   warrior = getWarrior(&engine->renderer);
-  renderOptions = getRenderingOptions();
+
+  staOptions = getStaPipOptions();
+  dynOptions = getDynPipOptions();
 
   cameraPosition = Vec4(0.0F, 0.0F, 0.0F, 1.0F);
   cameraLookAt = *warrior->getPosition();
@@ -42,6 +47,7 @@ void Wellinator::init() {
       FileUtils::fromCwd("blocks.png"));
 
   mcPip.setRenderer(&engine->renderer.core);
+  dynpip.setRenderer(&engine->renderer.core);
   stapip.setRenderer(&engine->renderer.core);
 
   picture = get2DPicture(&engine->renderer);
@@ -116,8 +122,8 @@ void Wellinator::loop() {
 
     // warrior->setPosition(*nextPos);
 
-    engine->renderer.renderer3D.usePipeline(&stapip);
-    { stapip.render(warrior, renderOptions); }
+    engine->renderer.renderer3D.usePipeline(&dynpip);
+    { dynpip.render(warrior, dynOptions); }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);
     { mcPip.render(blocks, blocksCount, blocksTex, false); }
@@ -150,10 +156,20 @@ Sprite* get2DPicture(Renderer* renderer) {
   return sprite;
 }
 
-StaPipOptions* getRenderingOptions() {
+StaPipOptions* getStaPipOptions() {
   auto* options = new StaPipOptions();
+  setPipelineOptions(options);
+  return options;
+}
 
-  auto* ambientColor = new Color(32.0F, 32.0F, 32.0F, 128.0F);
+DynPipOptions* getDynPipOptions() {
+  auto* options = new DynPipOptions();
+  setPipelineOptions(options);
+  return options;
+}
+
+void setPipelineOptions(PipelineOptions* options) {
+  auto* ambientColor = new Color(32.0F, 32.0F, 32.0F, 32.0F);
   auto* directionalColors = new Color[3];
   for (int i = 0; i < 3; i++) directionalColors[i].set(0.0F, 0.0F, 0.0F, 1.0F);
   auto* directionalDirections = new Vec4[3];
@@ -175,8 +191,6 @@ StaPipOptions* getRenderingOptions() {
 
   directionalDirections[1].set(1.0F, 0.0F, 0.0F);
   directionalColors[1].set(96.0F, 0.0F, 0.0F);
-
-  return options;
 }
 
 }  // namespace Tyra

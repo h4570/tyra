@@ -14,6 +14,7 @@
 #include <game.hpp>
 #include "renderer/3d/pipeline/minecraft/minecraft_pipeline.hpp"
 #include "renderer/3d/pipeline/static/static_pipeline.hpp"
+#include "renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
 
 namespace Tyra {
 
@@ -37,7 +38,9 @@ class Wellinator : public Game {
 
   MinecraftPipeline mcPip;
   StaticPipeline stapip;
-  StaPipOptions* renderOptions;
+  DynamicPipeline dynpip;
+  StaPipOptions* staOptions;
+  DynPipOptions* dynOptions;
   Texture* blocksTex;
 
   u32 blocksCount;
