@@ -166,11 +166,11 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 
 Without these guys, everything would be harder:
 * Dr Henry Fortuna - for code sources
-* Rick Gaiser, fjtrujy - for help and new GCC!
-* Lukasz D.K. - for huge archive of PS2 stuff
-* Guilherme Lampert - for code sources
-* Jesper Svennevid, Daniel Collin - for openvcl's code samples
-* Whole PS2DEV team
+* [Rick Gaiser](https://github.com/rickgaiser), [fjtrujy](https://github.com/fjtrujy) - for help and new GCC!
+* [Lukasz D.K](https://github.com/lukaszdk). - for huge archive of PS2 stuff
+* [Guilherme Lampert](https://github.com/glampert) - for code sources
+* [Jesper Svennevid](https://github.com/jsvennevid), Daniel Collin - for openvcl's code samples
+* [Whole PS2DEV team](https://github.com/ps2dev)
 * Manieq - for nice splash screens!
 * And so many other guys. Thanks!
 
