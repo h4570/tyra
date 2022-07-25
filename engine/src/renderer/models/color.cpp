@@ -9,6 +9,8 @@
 */
 
 #include "renderer/models/color.hpp"
+#include <sstream>
+#include <iomanip>
 
 namespace Tyra {
 

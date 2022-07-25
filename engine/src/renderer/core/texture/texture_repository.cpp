@@ -22,13 +22,48 @@ TextureRepository::~TextureRepository() {
   }
 }
 
-// ----
-// Methods
-// ----
+Texture* TextureRepository::getBySpriteOrMesh(const u32& t_id) const {
+  for (u32 i = 0; i < textures.size(); i++) {
+    if (textures[i]->isLinkedWith(t_id)) return textures[i];
+  }
+  return nullptr;
+}
+
+Texture* TextureRepository::getByTextureId(const u32& t_id) const {
+  for (u32 i = 0; i < textures.size(); i++)
+    if (t_id == textures[i]->getId()) return textures[i];
+  return nullptr;
+}
+
+const s32 TextureRepository::getIndexOf(const u32& t_texId) const {
+  for (u32 i = 0; i < textures.size(); i++)
+    if (textures[i]->getId() == t_texId) return i;
+  return -1;
+}
 
 Texture* TextureRepository::add(Texture* texture) {
   textures.push_back(texture);
   return texture;
+}
+
+void TextureRepository::removeByIndex(const u32& t_index) {
+  textures.erase(textures.begin() + t_index);
+}
+
+void TextureRepository::removeById(const u32& t_texId) {
+  s32 index = getIndexOf(t_texId);
+  TYRA_ASSERT(index != -1, "Cant remove texture, because it was not found!");
+  removeByIndex(index);
+}
+
+void TextureRepository::free(const u32& t_texId) {
+  s32 index = getIndexOf(t_texId);
+  auto* tex = textures[index];
+
+  TYRA_ASSERT(index != -1, "Cant remove texture, because it was not found!");
+  removeByIndex(index);
+
+  delete tex;
 }
 
 Texture* TextureRepository::add(const char* fullpath) {

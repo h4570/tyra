@@ -16,9 +16,6 @@ extern "C" {
 }
 
 #include <math3d.h>
-#include <iomanip>
-#include <cmath>
-#include <sstream>
 #include <string>
 #include "math/math.hpp"
 

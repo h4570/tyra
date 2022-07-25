@@ -14,7 +14,11 @@
 
 namespace Tyra {
 
-MinecraftPipeline::MinecraftPipeline() { latestMode = UndefinedMcpipProgram; }
+MinecraftPipeline::MinecraftPipeline() {
+  latestMode = UndefinedMcpipProgram;
+  spamBuffersCount = 4;
+  spammerIndex = 0;
+}
 
 MinecraftPipeline::~MinecraftPipeline() {
   if (bbox) {
@@ -22,7 +26,7 @@ MinecraftPipeline::~MinecraftPipeline() {
   }
 }
 
-void MinecraftPipeline::init(RendererCore* core) {
+void MinecraftPipeline::setRenderer(RendererCore* core) {
   rendererCore = core;
   manager.init(core);
 
@@ -30,9 +34,19 @@ void MinecraftPipeline::init(RendererCore* core) {
 }
 
 void MinecraftPipeline::onUse() {
+  spamBuffers = new McpipBlock**[spamBuffersCount];
+  spamCounts = new u32[spamBuffersCount];
+  manager.allocateOnUse();
+
   manager.uploadVU1Programs();
 
   changeMode(McPipCull, true);
+}
+
+void MinecraftPipeline::onUseEnd() {
+  delete[] spamBuffers;
+  delete[] spamCounts;
+  manager.deallocateOnUse();
 }
 
 void MinecraftPipeline::initBBox() {
@@ -42,36 +56,35 @@ void MinecraftPipeline::initBBox() {
 
 void MinecraftPipeline::render(McpipBlock* blocks, const u32& count,
                                Texture* t_tex, const bool& isMulti,
-                               const bool& noClipChecks) {
+                               const bool& fullClipChecks) {
   auto texBuffers = rendererCore->texture.useTexture(t_tex);
   rendererCore->gs.prim.mapping = 1;
 
   manager.clearLastProgram();
   std::vector<u32> cullIndexes;
 
-  if (noClipChecks) {
+  if (!fullClipChecks) {
     for (u32 i = 0; i < count; i++) cullIndexes.push_back(i);
-    cull(blocks, cullIndexes, &texBuffers, isMulti);
-  } else {
-    u32 culled = 0, clipped = 0;
-    std::vector<u32> clipIndexes;
-
-    for (u32 i = 0; i < count; i++) {
-      auto frustum = isInFrustum(blocks[i]);
-      if (frustum == CoreBBoxFrustum::IN_FRUSTUM) {
-        cullIndexes.push_back(i);
-        culled++;
-      } else if (frustum == CoreBBoxFrustum::PARTIALLY_IN_FRUSTUM) {
-        clipIndexes.push_back(i);
-        clipped++;
-      }
-    }
-
-    if (culled > 0) cull(blocks, cullIndexes, &texBuffers, isMulti);
-    if (clipped > 0) clip(blocks, clipIndexes, &texBuffers, isMulti);
+    cull(blocks, cullIndexes, &texBuffers, true, isMulti);
+    return;
   }
 
-  Threading::switchThread();
+  u32 culled = 0, clipped = 0;
+  std::vector<u32> clipIndexes;
+
+  for (u32 i = 0; i < count; i++) {
+    auto frustum = isInFrustum(blocks[i]);
+    if (frustum == CoreBBoxFrustum::IN_FRUSTUM) {
+      cullIndexes.push_back(i);
+      culled++;
+    } else if (frustum == CoreBBoxFrustum::PARTIALLY_IN_FRUSTUM) {
+      clipIndexes.push_back(i);
+      clipped++;
+    }
+  }
+
+  if (culled > 0) cull(blocks, cullIndexes, &texBuffers, false, isMulti);
+  if (clipped > 0) clip(blocks, clipIndexes, &texBuffers, isMulti);
 }
 
 CoreBBoxFrustum MinecraftPipeline::isInFrustum(const McpipBlock& block) const {
@@ -82,7 +95,7 @@ CoreBBoxFrustum MinecraftPipeline::isInFrustum(const McpipBlock& block) const {
 void MinecraftPipeline::cull(McpipBlock* blocks,
                              const std::vector<u32>& indexes,
                              RendererCoreTextureBuffers* texBuffers,
-                             const bool& isMulti) {
+                             const bool& isCullOnly, const bool& isMulti) {
   changeMode(McPipCull, false);
 
   auto maxBlocksPerQBuffer = manager.culler.getMaxBlocksCountPerQBuffer();
@@ -101,10 +114,18 @@ void MinecraftPipeline::cull(McpipBlock* blocks,
           &blocks[indexes[i * maxBlocksPerQBuffer + j]];
     }
 
-    manager.cull(blockPointerArray, blockPointerArrayCount, texBuffers,
-                 isMulti);
+    if (isCullOnly) {
+      addToSpammer(blockPointerArray, blockPointerArrayCount, texBuffers,
+                   isMulti);
+    } else {
+      manager.cull(blockPointerArray, blockPointerArrayCount, texBuffers,
+                   isMulti);
+      delete[] blockPointerArray;
+    }
+  }
 
-    delete[] blockPointerArray;
+  if (isCullOnly) {
+    flushSpammer(texBuffers, isMulti);
   }
 }
 
@@ -138,6 +159,40 @@ void MinecraftPipeline::changeMode(const McpipProgramName& requestedMode,
     manager.clipper.configureVU1AndSendStaticData();
     latestMode = McPipAsIs;
   }
+}
+
+void MinecraftPipeline::addToSpammer(McpipBlock** blockPointerArray,
+                                     const u32& count,
+                                     RendererCoreTextureBuffers* texBuffers,
+                                     const bool& isMulti) {
+  spamBuffers[spammerIndex] = blockPointerArray;
+  spamCounts[spammerIndex] = count;
+
+  spammerIndex++;
+
+  if (spammerIndex == spamBuffersCount) {
+    spammerIndex = 0;
+
+    manager.cullSpam(spamBuffers, spamCounts, spamBuffersCount, texBuffers,
+                     isMulti);
+
+    for (u32 i = 0; i < spamBuffersCount; i++) {
+      delete[] spamBuffers[i];
+    }
+  }
+}
+
+void MinecraftPipeline::flushSpammer(RendererCoreTextureBuffers* texBuffers,
+                                     const bool& isMulti) {
+  if (spammerIndex == 0) return;
+
+  manager.cullSpam(spamBuffers, spamCounts, spammerIndex, texBuffers, isMulti);
+
+  for (u32 i = 0; i < spammerIndex; i++) {
+    delete[] spamBuffers[i];
+  }
+
+  spammerIndex = 0;
 }
 
 }  // namespace Tyra

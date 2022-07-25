@@ -33,6 +33,11 @@ class RendererSettings {
   const float& getProjectionScale() const { return projectionScale; }
   const float& getAspectRatio() const { return aspectRatio; }
 
+  float getInterlacedHeightF() const { return getHeight() / 2; }
+  unsigned int getInterlacedHeightUI() const {
+    return static_cast<unsigned int>(getInterlacedHeightF());
+  }
+
   static void copy(RendererSettings* out, const RendererSettings* in);
   void set(const RendererSettings& v);
 

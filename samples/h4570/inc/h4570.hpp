@@ -13,7 +13,9 @@
 #include <engine.hpp>
 #include <game.hpp>
 #include "renderer/3d/pipeline/minecraft/minecraft_pipeline.hpp"
-#include "renderer/3d/pipeline/std/std_pipeline.hpp"
+#include "renderer/3d/pipeline/static/static_pipeline.hpp"
+#include "renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
+#include "renderer/3d/mesh/static/static_mesh.hpp"
 
 namespace Tyra {
 
@@ -28,10 +30,10 @@ class H4570 : public Game {
  private:
   Engine* engine;
 
-  Mesh* warrior;
-  Mesh* warrior2;
-  Mesh* warrior3;
-  Mesh* warrior4;
+  StaticMesh* staticMesh;
+  DynamicMesh* warrior;
+  u8 warriorsCount;
+  DynamicMesh** warriors;
   Sprite* picture;
   audsrv_adpcm_t* adpcmSample;
   Timer adpcmTimer;
@@ -39,8 +41,11 @@ class H4570 : public Game {
   Vec4 cameraPosition, cameraLookAt;
 
   MinecraftPipeline mcPip;
-  StdPipeline stdPip;
-  StdpipOptions* renderOptions;
+  DynamicPipeline dynpip;
+  StaticPipeline stapip;
+  StaPipOptions* staOptions;
+  DynPipOptions* dynOptions;
+  Texture* warriorTex;
   Texture* blocksTex;
 
   u32 blocksCount;

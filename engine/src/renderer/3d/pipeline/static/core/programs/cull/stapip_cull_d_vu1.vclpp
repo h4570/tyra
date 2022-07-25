@@ -1,0 +1,122 @@
+; ______       ____   ___
+;   |     \/   ____| |___|
+;   |     |   |   \  |   |
+;---------------------------------------------------------------
+; Copyright 2022, tyra - https://github.com/h4570/tyra
+; Licenced under Apache License 2.0
+; Sandro Sobczyński <sandro.sobczynski@gmail.com>
+;
+;---------------------------------------------------------------
+; Triangle list
+; Cull = Standard PS2 way. clipw polys are culled.
+; Directional lights
+;---------------------------------------------------------------
+
+.syntax new
+.name StaPipVU1Cull_D
+.vu
+.init_vf_all
+.init_vi_all
+
+#include "src/renderer/3d/pipeline/shared/vcl_sml.i"
+#include "src/renderer/3d/pipeline/shared/tyra_macros.i"
+#include "inc/renderer/3d/pipeline/static/core/programs/stapip_vu1_shared_defines.h"
+
+#define RGBA_STORE_OFFSET   0
+#define XYZ2_STORE_OFFSET   1
+
+--enter
+--endenter
+
+#vuprog StaPipVU1CullD
+
+    ResetClipFlags{ }
+    LoadTyraStaticData{ gifSetTag }
+    MatrixLoad{ mvp, VU1_MVP_MATRIX_ADDR, vi00 }
+    LoadTyraDirectionalLights{ lightMatrix, lightDirections, lightColors, ambientColor, VU1_LIGHTS_DIRS_ADDR, VU1_LIGHTS_COLORS_ADDR, VU1_LIGHTS_MATRIX_ADDR }
+    LoadTyraTags{ lodGifTag, texBufferClutGifTag, VU1_LOD_ADDR, VU1_CLUT_ADDR }
+
+begin:
+    xtop buffer
+    LoadTyraBufferTags{ scale, primTag, buffer }
+
+    iaddiu  vertexData,         buffer,         VU1_VERT_DATA_ADDR
+    ilw.w   vertexCount,        0(buffer)
+    iadd    normalData,         vertexData,     vertexCount
+    iadd    kickAddress,        normalData,     vertexCount
+    iadd    destAddress,        normalData,     vertexCount
+
+    StoreTyraGifTags{ gifSetTag, lodGifTag, texBufferClutGifTag, primTag, destAddress }
+
+    ;--- Loop
+    iadd vertexCounter, buffer, vertexCount
+vertexLoop:
+        ;--- Load vertex1
+        lq      vertex1,  (vertexData)
+        lq.xyz  normal1,  (normalData) 
+
+        ;--- Load vertex2
+        lq      vertex2,  1(vertexData)
+        lq.xyz  normal2,  1(normalData) 
+
+        ;--- Load vertex3
+        lq      vertex3,  2(vertexData)
+        lq.xyz  normal3,  2(normalData) 
+
+        ;--- Calculate vertex1
+        MatrixMultiplyVertex{ vertex1, mvp, vertex1 }
+        PerformClipCheck{ vertex1, destAddress, XYZ2_STORE_OFFSET }
+        VertexPersCorr{ vertex1, vertex1 }
+        ScaleVertexToGSFormat{ scale, vertex1 }
+        CalculateTyraDirectionalLights{ outputColor1, normal1, lightDirections, lightColors, lightMatrix, ambientColor }
+        FixColor{ outputColor1 }
+
+        ;--- Calculate vertex2
+        MatrixMultiplyVertex{ vertex2, mvp, vertex2 }
+        PerformClipCheck{ vertex2, destAddress, XYZ2_STORE_OFFSET+2 }
+        VertexPersCorr{ vertex2, vertex2 }
+        ScaleVertexToGSFormat{ scale, vertex2 }
+        CalculateTyraDirectionalLights{ outputColor2, normal2, lightDirections, lightColors, lightMatrix, ambientColor }
+        FixColor{ outputColor2 }
+
+        ;--- Calculate vertex3
+        MatrixMultiplyVertex{ vertex3, mvp, vertex3 }
+        PerformClipCheck{ vertex3, destAddress, XYZ2_STORE_OFFSET+4 }
+        VertexPersCorr{ vertex3, vertex3 }
+        ScaleVertexToGSFormat{ scale, vertex3 }
+        CalculateTyraDirectionalLights{ outputColor3, normal3, lightDirections, lightColors, lightMatrix, ambientColor }
+        FixColor{ outputColor3 }
+
+        ;--- Store vertex1 
+        sq      outputColor1,   RGBA_STORE_OFFSET(destAddress)
+        sq.xyz  vertex1,        XYZ2_STORE_OFFSET(destAddress)
+
+        ;--- Store vertex2
+        sq      outputColor2,   RGBA_STORE_OFFSET+2(destAddress)
+        sq.xyz  vertex2,        XYZ2_STORE_OFFSET+2(destAddress)
+
+        ;--- Store vertex3
+        sq      outputColor3,   RGBA_STORE_OFFSET+4(destAddress)
+        sq.xyz  vertex3,        XYZ2_STORE_OFFSET+4(destAddress)
+
+        ;-------------------------------
+
+        iaddiu  vertexData,     vertexData,     3      
+        iaddiu  normalData,     normalData,     3  
+        iaddiu  destAddress,    destAddress,    6
+
+        ;--- Fix loop
+        iaddi   vertexCounter,  vertexCounter,  -3  ; decrement the loop counter 
+        ibne    vertexCounter,  buffer, vertexLoop  ; and repeat if needed
+
+    xgkick kickAddress ; dispatch to the GS rasterizer.
+
+--barrier ; Why the hell I must add barrier AFTER XGKICK? VCL does not adds E bit without it...
+--cont
+
+    b   begin
+
+#endvuprog
+
+--exit
+--endexit

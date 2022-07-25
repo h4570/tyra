@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "./vec4.hpp"
+#include <string>
 
 namespace Tyra {
 

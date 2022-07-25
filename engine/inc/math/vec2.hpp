@@ -15,7 +15,6 @@ extern "C" {
 #include <tamtypes.h>
 }
 
-#include <iomanip>
 #include <string>
 #include "math/math.hpp"
 

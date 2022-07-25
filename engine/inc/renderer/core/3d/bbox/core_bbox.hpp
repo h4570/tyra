@@ -11,6 +11,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 #include "./core_bbox_frustum.hpp"
 #include "math/m4x4.hpp"
 #include "math/plane.hpp"

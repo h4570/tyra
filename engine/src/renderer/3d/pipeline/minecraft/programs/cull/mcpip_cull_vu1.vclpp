@@ -21,7 +21,7 @@
 .init_vf_all
 .init_vi_all
 
-#include "src/renderer/core/paths/path1/programs/vcl_sml.i"
+#include "src/renderer/3d/pipeline/shared/vcl_sml.i"
 #include "inc/renderer/3d/pipeline/minecraft/programs/cull/mcpip_vu1_cull_shared_defines.h"
 #include "src/renderer/3d/pipeline/minecraft/programs/cull/macros.i"
 

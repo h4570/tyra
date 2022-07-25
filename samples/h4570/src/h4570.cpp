@@ -11,14 +11,27 @@
 #include "h4570.hpp"
 #include "file/file_utils.hpp"
 #include "loaders/3d/md2/md2_loader.hpp"
+#include "thread/threading.hpp"
 
 namespace Tyra {
+
+float getRandomFloat(float a, float b) {
+  float random = ((float)rand()) / (float)RAND_MAX;
+  float diff = b - a;
+  float r = random * diff;
+  return a + r;
+}
+
+int getRandomInt(int a, int b) { return (rand() % (b - a + 1)) + a; }
 
 H4570::H4570(Engine* t_engine) { engine = t_engine; }
 H4570::~H4570() {}
 
-Mesh* getWarrior(Renderer* renderer);
-StdpipOptions* getRenderingOptions();
+StaticMesh* getStaticMesh(Renderer* renderer);
+DynamicMesh* getWarrior(Renderer* renderer);
+StaPipOptions* getStaPipOptions();
+DynPipOptions* getDynPipOptions();
+void setPipelineOptions(PipelineOptions* options);
 Sprite* get2DPicture(Renderer* renderer);
 
 void H4570::init() {
@@ -33,30 +46,29 @@ void H4570::init() {
 
   engine->renderer.setClearScreenColor(Color(64.0F, 64.0F, 64.0F));
 
-  warrior = getWarrior(&engine->renderer);
+  staticMesh = getStaticMesh(&engine->renderer);
 
-  auto* warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
+  warrior = getWarrior(&engine->renderer);
+  warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
       warrior->getMaterial(0)->getId());
 
-  warrior2 = new Mesh(*warrior);
-  warrior2->translation.translateX(-3.0F);
-  warriorTex->addLink(warrior2->getMaterial(0)->getId());
-  warrior2->playAnimation(0, warrior2->getFramesCount() - 1);
-  warrior2->setAnimSpeed(0.10F);
+  warriorsCount = 22;
+  warriors = new DynamicMesh*[warriorsCount];
+  for (u8 i = 0; i < warriorsCount; i++) {
+    warriors[i] = new DynamicMesh(*warrior);
+    warriors[i]->translation.translateX(-40.0F + static_cast<float>(i) * 4);
+    warriors[i]->translation.translateY(30.0F);
+    warriors[i]->translation.translateZ(-10.0F);
+    warriors[i]->translation.rotateX(-1.5F);
+    warriorTex->addLink(warriors[i]->getMaterial(0)->getId());
+    warriors[i]->playAnimation(0, warriors[i]->getFramesCount() - 1);
+    warriors[i]->setCurrentAnimationFrame(
+        getRandomInt(0, warriors[i]->getFramesCount() - 1));
+    warriors[i]->setAnimSpeed(getRandomFloat(0.1F, 0.9F));
+  }
 
-  warrior3 = new Mesh(*warrior);
-  warrior3->translation.translateX(-6.0F);
-  warriorTex->addLink(warrior3->getMaterial(0)->getId());
-  warrior3->playAnimation(0, warrior3->getFramesCount() - 1);
-  warrior3->setAnimSpeed(0.7F);
-
-  warrior4 = new Mesh(*warrior);
-  warrior4->translation.translateX(3.0F);
-  warriorTex->addLink(warrior4->getMaterial(0)->getId());
-  warrior4->playAnimation(0, warrior4->getFramesCount() - 1);
-  warrior4->setAnimSpeed(0.5F);
-
-  renderOptions = getRenderingOptions();
+  staOptions = getStaPipOptions();
+  dynOptions = getDynPipOptions();
 
   cameraPosition = Vec4(0.0F, 0.0F, 20.0F);
   cameraLookAt = *warrior->getPosition();
@@ -64,8 +76,9 @@ void H4570::init() {
   blocksTex = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("blocks.png"));
 
-  mcPip.init(&engine->renderer.core);
-  stdPip.init(&engine->renderer.core);
+  mcPip.setRenderer(&engine->renderer.core);
+  dynpip.setRenderer(&engine->renderer.core);
+  stapip.setRenderer(&engine->renderer.core);
 
   picture = get2DPicture(&engine->renderer);
 
@@ -100,30 +113,19 @@ void H4570::init() {
     blocks[i].color = Color(128.0F, 128.0F, 128.0F, 128.0F);
   }
 
-  engine->audio.playSong();
+  // engine->audio.playSong();
+  engine->renderer.setFrameLimit(false);
 }
 
 u32 counter = 0;
 
 void H4570::loop() {
-  if (counter++ > 100) {
+  if (counter++ > 30) {
+    // TYRA_LOG(engine->info.getFps());
     counter = 0;
-    TYRA_LOG(engine->info.getFps());
   }
 
-  warrior->animate();
-  warrior2->animate();
-  warrior3->animate();
-  warrior4->animate();
-
-  // if ((engine->pad.getPressed().DpadUp || engine->pad.getPressed().DpadDown
-  // ||
-  //      engine->pad.getPressed().DpadLeft ||
-  //      engine->pad.getPressed().DpadRight) &&
-  //     adpcmTimer.getTimeDelta() > 8000) {
-  //   adpcmTimer.prime();
-  //   engine->audio.playADPCM(adpcmSample, 1);
-  // }
+  for (u8 i = 0; i < warriorsCount; i++) warriors[i]->animate();
 
   engine->renderer.beginFrame(CameraInfo3D(&cameraPosition, &cameraLookAt));
   {
@@ -135,26 +137,43 @@ void H4570::loop() {
       blocks[i].model = translations[i] * rotations[i] * scales[i];
     }
 
-    // engine->renderer.renderer2D.render(picture);
+    engine->renderer.renderer3D.usePipeline(&stapip);
+    { stapip.render(staticMesh, staOptions); }
 
-    engine->renderer.renderer3D.usePipeline(&stdPip);
+    engine->renderer.renderer3D.usePipeline(&dynpip);
     {
-      stdPip.render(warrior, renderOptions);
-      // stdPip.render(warrior2, renderOptions);
-      // stdPip.render(warrior3, renderOptions);
-      // stdPip.render(warrior4, renderOptions);
+      Threading::switchThread();
+      for (u8 i = 0; i < warriorsCount; i++) {
+        dynpip.render(warriors[i], dynOptions);
+        if (i == 5) Threading::switchThread();
+        if (i == 10) Threading::switchThread();
+        if (i == 15) Threading::switchThread();
+      }
     }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);
-    { mcPip.render(blocks, blocksCount, blocksTex, false); }
+    { mcPip.render(blocks, blocksCount, blocksTex); }
   }
   engine->renderer.endFrame();
 }
 
-Mesh* getWarrior(Renderer* renderer) {
+StaticMesh* getStaticMesh(Renderer* renderer) {
   MD2Loader loader;
   auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), .08F, false);
-  auto* result = new Mesh(*data);
+  auto* result = new StaticMesh(*data);
+  // result->translation.translateZ(-30.0F);
+  delete data;
+
+  renderer->core.texture.repository.addByMesh(result, FileUtils::getCwd(),
+                                              "png");
+
+  return result;
+}
+
+DynamicMesh* getWarrior(Renderer* renderer) {
+  MD2Loader loader;
+  auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), .08F, false);
+  auto* result = new DynamicMesh(*data);
   // result->translation.translateZ(-30.0F);
   delete data;
 
@@ -179,9 +198,19 @@ Sprite* get2DPicture(Renderer* renderer) {
   return sprite;
 }
 
-StdpipOptions* getRenderingOptions() {
-  auto* options = new StdpipOptions();
+StaPipOptions* getStaPipOptions() {
+  auto* options = new StaPipOptions();
+  setPipelineOptions(options);
+  return options;
+}
 
+DynPipOptions* getDynPipOptions() {
+  auto* options = new DynPipOptions();
+  setPipelineOptions(options);
+  return options;
+}
+
+void setPipelineOptions(PipelineOptions* options) {
   auto* ambientColor = new Color(32.0F, 32.0F, 32.0F, 32.0F);
   auto* directionalColors = new Color[3];
   for (int i = 0; i < 3; i++) directionalColors[i].set(0.0F, 0.0F, 0.0F, 1.0F);
@@ -189,12 +218,12 @@ StdpipOptions* getRenderingOptions() {
   for (int i = 0; i < 3; i++)
     directionalDirections[i].set(1.0F, 1.0F, 1.0F, 1.0F);
 
-  auto* lightingOptions = new StdpipLightingOptions();  // Memory leak!
+  auto* lightingOptions = new PipelineLightingOptions();  // Memory leak!
   lightingOptions->ambientColor = ambientColor;
   lightingOptions->directionalColors = directionalColors;
   lightingOptions->directionalDirections = directionalDirections;
 
-  options->shadingType = Tyra::StdpipShadingGouraud;
+  options->shadingType = Tyra::TyraShadingGouraud;
   options->blendingEnabled = true;
   options->antiAliasingEnabled = false;
   options->lighting = lightingOptions;
@@ -204,8 +233,6 @@ StdpipOptions* getRenderingOptions() {
 
   directionalDirections[1].set(1.0F, 0.0F, 0.0F);
   directionalColors[1].set(96.0F, 0.0F, 0.0F);
-
-  return options;
 }
 
 }  // namespace Tyra

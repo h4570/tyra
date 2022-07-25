@@ -13,7 +13,7 @@
 #include <engine.hpp>
 #include <game.hpp>
 #include "renderer/3d/pipeline/minecraft/minecraft_pipeline.hpp"
-#include "renderer/3d/pipeline/std/std_pipeline.hpp"
+#include "renderer/3d/pipeline/static/static_pipeline.hpp"
 
 namespace Tyra {
 
@@ -28,7 +28,7 @@ class Wellinator : public Game {
  private:
   Engine* engine;
 
-  Mesh* warrior;
+  DynamicMesh* warrior;
   Sprite* picture;
   audsrv_adpcm_t* adpcmSample;
   Timer adpcmTimer;
@@ -36,8 +36,8 @@ class Wellinator : public Game {
   Vec4 cameraPosition, cameraLookAt;
 
   MinecraftPipeline mcPip;
-  StdPipeline stdPip;
-  StdpipOptions* renderOptions;
+  StaticPipeline stapip;
+  StaPipOptions* renderOptions;
   Texture* blocksTex;
 
   u32 blocksCount;

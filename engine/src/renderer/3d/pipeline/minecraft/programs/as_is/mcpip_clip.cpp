@@ -57,15 +57,15 @@ void McpipClip::initStaticPacket() {
 void McpipClip::addData(McpipBlock* block, const bool& isMulti,
                         RendererCoreTextureBuffers* texBuffers,
                         packet2_t* packet, const u8& context) {
-  std::vector<Path1ClipVertex> clippedVertices;
+  std::vector<EEClipVertex> clippedVertices;
   auto mvp = rendererCore->renderer3D.getViewProj() * block->model;
 
   const auto* blockData = isMulti ? multiBlockData : singleBlockData;
 
   for (u32 i = 0; i < blockData->count / 3; i++) {
     for (u8 j = 0; j < 3; j++) {
-      Path1ClipVertex vert = {mvp * blockData->vertices[i * 3 + j], Vec4(),
-                              blockData->textureCoords[i * 3 + j], Vec4()};
+      EEClipVertex vert = {mvp * blockData->vertices[i * 3 + j], Vec4(),
+                           blockData->textureCoords[i * 3 + j], Vec4()};
 
       inputTriangle.push_back(vert);
     }
@@ -93,7 +93,7 @@ void McpipClip::addData(McpipBlock* block, const bool& isMulti,
   addDataToPacket(packet, context, block, clippedVertices.size(), texBuffers);
 }
 
-void McpipClip::addCorrections(std::vector<Path1ClipVertex>* vertices,
+void McpipClip::addCorrections(std::vector<EEClipVertex>* vertices,
                                McpipBlock* block) {
   for (u32 i = 0; i < vertices->size(); i++) {
     (*vertices)[i].position /= (*vertices)[i].position.w;  // Perspective divide
@@ -101,7 +101,7 @@ void McpipClip::addCorrections(std::vector<Path1ClipVertex>* vertices,
   }
 }
 
-void McpipClip::moveDataToBuffer(std::vector<Path1ClipVertex>* vertices,
+void McpipClip::moveDataToBuffer(std::vector<EEClipVertex>* vertices,
                                  const u8& context) {
   for (u32 i = 0; i < vertices->size(); i++) {
     vertexBuffers[context][i].set(vertices->at(i).position);

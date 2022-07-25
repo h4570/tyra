@@ -24,7 +24,20 @@ MeshBuilderFrameData::MeshBuilderFrameData() {
   colorsCount = 0;
 }
 
-MeshBuilderFrameData::~MeshBuilderFrameData() {}
+MeshBuilderFrameData::~MeshBuilderFrameData() {
+  if (vertices) {
+    delete[] vertices;
+  }
+  if (normals) {
+    delete[] normals;
+  }
+  if (textureCoords) {
+    delete[] textureCoords;
+  }
+  if (colors) {
+    delete[] colors;
+  }
+}
 
 void MeshBuilderFrameData::allocateTextureCoords(const u32& count) {
   textureCoordsCount = count;

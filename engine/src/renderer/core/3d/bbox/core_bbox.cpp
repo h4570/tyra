@@ -10,6 +10,7 @@
 
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include "renderer/core/3d/bbox/core_bbox.hpp"
 
 namespace Tyra {

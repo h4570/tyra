@@ -30,7 +30,8 @@ RendererCoreTextureBuffers RendererCoreTextureSender::allocate(
   texbuffer_t* core = allocateTextureCore(t_texture);
   texbuffer_t* clut = nullptr;
 
-  if (t_texture->getClutData() != nullptr) {
+  auto texClut = t_texture->getClutData();
+  if (texClut != nullptr && texClut->width + texClut->height > 0) {
     clut = allocateTextureClut(t_texture);
   }
   return {t_texture->getId(), core, clut};
@@ -66,12 +67,11 @@ texbuffer_t* RendererCoreTextureSender::allocateTextureCore(
   TYRA_ASSERT(t_texture->getSizeInMB() <= getFreeVRamInMB(),
               "Not enough VRAM memory for texture!");
 
-  result->address =
+  auto address =
       graph_vram_allocate(t_texture->getWidth(), t_texture->getHeight(),
                           result->psm, GRAPH_ALIGN_BLOCK);
-
-  TYRA_ASSERT(result->address > 0,
-              "Texture buffer allocation error. No memory!");
+  TYRA_ASSERT(address > 0, "Texture buffer allocation error, no memory!");
+  result->address = address;
 
   allocatedVRamMemForTextures += t_texture->getSizeInMB();
   result->info.width = draw_log2(t_texture->getWidth());
@@ -89,8 +89,10 @@ texbuffer_t* RendererCoreTextureSender::allocateTextureClut(
   result->psm = clut->psm;
   result->info.components = clut->components;
 
-  result->address = graph_vram_allocate(clut->width, clut->height, result->psm,
-                                        GRAPH_ALIGN_BLOCK);
+  auto address = graph_vram_allocate(clut->width, clut->height, result->psm,
+                                     GRAPH_ALIGN_BLOCK);
+  TYRA_ASSERT(address > 0, "Texture clut buffer allocation error, no memory!");
+  result->address = address;
 
   result->info.width = draw_log2(clut->width);
   result->info.height = draw_log2(clut->height);

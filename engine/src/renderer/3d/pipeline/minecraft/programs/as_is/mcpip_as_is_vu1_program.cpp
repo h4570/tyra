@@ -22,7 +22,7 @@ McpipAsIsVU1Program::McpipAsIsVU1Program()
 McpipAsIsVU1Program::~McpipAsIsVU1Program() {}
 
 std::string McpipAsIsVU1Program::getStringName() const {
-  return std::string("As is");
+  return std::string("McPip - As is");
 }
 
 }  // namespace Tyra

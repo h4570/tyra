@@ -12,6 +12,7 @@
 
 #include "math/vec4.hpp"
 #include "math/math.hpp"
+#include <string>
 
 namespace Tyra {
 

@@ -18,7 +18,7 @@
 #include "../../mcpip_block.hpp"
 #include "../../data/mcpip_block_data.hpp"
 #include "./mcpip_vu1_as_is_shared_defines.h"
-#include "renderer/core/paths/path1/clipper/path1_ee_clip_algorithm.hpp"
+#include "renderer/core/3d/clipper/ee_clip_algorithm.hpp"
 
 namespace Tyra {
 
@@ -27,8 +27,8 @@ class McpipClip {
   McpipClip();
   ~McpipClip();
 
-  Path1EEClipAlgorithm algorithm;
-  Path1EEClipAlgorithmSettings algoSettings;
+  EEClipAlgorithm algorithm;
+  EEClipAlgorithmSettings algoSettings;
 
   void init(RendererCore* core, McpipBlockData* t_singleBlockData,
             McpipBlockData* t_multiBlockData);
@@ -48,16 +48,14 @@ class McpipClip {
   packet2_t* staticPacket;
   u16 vu1DBufferSize;
 
-  std::vector<Path1ClipVertex> clippedTriangle;
-  std::vector<Path1ClipVertex> inputTriangle;
+  std::vector<EEClipVertex> clippedTriangle;
+  std::vector<EEClipVertex> inputTriangle;
 
   Vec4 vertexBuffers[2][108];
   Vec4 texCoordBuffers[2][108];
 
-  void addCorrections(std::vector<Path1ClipVertex>* vertices,
-                      McpipBlock* block);
-  void moveDataToBuffer(std::vector<Path1ClipVertex>* vertices,
-                        const u8& context);
+  void addCorrections(std::vector<EEClipVertex>* vertices, McpipBlock* block);
+  void moveDataToBuffer(std::vector<EEClipVertex>* vertices, const u8& context);
   void addDataToPacket(packet2_t* packet, const u8& context, McpipBlock* block,
                        const int& count,
                        RendererCoreTextureBuffers* texBuffers);

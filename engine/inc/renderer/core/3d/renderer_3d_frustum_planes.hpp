@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <sstream>
+#include <string>
 #include "renderer/renderer_settings.hpp"
 #include "./camera_info_3d.hpp"
 #include "math/plane.hpp"

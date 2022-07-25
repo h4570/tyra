@@ -42,6 +42,10 @@ class BlockizerProgramsManager {
 
   void clearLastProgram() { lastProgramName = UndefinedMcpipProgram; }
 
+  void cullSpam(McpipBlock*** blockPointerArrays, u32* blockPointerArrayCounts,
+                u32 blockPointerArraysCount,
+                RendererCoreTextureBuffers* texBuffers, const bool& isMulti);
+
   void cull(McpipBlock** blockPointerArray, u32 blockPointerArrayCount,
             RendererCoreTextureBuffers* texBuffers, const bool& isMulti);
 
@@ -53,6 +57,9 @@ class BlockizerProgramsManager {
   }
 
   const McpipBlockData& getBlockData() const { return singleTexBlockData; }
+
+  void allocateOnUse();
+  void deallocateOnUse();
 
  private:
   McpipProgramsRepository repo;
@@ -69,6 +76,7 @@ class BlockizerProgramsManager {
 
   void setProgramsCache();
   void uploadBlock(bool isMulti);
+  void addProgram(McpipProgram* program);
   void sendPacket(McpipProgram* program);
 };
 

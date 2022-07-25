@@ -107,8 +107,6 @@ void McpipCull::sendVU1StaticData() {
 void McpipCull::addData(packet2_t* packet, McpipBlock** blockPointerArray,
                         u32 blockPointerArrayCount,
                         RendererCoreTextureBuffers* texBuffers, bool isMulti) {
-  packet2_reset(packet, false);
-
   rendererCore->texture.updateClutBuffer(texBuffers->clut);
 
   packet2_utils_vu_open_unpack(
