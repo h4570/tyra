@@ -15,8 +15,6 @@ int main()
     Engine engine = Engine();
     Cubes game = Cubes(&engine);
     game.engine->init(&game, 128);
-    Tyra_Version version;
-    version.Get();
     SleepThread();
     return 0;
 }

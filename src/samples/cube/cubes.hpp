@@ -14,7 +14,6 @@
 #include <tamtypes.h>
 #include <game.hpp>
 #include <engine.hpp>
-#include <utils/Tyra_version.hpp>
 #include "modules/texture_repository.hpp"
 #include "camera.hpp"
 #include "objects/cube.hpp"
@@ -36,7 +35,6 @@ class Cubes : public Game
         TextureRepository *texRepo;
         Cube *cube;
         Camera camera;
-        Tyra_Version *version;
 };
 
 #endif
