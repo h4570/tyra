@@ -19,9 +19,9 @@ DynPipCore::DynPipCore() {}
 
 DynPipCore::~DynPipCore() {}
 
-void DynPipCore::init(RendererCore* t_core, const u32& t_packetSize) {
+void DynPipCore::init(RendererCore* t_core) {
   rendererCore = t_core;
-  qbufferRenderer.init(t_core, &repository, t_packetSize);
+  qbufferRenderer.init(t_core, &repository);
 }
 
 void DynPipCore::reinitVU1Programs() { qbufferRenderer.reinitVU1(); }

@@ -25,7 +25,7 @@ class DynPipCore {
 
   DynPipProgramsRepository repository;
 
-  void init(RendererCore* t_core, const u32& t_packetSize);
+  void init(RendererCore* t_core);
 
   /** Force starting VU1 program instead of continueing */
   void clear() { qbufferRenderer.clearLastProgramName(); }
@@ -51,6 +51,11 @@ class DynPipCore {
    * Should be called if VU1 was used by your non standard programs.
    */
   void reinitVU1Programs();
+
+  void allocateOnUse(const u32& t_packetSize) {
+    qbufferRenderer.allocateOnUse(t_packetSize);
+  }
+  void deallocateOnUse() { qbufferRenderer.deallocateOnUse(); }
 
  private:
   M4x4 mvp;

@@ -19,6 +19,7 @@ Renderer3D::~Renderer3D() {}
 
 void Renderer3D::usePipeline(Renderer3DPipeline* pipeline) {
   if (currentPipeline != pipeline) {
+    if (currentPipeline) currentPipeline->onUseEnd();
     currentPipeline = pipeline;
     currentPipeline->onUse();
   }

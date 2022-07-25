@@ -19,8 +19,9 @@ class Renderer3DPipeline {
   Renderer3DPipeline() {}
   ~Renderer3DPipeline() {}
 
-  virtual void init(RendererCore* core) = 0;
+  virtual void setRenderer(RendererCore* core) = 0;
   virtual void onUse() = 0;
+  virtual void onUseEnd() = 0;
 };
 
 }  // namespace Tyra

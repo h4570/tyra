@@ -29,9 +29,10 @@ class MinecraftPipeline : public Renderer3DPipeline {
   MinecraftPipeline();
   ~MinecraftPipeline();
 
-  void init(RendererCore* core);
+  void setRenderer(RendererCore* core);
 
   void onUse();
+  void onUseEnd();
 
   /**
    * @brief Render voxels

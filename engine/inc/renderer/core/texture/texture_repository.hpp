@@ -95,19 +95,19 @@ class TextureRepository {
    * Remove texture from repository.
    * Texture is NOT destructed.
    */
-  void removeByIndex(const u32& t_index) {
-    textures.erase(textures.begin() + t_index);
-  }
+  void removeByIndex(const u32& t_index);
 
   /**
    * Remove texture from repository.
    * Texture is NOT destructed.
    */
-  const void removeById(const u32& t_texId) {
-    s32 index = getIndexOf(t_texId);
-    TYRA_ASSERT(index != -1, "Cant remove texture, because it was not found!");
-    removeByIndex(index);
-  }
+  void removeById(const u32& t_texId);
+
+  /**
+   * Remove texture from repository.
+   * Texture IS destructed.
+   */
+  void free(const u32& t_texId);
 
  private:
   std::vector<Texture*> textures;

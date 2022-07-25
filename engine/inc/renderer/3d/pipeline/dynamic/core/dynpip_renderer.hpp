@@ -21,8 +21,7 @@ class DynPipRenderer {
   DynPipRenderer();
   ~DynPipRenderer();
 
-  void init(RendererCore* t_core, DynPipProgramsRepository* t_programRepo,
-            const u32& t_packetSize);
+  void init(RendererCore* t_core, DynPipProgramsRepository* t_programRepo);
 
   void reinitVU1();
 
@@ -34,6 +33,9 @@ class DynPipRenderer {
   void clearLastProgramName();
 
   const u16& getBufferSize() { return bufferSize; }
+
+  void allocateOnUse(const u32& t_packetSize);
+  void deallocateOnUse();
 
  private:
   void sendStaticData() const;

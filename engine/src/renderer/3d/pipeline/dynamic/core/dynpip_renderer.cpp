@@ -18,35 +18,40 @@ DynPipRenderer::DynPipRenderer() {
   context = 0;
   bufferSize = 0;
   lastProgramName = DynPipProgramName::DynPipUndefinedProgram;
-  staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-  objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+
   programsPacket = nullptr;
 }
 
 DynPipRenderer::~DynPipRenderer() {
-  packet2_free(packets[0]);
-  packet2_free(packets[1]);
-  packet2_free(staticDataPacket);
-  packet2_free(objectDataPacket);
-
   if (programsPacket) packet2_free(programsPacket);
 }
 
+void DynPipRenderer::allocateOnUse(const u32& t_packetSize) {
+  staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+
+  for (u16 i = 0; i < 2; i++)
+    packets[i] =
+        packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+
+  sendStaticData();
+}
+
+void DynPipRenderer::deallocateOnUse() {
+  packet2_free(staticDataPacket);
+  packet2_free(objectDataPacket);
+
+  for (u16 i = 0; i < 2; i++) packet2_free(packets[i]);
+}
+
 void DynPipRenderer::init(RendererCore* t_core,
-                          DynPipProgramsRepository* t_programRepo,
-                          const u32& t_packetSize) {
+                          DynPipProgramsRepository* t_programRepo) {
   path1 = t_core->getPath1();
   rendererCore = t_core;
   programsRepo = t_programRepo;
 
   dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
   dma_channel_fast_waits(DMA_CHANNEL_VIF1);
-
-  packets[0] =
-      packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-
-  packets[1] =
-      packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
   setProgramsCache();
 
@@ -56,7 +61,6 @@ void DynPipRenderer::init(RendererCore* t_core,
 }
 
 void DynPipRenderer::reinitVU1() {
-  sendStaticData();
   uploadPrograms();
   setDoubleBuffer();
 }

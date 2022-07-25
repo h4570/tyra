@@ -41,8 +41,8 @@ void Wellinator::init() {
   blocksTex = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("blocks.png"));
 
-  mcPip.init(&engine->renderer.core);
-  stapip.init(&engine->renderer.core);
+  mcPip.setRenderer(&engine->renderer.core);
+  stapip.setRenderer(&engine->renderer.core);
 
   picture = get2DPicture(&engine->renderer);
 

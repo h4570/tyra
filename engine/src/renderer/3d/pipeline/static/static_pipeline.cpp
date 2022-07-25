@@ -13,16 +13,26 @@
 
 namespace Tyra {
 
-StaticPipeline::StaticPipeline() { colorsCache = new Vec4[4]; }
+StaticPipeline::StaticPipeline() {}
 
-StaticPipeline::~StaticPipeline() { delete[] colorsCache; }
+StaticPipeline::~StaticPipeline() {}
 
-void StaticPipeline::init(RendererCore* t_core) {
+void StaticPipeline::setRenderer(RendererCore* t_core) {
   rendererCore = t_core;
   core.init(t_core);
 }
 
-void StaticPipeline::onUse() { core.reinitVU1Programs(); }
+void StaticPipeline::onUse() {
+  colorsCache = new Vec4[4];
+  core.allocateOnUse();
+  core.reinitVU1Programs();
+}
+
+void StaticPipeline::onUseEnd() {
+  delete[] colorsCache;
+
+  core.deallocateOnUse();
+}
 
 void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
   auto model = mesh->getModelMatrix();

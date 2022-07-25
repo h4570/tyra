@@ -15,25 +15,36 @@ namespace Tyra {
 const u32 DynamicPipeline::buffersCount = 64;
 const u32 DynamicPipeline::halfBuffersCount = buffersCount / 2;
 
-DynamicPipeline::DynamicPipeline() {
-  colorsCache = new Vec4[4];
-  buffers = new DynPipBag[buffersCount];
-}
+DynamicPipeline::DynamicPipeline() {}
 
-DynamicPipeline::~DynamicPipeline() {
-  delete[] colorsCache;
-  for (u32 i = 0; i < buffersCount; i++) freeBuffer(&buffers[i]);
-  delete[] buffers;
-}
+DynamicPipeline::~DynamicPipeline() {}
 
-void DynamicPipeline::init(RendererCore* t_core) {
+void DynamicPipeline::setRenderer(RendererCore* t_core) {
   rendererCore = t_core;
+
+  core.init(t_core);
+}
+
+void DynamicPipeline::onUse() {
+  colorsCache = new Vec4[4];
+
+  buffers = new DynPipBag[buffersCount];
+
   auto packetSize =
       buffersCount * 5.1F;  // 5.1 = packet2_get_qw_count / buffersCount
-  core.init(t_core, static_cast<u32>(packetSize));
+
+  core.allocateOnUse(static_cast<u32>(packetSize));
+  core.reinitVU1Programs();
 }
 
-void DynamicPipeline::onUse() { core.reinitVU1Programs(); }
+void DynamicPipeline::onUseEnd() {
+  delete[] colorsCache;
+
+  for (u32 i = 0; i < buffersCount; i++) freeBuffer(&buffers[i]);
+  delete[] buffers;
+
+  core.deallocateOnUse();
+}
 
 void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   auto model = mesh->getModelMatrix();

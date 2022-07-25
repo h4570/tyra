@@ -35,9 +35,11 @@ class DynamicPipeline : public Renderer3DPipeline {
 
   DynPipCore core;
 
-  void init(RendererCore* core);
+  void setRenderer(RendererCore* core);
 
   void onUse();
+
+  void onUseEnd();
 
   /**
    * Render dynamic model.

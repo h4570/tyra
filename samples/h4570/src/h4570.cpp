@@ -76,9 +76,9 @@ void H4570::init() {
   blocksTex = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("blocks.png"));
 
-  mcPip.init(&engine->renderer.core);
-  dynpip.init(&engine->renderer.core);
-  stapip.init(&engine->renderer.core);
+  mcPip.setRenderer(&engine->renderer.core);
+  dynpip.setRenderer(&engine->renderer.core);
+  stapip.setRenderer(&engine->renderer.core);
 
   picture = get2DPicture(&engine->renderer);
 
@@ -121,7 +121,7 @@ u32 counter = 0;
 
 void H4570::loop() {
   if (counter++ > 30) {
-    TYRA_LOG(engine->info.getFps());
+    // TYRA_LOG(engine->info.getFps());
     counter = 0;
   }
 

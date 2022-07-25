@@ -58,6 +58,9 @@ class BlockizerProgramsManager {
 
   const McpipBlockData& getBlockData() const { return singleTexBlockData; }
 
+  void allocateOnUse();
+  void deallocateOnUse();
+
  private:
   McpipProgramsRepository repo;
   Renderer* renderer;

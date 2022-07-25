@@ -65,6 +65,9 @@ class StaPipQBufferRenderer {
 
   const u16& getBufferSize() { return bufferSize; }
 
+  void allocateOnUse();
+  void deallocateOnUse();
+
  private:
   bool is1stDBufferFlushTime();
   bool is2ndDBufferFlushTime();
@@ -74,6 +77,7 @@ class StaPipQBufferRenderer {
   void uploadPrograms();
   void setDoubleBuffer();
   u16 getQBufferIndex(StaPipQBuffer* buffer);
+  u16 qbuffersPacketSize;
 
   static const u16 buffersCount;
 
@@ -88,7 +92,7 @@ class StaPipQBufferRenderer {
   packet2_t* programsPacket;
 
   packet2_t** packets;
-  StaPipVU1Program** programs;  // dbuffer
+  StaPipVU1Program** dBufferPrograms;
   StaPipQBuffer** buffers;
   packet2_t* currentPacket;
   packet2_t* staticDataPacket;

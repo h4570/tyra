@@ -16,16 +16,23 @@ BlockizerProgramsManager::BlockizerProgramsManager() {
   lastProgramName = UndefinedMcpipProgram;
   context = 0;
   vu1BlockData = BlockNotUploaded;
-  dynamicPackets[0] = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-  dynamicPackets[1] = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-  staticPacket = packet2_create(2, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+
   setProgramsCache();
 }
 
-BlockizerProgramsManager::~BlockizerProgramsManager() {
+void BlockizerProgramsManager::allocateOnUse() {
+  dynamicPackets[0] = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  dynamicPackets[1] = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  staticPacket = packet2_create(2, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+}
+
+void BlockizerProgramsManager::deallocateOnUse() {
   packet2_free(dynamicPackets[0]);
   packet2_free(dynamicPackets[1]);
   packet2_free(staticPacket);
+}
+
+BlockizerProgramsManager::~BlockizerProgramsManager() {
   packet2_free(programsPacket);
 }
 

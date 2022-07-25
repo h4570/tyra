@@ -17,8 +17,6 @@ namespace Tyra {
 MinecraftPipeline::MinecraftPipeline() {
   latestMode = UndefinedMcpipProgram;
   spamBuffersCount = 4;
-  spamBuffers = new McpipBlock**[spamBuffersCount];
-  spamCounts = new u32[spamBuffersCount];
   spammerIndex = 0;
 }
 
@@ -26,11 +24,9 @@ MinecraftPipeline::~MinecraftPipeline() {
   if (bbox) {
     delete bbox;
   }
-  delete[] spamBuffers;
-  delete[] spamCounts;
 }
 
-void MinecraftPipeline::init(RendererCore* core) {
+void MinecraftPipeline::setRenderer(RendererCore* core) {
   rendererCore = core;
   manager.init(core);
 
@@ -38,9 +34,19 @@ void MinecraftPipeline::init(RendererCore* core) {
 }
 
 void MinecraftPipeline::onUse() {
+  spamBuffers = new McpipBlock**[spamBuffersCount];
+  spamCounts = new u32[spamBuffersCount];
+  manager.allocateOnUse();
+
   manager.uploadVU1Programs();
 
   changeMode(McPipCull, true);
+}
+
+void MinecraftPipeline::onUseEnd() {
+  delete[] spamBuffers;
+  delete[] spamCounts;
+  manager.deallocateOnUse();
 }
 
 void MinecraftPipeline::initBBox() {

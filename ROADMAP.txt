@@ -1,10 +1,6 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 --- H4570
-- [Renderer] Allocate dynamic pipeline memory only in "onUse" (core,qbuffrenderer,pipeline..)
-- [Texture] Unload texture
-- [Texture] Dont load loaded texture by name
-
 - [Loaders] Think about ".tyrobj" format - implement it (add multicolor support)
 - [Loaders] DFF loader as static Mesh loader
 - [Game] Update intellisense from docker

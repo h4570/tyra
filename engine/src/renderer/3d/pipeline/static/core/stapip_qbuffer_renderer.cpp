@@ -42,38 +42,43 @@ StaPipQBufferRenderer::StaPipQBufferRenderer() {
   context = 0;
   lastProgramName = StaPipUndefinedProgram;
 
-  u32 qbuffersPacketSize = 4 * buffersCount;
+  qbuffersPacketSize = 4 * buffersCount;
+  programsPacket = nullptr;
+}
 
-  packets = new packet2_t*[buffersCount];
-  packets[0] =
-      packet2_create(qbuffersPacketSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-  packets[1] =
-      packet2_create(qbuffersPacketSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-
+void StaPipQBufferRenderer::allocateOnUse() {
   staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
-  programsPacket = nullptr;
+  packets = new packet2_t*[buffersCount];
+  for (u16 i = 0; i < 2; i++)
+    packets[i] =
+        packet2_create(qbuffersPacketSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
   buffers = new StaPipQBuffer*[buffersCount];
-  programs = new StaPipVU1Program*[buffersCount];
   for (u16 i = 0; i < buffersCount; i++) {
     buffers[i] = new StaPipQBuffer();
   }
+
+  dBufferPrograms = new StaPipVU1Program*[buffersCount];
+
+  sendStaticData();
 }
-StaPipQBufferRenderer::~StaPipQBufferRenderer() {
+
+void StaPipQBufferRenderer::deallocateOnUse() {
   packet2_free(staticDataPacket);
   packet2_free(objectDataPacket);
-  packet2_free(packets[0]);
-  packet2_free(packets[1]);
 
-  for (u16 i = 0; i < buffersCount; i++) {
-    delete buffers[i];
-  }
-
+  for (u16 i = 0; i < 2; i++) packet2_free(packets[i]);
   delete[] packets;
+
+  for (u16 i = 0; i < buffersCount; i++) delete buffers[i];
   delete[] buffers;
 
+  delete[] dBufferPrograms;
+}
+
+StaPipQBufferRenderer::~StaPipQBufferRenderer() {
   if (programsPacket) packet2_free(programsPacket);
 }
 
@@ -93,7 +98,6 @@ void StaPipQBufferRenderer::init(RendererCore* t_core) {
 }
 
 void StaPipQBufferRenderer::reinitVU1() {
-  sendStaticData();
   uploadPrograms();
   setDoubleBuffer();
 }
@@ -239,7 +243,7 @@ void StaPipQBufferRenderer::cull(StaPipQBuffer* buffer) {
     return;
   }
 
-  programs[getQBufferIndex(buffer)] = getCullProgramByBag(buffer->bag);
+  dBufferPrograms[getQBufferIndex(buffer)] = getCullProgramByBag(buffer->bag);
 
   auto is1stDBuffer = is1stDBufferFlushTime();
   auto is2ndDBuffer = is2ndDBufferFlushTime();
@@ -256,7 +260,7 @@ void StaPipQBufferRenderer::clip(StaPipQBuffer* buffer) {
     return;
   }
 
-  programs[getQBufferIndex(buffer)] = getAsIsProgramByBag(buffer->bag);
+  dBufferPrograms[getQBufferIndex(buffer)] = getAsIsProgramByBag(buffer->bag);
 
   clipper.clip(buffer);
 
@@ -282,13 +286,13 @@ void StaPipQBufferRenderer::addBufferDataToPacket(StaPipQBuffer** buffers,
   for (u32 i = 0; i < count; i++) {
     if (!buffers[i]->any()) continue;
 
-    programs[i]->addBufferDataToPacket(currentPacket, buffers[i],
-                                       &rendererCore->gs.prim);
+    dBufferPrograms[i]->addBufferDataToPacket(currentPacket, buffers[i],
+                                              &rendererCore->gs.prim);
 
-    if (lastProgramName != programs[i]->getName()) {
-      packet2_utils_vu_add_start_program(currentPacket,
-                                         programs[i]->getDestinationAddress());
-      lastProgramName = programs[i]->getName();
+    if (lastProgramName != dBufferPrograms[i]->getName()) {
+      packet2_utils_vu_add_start_program(
+          currentPacket, dBufferPrograms[i]->getDestinationAddress());
+      lastProgramName = dBufferPrograms[i]->getName();
     } else {
       packet2_utils_vu_add_continue_program(currentPacket);
     }

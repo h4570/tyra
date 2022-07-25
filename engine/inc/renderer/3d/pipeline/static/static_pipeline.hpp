@@ -35,9 +35,11 @@ class StaticPipeline : public Renderer3DPipeline {
 
   StaPipCore core;
 
-  void init(RendererCore* core);
+  void setRenderer(RendererCore* core);
 
   void onUse();
+
+  void onUseEnd();
 
   /**
    * Render static model

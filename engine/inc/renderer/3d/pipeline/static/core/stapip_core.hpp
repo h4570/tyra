@@ -47,6 +47,9 @@ class StaPipCore {
    */
   void reinitVU1Programs();
 
+  void allocateOnUse() { qbufferRenderer.allocateOnUse(); }
+  void deallocateOnUse() { qbufferRenderer.deallocateOnUse(); }
+
  private:
   u32 maxVertCount;
   RendererCore* rendererCore;

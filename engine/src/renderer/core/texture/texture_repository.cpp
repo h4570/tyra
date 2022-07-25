@@ -46,6 +46,26 @@ Texture* TextureRepository::add(Texture* texture) {
   return texture;
 }
 
+void TextureRepository::removeByIndex(const u32& t_index) {
+  textures.erase(textures.begin() + t_index);
+}
+
+void TextureRepository::removeById(const u32& t_texId) {
+  s32 index = getIndexOf(t_texId);
+  TYRA_ASSERT(index != -1, "Cant remove texture, because it was not found!");
+  removeByIndex(index);
+}
+
+void TextureRepository::free(const u32& t_texId) {
+  s32 index = getIndexOf(t_texId);
+  auto* tex = textures[index];
+
+  TYRA_ASSERT(index != -1, "Cant remove texture, because it was not found!");
+  removeByIndex(index);
+
+  delete tex;
+}
+
 Texture* TextureRepository::add(const char* fullpath) {
   TextureLoader& loader = texLoaderSelector.getLoaderByFileName(fullpath);
 
