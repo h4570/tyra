@@ -21,6 +21,8 @@ void RendererSettings::copy(RendererSettings* out, const RendererSettings* in) {
   out->far = in->far;
   out->projectionScale = in->projectionScale;
   out->aspectRatio = in->aspectRatio;
+  out->interlacedHeightF = in->interlacedHeightF;
+  out->interlacedHeightUI = in->interlacedHeightUI;
 }
 
 void RendererSettings::set(const RendererSettings& v) { copy(this, &v); }
@@ -38,7 +40,8 @@ std::string RendererSettings::getPrint() const {
   res << "near: " << near << ", ";
   res << "far: " << far << ", ";
   res << "projectionScale: " << projectionScale << ", ";
-  res << "aspectRatio: " << aspectRatio;
+  res << "aspectRatio: " << aspectRatio << ", ";
+  res << "interlaced height: " << interlacedHeightF;
   res << ")";
   return res.str();
 }

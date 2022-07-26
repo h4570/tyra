@@ -75,8 +75,8 @@ MD2Loader::MD2Loader() {}
 
 MD2Loader::~MD2Loader() {}
 
-MeshBuilderData* MD2Loader::load(const char* fullpath, const float& t_scale,
-                                 const u8& t_invertT) {
+MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
+                                 const bool& invertT) {
   std::string path = fullpath;
   TYRA_ASSERT(!path.empty(), "Provided path is empty!");
 
@@ -131,11 +131,11 @@ MeshBuilderData* MD2Loader::load(const char* fullpath, const float& t_scale,
     for (u32 i = 0; i < vertexCount; i++) {
       temp.set(
           ((frame->verts[i].v[0] * frame->scale[0]) + frame->translate[0]) *
-              t_scale,
+              scale,
           ((frame->verts[i].v[1] * frame->scale[1]) + frame->translate[1]) *
-              t_scale,
+              scale,
           ((frame->verts[i].v[2] * frame->scale[2]) + frame->translate[2]) *
-              t_scale);
+              scale);
 
       result->frames[j]->vertices[i].set(temp);
 
@@ -159,7 +159,7 @@ MeshBuilderData* MD2Loader::load(const char* fullpath, const float& t_scale,
     temp.set(static_cast<float>(texCoord->s) / header.skinwidth,
              static_cast<float>(texCoord->t) / header.skinheight, 1.0F, 0.0F);
 
-    if (t_invertT) temp.y = 1.0F - temp.y;
+    if (invertT) temp.y = 1.0F - temp.y;
 
     for (u32 j = 0; j < framesCount; j++)
       result->frames[j]->textureCoords[i].set(temp);

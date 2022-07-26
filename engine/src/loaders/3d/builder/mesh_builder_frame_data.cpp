@@ -40,21 +40,25 @@ MeshBuilderFrameData::~MeshBuilderFrameData() {
 }
 
 void MeshBuilderFrameData::allocateTextureCoords(const u32& count) {
+  if (count == 0) return;
   textureCoordsCount = count;
   textureCoords = new Vec4[count];
 }
 
 void MeshBuilderFrameData::allocateVertices(const u32& count) {
+  if (count == 0) return;
   verticesCount = count;
   vertices = new Vec4[count];
 }
 
 void MeshBuilderFrameData::allocateNormals(const u32& count) {
+  if (count == 0) return;
   normalsCount = count;
   normals = new Vec4[count];
 }
 
 void MeshBuilderFrameData::allocateColors(const u32& count) {
+  if (count == 0) return;
   colorsCount = count;
   colors = new Color[count];
 }

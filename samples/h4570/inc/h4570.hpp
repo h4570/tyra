@@ -30,6 +30,7 @@ class H4570 : public Game {
  private:
   Engine* engine;
 
+  DynamicMesh* cube;
   StaticMesh* staticMesh;
   DynamicMesh* warrior;
   u8 warriorsCount;

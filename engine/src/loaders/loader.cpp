@@ -26,4 +26,9 @@ std::string Loader::getFilenameWithoutExtension(const std::string& filename) {
   return filename.substr(0, lastindex);
 }
 
+std::string Loader::getExtensionOfFilename(const std::string& filename) {
+  auto lastindex = filename.find_last_of(".");
+  return filename.substr(lastindex + 1);
+}
+
 }  // namespace Tyra

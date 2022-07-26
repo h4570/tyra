@@ -11,6 +11,7 @@
 #include "h4570.hpp"
 #include "file/file_utils.hpp"
 #include "loaders/3d/md2/md2_loader.hpp"
+#include "loaders/3d/tyrobj/tyrobj_loader.hpp"
 #include "thread/threading.hpp"
 
 namespace Tyra {
@@ -29,6 +30,7 @@ H4570::~H4570() {}
 
 StaticMesh* getStaticMesh(Renderer* renderer);
 DynamicMesh* getWarrior(Renderer* renderer);
+DynamicMesh* getCube(Renderer* renderer);
 StaPipOptions* getStaPipOptions();
 DynPipOptions* getDynPipOptions();
 void setPipelineOptions(PipelineOptions* options);
@@ -36,7 +38,6 @@ Sprite* get2DPicture(Renderer* renderer);
 
 void H4570::init() {
   // Song
-
   engine->audio.loadSong(FileUtils::fromCwd("mafikizolo-loot.wav"));
   engine->audio.setSongLoop(true);
   engine->audio.setSongVolume(30);
@@ -47,6 +48,8 @@ void H4570::init() {
   engine->renderer.setClearScreenColor(Color(64.0F, 64.0F, 64.0F));
 
   staticMesh = getStaticMesh(&engine->renderer);
+
+  cube = getCube(&engine->renderer);
 
   warrior = getWarrior(&engine->renderer);
   warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
@@ -120,8 +123,9 @@ void H4570::init() {
 u32 counter = 0;
 
 void H4570::loop() {
-  if (counter++ > 30) {
-    // TYRA_LOG(engine->info.getFps());
+  if (counter++ > 100) {
+    TYRA_LOG("Free RAM: ", engine->info.getAvailableRAM(), " MB");
+    TYRA_LOG("FPS: ", engine->info.getFps());
     counter = 0;
   }
 
@@ -137,11 +141,14 @@ void H4570::loop() {
       blocks[i].model = translations[i] * rotations[i] * scales[i];
     }
 
+    engine->renderer.renderer2D.render(picture);
+
     engine->renderer.renderer3D.usePipeline(&stapip);
     { stapip.render(staticMesh, staOptions); }
 
     engine->renderer.renderer3D.usePipeline(&dynpip);
     {
+      // dynpip.render(cube);
       Threading::switchThread();
       for (u8 i = 0; i < warriorsCount; i++) {
         dynpip.render(warriors[i], dynOptions);
@@ -179,6 +186,46 @@ DynamicMesh* getWarrior(Renderer* renderer) {
 
   renderer->core.texture.repository.addByMesh(result, FileUtils::getCwd(),
                                               "png");
+
+  result->playAnimation(0, result->getFramesCount() - 1);
+  result->setAnimSpeed(0.15F);
+
+  return result;
+}
+
+DynamicMesh* getCube(Renderer* renderer) {
+  TyrobjLoader loader;
+  auto* data =
+      loader.load(FileUtils::fromCwd("untitled.tyrobj"), 2, .08F, false);
+
+  TYRA_LOG("Frames count: ", data->framesCount);
+  TYRA_LOG("Materials count: ", data->materialsCount);
+
+  for (u32 i = 0; i < data->framesCount; i++) {
+    TYRA_LOG("Vertex count ", i, ": ", data->frames[i]->verticesCount);
+    for (u32 j = 0; j < data->frames[i]->verticesCount; j++) {
+      TYRA_LOG("Vertex ", j, ": ", data->frames[i]->vertices[j].getPrint());
+    }
+
+    TYRA_LOG("Normals count ", i, ": ", data->frames[i]->normalsCount);
+    for (u32 j = 0; j < data->frames[i]->normalsCount; j++) {
+      TYRA_LOG("Normal ", j, ": ", data->frames[i]->normals[j].getPrint());
+    }
+  }
+
+  for (u32 i = 0; i < data->materialsCount; i++) {
+    TYRA_LOG("Material ", i, ": ", data->materials[i]->name);
+    TYRA_LOG("Faces count: ", data->materials[i]->count);
+    for (u32 j = 0; j < data->materials[i]->count; j++) {
+      TYRA_LOG("Vertex face ", j, ": ", data->materials[i]->vertexFaces);
+      TYRA_LOG("Normal face ", j, ": ", data->materials[i]->normalFaces);
+    }
+  }
+
+  TYRA_BREAKPOINT();
+  auto* result = new DynamicMesh(*data);
+  // result->translation.translateZ(-30.0F);
+  delete data;
 
   result->playAnimation(0, result->getFramesCount() - 1);
   result->setAnimSpeed(0.15F);

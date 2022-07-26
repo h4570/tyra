@@ -20,12 +20,12 @@ class MD2Loader : public Loader {
   MD2Loader();
   ~MD2Loader();
 
-  MeshBuilderData* load(const char* fullpath, const float& t_scale,
-                        const u8& t_invertT);
+  MeshBuilderData* load(const char* fullpath, const float& scale,
+                        const bool& invertT);
 
-  inline MeshBuilderData* load(const std::string& fullpath,
-                               const float& t_scale, const u8& t_invertT) {
-    return load(fullpath.c_str(), t_scale, t_invertT);
+  inline MeshBuilderData* load(const std::string& fullpath, const float& scale,
+                               const bool& invertT) {
+    return load(fullpath.c_str(), scale, invertT);
   }
 };
 

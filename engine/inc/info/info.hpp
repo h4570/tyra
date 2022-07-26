@@ -11,6 +11,7 @@
 #pragma once
 
 #include <tamtypes.h>
+#include <stddef.h>
 #include "time/timer.hpp"
 
 namespace Tyra {
@@ -25,8 +26,13 @@ class Info {
 
   const u32& getFps() const { return fps; };
 
+  /** @return Available RAM in MB */
+  float getAvailableRAM();
+
  private:
   float calcFps();
+  void* allocateLargestFreeRAMBlock(size_t* size);
+  size_t getFreeRAMSize();
 
   u8 fpsDelayer;
   u32 fps;

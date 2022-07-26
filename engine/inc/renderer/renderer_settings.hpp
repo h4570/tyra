@@ -20,10 +20,12 @@ class RendererSettings {
   RendererSettings()
       : width(640.0F),
         height(448.0F),
+        interlacedHeightF(height / 2),
         near(0.1F),
         far(4096.0F),
         projectionScale(4096.0F),
-        aspectRatio(width / height) {}
+        aspectRatio(width / height),
+        interlacedHeightUI(static_cast<unsigned int>(interlacedHeightF)) {}
   ~RendererSettings();
 
   const float& getWidth() const { return width; }
@@ -32,10 +34,9 @@ class RendererSettings {
   const float& getFar() const { return far; }
   const float& getProjectionScale() const { return projectionScale; }
   const float& getAspectRatio() const { return aspectRatio; }
-
-  float getInterlacedHeightF() const { return getHeight() / 2; }
-  unsigned int getInterlacedHeightUI() const {
-    return static_cast<unsigned int>(getInterlacedHeightF());
+  const float& getInterlacedHeightF() const { return interlacedHeightF; }
+  const unsigned int& getInterlacedHeightUI() const {
+    return interlacedHeightUI;
   }
 
   static void copy(RendererSettings* out, const RendererSettings* in);
@@ -45,7 +46,9 @@ class RendererSettings {
   std::string getPrint() const;
 
  private:
-  float width, height, near, far, projectionScale, aspectRatio;
+  float width, height, interlacedHeightF, near, far, projectionScale,
+      aspectRatio;
+  unsigned int interlacedHeightUI;
 };
 
 }  // namespace Tyra
