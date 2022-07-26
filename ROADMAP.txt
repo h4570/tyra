@@ -1,7 +1,6 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 --- H4570
-- [Loaders] ".tyrobj" format
 - [Loaders] DFF loader as static Mesh loader
 - [Game] Update intellisense from docker
 - [Texture] Test cache hits with large amount of textures (dolphin sample?)

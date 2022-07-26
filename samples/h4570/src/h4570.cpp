@@ -130,6 +130,7 @@ void H4570::loop() {
   }
 
   for (u8 i = 0; i < warriorsCount; i++) warriors[i]->animate();
+  cube->animate();
 
   engine->renderer.beginFrame(CameraInfo3D(&cameraPosition, &cameraLookAt));
   {
@@ -148,7 +149,7 @@ void H4570::loop() {
 
     engine->renderer.renderer3D.usePipeline(&dynpip);
     {
-      // dynpip.render(cube);
+      dynpip.render(cube);
       Threading::switchThread();
       for (u8 i = 0; i < warriorsCount; i++) {
         dynpip.render(warriors[i], dynOptions);
@@ -196,35 +197,10 @@ DynamicMesh* getWarrior(Renderer* renderer) {
 DynamicMesh* getCube(Renderer* renderer) {
   TyrobjLoader loader;
   auto* data =
-      loader.load(FileUtils::fromCwd("untitled.tyrobj"), 2, .08F, false);
+      loader.load(FileUtils::fromCwd("untitled.tyrobj"), 2, 3.0F, false);
 
-  TYRA_LOG("Frames count: ", data->framesCount);
-  TYRA_LOG("Materials count: ", data->materialsCount);
-
-  for (u32 i = 0; i < data->framesCount; i++) {
-    TYRA_LOG("Vertex count ", i, ": ", data->frames[i]->verticesCount);
-    for (u32 j = 0; j < data->frames[i]->verticesCount; j++) {
-      TYRA_LOG("Vertex ", j, ": ", data->frames[i]->vertices[j].getPrint());
-    }
-
-    TYRA_LOG("Normals count ", i, ": ", data->frames[i]->normalsCount);
-    for (u32 j = 0; j < data->frames[i]->normalsCount; j++) {
-      TYRA_LOG("Normal ", j, ": ", data->frames[i]->normals[j].getPrint());
-    }
-  }
-
-  for (u32 i = 0; i < data->materialsCount; i++) {
-    TYRA_LOG("Material ", i, ": ", data->materials[i]->name);
-    TYRA_LOG("Faces count: ", data->materials[i]->count);
-    for (u32 j = 0; j < data->materials[i]->count; j++) {
-      TYRA_LOG("Vertex face ", j, ": ", data->materials[i]->vertexFaces);
-      TYRA_LOG("Normal face ", j, ": ", data->materials[i]->normalFaces);
-    }
-  }
-
-  TYRA_BREAKPOINT();
   auto* result = new DynamicMesh(*data);
-  // result->translation.translateZ(-30.0F);
+  result->translation.translateZ(-30.0F);
   delete data;
 
   result->playAnimation(0, result->getFramesCount() - 1);
