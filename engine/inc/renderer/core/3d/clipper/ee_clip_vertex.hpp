@@ -18,4 +18,8 @@ struct EEClipVertex {
   Vec4 position, normal, st, color;
 };
 
+struct EEClipVertexPtrs {
+  Vec4 *position, *normal, *st, *color;
+};
+
 }  // namespace Tyra

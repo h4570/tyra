@@ -48,8 +48,9 @@ class McpipClip {
   packet2_t* staticPacket;
   u16 vu1DBufferSize;
 
-  std::vector<EEClipVertex> clippedTriangle;
-  std::vector<EEClipVertex> inputTriangle;
+  Vec4 inputVerts[3];
+  EEClipVertexPtrs inputTriangle[3];
+  EEClipVertex clippedTriangle[9];
 
   Vec4 vertexBuffers[2][108];
   Vec4 texCoordBuffers[2][108];

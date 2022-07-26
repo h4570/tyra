@@ -28,25 +28,25 @@ class EEClipAlgorithm {
 
   void init(const RendererSettings& settings);
 
-  void clip(std::vector<EEClipVertex>* o_vertices,
-            const std::vector<EEClipVertex>& vertices,
-            const EEClipAlgorithmSettings& settings);
+  u8 clip(EEClipVertex* o_vertices, EEClipVertexPtrs* i_vertices,
+          const EEClipAlgorithmSettings& settings);
 
   static float clipMargin;
 
  private:
   float halfWidth, halfHeight, near, far;
-  std::vector<EEClipVertex> tempVertices;
+  EEClipVertex* tempVertices;
 
   float getValueByPlane(const EEClipVertex& v, const int& plane);
 
   bool isInside(const int& plane, const float& v, const float& w,
                 const float& planeLimitValue);
 
-  void clipAgainstPlane(const std::vector<EEClipVertex>& original,
-                        std::vector<EEClipVertex>* clipped, const int& plane,
-                        const float& planeLimitValue,
-                        const EEClipAlgorithmSettings& settings);
+  /** @return clipped size */
+  u8 clipAgainstPlane(EEClipVertex* original, const u8& originalSize,
+                      EEClipVertex* clipped, const int& plane,
+                      const float& planeLimitValue,
+                      const EEClipAlgorithmSettings& settings);
 };
 
 }  // namespace Tyra

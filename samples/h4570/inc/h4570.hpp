@@ -30,6 +30,7 @@ class H4570 : public Game {
  private:
   Engine* engine;
 
+  StaticMesh* skybox;
   DynamicMesh* cube;
   StaticMesh* staticMesh;
   DynamicMesh* warrior;
@@ -44,6 +45,7 @@ class H4570 : public Game {
   MinecraftPipeline mcPip;
   DynamicPipeline dynpip;
   StaticPipeline stapip;
+  StaPipOptions* skyboxOptions;
   StaPipOptions* staOptions;
   DynPipOptions* dynOptions;
   Texture* warriorTex;

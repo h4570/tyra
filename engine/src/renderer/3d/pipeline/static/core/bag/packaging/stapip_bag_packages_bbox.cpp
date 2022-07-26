@@ -52,6 +52,11 @@ StaPipBagPackagesBBox::StaPipBagPackagesBBox(Vec4* t_vertices,
   mainBBox = new RenderBBox(*bboxParts, 0, partsCount);
 }
 
+StaPipBagPackagesBBox::~StaPipBagPackagesBBox() {
+  delete bboxParts;
+  delete mainBBox;
+}
+
 const RenderBBox& StaPipBagPackagesBBox::getChildBBox1By3(
     const u32& index) const {
   TYRA_ASSERT(index < partsCount,
@@ -104,11 +109,6 @@ std::string StaPipBagPackagesBBox::getPrint(const char* name) const {
 
   res << ")";
   return res.str();
-}
-
-StaPipBagPackagesBBox::~StaPipBagPackagesBBox() {
-  delete bboxParts;
-  delete mainBBox;
 }
 
 }  // namespace Tyra

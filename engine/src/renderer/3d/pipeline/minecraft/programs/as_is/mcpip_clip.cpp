@@ -64,24 +64,20 @@ void McpipClip::addData(McpipBlock* block, const bool& isMulti,
 
   for (u32 i = 0; i < blockData->count / 3; i++) {
     for (u8 j = 0; j < 3; j++) {
-      EEClipVertex vert = {mvp * blockData->vertices[i * 3 + j], Vec4(),
-                           blockData->textureCoords[i * 3 + j], Vec4()};
-
-      inputTriangle.push_back(vert);
+      inputVerts[j] = mvp * blockData->vertices[i * 3 + j];
+      inputTriangle[j] = {&inputVerts[j], nullptr,
+                          &blockData->textureCoords[i * 3 + j], nullptr};
     }
 
-    clippedTriangle.clear();
+    u8 clippedSize =
+        algorithm.clip(clippedTriangle, inputTriangle, algoSettings);
 
-    algorithm.clip(&clippedTriangle, inputTriangle, algoSettings);
+    if (clippedSize == 0) continue;
 
-    inputTriangle.clear();
-
-    if (clippedTriangle.size() == 0) continue;
-
-    auto va = clippedTriangle.at(0);
-    for (u32 j = 1; j <= clippedTriangle.size() - 2; j++) {
-      auto vb = clippedTriangle.at(j);
-      auto vc = clippedTriangle.at((j + 1) % clippedTriangle.size());
+    auto va = clippedTriangle[0];
+    for (u8 j = 1; j <= clippedSize - 2; j++) {
+      auto vb = clippedTriangle[j];
+      auto vc = clippedTriangle[(j + 1) % clippedSize];
       clippedVertices.push_back(va);
       clippedVertices.push_back(vb);
       clippedVertices.push_back(vc);

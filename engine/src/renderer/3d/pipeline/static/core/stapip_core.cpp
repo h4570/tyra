@@ -91,7 +91,12 @@ void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
     frustumCheck = renderBbox->getMainBBox()->clipIsInFrustum(
         rendererCore->renderer3D.frustumPlanes.getAll(), *bag->info->model);
 
-    if (frustumCheck == OUTSIDE_FRUSTUM) return;
+    if (frustumCheck == OUTSIDE_FRUSTUM) {
+      if (frustumCull && !bbox) {
+        delete renderBbox;
+      }
+      return;
+    }
   }
 
   packager.setRenderBBox(renderBbox);
@@ -157,7 +162,9 @@ void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
     }
   }
 
-  if (frustumCull && !bbox) delete renderBbox;
+  if (frustumCull && !bbox) {
+    delete renderBbox;
+  }
   if (texBuffers) delete texBuffers;
 
   qbufferRenderer.flushBuffers();

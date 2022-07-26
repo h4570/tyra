@@ -18,7 +18,12 @@ namespace Tyra {
 
 class PipelineOptions {
  public:
-  PipelineOptions() { lighting = nullptr; }
+  PipelineOptions() {
+    lighting = nullptr;
+    antiAliasingEnabled = false;
+    blendingEnabled = true;
+    shadingType = TyraShadingFlat;
+  }
   ~PipelineOptions() {}
 
   PipelineFrustumCulling frustumCulling;

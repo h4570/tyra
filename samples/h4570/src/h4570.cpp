@@ -30,6 +30,7 @@ H4570::~H4570() {}
 
 StaticMesh* getStaticMesh(Renderer* renderer);
 DynamicMesh* getWarrior(Renderer* renderer);
+StaticMesh* getSkybox(Renderer* renderer);
 DynamicMesh* getCube(Renderer* renderer);
 StaPipOptions* getStaPipOptions();
 DynPipOptions* getDynPipOptions();
@@ -48,6 +49,7 @@ void H4570::init() {
   engine->renderer.setClearScreenColor(Color(64.0F, 64.0F, 64.0F));
 
   staticMesh = getStaticMesh(&engine->renderer);
+  skybox = getSkybox(&engine->renderer);
 
   cube = getCube(&engine->renderer);
 
@@ -55,7 +57,7 @@ void H4570::init() {
   warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
       warrior->getMaterial(0)->getId());
 
-  warriorsCount = 22;
+  warriorsCount = 12;
   warriors = new DynamicMesh*[warriorsCount];
   for (u8 i = 0; i < warriorsCount; i++) {
     warriors[i] = new DynamicMesh(*warrior);
@@ -71,6 +73,11 @@ void H4570::init() {
   }
 
   staOptions = getStaPipOptions();
+
+  skyboxOptions = new StaPipOptions();
+  skyboxOptions->fullClipChecks = true;
+  skyboxOptions->frustumCulling = PipelineFrustumCulling_Precise;
+
   dynOptions = getDynPipOptions();
 
   cameraPosition = Vec4(0.0F, 0.0F, 20.0F);
@@ -88,9 +95,8 @@ void H4570::init() {
   u32 rows = 16;     // 64
   u32 columns = 16;  // 64
   blocksCount = rows * columns;
-  float initialCameraZ = -400.0F;
 
-  float offset = 40.0F;
+  float offset = 4.0F;
   blocks = new McpipBlock[blocksCount];
   translations = new M4x4[blocksCount];
   rotations = new M4x4[blocksCount];
@@ -101,10 +107,9 @@ void H4570::init() {
     u32 column = i % columns;
     u32 row = i / rows;
 
-    scales[i].scale(10.0F);
     translations[i].translateX(row * offset - center);
     translations[i].translateY(column * offset - center);
-    translations[i].translateZ(initialCameraZ);
+    translations[i].translateZ(-50.0F);
 
     u32 randRow = rand() % (rows + 1);
     u32 randColumn = rand() % (columns + 1);
@@ -117,7 +122,7 @@ void H4570::init() {
   }
 
   // engine->audio.playSong();
-  engine->renderer.setFrameLimit(false);
+  // engine->renderer.setFrameLimit(false);
 }
 
 u32 counter = 0;
@@ -132,6 +137,8 @@ void H4570::loop() {
   for (u8 i = 0; i < warriorsCount; i++) warriors[i]->animate();
   cube->animate();
 
+  skybox->rotation.rotateY(0.02F);
+
   engine->renderer.beginFrame(CameraInfo3D(&cameraPosition, &cameraLookAt));
   {
     for (u32 i = 0; i < blocksCount; i++) {
@@ -142,25 +149,28 @@ void H4570::loop() {
       blocks[i].model = translations[i] * rotations[i] * scales[i];
     }
 
-    engine->renderer.renderer2D.render(picture);
+    // engine->renderer.renderer2D.render(picture);
 
     engine->renderer.renderer3D.usePipeline(&stapip);
-    { stapip.render(staticMesh, staOptions); }
-
-    engine->renderer.renderer3D.usePipeline(&dynpip);
     {
-      dynpip.render(cube);
-      Threading::switchThread();
-      for (u8 i = 0; i < warriorsCount; i++) {
-        dynpip.render(warriors[i], dynOptions);
-        if (i == 5) Threading::switchThread();
-        if (i == 10) Threading::switchThread();
-        if (i == 15) Threading::switchThread();
-      }
+      // stapip.render(staticMesh, staOptions);
+      stapip.render(skybox, skyboxOptions);
     }
 
-    engine->renderer.renderer3D.usePipeline(&mcPip);
-    { mcPip.render(blocks, blocksCount, blocksTex); }
+    // engine->renderer.renderer3D.usePipeline(&dynpip);
+    // {
+    //   dynpip.render(cube);
+    //   Threading::switchThread();
+    //   for (u8 i = 0; i < warriorsCount; i++) {
+    //     dynpip.render(warriors[i], dynOptions);
+    //     if (i == 5) Threading::switchThread();
+    //     if (i == 10) Threading::switchThread();
+    //     if (i == 15) Threading::switchThread();
+    //   }
+    // }
+
+    // engine->renderer.renderer3D.usePipeline(&mcPip);
+    // { mcPip.render(blocks, blocksCount, blocksTex); }
   }
   engine->renderer.endFrame();
 }
@@ -174,6 +184,20 @@ StaticMesh* getStaticMesh(Renderer* renderer) {
 
   renderer->core.texture.repository.addByMesh(result, FileUtils::getCwd(),
                                               "png");
+
+  return result;
+}
+
+StaticMesh* getSkybox(Renderer* renderer) {
+  TyrobjLoader loader;
+  auto* data =
+      loader.load(FileUtils::fromCwd("skybox/skybox.tyrobj"), 1, 50.0F, true);
+  auto* result = new StaticMesh(*data);
+  result->translation.translateZ(-30.0F);
+  delete data;
+
+  renderer->core.texture.repository.addByMesh(
+      result, FileUtils::fromCwd("skybox/"), "png");
 
   return result;
 }

@@ -77,7 +77,6 @@ void RendererCoreGS::allocateBuffers() {
   zBuffer.address =
       graph_vram_allocate(frameBuffers[0].width, frameBuffers[0].height,
                           zBuffer.zsm, GRAPH_ALIGN_PAGE);
-  TYRA_LOG("Framebuffers, zBuffer set and allocated!");
 
   graph_set_mode(GRAPH_MODE_INTERLACED, GRAPH_MODE_NTSC, GRAPH_MODE_FRAME,
                  GRAPH_ENABLE);
@@ -95,6 +94,8 @@ void RendererCoreGS::allocateBuffers() {
 
   spaceOccupiedByZBuffer = spaceOccupiedByFrameBuffers;
   spaceOccupiedByFrameBuffers *= 2;
+
+  TYRA_LOG("Framebuffers, zBuffer set and allocated!");
 }
 
 void RendererCoreGS::initDrawingEnvironment() {

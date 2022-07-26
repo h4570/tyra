@@ -39,6 +39,10 @@ class StaPipClipper {
   EEClipAlgorithm algorithm;
   M4x4* mvp;
 
+  Vec4 inputVerts[3];
+  EEClipVertexPtrs inputTriangle[3];
+  EEClipVertex clippedTriangle[9];
+
   void perspectiveDivide(std::vector<EEClipVertex>* vertices);
   void moveDataToBuffer(const std::vector<EEClipVertex>& vertices,
                         StaPipQBuffer* buffer);

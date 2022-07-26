@@ -12,34 +12,52 @@
 
 namespace Tyra {
 
-EEClipAlgorithm::EEClipAlgorithm() {}
+EEClipAlgorithm::EEClipAlgorithm() { tempVertices = new EEClipVertex[9]; }
 
-EEClipAlgorithm::~EEClipAlgorithm() {}
+EEClipAlgorithm::~EEClipAlgorithm() { delete[] tempVertices; }
 
 float EEClipAlgorithm::clipMargin = -10.0F;
 
 void EEClipAlgorithm::init(const RendererSettings& settings) {
-  halfWidth = settings.getWidth() / 2;
-  halfHeight = settings.getHeight() / 2;
+  // halfWidth = settings.getWidth() / 2;
+  // halfHeight = settings.getHeight() / 2;
+  halfWidth = 0.5F;
+  halfHeight = 0.5F;
   near = settings.getNear() - (-clipMargin);
   far = -settings.getFar();
 }
 
-void EEClipAlgorithm::clip(std::vector<EEClipVertex>* o_vertices,
-                           const std::vector<EEClipVertex>& vertices,
-                           const EEClipAlgorithmSettings& settings) {
-  tempVertices.clear();
-
-  for (u32 i = 0; i < vertices.size(); i++) {
-    o_vertices->push_back(vertices.at(i));
+u8 EEClipAlgorithm::clip(EEClipVertex* o_vertices, EEClipVertexPtrs* i_vertices,
+                         const EEClipAlgorithmSettings& settings) {
+  for (int i = 0; i < 3; i++) {
+    o_vertices[i].position = *i_vertices[i].position;
+    if (settings.lerpColors) o_vertices[i].color = *i_vertices[i].color;
+    if (settings.lerpNormals) o_vertices[i].normal = *i_vertices[i].normal;
+    if (settings.lerpTexCoords) o_vertices[i].st = *i_vertices[i].st;
   }
 
-  clipAgainstPlane(*o_vertices, &tempVertices, 1, halfWidth, settings);
-  clipAgainstPlane(tempVertices, o_vertices, 1, -halfWidth, settings);
-  clipAgainstPlane(*o_vertices, &tempVertices, 2, halfHeight, settings);
-  clipAgainstPlane(tempVertices, o_vertices, 2, -halfHeight, settings);
-  clipAgainstPlane(*o_vertices, &tempVertices, 3, near, settings);
-  clipAgainstPlane(tempVertices, o_vertices, 4, far, settings);
+  u8 tempVerticesSize = 0;
+  u8 outputSize = 0;
+
+  tempVerticesSize =
+      clipAgainstPlane(o_vertices, 3, tempVertices, 1, halfWidth, settings);
+
+  outputSize = clipAgainstPlane(tempVertices, tempVerticesSize, o_vertices, 1,
+                                -halfWidth, settings);
+
+  tempVerticesSize = clipAgainstPlane(o_vertices, outputSize, tempVertices, 2,
+                                      halfHeight, settings);
+
+  outputSize = clipAgainstPlane(tempVertices, tempVerticesSize, o_vertices, 2,
+                                -halfHeight, settings);
+
+  tempVerticesSize =
+      clipAgainstPlane(o_vertices, outputSize, tempVertices, 3, near, settings);
+
+  outputSize = clipAgainstPlane(tempVertices, tempVerticesSize, o_vertices, 4,
+                                far, settings);
+
+  return outputSize;
 }
 
 float EEClipAlgorithm::getValueByPlane(const EEClipVertex& v,
@@ -70,22 +88,23 @@ bool EEClipAlgorithm::isInside(const int& plane, const float& v, const float& w,
   }
 }
 
-void EEClipAlgorithm::clipAgainstPlane(
-    const std::vector<EEClipVertex>& original,
-    std::vector<EEClipVertex>* clipped, const int& plane,
-    const float& planeLimitValue, const EEClipAlgorithmSettings& settings) {
-  clipped->clear();
+u8 EEClipAlgorithm::clipAgainstPlane(EEClipVertex* original,
+                                     const u8& originalSize,
+                                     EEClipVertex* clipped, const int& plane,
+                                     const float& planeLimitValue,
+                                     const EEClipAlgorithmSettings& settings) {
+  int clippedSize = 0;
 
-  for (u32 i = 0; i < original.size(); i++) {
-    auto a = original.at(i);
-    auto b = original.at((i + 1) % original.size());
+  for (u32 i = 0; i < originalSize; i++) {
+    auto a = original[i];
+    auto b = original[(i + 1) % originalSize];
     auto apx = getValueByPlane(a, plane);
     auto bpx = getValueByPlane(b, plane);
     auto aIsInside = isInside(plane, apx, a.position.w, planeLimitValue);
     auto bIsInside = isInside(plane, bpx, b.position.w, planeLimitValue);
 
     if (aIsInside) {
-      clipped->push_back(a);
+      clipped[clippedSize++] = a;
     }
 
     if (aIsInside != bIsInside) {
@@ -96,17 +115,22 @@ void EEClipAlgorithm::clipAgainstPlane(
                     ((b.position.w - a.position.w) * planeLimitValue -
                      (bpx - apx));
 
-      EEClipVertex nb = {
-          Vec4::getByLerp(a.position, b.position, p),
-          settings.lerpNormals ? Vec4::getByLerp(a.normal, b.normal, p)
-                               : Vec4(),
-          settings.lerpTexCoords ? Vec4::getByLerp(a.st, b.st, p) : Vec4(),
-          settings.lerpColors ? Vec4::getByLerp(a.color, b.color, p) : Vec4(),
-      };
+      auto index = clippedSize++;
 
-      clipped->push_back(nb);
+      clipped[index].position = Vec4::getByLerp(a.position, b.position, p);
+
+      if (settings.lerpNormals)
+        clipped[index].normal = Vec4::getByLerp(a.normal, b.normal, p);
+
+      if (settings.lerpTexCoords)
+        clipped[index].st = Vec4::getByLerp(a.st, b.st, p);
+
+      if (settings.lerpColors)
+        clipped[index].color = Vec4::getByLerp(a.color, b.color, p);
     }
   }
+
+  return clippedSize;
 }
 
 }  // namespace Tyra

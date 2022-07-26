@@ -34,26 +34,24 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
   std::vector<EEClipVertex> clippedVertices;
 
   for (u32 i = 0; i < buffer->size / 3; i++) {
-    std::vector<EEClipVertex> inputTriangle;
     for (u8 j = 0; j < 3; j++) {
-      EEClipVertex vert = {
-          *mvp * buffer->vertices[i * 3 + j],
-          buffer->bag->lighting ? buffer->normals[i * 3 + j] : Vec4(),
-          buffer->bag->texture ? buffer->sts[i * 3 + j] : Vec4(),
-          buffer->bag->color->many ? buffer->colors[i * 3 + j] : Vec4()};
-
-      inputTriangle.push_back(vert);
+      inputVerts[j] = *mvp * buffer->vertices[i * 3 + j];
+      inputTriangle[j] = {
+          &inputVerts[j],
+          buffer->bag->lighting ? &buffer->normals[i * 3 + j] : nullptr,
+          buffer->bag->texture ? &buffer->sts[i * 3 + j] : nullptr,
+          buffer->bag->color->many ? &buffer->colors[i * 3 + j] : nullptr};
     }
 
-    std::vector<EEClipVertex> clippedTriangle;
-    algorithm.clip(&clippedTriangle, inputTriangle, algoSettings);
+    u8 clippedSize =
+        algorithm.clip(clippedTriangle, inputTriangle, algoSettings);
 
-    if (clippedTriangle.size() == 0) continue;
+    if (clippedSize == 0) continue;
 
-    auto va = clippedTriangle.at(0);
-    for (u32 j = 1; j <= clippedTriangle.size() - 2; j++) {
-      auto vb = clippedTriangle.at(j);
-      auto vc = clippedTriangle.at((j + 1) % clippedTriangle.size());
+    auto va = clippedTriangle[0];
+    for (u8 j = 1; j <= clippedSize - 2; j++) {
+      auto vb = clippedTriangle[j];
+      auto vc = clippedTriangle[(j + 1) % clippedSize];
       clippedVertices.push_back(va);
       clippedVertices.push_back(vb);
       clippedVertices.push_back(vc);

@@ -31,7 +31,9 @@ MeshBuilderData* TyrobjLoader::load(const char* fullpath, const u16& count,
   auto rawFilename = getFilenameWithoutExtension(path);
   auto extension = getExtensionOfFilename(path);
 
-  auto firstFile = rawFilename + "1." + extension;
+  std::string firstFile = path;
+  if (count > 1) firstFile = rawFilename + "1." + extension;
+
   FILE* firstFileHandler = fopen(firstFile.c_str(), "rb");
   TYRA_ASSERT(firstFileHandler != nullptr, "Failed to load: ", firstFile);
   auto data = scan(firstFileHandler, count);
@@ -46,10 +48,12 @@ MeshBuilderData* TyrobjLoader::load(const char* fullpath, const u16& count,
   result->manyColorsEnabled = data.colorsCount > 0;
 
   for (u16 i = 1; i <= count; i++) {
-    auto path = rawFilename + std::to_string(i) + "." + extension;
-    FILE* fileHandler = fopen(path.c_str(), "rb");
-    TYRA_ASSERT(fileHandler != nullptr, "Failed to load: ", path);
-    loadFile(fileHandler, path, i - 1, data, result);
+    std::string filePath = rawFilename + std::to_string(i) + "." + extension;
+    if (count == 1) filePath = path;
+
+    FILE* fileHandler = fopen(filePath.c_str(), "rb");
+    TYRA_ASSERT(fileHandler != nullptr, "Failed to load: ", filePath);
+    loadFile(fileHandler, filePath, i - 1, data, result);
     fclose(fileHandler);
   }
 
