@@ -5,15 +5,15 @@
 #-----------------------------------------------------------------------
 # Copyright 2020, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
-# Wellington Carvalho <wellcoj@gmail.com>
+# Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
 #include "engine.hpp"
-#include "wellinator.hpp"
+#include "tutorial_01.hpp"
 
 int main() {
   Tyra::Engine engine;
-  Tyra::Wellinator game(&engine);
+  Tyra::Tutorial01 game(&engine);
   engine.run(&game);
   SleepThread();
   return 0;

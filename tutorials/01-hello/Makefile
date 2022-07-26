@@ -1,4 +1,4 @@
-TARGET      := wellinator.elf
+TARGET      := tutorial_01.elf
 ENGINEDIR	:= ../../engine
 
 #The Directories, Source, Includes, Objects, Binary and Resources
@@ -21,4 +21,4 @@ LIBDIRS     :=
 INC         := -I$(INCDIR)
 INCDEP      := -I$(INCDIR)
 
-include ../Makefile.samples-base
+include ../Makefile.tutorials-base

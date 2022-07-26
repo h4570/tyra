@@ -19,10 +19,10 @@
 
 namespace Tyra {
 
-class H4570 : public Game {
+class Tutorial01 : public Game {
  public:
-  H4570(Engine* engine);
-  ~H4570();
+  Tutorial01(Engine* engine);
+  ~Tutorial01();
 
   void init();
   void loop();

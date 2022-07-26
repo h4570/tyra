@@ -8,7 +8,7 @@
 # Wellington Carvalho <wellcoj@gmail.com>
 */
 
-#include "h4570.hpp"
+#include "tutorial_01.hpp"
 #include "file/file_utils.hpp"
 #include "loaders/3d/md2/md2_loader.hpp"
 #include "loaders/3d/tyrobj/tyrobj_loader.hpp"
@@ -25,8 +25,8 @@ float getRandomFloat(float a, float b) {
 
 int getRandomInt(int a, int b) { return (rand() % (b - a + 1)) + a; }
 
-H4570::H4570(Engine* t_engine) { engine = t_engine; }
-H4570::~H4570() {}
+Tutorial01 ::Tutorial01(Engine* t_engine) { engine = t_engine; }
+Tutorial01 ::~Tutorial01() {}
 
 StaticMesh* getStaticMesh(Renderer* renderer);
 DynamicMesh* getWarrior(Renderer* renderer);
@@ -37,7 +37,7 @@ DynPipOptions* getDynPipOptions();
 void setPipelineOptions(PipelineOptions* options);
 Sprite* get2DPicture(Renderer* renderer);
 
-void H4570::init() {
+void Tutorial01 ::init() {
   // Song
   engine->audio.loadSong(FileUtils::fromCwd("mafikizolo-loot.wav"));
   engine->audio.setSongLoop(true);
@@ -127,7 +127,7 @@ void H4570::init() {
 
 u32 counter = 0;
 
-void H4570::loop() {
+void Tutorial01 ::loop() {
   if (counter++ > 100) {
     TYRA_LOG("Free RAM: ", engine->info.getAvailableRAM(), " MB");
     TYRA_LOG("FPS: ", engine->info.getFps());
