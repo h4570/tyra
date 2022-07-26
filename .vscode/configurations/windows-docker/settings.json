@@ -1,5 +1,5 @@
 {
-    "buildDirectory": "tutorials/01-hello",
+    "buildDirectory": "demo",
     "C_Cpp.default.intelliSenseMode": "gcc-x86",
     "files.associations": {
         "*.vcl": "asm-collection",
