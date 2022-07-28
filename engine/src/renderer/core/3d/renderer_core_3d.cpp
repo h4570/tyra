@@ -37,7 +37,7 @@ void RendererCore3D::setFov(const float& t_fov) {
 
 void RendererCore3D::setProjection() {
   projection = M4x4::perspective(
-      fov, settings->getWidth(), settings->getInterlacedHeightF(),
+      fov, settings->getWidth(), settings->getHeight(),
       settings->getProjectionScale(), settings->getAspectRatio(),
       settings->getNear(), settings->getFar());
 }

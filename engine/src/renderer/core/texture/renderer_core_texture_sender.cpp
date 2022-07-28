@@ -49,7 +49,7 @@ void RendererCoreTextureSender::deallocate(
   graph_vram_free(texBuffers.core->address);
   delete texBuffers.core;
 
-  if (texBuffers.clut != nullptr) {
+  if (texBuffers.clut != nullptr && texBuffers.clut->width > 0) {
     graph_vram_free(texBuffers.clut->address);
     delete texBuffers.clut;
   }

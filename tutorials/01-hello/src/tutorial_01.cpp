@@ -57,7 +57,7 @@ void Tutorial01 ::init() {
   warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
       warrior->getMaterial(0)->getId());
 
-  warriorsCount = 12;
+  warriorsCount = 22;
   warriors = new DynamicMesh*[warriorsCount];
   for (u8 i = 0; i < warriorsCount; i++) {
     warriors[i] = new DynamicMesh(*warrior);
@@ -90,7 +90,10 @@ void Tutorial01 ::init() {
   dynpip.setRenderer(&engine->renderer.core);
   stapip.setRenderer(&engine->renderer.core);
 
-  picture = get2DPicture(&engine->renderer);
+  picturesCount = 1;
+  pictures = new Sprite*[picturesCount];
+  for (u32 i = 0; i < picturesCount; i++)
+    pictures[i] = get2DPicture(&engine->renderer);
 
   u32 rows = 16;     // 64
   u32 columns = 16;  // 64
@@ -149,28 +152,29 @@ void Tutorial01 ::loop() {
       blocks[i].model = translations[i] * rotations[i] * scales[i];
     }
 
-    // engine->renderer.renderer2D.render(picture);
+    for (u32 i = 0; i < picturesCount; i++)
+      engine->renderer.renderer2D.render(pictures[i]);
 
     engine->renderer.renderer3D.usePipeline(&stapip);
     {
-      // stapip.render(staticMesh, staOptions);
+      stapip.render(staticMesh, staOptions);
       stapip.render(skybox, skyboxOptions);
     }
 
-    // engine->renderer.renderer3D.usePipeline(&dynpip);
-    // {
-    //   dynpip.render(cube);
-    //   Threading::switchThread();
-    //   for (u8 i = 0; i < warriorsCount; i++) {
-    //     dynpip.render(warriors[i], dynOptions);
-    //     if (i == 5) Threading::switchThread();
-    //     if (i == 10) Threading::switchThread();
-    //     if (i == 15) Threading::switchThread();
-    //   }
-    // }
+    engine->renderer.renderer3D.usePipeline(&dynpip);
+    {
+      dynpip.render(cube);
+      Threading::switchThread();
+      for (u8 i = 0; i < warriorsCount; i++) {
+        dynpip.render(warriors[i], dynOptions);
+        if (i == 5) Threading::switchThread();
+        if (i == 10) Threading::switchThread();
+        if (i == 15) Threading::switchThread();
+      }
+    }
 
-    // engine->renderer.renderer3D.usePipeline(&mcPip);
-    // { mcPip.render(blocks, blocksCount, blocksTex); }
+    engine->renderer.renderer3D.usePipeline(&mcPip);
+    { mcPip.render(blocks, blocksCount, blocksTex); }
   }
   engine->renderer.endFrame();
 }
@@ -237,7 +241,7 @@ Sprite* get2DPicture(Renderer* renderer) {
   auto* sprite = new Sprite;
 
   sprite->size.set(128.0F, 128.0F);
-  sprite->position.set(500.0F, 280.0F);
+  sprite->position.set(300.0F, 280.0F);
 
   renderer->core.texture.repository.add(FileUtils::fromCwd("reward.png"))
       ->addLink(sprite->getId());

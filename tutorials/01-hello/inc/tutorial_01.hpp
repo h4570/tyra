@@ -36,7 +36,8 @@ class Tutorial01 : public Game {
   DynamicMesh* warrior;
   u8 warriorsCount;
   DynamicMesh** warriors;
-  Sprite* picture;
+  u32 picturesCount;
+  Sprite** pictures;
   audsrv_adpcm_t* adpcmSample;
   Timer adpcmTimer;
 

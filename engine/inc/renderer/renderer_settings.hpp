@@ -18,7 +18,7 @@ namespace Tyra {
 class RendererSettings {
  public:
   RendererSettings()
-      : width(640.0F),
+      : width(512.0F),
         height(448.0F),
         interlacedHeightF(height / 2),
         near(0.1F),
