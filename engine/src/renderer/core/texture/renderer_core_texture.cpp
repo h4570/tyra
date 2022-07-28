@@ -39,13 +39,15 @@ void RendererCoreTexture::updateClutBuffer(texbuffer_t* clutBuffer) {
 RendererCoreTextureBuffers RendererCoreTexture::useTexture(Texture* t_tex) {
   TYRA_ASSERT(t_tex != nullptr, "Provided nullptr texture!");
 
-  cacheManager.addRequestedTexture(t_tex);
+  // cacheManager.addRequestedTexture(t_tex);
 
   auto allocated = getAllocatedBuffersByTextureId(t_tex->getId());
   if (allocated.id != 0) return allocated;
 
-  while (t_tex->getSizeInMB() > sender.getFreeVRamInMB()) {
-    auto idToDealloc = cacheManager.getTextureIdToDealloc(currentAllocations);
+  while ((t_tex->getSizeInMB()) > sender.getFreeVRamInMB()) {
+    // auto idToDealloc =
+    // cacheManager.getTextureIdToDealloc(currentAllocations);
+    auto idToDealloc = currentAllocations.back().id;
     auto buffToDealloc = getAllocatedBuffersByTextureId(idToDealloc);
     sender.deallocate(buffToDealloc);
     unregisterAllocation(idToDealloc);

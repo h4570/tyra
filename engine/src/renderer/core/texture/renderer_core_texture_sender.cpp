@@ -31,7 +31,7 @@ RendererCoreTextureBuffers RendererCoreTextureSender::allocate(
   texbuffer_t* clut = nullptr;
 
   auto texClut = t_texture->getClutData();
-  if (texClut != nullptr && texClut->width + texClut->height > 0) {
+  if (texClut != nullptr && texClut->width > 0) {
     clut = allocateTextureClut(t_texture);
   }
   return {t_texture->getId(), core, clut};
@@ -46,15 +46,18 @@ float RendererCoreTextureSender::getSizeInMB(texbuffer_t* texBuffer) {
 
 void RendererCoreTextureSender::deallocate(
     const RendererCoreTextureBuffers& texBuffers) {
-  graph_vram_free(texBuffers.core->address);
-  delete texBuffers.core;
-
-  if (texBuffers.clut != nullptr) {
+  if (texBuffers.clut != nullptr && texBuffers.clut->width > 0) {
     graph_vram_free(texBuffers.clut->address);
     delete texBuffers.clut;
   }
 
-  allocatedVRamMemForTextures -= getSizeInMB(texBuffers.core);
+  graph_vram_free(texBuffers.core->address);
+
+  float deallocateSize = getSizeInMB(texBuffers.core);
+
+  delete texBuffers.core;
+
+  allocatedVRamMemForTextures -= deallocateSize;
 }
 
 texbuffer_t* RendererCoreTextureSender::allocateTextureCore(

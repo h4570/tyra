@@ -72,12 +72,13 @@ void RendererCore2D::render(Sprite* sprite,
   rect->color.q = 0;
 
   rect->v0.x = sprite->position.x;
-  rect->v0.y = sprite->position.y / 2.0F;  // interlacing
+  rect->v0.y = sprite->position.y;
+  // rect->v0.y /= 2.0F;  // interlacing
   rect->v0.z = (u32)-1;
 
   rect->v1.x = (sprite->size.x * sprite->scale) + sprite->position.x;
   rect->v1.y = (sprite->size.y * sprite->scale) + sprite->position.y;
-  rect->v1.y /= 2.0F;  // interlacing
+  // rect->v1.y /= 2.0F;  // interlacing
   rect->v1.z = (u32)-1;
 
   auto* packet = packets[context];
@@ -89,11 +90,10 @@ void RendererCore2D::render(Sprite* sprite,
   packet2_utils_gs_add_texbuff_clut(packet, texBuffers.core, clutBuffer);
   draw_enable_blending();
   packet2_update(packet, draw_rect_textured(packet->next, 0, rect));
-  packet2_update(
-      packet,
-      draw_primitive_xyoffset(
-          packet->next, 0, SCREEN_CENTER - (settings->getWidth() / 2.0F),
-          SCREEN_CENTER - (settings->getInterlacedHeightF() / 2.0F)));
+  packet2_update(packet, draw_primitive_xyoffset(
+                             packet->next, 0,
+                             SCREEN_CENTER - (settings->getWidth() / 2.0F),
+                             SCREEN_CENTER - (settings->getHeight() / 2.0F)));
   draw_disable_blending();
   packet2_update(packet, draw_finish(packet->next));
 

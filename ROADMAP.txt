@@ -1,8 +1,8 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 --- H4570
+- [Renderer] Fix sync problems with textures
 - [Renderer] Fix color issue in clipper
-- [Renderer] Fix interlacing quality
 - [Loaders] DFF loader as static Mesh loader
 - [Game] Update intellisense from docker
 - [Texture] Test cache hits with large amount of textures (dolphin sample?)
@@ -52,3 +52,5 @@ because Mesh rendering uses only core.render()
 - [3D] Add drawBBox(x, y , color, size)
 - [File] Async file loading
 - [tyrobj] Add multicolor support to tyrobj
+- [Renderer] Interlacing
+- [Renderer] Texture smart freeing

@@ -36,7 +36,8 @@ class Tutorial01 : public Game {
   DynamicMesh* warrior;
   u8 warriorsCount;
   DynamicMesh** warriors;
-  Sprite* picture;
+  u32 picturesCount;
+  Sprite** pictures;
   audsrv_adpcm_t* adpcmSample;
   Timer adpcmTimer;
 
@@ -50,6 +51,7 @@ class Tutorial01 : public Game {
   DynPipOptions* dynOptions;
   Texture* warriorTex;
   Texture* blocksTex;
+  Texture* blocksTex2;
 
   u32 blocksCount;
   McpipBlock* blocks;
