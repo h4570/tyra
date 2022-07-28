@@ -12,6 +12,7 @@
 #include <draw_buffers.h>
 #include <gs_psm.h>
 #include <stdlib.h>
+#include <fastmath.h>
 #include <string>
 #include <sstream>
 #include "renderer/core/texture/models/texture.hpp"
@@ -22,6 +23,19 @@ Texture::Texture(TextureBuilderData* t_data) {
   id = rand() % 1000000;
 
   name = t_data->name;
+
+  TYRA_ASSERT(t_data->width <= 256 && t_data->height <= 256,
+              "Tyra supports only 256x256 textures max!");
+
+  TYRA_ASSERT(t_data->width == 8 || t_data->width == 16 ||
+                  t_data->width == 32 || t_data->width == 64 ||
+                  t_data->width == 128 || t_data->width == 256,
+              "Texture width/height should be 8/16/32/64/128/256!");
+
+  TYRA_ASSERT(t_data->height == 8 || t_data->height == 16 ||
+                  t_data->height == 32 || t_data->height == 64 ||
+                  t_data->height == 128 || t_data->height == 256,
+              "Texture width/height should be 8/16/32/64/128/256!");
 
   core = new TextureData(t_data->data, t_data->bpp, t_data->gsComponents,
                          t_data->width, t_data->height);

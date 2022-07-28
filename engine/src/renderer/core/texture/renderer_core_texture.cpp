@@ -44,8 +44,9 @@ RendererCoreTextureBuffers RendererCoreTexture::useTexture(Texture* t_tex) {
   auto allocated = getAllocatedBuffersByTextureId(t_tex->getId());
   if (allocated.id != 0) return allocated;
 
-  // TODO: Dont like this..., but it works for now.
-  if (t_tex->getSizeInMB() > sender.getFreeVRamInMB()) {
+  // TODO: FIXME!
+  if (currentAllocations.size()) {
+    // if (t_tex->getSizeInMB() > sender.getFreeVRamInMB()) {
     for (int i = currentAllocations.size() - 1; i >= 0; i--) {
       sender.deallocate(currentAllocations[i]);
     }
