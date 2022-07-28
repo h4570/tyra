@@ -25,9 +25,10 @@ McpipMultiTexBlockData::~McpipMultiTexBlockData() {
 }
 
 void McpipMultiTexBlockData::allocateTempData() {
-  u32 tempVertsStsCount = 24;
+  u32 tempVertsCount = 24;
+  u32 tempStsCount = 28;
 
-  tempVerts = new Tyra::Vec4[tempVertsStsCount];
+  tempVerts = new Tyra::Vec4[tempVertsCount];
   tempVerts[0].set(-1.0F, -1.0F, -1.0F);
   tempVerts[1].set(1.0F, -1.0F, -1.0F);
   tempVerts[2].set(1.0F, -1.0F, 1.0F);
@@ -53,32 +54,36 @@ void McpipMultiTexBlockData::allocateTempData() {
   tempVerts[22].set(-1.0F, 1.0F, 1.0F);
   tempVerts[23].set(1.0F, 1.0F, 1.0F);
 
-  tempTexCoords = new Tyra::Vec4[tempVertsStsCount];
+  tempTexCoords = new Tyra::Vec4[tempStsCount];
   // Y = 1.0F - Y
-  tempTexCoords[0].set(0.0625F, 0.1875F, 1.0000F, 0.0000F);
-  tempTexCoords[1].set(0.0625F, 0.1250F, 1.0000F, 0.0000F);
-  tempTexCoords[2].set(0.0000F, 0.1250F, 1.0000F, 0.0000F);
-  tempTexCoords[3].set(0.0000F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[0].set(0.0000F, 0.3750F, 1.0000F, 0.0000F);
+  tempTexCoords[1].set(0.0625F, 0.3750F, 1.0000F, 0.0000F);
+  tempTexCoords[2].set(0.0625F, 0.3125F, 1.0000F, 0.0000F);
+  tempTexCoords[3].set(0.0000F, 0.3125F, 1.0000F, 0.0000F);
   tempTexCoords[4].set(0.0625F, 0.2500F, 1.0000F, 0.0000F);
-  tempTexCoords[5].set(0.0625F, 0.1875F, 1.0000F, 0.0000F);
-  tempTexCoords[6].set(0.0000F, 0.1875F, 1.0000F, 0.0000F);
-  tempTexCoords[7].set(0.0000F, 0.2500F, 1.0000F, 0.0000F);
-  tempTexCoords[8].set(0.0625F, 0.3125F, 1.0000F, 0.0000F);
-  tempTexCoords[9].set(0.0000F, 0.3125F, 1.0000F, 0.0000F);
-  tempTexCoords[10].set(0.0000F, 0.3750F, 1.0000F, 0.0000F);
-  tempTexCoords[11].set(0.0625F, 0.3750F, 1.0000F, 0.0000F);
-  tempTexCoords[12].set(0.0625F, 0.3750F, 1.0000F, 0.0000F);
-  tempTexCoords[13].set(0.0000F, 0.3750F, 1.0000F, 0.0000F);
-  tempTexCoords[14].set(0.0000F, 0.4375F, 1.0000F, 0.0000F);
-  tempTexCoords[15].set(0.0625F, 0.4375F, 1.0000F, 0.0000F);
-  tempTexCoords[16].set(0.0000F, 0.0625F, 1.0000F, 0.0000F);
-  tempTexCoords[17].set(0.0000F, 0.1250F, 1.0000F, 0.0000F);
-  tempTexCoords[18].set(0.0625F, 0.1250F, 1.0000F, 0.0000F);
-  tempTexCoords[19].set(0.0625F, 0.0625F, 1.0000F, 0.0000F);
-  tempTexCoords[20].set(0.0000F, 0.0625F, 1.0000F, 0.0000F);
+  tempTexCoords[5].set(0.0625F, 0.2500F, 1.0000F, 0.0000F);
+  tempTexCoords[6].set(0.0625F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[7].set(0.0000F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[8].set(0.0000F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[9].set(0.0000F, 0.2500F, 1.0000F, 0.0000F);
+  tempTexCoords[10].set(0.0625F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[11].set(0.0625F, 0.1250F, 1.0000F, 0.0000F);
+  tempTexCoords[12].set(0.0000F, 0.1250F, 1.0000F, 0.0000F);
+  tempTexCoords[13].set(0.0000F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[14].set(0.0625F, 0.3125F, 1.0000F, 0.0000F);
+  tempTexCoords[15].set(0.0625F, 0.3125F, 1.0000F, 0.0000F);
+  tempTexCoords[16].set(0.0625F, 0.2500F, 1.0000F, 0.0000F);
+  tempTexCoords[17].set(0.0000F, 0.2500F, 1.0000F, 0.0000F);
+  tempTexCoords[18].set(0.0000F, 0.2500F, 1.0000F, 0.0000F);
+  tempTexCoords[19].set(0.0000F, 0.3125F, 1.0000F, 0.0000F);
+  tempTexCoords[20].set(0.0625F, 0.1250F, 1.0000F, 0.0000F);
   tempTexCoords[21].set(0.0625F, 0.0625F, 1.0000F, 0.0000F);
-  tempTexCoords[22].set(0.0625F, 0.0000F, 1.0000F, 0.0000F);
-  tempTexCoords[23].set(0.0000F, 0.0000F, 1.0000F, 0.0000F);
+  tempTexCoords[22].set(0.0000F, 0.0625F, 1.0000F, 0.0000F);
+  tempTexCoords[23].set(0.0000F, 0.1250F, 1.0000F, 0.0000F);
+  tempTexCoords[24].set(0.0000F, 0.0625F, 1.0000F, 0.0000F);
+  tempTexCoords[25].set(0.0625F, 0.0625F, 1.0000F, 0.0000F);
+  tempTexCoords[26].set(0.0625F, 0.0000F, 1.0000F, 0.0000F);
+  tempTexCoords[27].set(0.0000F, 0.0000F, 1.0000F, 0.0000F);
 
   // Because 16 blocks can fit in single column of 256x256 tex atlas
   offset = 1.0F / 16.0F;
@@ -92,8 +97,8 @@ void McpipMultiTexBlockData::allocateTempData() {
   std::stringstream ssVertexFaces(vertexFaces);
 
   std::string texCoordFaces =
-      "1,2,3,1,3,4,5,6,7,5,7,8,9,10,11,9,11,12,13,14,15,13,15,16,17,18,19,17,"
-      "19,20,21,22,23,21,23,24";
+      "1,2,3,1,3,4,5,7,8,6,9,10,11,12,13,11,13,14,15,17,18,16,19,20,21,22,23,"
+      "21,23,24,25,26,27,25,27,28";
   std::stringstream ssTexCoordFaces(texCoordFaces);
 
   int i = 0;
