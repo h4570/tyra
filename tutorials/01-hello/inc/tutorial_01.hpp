@@ -51,6 +51,7 @@ class Tutorial01 : public Game {
   DynPipOptions* dynOptions;
   Texture* warriorTex;
   Texture* blocksTex;
+  Texture* blocksTex2;
 
   u32 blocksCount;
   McpipBlock* blocks;

@@ -85,6 +85,8 @@ void Tutorial01 ::init() {
 
   blocksTex = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("blocks.png"));
+  blocksTex2 = engine->renderer.core.texture.repository.add(
+      FileUtils::fromCwd("texture_atlas.png"));
 
   mcPip.setRenderer(&engine->renderer.core);
   dynpip.setRenderer(&engine->renderer.core);
@@ -95,8 +97,8 @@ void Tutorial01 ::init() {
   for (u32 i = 0; i < picturesCount; i++)
     pictures[i] = get2DPicture(&engine->renderer);
 
-  u32 rows = 16;     // 64
-  u32 columns = 16;  // 64
+  u32 rows = 2;     // 64
+  u32 columns = 2;  // 64
   blocksCount = rows * columns;
 
   float offset = 4.0F;
@@ -112,10 +114,12 @@ void Tutorial01 ::init() {
 
     translations[i].translateX(row * offset - center);
     translations[i].translateY(column * offset - center);
-    translations[i].translateZ(-50.0F);
+    translations[i].translateZ(-10.0F);
 
-    u32 randRow = rand() % (rows + 1);
-    u32 randColumn = rand() % (columns + 1);
+    // u32 randRow = rand() % (rows + 1);
+    // u32 randColumn = rand() % (columns + 1);
+    u32 randRow = 0;
+    u32 randColumn = 0;
 
     blocks[i].textureOffset =
         Vec4(mcPip.getTextureOffset() * randRow,
@@ -145,9 +149,9 @@ void Tutorial01 ::loop() {
   engine->renderer.beginFrame(CameraInfo3D(&cameraPosition, &cameraLookAt));
   {
     for (u32 i = 0; i < blocksCount; i++) {
-      rotations[i].rotateX(0.04F);
-      rotations[i].rotateY(0.01F);
-      rotations[i].rotateZ(0.01F);
+      // rotations[i].rotateX(0.04F);
+      rotations[i].rotateY(0.04F);
+      // rotations[i].rotateZ(0.01F);
 
       blocks[i].model = translations[i] * rotations[i] * scales[i];
     }
@@ -155,26 +159,26 @@ void Tutorial01 ::loop() {
     for (u32 i = 0; i < picturesCount; i++)
       engine->renderer.renderer2D.render(pictures[i]);
 
-    engine->renderer.renderer3D.usePipeline(&stapip);
-    {
-      stapip.render(staticMesh, staOptions);
-      stapip.render(skybox, skyboxOptions);
-    }
+    // engine->renderer.renderer3D.usePipeline(&stapip);
+    // {
+    //   stapip.render(staticMesh, staOptions);
+    //   stapip.render(skybox, skyboxOptions);
+    // }
 
-    engine->renderer.renderer3D.usePipeline(&dynpip);
-    {
-      dynpip.render(cube);
-      Threading::switchThread();
-      for (u8 i = 0; i < warriorsCount; i++) {
-        dynpip.render(warriors[i], dynOptions);
-        if (i == 5) Threading::switchThread();
-        if (i == 10) Threading::switchThread();
-        if (i == 15) Threading::switchThread();
-      }
-    }
+    // engine->renderer.renderer3D.usePipeline(&dynpip);
+    // {
+    //   dynpip.render(cube);
+    //   Threading::switchThread();
+    //   for (u8 i = 0; i < warriorsCount; i++) {
+    //     dynpip.render(warriors[i], dynOptions);
+    //     if (i == 5) Threading::switchThread();
+    //     if (i == 10) Threading::switchThread();
+    //     if (i == 15) Threading::switchThread();
+    //   }
+    // }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);
-    { mcPip.render(blocks, blocksCount, blocksTex); }
+    { mcPip.render(blocks, blocksCount, blocksTex2, true); }
   }
   engine->renderer.endFrame();
 }

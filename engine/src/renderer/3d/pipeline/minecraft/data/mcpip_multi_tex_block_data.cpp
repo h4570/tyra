@@ -54,36 +54,34 @@ void McpipMultiTexBlockData::allocateTempData() {
   tempVerts[23].set(1.0F, 1.0F, 1.0F);
 
   tempTexCoords = new Tyra::Vec4[tempVertsStsCount];
-  tempTexCoords[0].set(0.062721F, 0.813282F, 1.0F, 0.0F);
-  tempTexCoords[1].set(0.062721F, 0.875327F, 1.0F, 0.0F);
-  tempTexCoords[2].set(0.000676F, 0.875327F, 1.0F, 0.0F);
-  tempTexCoords[3].set(0.000676F, 0.813282F, 1.0F, 0.0F);
-  tempTexCoords[4].set(0.062095F, 0.750461F, 1.0F, 0.0F);
-  tempTexCoords[5].set(0.062095F, 0.812244F, 1.0F, 0.0F);
-  tempTexCoords[6].set(0.000311F, 0.812244F, 1.0F, 0.0F);
-  tempTexCoords[7].set(0.000311F, 0.750461F, 1.0F, 0.0F);
-  tempTexCoords[8].set(0.062629F, 0.687779F, 1.0F, 0.0F);
-  tempTexCoords[9].set(0.000000F, 0.687779F, 1.0F, 0.0F);
-  tempTexCoords[10].set(0.000000F, 0.624816F, 1.0F, 0.0F);
-  tempTexCoords[11].set(0.062629F, 0.624816F, 1.0F, 0.0F);
-  tempTexCoords[12].set(0.062667F, 0.626382F, 1.0F, 0.0F);
-  tempTexCoords[13].set(0.000000F, 0.626382F, 1.0F, 0.0F);
-  tempTexCoords[14].set(0.000000F, 0.561642F, 1.0F, 0.0F);
-  tempTexCoords[15].set(0.062667F, 0.561642F, 1.0F, 0.0F);
-  tempTexCoords[16].set(0.000000F, 0.937621F, 1.0F, 0.0F);
-  tempTexCoords[17].set(0.000000F, 0.875134F, 1.0F, 0.0F);
-  tempTexCoords[18].set(0.062128F, 0.875134F, 1.0F, 0.0F);
-  tempTexCoords[19].set(0.062128F, 0.937621F, 1.0F, 0.0F);
-  tempTexCoords[20].set(0.000000F, 0.937223F, 1.0F, 0.0F);
-  tempTexCoords[21].set(0.062223F, 0.937223F, 1.0F, 0.0F);
-  tempTexCoords[22].set(0.062223F, 0.999641F, 1.0F, 0.0F);
-  tempTexCoords[23].set(0.000000F, 0.999641F, 1.0F, 0.0F);
+  // Y = 1.0F - Y
+  tempTexCoords[0].set(0.0625F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[1].set(0.0625F, 0.1250F, 1.0000F, 0.0000F);
+  tempTexCoords[2].set(0.0000F, 0.1250F, 1.0000F, 0.0000F);
+  tempTexCoords[3].set(0.0000F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[4].set(0.0625F, 0.2500F, 1.0000F, 0.0000F);
+  tempTexCoords[5].set(0.0625F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[6].set(0.0000F, 0.1875F, 1.0000F, 0.0000F);
+  tempTexCoords[7].set(0.0000F, 0.2500F, 1.0000F, 0.0000F);
+  tempTexCoords[8].set(0.0625F, 0.3125F, 1.0000F, 0.0000F);
+  tempTexCoords[9].set(0.0000F, 0.3125F, 1.0000F, 0.0000F);
+  tempTexCoords[10].set(0.0000F, 0.3750F, 1.0000F, 0.0000F);
+  tempTexCoords[11].set(0.0625F, 0.3750F, 1.0000F, 0.0000F);
+  tempTexCoords[12].set(0.0625F, 0.3750F, 1.0000F, 0.0000F);
+  tempTexCoords[13].set(0.0000F, 0.3750F, 1.0000F, 0.0000F);
+  tempTexCoords[14].set(0.0000F, 0.4375F, 1.0000F, 0.0000F);
+  tempTexCoords[15].set(0.0625F, 0.4375F, 1.0000F, 0.0000F);
+  tempTexCoords[16].set(0.0000F, 0.0625F, 1.0000F, 0.0000F);
+  tempTexCoords[17].set(0.0000F, 0.1250F, 1.0000F, 0.0000F);
+  tempTexCoords[18].set(0.0625F, 0.1250F, 1.0000F, 0.0000F);
+  tempTexCoords[19].set(0.0625F, 0.0625F, 1.0000F, 0.0000F);
+  tempTexCoords[20].set(0.0000F, 0.0625F, 1.0000F, 0.0000F);
+  tempTexCoords[21].set(0.0625F, 0.0625F, 1.0000F, 0.0000F);
+  tempTexCoords[22].set(0.0625F, 0.0000F, 1.0000F, 0.0000F);
+  tempTexCoords[23].set(0.0000F, 0.0000F, 1.0000F, 0.0000F);
 
   // Because 16 blocks can fit in single column of 256x256 tex atlas
   offset = 1.0F / 16.0F;
-
-  for (u32 i = 0; i < tempVertsStsCount; i++)
-    tempTexCoords[i].y = 1.0F - tempTexCoords[i].y;
 
   tempVertFaces = new u32[36];
   tempTexCoordsFaces = new u32[36];
