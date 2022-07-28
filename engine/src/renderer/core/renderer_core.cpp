@@ -22,7 +22,7 @@ void RendererCore::init() {
   path3.init(&settings);
   renderer3D.init(&settings, &path1);
   renderer2D.init(&settings, &texture.clut);
-  sync.init(&path3);
+  sync.init(&path3, &path1);
 }
 
 void RendererCore::setClearScreenColor(const Color& color) { bgColor = color; }

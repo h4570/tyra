@@ -36,7 +36,7 @@ void Path3::init(RendererSettings* t_settings) {
   TYRA_LOG("Path3 initialized");
 }
 
-void Path3::addDrawFinishTag() {
+void Path3::sendDrawFinishTag() {
   dma_channel_wait(DMA_CHANNEL_GIF, 0);
   dma_channel_send_packet2(drawFinishPacket, DMA_CHANNEL_GIF, true);
 }

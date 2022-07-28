@@ -37,6 +37,7 @@ BlockizerProgramsManager::~BlockizerProgramsManager() {
 }
 
 void BlockizerProgramsManager::init(RendererCore* core) {
+  rendererCore = core;
   culler.init(core, &singleTexBlockData);
   clipper.init(core, &singleTexBlockData, &multiTexBlockData);
 }
@@ -46,7 +47,7 @@ void BlockizerProgramsManager::setProgramsCache() {
   programs[0] = repo.getProgram(McpipProgramName::McPipCull);
   programs[1] = repo.getProgram(McpipProgramName::McPipAsIs);
   programsPacket =
-      renderer->core.getPath1()->createProgramsCache(programs, 2, 0);
+      rendererCore->getPath1()->createProgramsCache(programs, 2, 0);
   delete[] programs;
 }
 

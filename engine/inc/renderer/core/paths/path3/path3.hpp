@@ -27,7 +27,7 @@ class Path3 {
 
   void init(RendererSettings* settings);
 
-  void addDrawFinishTag();
+  void sendDrawFinishTag();
   void clearScreen(zbuffer_t* z, const Color& color);
   void sendTexture(Texture* texture,
                    const RendererCoreTextureBuffers& texBuffers);

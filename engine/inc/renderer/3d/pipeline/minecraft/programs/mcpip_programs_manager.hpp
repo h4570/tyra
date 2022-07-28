@@ -63,7 +63,7 @@ class BlockizerProgramsManager {
 
  private:
   McpipProgramsRepository repo;
-  Renderer* renderer;
+  RendererCore* rendererCore;
   McpipSingleTexBlockData singleTexBlockData;
   McpipMultiTexBlockData multiTexBlockData;
   McpipProgramName lastProgramName;

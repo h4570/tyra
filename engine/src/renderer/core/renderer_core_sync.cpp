@@ -15,15 +15,30 @@ namespace Tyra {
 RendererCoreSync::RendererCoreSync() {}
 RendererCoreSync::~RendererCoreSync() {}
 
-void RendererCoreSync::init(Path3* t_path3) { path3 = t_path3; }
+void RendererCoreSync::init(Path3* t_path3, Path1* t_path1) {
+  path3 = t_path3;
+  path1 = t_path1;
+}
 
-void RendererCoreSync::align() {
+void RendererCoreSync::align3D() {
   clear();
-  add();
+  sendPath1Req();
   waitAndClear();
 }
 
-void RendererCoreSync::add() { path3->addDrawFinishTag(); }
+void RendererCoreSync::align2D() {
+  clear();
+  sendPath3Req();
+  waitAndClear();
+}
+
+void RendererCoreSync::sendPath1Req() { path1->sendDrawFinishTag(); }
+
+void RendererCoreSync::sendPath3Req() { path3->sendDrawFinishTag(); }
+
+void RendererCoreSync::addPath1Req(packet2_t* packet) {
+  path1->addDrawFinishTag(packet);
+}
 
 u8 RendererCoreSync::check() { return *GS_REG_CSR & 2; }
 

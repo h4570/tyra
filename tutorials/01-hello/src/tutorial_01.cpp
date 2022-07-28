@@ -92,7 +92,7 @@ void Tutorial01 ::init() {
   dynpip.setRenderer(&engine->renderer.core);
   stapip.setRenderer(&engine->renderer.core);
 
-  picturesCount = 1;
+  picturesCount = 3;
   pictures = new Sprite*[picturesCount];
   for (u32 i = 0; i < picturesCount; i++)
     pictures[i] = get2DPicture(&engine->renderer);
@@ -159,23 +159,23 @@ void Tutorial01 ::loop() {
     for (u32 i = 0; i < picturesCount; i++)
       engine->renderer.renderer2D.render(pictures[i]);
 
-    // engine->renderer.renderer3D.usePipeline(&stapip);
-    // {
-    //   stapip.render(staticMesh, staOptions);
-    //   stapip.render(skybox, skyboxOptions);
-    // }
+    engine->renderer.renderer3D.usePipeline(&stapip);
+    {
+      stapip.render(staticMesh, staOptions);
+      stapip.render(skybox, skyboxOptions);
+    }
 
-    // engine->renderer.renderer3D.usePipeline(&dynpip);
-    // {
-    //   dynpip.render(cube);
-    //   Threading::switchThread();
-    //   for (u8 i = 0; i < warriorsCount; i++) {
-    //     dynpip.render(warriors[i], dynOptions);
-    //     if (i == 5) Threading::switchThread();
-    //     if (i == 10) Threading::switchThread();
-    //     if (i == 15) Threading::switchThread();
-    //   }
-    // }
+    engine->renderer.renderer3D.usePipeline(&dynpip);
+    {
+      dynpip.render(cube);
+      Threading::switchThread();
+      for (u8 i = 0; i < warriorsCount; i++) {
+        dynpip.render(warriors[i], dynOptions);
+        if (i == 5) Threading::switchThread();
+        if (i == 10) Threading::switchThread();
+        if (i == 15) Threading::switchThread();
+      }
+    }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);
     { mcPip.render(blocks, blocksCount, blocksTex2, true); }

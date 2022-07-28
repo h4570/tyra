@@ -13,6 +13,7 @@
 #include <draw.h>
 #include <gs_privileged.h>
 #include "./paths/path3/path3.hpp"
+#include "./paths/path1/path1.hpp"
 
 namespace Tyra {
 
@@ -29,22 +30,29 @@ class RendererCoreSync {
   RendererCoreSync();
   ~RendererCoreSync();
 
-  void init(Path3* path3);
+  void init(Path3* path3, Path1* path1);
 
-  /** Send draw finish tag via VU1 to GS. */
-  void add();
-  /** Check if finish flag was set by GS. */
+  // --- Auto
+
+  /** clear() -> sendPath1Req() -> waitAndClear() */
+  void align3D();
+
+  /** clear() -> sendPath3Req() -> waitAndClear() */
+  void align2D();
+
+  // --- Manual
+
   u8 check();
-  /** Clear finish tag flag. */
   void clear();
-  /** Wait for finish flag and clear it. */
   void waitAndClear();
+  void sendPath1Req();
+  void sendPath3Req();
 
-  /** Clear() -> Add() -> waitAndClear() */
-  void align();
+  void addPath1Req(packet2_t* packet);
 
  private:
   Path3* path3;
+  Path1* path1;
 };
 
 }  // namespace Tyra

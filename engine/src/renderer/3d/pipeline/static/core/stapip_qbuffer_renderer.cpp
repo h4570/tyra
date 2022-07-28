@@ -139,10 +139,10 @@ void StaPipQBufferRenderer::sendObjectData(
     packet2_utils_gs_add_lod(objectDataPacket, &rendererCore->gs.lod);
 
     if (texBuffers != nullptr) {
+      rendererCore->texture.updateClutBuffer(texBuffers->clut);
+
       packet2_utils_gs_add_texbuff_clut(objectDataPacket, texBuffers->core,
                                         &rendererCore->texture.clut);
-
-      rendererCore->texture.updateClutBuffer(texBuffers->clut);
     }
   }
   packet2_utils_vu_close_unpack(objectDataPacket);
