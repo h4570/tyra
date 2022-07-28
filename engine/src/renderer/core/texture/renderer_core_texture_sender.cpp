@@ -52,9 +52,12 @@ void RendererCoreTextureSender::deallocate(
   }
 
   graph_vram_free(texBuffers.core->address);
+
+  float deallocateSize = getSizeInMB(texBuffers.core);
+
   delete texBuffers.core;
 
-  allocatedVRamMemForTextures -= getSizeInMB(texBuffers.core);
+  allocatedVRamMemForTextures -= deallocateSize;
 }
 
 texbuffer_t* RendererCoreTextureSender::allocateTextureCore(
