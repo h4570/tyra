@@ -1,6 +1,7 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 --- H4570
+- [Renderer] Fix sync problems with textures
 - [Renderer] Fix color issue in clipper
 - [Loaders] DFF loader as static Mesh loader
 - [Game] Update intellisense from docker
