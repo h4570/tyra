@@ -36,7 +36,7 @@ class RendererCoreGS {
   constexpr static float gsCenter = 4096.0F;
   constexpr static float screenCenter = gsCenter / 2.0F;
   constexpr static float vramMargin =
-      0.01F;  // We don't have perfectly 4MB of VRAM
+      0.003F;  // We don't have perfectly 4MB of VRAM
 
   float spaceOccupiedByFrameBuffers, spaceOccupiedByZBuffer;
   RendererSettings* settings;
