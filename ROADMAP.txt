@@ -1,8 +1,7 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
-- [General] CI in Github via docker image
-- [General] Add cpp lint checker in GitHub
-
 - [Demo] Create cool demo which will show all features of Tyra
+- [General] CI in Github via docker image
+
 
 - [Tutorials] 1. Hello world! - explain init(), loop() and what should be inside them (every tutorial should be well commented!)
 
@@ -33,4 +32,5 @@ because Mesh rendering uses only core.render()
 - [File] Async file loading
 - [tyrobj] Add multicolor support to tyrobj
 - [Renderer] Interlacing
+- [General] Add cpp lint checker in GitHub
 - [General] Control generated id to avoid duplication. Maybe Just increment from 0? Add interface IIdentificable?
