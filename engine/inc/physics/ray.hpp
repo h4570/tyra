@@ -3,7 +3,7 @@
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
-# Copyright 2020-2022, tyra - https://github.com/h4570/tyra
+# Copyright 2022-2022, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # Wellington Carvalho <wellcoj@gmail.com>
 */
@@ -22,7 +22,7 @@ class Ray {
   /** @brief Constructor create a ampty ray */
   Ray();
 
-  /** 
+  /**
    * @param origin The origin of the ray
    * @param direction The direction of the ray (normalized Vec4)
    */
@@ -32,18 +32,18 @@ class Ray {
   // Methods
 
   /**
-   * @param origin Vec4 starting point of the ray;  
+   * @param origin Vec4 starting point of the ray;
    * @param direction Vec4 normalized vector pointing to direction;
    */
   void set(const Vec4& origin, const Vec4& direction);
 
-  /** 
+  /**
    * @brief Set origin of the ray;
-   * @param origin Vec4 starting point of the ray;   
+   * @param origin Vec4 starting point of the ray;
    */
   void setOrigin(const Vec4& origin);
 
-  /** 
+  /**
    * @brief Set direction of the ray;
    * @param direction Vec4 normalized vector pointing to direction;
    */
@@ -64,7 +64,8 @@ class Ray {
    * @param distance - the box to intersect with.
    * @return Vec4 point of intersection
    */
-  u8 intersectBox(const Vec4& minCorner, const Vec4& maxCorner, float& distance);
+  u8 intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
+                  float& distance);
 
   /** Returns inverse direction */
   const Vec4 invDir();

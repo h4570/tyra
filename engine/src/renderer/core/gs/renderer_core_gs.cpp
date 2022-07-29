@@ -3,7 +3,7 @@
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
-# Copyright 2020, tyra - https://github.com/h4570/tyra
+# Copyright 2022, tyra - https://github.com/h4570/tyra
 # Licenced under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
@@ -55,24 +55,22 @@ void RendererCoreGS::allocateBuffers() {
   frameBuffers[0].height = static_cast<unsigned int>(settings->getHeight());
   frameBuffers[0].mask = 0;
   frameBuffers[0].psm = GS_PSM_32;
-  frameBuffers[0].address =
-      vram.allocateBuffer(frameBuffers[0].width, frameBuffers[0].height,
-                    frameBuffers[0].psm);
+  frameBuffers[0].address = vram.allocateBuffer(
+      frameBuffers[0].width, frameBuffers[0].height, frameBuffers[0].psm);
 
   frameBuffers[1].width = frameBuffers[0].width;
   frameBuffers[1].height = frameBuffers[0].height;
   frameBuffers[1].mask = frameBuffers[0].mask;
   frameBuffers[1].psm = frameBuffers[0].psm;
-  frameBuffers[1].address =
-      vram.allocateBuffer(frameBuffers[1].width, frameBuffers[1].height,
-                    frameBuffers[1].psm);
+  frameBuffers[1].address = vram.allocateBuffer(
+      frameBuffers[1].width, frameBuffers[1].height, frameBuffers[1].psm);
 
   zBuffer.enable = DRAW_ENABLE;
   zBuffer.mask = 0;
   zBuffer.method = ZTEST_METHOD_GREATER_EQUAL;
   zBuffer.zsm = GS_ZBUF_32;
-  zBuffer.address = vram.allocateBuffer(frameBuffers[0].width, frameBuffers[0].height,
-                                  zBuffer.zsm);
+  zBuffer.address = vram.allocateBuffer(frameBuffers[0].width,
+                                        frameBuffers[0].height, zBuffer.zsm);
 
   graph_initialize(frameBuffers[1].address, frameBuffers[1].width,
                    frameBuffers[1].height, frameBuffers[1].psm, 0, 0);
