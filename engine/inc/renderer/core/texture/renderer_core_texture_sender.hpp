@@ -31,19 +31,14 @@ class RendererCoreTextureSender {
 
   void deallocate(const RendererCoreTextureBuffers& texBuffers);
 
-  float getFreeVRamInMB();
-
   float getSizeInMB(texbuffer_t* texBuffer);
 
  private:
-  float allocatedVRamMemForTextures;
   RendererCoreGS* gs;
   Path3* path3;
   TextureBpp getBppByPsm(const u32& psm);
   texbuffer_t* allocateTextureCore(Texture* t_texture);
   texbuffer_t* allocateTextureClut(Texture* t_texture);
-
-  u8 isTextureVRAMAllocated, isVSyncEnabled;
 };
 
 }  // namespace Tyra

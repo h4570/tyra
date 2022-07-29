@@ -25,8 +25,6 @@ namespace Tyra {
 
 RendererCoreGS::RendererCoreGS() {
   context = 0;
-  spaceOccupiedByFrameBuffers = 0;
-  spaceOccupiedByZBuffer = 0;
   currentField = 0;
 }
 RendererCoreGS::~RendererCoreGS() {
@@ -56,28 +54,25 @@ void RendererCoreGS::allocateBuffers() {
   frameBuffers[0].width = static_cast<unsigned int>(settings->getWidth());
   frameBuffers[0].height = static_cast<unsigned int>(settings->getHeight());
   frameBuffers[0].mask = 0;
-  const u16 fpsm = 32;
   frameBuffers[0].psm = GS_PSM_32;
   frameBuffers[0].address =
-      graph_vram_allocate(frameBuffers[0].width, frameBuffers[0].height,
-                          frameBuffers[0].psm, GRAPH_ALIGN_PAGE);
+      vram.allocateBuffer(frameBuffers[0].width, frameBuffers[0].height,
+                    frameBuffers[0].psm);
 
   frameBuffers[1].width = frameBuffers[0].width;
   frameBuffers[1].height = frameBuffers[0].height;
   frameBuffers[1].mask = frameBuffers[0].mask;
   frameBuffers[1].psm = frameBuffers[0].psm;
   frameBuffers[1].address =
-      graph_vram_allocate(frameBuffers[1].width, frameBuffers[1].height,
-                          frameBuffers[1].psm, GRAPH_ALIGN_PAGE);
+      vram.allocateBuffer(frameBuffers[1].width, frameBuffers[1].height,
+                    frameBuffers[1].psm);
 
   zBuffer.enable = DRAW_ENABLE;
   zBuffer.mask = 0;
   zBuffer.method = ZTEST_METHOD_GREATER_EQUAL;
-  const u16 zpsm = 32;
   zBuffer.zsm = GS_ZBUF_32;
-  zBuffer.address =
-      graph_vram_allocate(frameBuffers[0].width, frameBuffers[0].height,
-                          zBuffer.zsm, GRAPH_ALIGN_PAGE);
+  zBuffer.address = vram.allocateBuffer(frameBuffers[0].width, frameBuffers[0].height,
+                                  zBuffer.zsm);
 
   graph_initialize(frameBuffers[1].address, frameBuffers[1].width,
                    frameBuffers[1].height, frameBuffers[1].psm, 0, 0);
@@ -92,17 +87,6 @@ void RendererCoreGS::allocateBuffers() {
   // frameBuffers[1].width,
   //                                frameBuffers[1].psm, 0, 0);
   // graph_enable_output();
-
-  spaceOccupiedByZBuffer =
-      ((frameBuffers[0].width / 100.0F) * (frameBuffers[0].height / 100.0F) *
-       (zpsm / 100.0F)) /
-      8.0F;
-
-  spaceOccupiedByFrameBuffers =
-      ((frameBuffers[0].width / 100.0F) * (frameBuffers[0].height / 100.0F) *
-       (fpsm / 100.0F)) /
-      8.0F;
-  spaceOccupiedByFrameBuffers *= 2;
 
   TYRA_LOG("Framebuffers, zBuffer set and allocated!");
 }

@@ -47,7 +47,7 @@ class Texture {
 
   const TextureData& getCoreData() const { return *core; }
 
-  TextureData* getClutData() { return clut; }
+  const TextureData* getClutData() const { return clut; }
 
   /**
    * Get texture name.

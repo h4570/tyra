@@ -16,9 +16,8 @@ RendererCoreTexture::RendererCoreTexture() {}
 
 RendererCoreTexture::~RendererCoreTexture() {}
 
-void RendererCoreTexture::onFrameChange() { cacheManager.onFrameChange(); }
-
 void RendererCoreTexture::init(RendererCoreGS* t_gs, Path3* t_path3) {
+  gs = t_gs;
   sender.init(t_path3, t_gs);
   path3 = t_path3;
   initClut();
@@ -39,28 +38,15 @@ void RendererCoreTexture::updateClutBuffer(texbuffer_t* clutBuffer) {
 RendererCoreTextureBuffers RendererCoreTexture::useTexture(Texture* t_tex) {
   TYRA_ASSERT(t_tex != nullptr, "Provided nullptr texture!");
 
-  // cacheManager.addRequestedTexture(t_tex);
-
   auto allocated = getAllocatedBuffersByTextureId(t_tex->getId());
   if (allocated.id != 0) return allocated;
 
-  // TODO: FIXME!
-  if (currentAllocations.size()) {
-    // if (t_tex->getSizeInMB() > sender.getFreeVRamInMB()) {
+  if (gs->vram.getSizeInMB(*t_tex) >= gs->vram.getFreeSpaceInMB()) {
     for (int i = currentAllocations.size() - 1; i >= 0; i--) {
       sender.deallocate(currentAllocations[i]);
     }
     currentAllocations.clear();
   }
-
-  // while (t_tex->getSizeInMB() > sender.getFreeVRamInMB()) {
-  // auto idToDealloc =
-  // cacheManager.getTextureIdToDealloc(currentAllocations);
-  // auto buffToDealloc = getAllocatedBuffersByTextureId(idToDealloc);
-  // TYRA_LOG("Deallocate(", buffToDealloc.id, ")");
-  // sender.deallocate(buffToDealloc);
-  // unregisterAllocation(idToDealloc);
-  // }
 
   auto newTexBuffer = sender.allocate(t_tex);
   path3->sendTexture(t_tex, newTexBuffer);

@@ -13,10 +13,7 @@
 
 namespace Tyra {
 
-RendererCoreTextureSender::RendererCoreTextureSender() {
-  isTextureVRAMAllocated = false;
-  allocatedVRamMemForTextures = 0;
-}
+RendererCoreTextureSender::RendererCoreTextureSender() {}
 RendererCoreTextureSender::~RendererCoreTextureSender() {}
 
 void RendererCoreTextureSender::init(Path3* t_path3, RendererCoreGS* t_gs) {
@@ -47,36 +44,28 @@ float RendererCoreTextureSender::getSizeInMB(texbuffer_t* texBuffer) {
 void RendererCoreTextureSender::deallocate(
     const RendererCoreTextureBuffers& texBuffers) {
   if (texBuffers.clut != nullptr && texBuffers.clut->width > 0) {
-    graph_vram_free(texBuffers.clut->address);
+    gs->vram.free(texBuffers.clut->address);
     delete texBuffers.clut;
   }
 
-  graph_vram_free(texBuffers.core->address);
-
-  float deallocateSize = getSizeInMB(texBuffers.core);
+  gs->vram.free(texBuffers.core->address);
 
   delete texBuffers.core;
-
-  allocatedVRamMemForTextures -= deallocateSize;
 }
 
 texbuffer_t* RendererCoreTextureSender::allocateTextureCore(
     Texture* t_texture) {
   auto* result = new texbuffer_t;
+  const auto& core = t_texture->getCoreData();
+
   result->width = t_texture->getWidth();
-  result->psm = t_texture->getCoreData().psm;
-  result->info.components = t_texture->getCoreData().components;
+  result->psm = core.psm;
+  result->info.components = core.components;
 
-  TYRA_ASSERT(t_texture->getSizeInMB() <= getFreeVRamInMB(),
-              "Not enough VRAM memory for texture!");
-
-  auto address =
-      graph_vram_allocate(t_texture->getWidth(), t_texture->getHeight(),
-                          result->psm, GRAPH_ALIGN_BLOCK);
+  auto address = gs->vram.allocate(core);
   TYRA_ASSERT(address > 0, "Texture buffer allocation error, no memory!");
   result->address = address;
 
-  allocatedVRamMemForTextures += t_texture->getSizeInMB();
   result->info.width = draw_log2(t_texture->getWidth());
   result->info.height = draw_log2(t_texture->getHeight());
   result->info.function = TEXTURE_FUNCTION_MODULATE;
@@ -92,8 +81,7 @@ texbuffer_t* RendererCoreTextureSender::allocateTextureClut(
   result->psm = clut->psm;
   result->info.components = clut->components;
 
-  auto address = graph_vram_allocate(clut->width, clut->height, result->psm,
-                                     GRAPH_ALIGN_BLOCK);
+  auto address = gs->vram.allocate(*clut);
   TYRA_ASSERT(address > 0, "Texture clut buffer allocation error, no memory!");
   result->address = address;
 
@@ -101,10 +89,6 @@ texbuffer_t* RendererCoreTextureSender::allocateTextureClut(
   result->info.height = draw_log2(clut->height);
   result->info.function = TEXTURE_FUNCTION_MODULATE;
   return result;
-}
-
-float RendererCoreTextureSender::getFreeVRamInMB() {
-  return gs->getVRamFreeSpaceInMB() - allocatedVRamMemForTextures;
 }
 
 TextureBpp RendererCoreTextureSender::getBppByPsm(const u32& psm) {
