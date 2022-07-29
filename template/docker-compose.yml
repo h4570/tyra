@@ -1,0 +1,16 @@
+version: "3.9"
+volumes:
+  tyra-game-volume:
+services:
+  compiler:
+    environment:
+      TERM: xterm-256color
+    network_mode: host
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    tty: true
+    container_name: tyra-game-compiler
+    volumes:
+      - tyra-game-volume:/src
+      - ./:/host
