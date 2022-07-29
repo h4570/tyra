@@ -29,7 +29,7 @@ struct TyraobjReadInfo {
   s16 materialsI;
 };
 
-/** Class responsible for loading&parsing custom Tyra obj files */
+/** Class responsible for loading & parsing custom Tyra obj files */
 class TyrobjLoader : public Loader {
  public:
   TyrobjLoader();

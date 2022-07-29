@@ -199,9 +199,9 @@ StaticMesh* getStaticMesh(Renderer* renderer) {
 StaticMesh* getSkybox(Renderer* renderer) {
   TyrobjLoader loader;
   auto* data =
-      loader.load(FileUtils::fromCwd("skybox/skybox.tyrobj"), 1, 50.0F, true);
+      loader.load(FileUtils::fromCwd("skybox/skybox.tyrobj"), 1, 200.0F, true);
   auto* result = new StaticMesh(*data);
-  result->translation.translateZ(-30.0F);
+  // result->translation.translateZ(-30.0F);
   delete data;
 
   renderer->core.texture.repository.addByMesh(

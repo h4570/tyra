@@ -10,11 +10,13 @@
 
 #pragma once
 
+#include "../../loader.hpp"
+#include "../builder/mesh_builder_data.hpp"
 #include <string>
 
 namespace Tyra {
 
-/** Class responsible for loading&parsing Quake's II ".md2" 3D files */
+/** Class responsible for loading & parsing Quake's II ".md2" 3D files */
 class MD2Loader : public Loader {
  public:
   MD2Loader();
