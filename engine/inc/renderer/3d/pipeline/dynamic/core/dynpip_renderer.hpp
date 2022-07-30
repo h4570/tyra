@@ -21,7 +21,8 @@ class DynPipRenderer {
   DynPipRenderer();
   ~DynPipRenderer();
 
-  void init(RendererCore* t_core, DynPipProgramsRepository* t_programRepo);
+  void init(RendererCore* t_core, DynPipProgramsRepository* t_programRepo,
+            prim_t* prim, lod_t* lod);
 
   void reinitVU1();
 
@@ -46,6 +47,9 @@ class DynPipRenderer {
   void addBufferDataToPacket(DynPipVU1Program* program, DynPipBag** bags,
                              const u32& count);
   void sendPacket();
+
+  prim_t* prim;
+  lod_t* lod;
 
   packet2_t* packets[2];
   packet2_t* programsPacket;

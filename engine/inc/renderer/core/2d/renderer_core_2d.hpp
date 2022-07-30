@@ -31,6 +31,12 @@ class RendererCore2D {
               Texture* texture);
 
  private:
+  void setPrim();
+  void setLod();
+
+  prim_t prim;
+  lod_t lod;
+
   static const float GS_CENTER;
   static const float SCREEN_CENTER;
 

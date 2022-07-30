@@ -36,7 +36,7 @@ class BlockizerProgramsManager {
   McpipCull culler;
   McpipClip clipper;
 
-  void init(RendererCore* core);
+  void init(RendererCore* core, prim_t* prim, lod_t* lod);
 
   void uploadVU1Programs();
 

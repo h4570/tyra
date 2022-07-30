@@ -82,10 +82,13 @@ StaPipQBufferRenderer::~StaPipQBufferRenderer() {
   if (programsPacket) packet2_free(programsPacket);
 }
 
-void StaPipQBufferRenderer::init(RendererCore* t_core) {
+void StaPipQBufferRenderer::init(RendererCore* t_core, prim_t* t_prim,
+                                 lod_t* t_lod) {
   path1 = t_core->getPath1();
   clipper.init(t_core->getSettings());
   rendererCore = t_core;
+  prim = t_prim;
+  lod = t_lod;
 
   dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
   dma_channel_fast_waits(DMA_CHANNEL_VIF1);
@@ -136,7 +139,7 @@ void StaPipQBufferRenderer::sendObjectData(
     packet2_add_u32(objectDataPacket, 0);  // not used, padding
     packet2_add_u32(objectDataPacket, 0);  // not used, padding
 
-    packet2_utils_gs_add_lod(objectDataPacket, &rendererCore->gs.lod);
+    packet2_utils_gs_add_lod(objectDataPacket, lod);
 
     if (texBuffers != nullptr) {
       rendererCore->texture.updateClutBuffer(texBuffers->clut);
@@ -153,9 +156,9 @@ void StaPipQBufferRenderer::sendObjectData(
 }
 
 void StaPipQBufferRenderer::setInfo(PipelineInfoBag* bag) {
-  rendererCore->gs.prim.antialiasing = bag->antiAliasingEnabled;
-  rendererCore->gs.prim.blending = bag->blendingEnabled;
-  rendererCore->gs.prim.shading = bag->shadingType;
+  prim->antialiasing = bag->antiAliasingEnabled;
+  prim->blending = bag->blendingEnabled;
+  prim->shading = bag->shadingType;
 }
 
 void StaPipQBufferRenderer::sendStaticData() const {
@@ -286,8 +289,7 @@ void StaPipQBufferRenderer::addBufferDataToPacket(StaPipQBuffer** buffers,
   for (u32 i = 0; i < count; i++) {
     if (!buffers[i]->any()) continue;
 
-    dBufferPrograms[i]->addBufferDataToPacket(currentPacket, buffers[i],
-                                              &rendererCore->gs.prim);
+    dBufferPrograms[i]->addBufferDataToPacket(currentPacket, buffers[i], prim);
 
     if (lastProgramName != dBufferPrograms[i]->getName()) {
       packet2_utils_vu_add_start_program(

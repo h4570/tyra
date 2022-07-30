@@ -33,7 +33,7 @@ class StaPipQBufferRenderer {
   StaPipQBufferRenderer();
   ~StaPipQBufferRenderer();
 
-  void init(RendererCore* t_core);
+  void init(RendererCore* t_core, prim_t* prim, lod_t* lod);
 
   void reinitVU1();
 
@@ -69,6 +69,9 @@ class StaPipQBufferRenderer {
   void deallocateOnUse();
 
  private:
+  prim_t* prim;
+  lod_t* lod;
+
   bool is1stDBufferFlushTime();
   bool is2ndDBufferFlushTime();
 

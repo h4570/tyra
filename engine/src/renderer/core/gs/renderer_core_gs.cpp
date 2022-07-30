@@ -27,6 +27,7 @@ RendererCoreGS::RendererCoreGS() {
   context = 0;
   currentField = 0;
 }
+
 RendererCoreGS::~RendererCoreGS() {
   if (flipPacket) {
     packet2_free(flipPacket);
@@ -40,8 +41,6 @@ void RendererCoreGS::init(RendererSettings* t_settings) {
   flipPacket = packet2_create(4, P2_TYPE_UNCACHED_ACCL, P2_MODE_NORMAL, 0);
   allocateBuffers();
   initDrawingEnvironment();
-  setPrim();
-  setLod();
 
   TYRA_LOG("Renderer core initialized!");
 }
@@ -102,28 +101,6 @@ void RendererCoreGS::initDrawingEnvironment() {
   dma_channel_wait(DMA_CHANNEL_GIF, 0);
   packet2_free(packet2);
   TYRA_LOG("Drawing environment initialized!");
-}
-
-void RendererCoreGS::setPrim() {
-  prim.type = PRIM_TRIANGLE;
-  prim.shading = PRIM_SHADE_GOURAUD;
-  prim.mapping = DRAW_ENABLE;
-  prim.fogging = DRAW_DISABLE;
-  prim.blending = DRAW_ENABLE;
-  prim.antialiasing = DRAW_DISABLE;
-  prim.mapping_type = PRIM_MAP_ST;
-  prim.colorfix = PRIM_UNFIXED;
-  TYRA_LOG("Prim set!");
-}
-
-void RendererCoreGS::setLod() {
-  lod.calculation = LOD_USE_K;
-  lod.max_level = 0;
-  lod.mag_filter = LOD_MAG_NEAREST;
-  lod.min_filter = LOD_MIN_NEAREST;
-  lod.l = 0;
-  lod.k = 0.0F;
-  TYRA_LOG("Lod set!");
 }
 
 qword_t* RendererCoreGS::setXYOffset(qword_t* q, const int& drawContext,

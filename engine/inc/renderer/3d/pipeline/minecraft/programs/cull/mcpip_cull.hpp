@@ -26,7 +26,8 @@ class McpipCull {
   McpipCull();
   ~McpipCull();
 
-  void init(RendererCore* core, McpipBlockData* t_blockData);
+  void init(RendererCore* core, McpipBlockData* t_blockData, prim_t* prim,
+            lod_t* lod);
 
   u32 uploadVU1Program(McpipProgramsRepository* repo, const u32& addr);
 
@@ -39,6 +40,8 @@ class McpipCull {
                RendererCoreTextureBuffers* texBuffers, bool isMulti);
 
  private:
+  prim_t* prim;
+  lod_t* lod;
   RendererCore* rendererCore;
   u16 vu1DBufferSize;
   McpipBlockData* blockData;

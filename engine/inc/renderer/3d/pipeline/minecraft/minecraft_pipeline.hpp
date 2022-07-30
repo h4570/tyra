@@ -54,6 +54,12 @@ class MinecraftPipeline : public Renderer3DPipeline {
   const McpipBlockData& getBlockData() const { return manager.getBlockData(); }
 
  private:
+  void setPrim();
+  void setLod();
+
+  prim_t prim;
+  lod_t lod;
+
   BlockizerProgramsManager manager;
   RendererCore* rendererCore;
   RenderBBox* bbox;

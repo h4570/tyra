@@ -18,6 +18,8 @@ MinecraftPipeline::MinecraftPipeline() {
   latestMode = UndefinedMcpipProgram;
   spamBuffersCount = 4;
   spammerIndex = 0;
+  setPrim();
+  setLod();
 }
 
 MinecraftPipeline::~MinecraftPipeline() {
@@ -29,9 +31,30 @@ MinecraftPipeline::~MinecraftPipeline() {
 
 void MinecraftPipeline::setRenderer(RendererCore* core) {
   rendererCore = core;
-  manager.init(core);
+  manager.init(core, &prim, &lod);
 
   initBBox();
+}
+
+void MinecraftPipeline::setPrim() {
+  prim.type = PRIM_TRIANGLE;
+  prim.shading = PRIM_SHADE_FLAT;
+  prim.mapping = DRAW_ENABLE;
+  prim.fogging = DRAW_DISABLE;
+  prim.blending = DRAW_ENABLE;
+  prim.antialiasing = DRAW_DISABLE;
+  prim.mapping_type = PRIM_MAP_ST;
+  prim.colorfix = PRIM_UNFIXED;
+}
+
+void MinecraftPipeline::setLod() {
+  lod.calculation = LOD_USE_K;
+  lod.max_level = 0;
+  lod.mag_filter = LOD_MAG_NEAREST;
+  lod.min_filter = LOD_MIN_NEAREST;
+  lod.mipmap_select = LOD_MIPMAP_REGISTER;
+  lod.l = 0;
+  lod.k = 0.0F;
 }
 
 void MinecraftPipeline::onUse() {
@@ -59,7 +82,6 @@ void MinecraftPipeline::render(McpipBlock* blocks, const u32& count,
                                Texture* t_tex, const bool& isMulti,
                                const bool& fullClipChecks) {
   auto texBuffers = rendererCore->texture.useTexture(t_tex);
-  rendererCore->gs.prim.mapping = 1;
 
   manager.clearLastProgram();
   std::vector<u32> cullIndexes;

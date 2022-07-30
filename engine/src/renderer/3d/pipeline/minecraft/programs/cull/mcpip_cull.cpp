@@ -18,7 +18,10 @@ McpipCull::McpipCull() {
 
 McpipCull::~McpipCull() { packet2_free(staticPacket); }
 
-void McpipCull::init(RendererCore* core, McpipBlockData* t_blockData) {
+void McpipCull::init(RendererCore* core, McpipBlockData* t_blockData,
+                     prim_t* t_prim, lod_t* t_lod) {
+  prim = t_prim;
+  lod = t_lod;
   blockData = t_blockData;
   rendererCore = core;
   initStaticPacket();
@@ -79,9 +82,9 @@ u32 McpipCull::getMaxBlocksCountPerQBuffer() const {
 void McpipCull::initStaticPacket() {
   packet2_utils_vu_open_unpack(staticPacket, VU1_MCPIP_CULL_STATIC_LOD, false);
   {
-    packet2_utils_gs_add_lod(staticPacket, &rendererCore->gs.lod);
+    packet2_utils_gs_add_lod(staticPacket, lod);
 
-    packet2_utils_gs_add_prim_giftag(staticPacket, &rendererCore->gs.prim, 36,
+    packet2_utils_gs_add_prim_giftag(staticPacket, prim, 36,
                                      ((u64)GIF_REG_ST) << 0 |
                                          ((u64)GIF_REG_RGBAQ) << 4 |
                                          ((u64)GIF_REG_XYZ2) << 8,

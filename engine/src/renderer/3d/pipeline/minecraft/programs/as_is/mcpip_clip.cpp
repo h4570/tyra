@@ -22,7 +22,10 @@ McpipClip::McpipClip() {
 McpipClip::~McpipClip() { packet2_free(staticPacket); }
 
 void McpipClip::init(RendererCore* core, McpipBlockData* t_singleBlockData,
-                     McpipBlockData* t_multiBlockData) {
+                     McpipBlockData* t_multiBlockData, prim_t* t_prim,
+                     lod_t* t_lod) {
+  prim = t_prim;
+  lod = t_lod;
   singleBlockData = t_singleBlockData;
   multiBlockData = t_multiBlockData;
   rendererCore = core;
@@ -46,7 +49,7 @@ void McpipClip::configureVU1AndSendStaticData() {
 void McpipClip::initStaticPacket() {
   packet2_utils_vu_open_unpack(staticPacket, VU1_MCPIP_AS_IS_STATIC_LOD, false);
   {
-    packet2_utils_gs_add_lod(staticPacket, &rendererCore->gs.lod);
+    packet2_utils_gs_add_lod(staticPacket, lod);
     packet2_utils_gif_add_set(staticPacket, 1);
   }
   packet2_utils_vu_close_unpack(staticPacket);
@@ -120,7 +123,7 @@ void McpipClip::addDataToPacket(packet2_t* packet, const u8& context,
                       static_cast<float>(0xFFFFFF) / 32.0F);  // scale
     packet2_add_s32(packet, count);                           // vertex count
 
-    packet2_utils_gs_add_prim_giftag(packet, &rendererCore->gs.prim, count,
+    packet2_utils_gs_add_prim_giftag(packet, prim, count,
                                      ((u64)GIF_REG_ST) << 0 |
                                          ((u64)GIF_REG_RGBAQ) << 4 |
                                          ((u64)GIF_REG_XYZ2) << 8,

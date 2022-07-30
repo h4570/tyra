@@ -45,6 +45,7 @@ class IntroPressKeyState : public State<IntroStateType> {
   bool _wantFinish;
   bool initialized;
 
+  constexpr static float textureWidthHeight = 512.0F;
   const static u8 mapRows = 3;
   const static u8 mapCols = 3;
 

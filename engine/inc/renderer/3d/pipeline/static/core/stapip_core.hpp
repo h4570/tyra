@@ -51,6 +51,12 @@ class StaPipCore {
   void deallocateOnUse() { qbufferRenderer.deallocateOnUse(); }
 
  private:
+  void setPrim();
+  void setLod();
+
+  prim_t prim;
+  lod_t lod;
+
   u32 maxVertCount;
   RendererCore* rendererCore;
 

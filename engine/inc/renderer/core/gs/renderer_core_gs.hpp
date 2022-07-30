@@ -20,8 +20,6 @@ class RendererCoreGS {
   RendererCoreGS();
   ~RendererCoreGS();
 
-  prim_t prim;
-  lod_t lod;
   zbuffer_t zBuffer;
   RendererCoreGSVRam vram;
 
@@ -41,8 +39,6 @@ class RendererCoreGS {
 
   void allocateBuffers();
   void initDrawingEnvironment();
-  void setPrim();
-  void setLod();
   void initChannels();
   void updateCurrentField();
   qword_t* setXYOffset(qword_t* q, const int& drawContext, const float& x,

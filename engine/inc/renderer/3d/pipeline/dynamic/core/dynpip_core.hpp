@@ -58,6 +58,12 @@ class DynPipCore {
   void deallocateOnUse() { qbufferRenderer.deallocateOnUse(); }
 
  private:
+  void setPrim();
+  void setLod();
+
+  prim_t prim;
+  lod_t lod;
+
   M4x4 mvp;
   RendererCore* rendererCore;
   DynPipRenderer qbufferRenderer;

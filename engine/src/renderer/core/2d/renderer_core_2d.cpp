@@ -20,6 +20,9 @@ RendererCore2D::RendererCore2D() {
   packets[1] = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
   rects[0] = new texrect_t;
   rects[1] = new texrect_t;
+
+  setPrim();
+  setLod();
 }
 
 RendererCore2D::~RendererCore2D() {
@@ -31,6 +34,27 @@ RendererCore2D::~RendererCore2D() {
 
 const float RendererCore2D::GS_CENTER = 4096.0F;
 const float RendererCore2D::SCREEN_CENTER = 4096.0F / 2.0F;
+
+void RendererCore2D::setPrim() {
+  prim.type = PRIM_TRIANGLE;
+  prim.shading = PRIM_SHADE_GOURAUD;
+  prim.mapping = DRAW_ENABLE;
+  prim.fogging = DRAW_DISABLE;
+  prim.blending = DRAW_ENABLE;
+  prim.antialiasing = DRAW_DISABLE;
+  prim.mapping_type = PRIM_MAP_ST;
+  prim.colorfix = PRIM_UNFIXED;
+}
+
+void RendererCore2D::setLod() {
+  lod.calculation = LOD_USE_K;
+  lod.max_level = 0;
+  lod.mag_filter = LOD_MAG_LINEAR;
+  lod.min_filter = LOD_MIN_LINEAR;
+  lod.mipmap_select = LOD_MIPMAP_REGISTER;
+  lod.l = 0;
+  lod.k = 0.0F;
+}
 
 void RendererCore2D::init(RendererSettings* t_settings,
                           clutbuffer_t* t_clutBuffer) {
@@ -86,10 +110,14 @@ void RendererCore2D::render(Sprite* sprite,
   packet2_reset(packet, false);
   packet2_update(packet, draw_primitive_xyoffset(packet->base, 0, SCREEN_CENTER,
                                                  SCREEN_CENTER));
+
+  packet2_utils_gif_add_set(packet, 1);
+  packet2_utils_gs_add_lod(packet, &lod);
   packet2_utils_gif_add_set(packet, 1);
   packet2_utils_gs_add_texbuff_clut(packet, texBuffers.core, clutBuffer);
   draw_enable_blending();
   packet2_update(packet, draw_rect_textured(packet->next, 0, rect));
+
   packet2_update(packet, draw_primitive_xyoffset(
                              packet->next, 0,
                              SCREEN_CENTER - (settings->getWidth() / 2.0F),

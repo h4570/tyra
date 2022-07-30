@@ -36,10 +36,11 @@ BlockizerProgramsManager::~BlockizerProgramsManager() {
   packet2_free(programsPacket);
 }
 
-void BlockizerProgramsManager::init(RendererCore* core) {
+void BlockizerProgramsManager::init(RendererCore* core, prim_t* prim,
+                                    lod_t* lod) {
   rendererCore = core;
-  culler.init(core, &singleTexBlockData);
-  clipper.init(core, &singleTexBlockData, &multiTexBlockData);
+  culler.init(core, &singleTexBlockData, prim, lod);
+  clipper.init(core, &singleTexBlockData, &multiTexBlockData, prim, lod);
 }
 
 void BlockizerProgramsManager::setProgramsCache() {

@@ -31,7 +31,7 @@ class McpipClip {
   EEClipAlgorithmSettings algoSettings;
 
   void init(RendererCore* core, McpipBlockData* t_singleBlockData,
-            McpipBlockData* t_multiBlockData);
+            McpipBlockData* t_multiBlockData, prim_t* prim, lod_t* lod);
 
   u32 uploadVU1Program(McpipProgramsRepository* repo, const u32& addr);
 
@@ -42,6 +42,9 @@ class McpipClip {
                const u8& context);
 
  private:
+  prim_t* prim;
+  lod_t* lod;
+
   RendererCore* rendererCore;
   McpipBlockData* singleBlockData;
   McpipBlockData* multiBlockData;

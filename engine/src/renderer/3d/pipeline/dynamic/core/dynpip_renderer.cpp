@@ -45,8 +45,11 @@ void DynPipRenderer::deallocateOnUse() {
 }
 
 void DynPipRenderer::init(RendererCore* t_core,
-                          DynPipProgramsRepository* t_programRepo) {
+                          DynPipProgramsRepository* t_programRepo,
+                          prim_t* t_prim, lod_t* t_lod) {
   path1 = t_core->getPath1();
+  prim = t_prim;
+  lod = t_lod;
   rendererCore = t_core;
   programsRepo = t_programRepo;
 
@@ -122,7 +125,7 @@ void DynPipRenderer::sendObjectData(
     packet2_add_u32(objectDataPacket, 0);   // not used, padding
     packet2_add_u32(objectDataPacket, 0);   // not used, padding
 
-    packet2_utils_gs_add_lod(objectDataPacket, &rendererCore->gs.lod);
+    packet2_utils_gs_add_lod(objectDataPacket, lod);
 
     if (texBuffers != nullptr) {
       rendererCore->texture.updateClutBuffer(texBuffers->clut);
@@ -154,8 +157,7 @@ void DynPipRenderer::addBufferDataToPacket(DynPipVU1Program* program,
   for (u32 i = 0; i < count; i++) {
     if (bags[i]->count <= 0) continue;
 
-    program->addBufferDataToPacket(currentPacket, bags[i],
-                                   &rendererCore->gs.prim);
+    program->addBufferDataToPacket(currentPacket, bags[i], prim);
 
     if (lastProgramName != program->getName()) {
       packet2_utils_vu_add_start_program(currentPacket,

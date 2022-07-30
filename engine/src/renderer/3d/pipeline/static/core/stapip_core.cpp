@@ -22,14 +22,39 @@
 
 namespace Tyra {
 
-StaPipCore::StaPipCore() { maxVertCount = 0; }
+StaPipCore::StaPipCore() {
+  maxVertCount = 0;
+  setPrim();
+  setLod();
+}
 
 StaPipCore::~StaPipCore() {}
 
 void StaPipCore::init(RendererCore* t_core) {
   rendererCore = t_core;
-  qbufferRenderer.init(t_core);
+  qbufferRenderer.init(t_core, &prim, &lod);
   packager.init(&rendererCore->renderer3D.frustumPlanes);
+}
+
+void StaPipCore::setPrim() {
+  prim.type = PRIM_TRIANGLE;
+  prim.shading = PRIM_SHADE_GOURAUD;
+  prim.mapping = DRAW_ENABLE;
+  prim.fogging = DRAW_DISABLE;
+  prim.blending = DRAW_ENABLE;
+  prim.antialiasing = DRAW_DISABLE;
+  prim.mapping_type = PRIM_MAP_ST;
+  prim.colorfix = PRIM_UNFIXED;
+}
+
+void StaPipCore::setLod() {
+  lod.calculation = LOD_USE_K;
+  lod.max_level = 0;
+  lod.mag_filter = LOD_MAG_NEAREST;
+  lod.min_filter = LOD_MIN_NEAREST;
+  lod.mipmap_select = LOD_MIPMAP_REGISTER;
+  lod.l = 0;
+  lod.k = 0.0F;
 }
 
 void StaPipCore::reinitVU1Programs() { qbufferRenderer.reinitVU1(); }

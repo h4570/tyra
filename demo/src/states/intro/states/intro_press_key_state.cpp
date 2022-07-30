@@ -19,6 +19,7 @@
 using Tyra::FileUtils;
 using Tyra::Math;
 using Tyra::PngLoader;
+using Tyra::SpriteMode;
 using Tyra::Threading;
 
 namespace Demo {
@@ -44,8 +45,10 @@ void IntroPressKeyState::onStart() {
   for (u8 i = 0; i < mapRows; i++) {
     for (u8 j = 0; j < mapCols; j++) {
       mapSprites[i][j] = new Sprite;
-      mapSprites[i][j]->size.set(512.0F, 512.0F);
-      mapSprites[i][j]->position.set(i * 512.0F, j * 512.0F);
+      mapSprites[i][j]->setMode(SpriteMode::MODE_STRETCH);
+      mapSprites[i][j]->size.set(textureWidthHeight, textureWidthHeight);
+      mapSprites[i][j]->position.set(i * textureWidthHeight,
+                                     j * textureWidthHeight);
 
       std::string filename =
           "map-" + std::to_string(i) + "-" + std::to_string(j);
@@ -63,18 +66,20 @@ void IntroPressKeyState::onStart() {
 void IntroPressKeyState::update() {
   engine->renderer.beginFrame();
 
-  if (mapDirection == 0 && mapPosition.x >= 512.0F * (mapRows - 1) &&
-      mapPosition.y >= 512.0F * (mapCols - 1)) {
+  if (mapDirection == 0 &&
+      mapPosition.x >= textureWidthHeight * (mapRows - 1) &&
+      mapPosition.y >= textureWidthHeight * (mapCols - 1)) {
     mapDirection = 1;
   } else if (mapDirection == 1 && mapPosition.x <= 0.0F &&
              mapPosition.y <= 0.0F) {
     mapDirection = 0;
   }
 
+  const float offset = 0.1F;
   if (mapDirection == 0) {
-    mapPosition += .5F;
+    mapPosition += offset;
   } else if (mapDirection == 1) {
-    mapPosition -= .5F;
+    mapPosition -= offset;
   }
 
   updateMap();
@@ -92,8 +97,8 @@ IntroStateType IntroPressKeyState::onFinish() { return STATE_INTRO_END; }
 void IntroPressKeyState::updateMap() {
   for (u8 i = 0; i < mapRows; i++)
     for (u8 j = 0; j < mapCols; j++) {
-      mapSprites[i][j]->position.x = i * 512.0F - mapPosition.x;
-      mapSprites[i][j]->position.y = j * 512.0F - mapPosition.y;
+      mapSprites[i][j]->position.x = i * textureWidthHeight - mapPosition.x;
+      mapSprites[i][j]->position.y = j * textureWidthHeight - mapPosition.y;
     }
 }
 }  // namespace Demo
