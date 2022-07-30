@@ -17,7 +17,9 @@ const u32 DynamicPipeline::halfBuffersCount = buffersCount / 2;
 
 DynamicPipeline::DynamicPipeline() {}
 
-DynamicPipeline::~DynamicPipeline() {}
+DynamicPipeline::~DynamicPipeline() {
+  if (onDestroy) onDestroy(this);
+}
 
 void DynamicPipeline::setRenderer(RendererCore* t_core) {
   rendererCore = t_core;

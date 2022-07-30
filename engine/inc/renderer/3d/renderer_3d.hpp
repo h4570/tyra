@@ -19,10 +19,12 @@ class Renderer3D {
   Renderer3D();
   ~Renderer3D();
 
+  /** Deinitialize previous pipeline and initialize new pipeline */
   void usePipeline(Renderer3DPipeline* pipeline);
 
  private:
   Renderer3DPipeline* currentPipeline;
+  void onDestroy(Renderer3DPipeline* pipeline);
 };
 
 }  // namespace Tyra

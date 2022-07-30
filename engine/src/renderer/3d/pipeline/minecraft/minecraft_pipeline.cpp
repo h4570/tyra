@@ -21,6 +21,7 @@ MinecraftPipeline::MinecraftPipeline() {
 }
 
 MinecraftPipeline::~MinecraftPipeline() {
+  if (onDestroy) onDestroy(this);
   if (bbox) {
     delete bbox;
   }

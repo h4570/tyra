@@ -21,7 +21,16 @@ void Renderer3D::usePipeline(Renderer3DPipeline* pipeline) {
   if (currentPipeline != pipeline) {
     if (currentPipeline) currentPipeline->onUseEnd();
     currentPipeline = pipeline;
+    currentPipeline->onDestroy =
+        std::bind(&Renderer3D::onDestroy, this, std::placeholders::_1);
     currentPipeline->onUse();
+  }
+}
+
+void Renderer3D::onDestroy(Renderer3DPipeline* pipeline) {
+  if (currentPipeline == pipeline) {
+    currentPipeline->onUseEnd();
+    currentPipeline = nullptr;
   }
 }
 

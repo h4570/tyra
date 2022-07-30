@@ -15,7 +15,9 @@ namespace Tyra {
 
 StaticPipeline::StaticPipeline() {}
 
-StaticPipeline::~StaticPipeline() {}
+StaticPipeline::~StaticPipeline() {
+  if (onDestroy) onDestroy(this);
+}
 
 void StaticPipeline::setRenderer(RendererCore* t_core) {
   rendererCore = t_core;
