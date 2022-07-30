@@ -39,18 +39,34 @@ class IntroPressKeyState : public State<IntroStateType> {
   IntroStateType onFinish();
 
  private:
+  void renderFiller();
   void updateMap();
 
   IntroStateType state;
   bool _wantFinish;
   bool initialized;
+  bool mapFadeIn;
+  bool fillerFadeIn;
+  bool showPressKey;
+  bool pressKeyAlphaToggle;
+  u8 pressKeyAlphaDelayer;
 
+  float fillersOffset;
   constexpr static float textureWidthHeight = 512.0F;
   const static u8 mapRows = 3;
   const static u8 mapCols = 3;
 
   Vec2 mapPosition;
   u8 mapDirection;
+
+  Texture* fillerTexture;
+  Sprite* fillerSprite;
+
+  Texture* logoTexture;
+  Sprite* logoSprite;
+
+  Texture* pressKeyTexture;
+  Sprite* pressKeySprite;
 
   Texture* mapTextures[mapRows][mapCols];
   Sprite* mapSprites[mapRows][mapCols];

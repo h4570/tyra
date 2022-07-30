@@ -21,7 +21,7 @@ using Tyra::FileUtils;
 namespace Demo {
 
 IntroState::IntroState(Engine* t_engine)
-    : State(t_engine), stateManager(STATE_PRESS_KEY) {
+    : State(t_engine), stateManager(STATE_PS2DEV) {
   state = STATE_INTRO;
   _wantFinish = false;
 }
@@ -32,7 +32,7 @@ void IntroState::onStart() {
   engine->audio.loadSong(FileUtils::fromCwd("intro/intro.wav"));
   engine->audio.setSongLoop(false);
   engine->audio.setSongVolume(80);
-  // engine->audio.playSong();
+  engine->audio.playSong();
 
   stateManager.add(new IntroPs2DevState(engine));
   stateManager.add(new IntroTyraState(engine));

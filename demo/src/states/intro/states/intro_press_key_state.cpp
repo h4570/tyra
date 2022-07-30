@@ -27,8 +27,14 @@ namespace Demo {
 IntroPressKeyState::IntroPressKeyState(Engine* t_engine)
     : State(t_engine), mapPosition(0.0F, 0.0F) {
   state = STATE_PRESS_KEY;
-  mapDirection = 0;
   _wantFinish = false;
+  mapDirection = 0;
+  mapFadeIn = true;
+  fillerFadeIn = false;
+  showPressKey = false;
+  pressKeyAlphaToggle = false;
+  pressKeyAlphaDelayer = 0;
+  fillersOffset = -512.0F;
 }
 
 IntroPressKeyState::~IntroPressKeyState() {
@@ -39,12 +45,22 @@ IntroPressKeyState::~IntroPressKeyState() {
       engine->renderer.core.texture.repository.free(mapTextures[i][j]->getId());
       delete mapSprites[i][j];
     }
+
+  engine->renderer.core.texture.repository.free(fillerTexture->getId());
+  delete fillerSprite;
+
+  engine->renderer.core.texture.repository.free(logoTexture->getId());
+  delete logoSprite;
+
+  engine->renderer.core.texture.repository.free(pressKeyTexture->getId());
+  delete pressKeySprite;
 }
 
 void IntroPressKeyState::onStart() {
   for (u8 i = 0; i < mapRows; i++) {
     for (u8 j = 0; j < mapCols; j++) {
       mapSprites[i][j] = new Sprite;
+      mapSprites[i][j]->color.a = 0.0F;
       mapSprites[i][j]->setMode(SpriteMode::MODE_STRETCH);
       mapSprites[i][j]->size.set(textureWidthHeight, textureWidthHeight);
       mapSprites[i][j]->position.set(i * textureWidthHeight,
@@ -59,6 +75,31 @@ void IntroPressKeyState::onStart() {
       mapTextures[i][j]->addLink(mapSprites[i][j]->getId());
     }
   }
+
+  fillerSprite = new Sprite;
+  fillerSprite->size.set(256.0F, 50.0F);
+  fillerSprite->position.set(0.0F, 224.0F - 25.0F);
+
+  fillerTexture = engine->renderer.core.texture.repository.add(
+      FileUtils::fromCwd("intro/filler.png"));
+  fillerTexture->addLink(fillerSprite->getId());
+
+  pressKeySprite = new Sprite;
+  pressKeySprite->size.set(256.0F, 64.0F);
+  pressKeySprite->scale = 0.5F;
+  pressKeySprite->position.set(192.0F, 380.0F);
+
+  pressKeyTexture = engine->renderer.core.texture.repository.add(
+      FileUtils::fromCwd("intro/press-key.png"));
+  pressKeyTexture->addLink(pressKeySprite->getId());
+
+  logoSprite = new Sprite;
+  logoSprite->size.set(256.0F, 128.0F);
+  logoSprite->position.set(256.0F - 128.0F, 224.0F - 64.0F);
+
+  logoTexture = engine->renderer.core.texture.repository.add(
+      FileUtils::fromCwd("intro/lastalive.png"));
+  logoTexture->addLink(logoSprite->getId());
 
   initialized = true;
 }
@@ -82,6 +123,31 @@ void IntroPressKeyState::update() {
     mapPosition -= offset;
   }
 
+  if (mapFadeIn) {
+    for (u8 i = 0; i < mapRows; i++) {
+      for (u8 j = 0; j < mapCols; j++) {
+        auto* sprite = mapSprites[i][j];
+        if (sprite->color.a >= 16.0F && sprite->color.a < 32.0F) {
+          fillerFadeIn = true;
+        }
+        if (sprite->color.a < 96.0F) {
+          sprite->color.a += 0.2F;
+        } else {
+          mapFadeIn = false;
+        }
+      }
+    }
+  }
+
+  if (fillerFadeIn) {
+    if (fillersOffset < -1.0F) {
+      fillersOffset += 4.0F;
+    } else {
+      fillerFadeIn = false;
+      showPressKey = true;
+    }
+  }
+
   updateMap();
   Threading::switchThread();
 
@@ -89,16 +155,39 @@ void IntroPressKeyState::update() {
     for (u8 j = 0; j < mapCols; j++)
       engine->renderer.renderer2D.render(mapSprites[i][j]);
 
+  renderFiller();
+  engine->renderer.renderer2D.render(logoSprite);
+
+  if (showPressKey) {
+    if (pressKeyAlphaDelayer++ > 50) {
+      pressKeyAlphaToggle = !pressKeyAlphaToggle;
+      pressKeyAlphaDelayer = 0;
+    }
+
+    if (pressKeyAlphaToggle) {
+      engine->renderer.renderer2D.render(pressKeySprite);
+    }
+  }
+
   engine->renderer.endFrame();
 }
 
 IntroStateType IntroPressKeyState::onFinish() { return STATE_INTRO_END; }
 
+void IntroPressKeyState::renderFiller() {
+  fillerSprite->position.x = -1.0F + fillersOffset;
+  engine->renderer.renderer2D.render(fillerSprite);
+  fillerSprite->position.x = 255.0F + fillersOffset;
+  engine->renderer.renderer2D.render(fillerSprite);
+}
+
 void IntroPressKeyState::updateMap() {
   for (u8 i = 0; i < mapRows; i++)
     for (u8 j = 0; j < mapCols; j++) {
-      mapSprites[i][j]->position.x = i * textureWidthHeight - mapPosition.x;
-      mapSprites[i][j]->position.y = j * textureWidthHeight - mapPosition.y;
+      mapSprites[i][j]->position.x =
+          i * (textureWidthHeight + 1.0F) - mapPosition.x;
+      mapSprites[i][j]->position.y =
+          j * (textureWidthHeight + 1.0F) - mapPosition.y;
     }
 }
 }  // namespace Demo
