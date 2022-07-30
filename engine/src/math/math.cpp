@@ -136,6 +136,10 @@ float Math::asin(float x) {
   return r;
 }
 
+bool Math::equalf(const float& a, const float& b, const float& epsilon) {
+  return fabs(a - b) < epsilon;
+}
+
 float Math::mod(float x, float y) {
   /*
    * Portable fmod(x,y) implementation for systems

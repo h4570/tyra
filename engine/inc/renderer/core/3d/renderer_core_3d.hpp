@@ -37,7 +37,14 @@ class RendererCore3D {
 
   /**
    * Called by beginFrame();
+   * Sets 3D support to off
+   */
+  void update();
+
+  /**
+   * Called by beginFrame();
    * Updates camera info, to get proper frustum culling.
+   * Sets 3D support to on
    */
   void update(const CameraInfo3D& cameraInfo);
 
@@ -48,13 +55,13 @@ class RendererCore3D {
    * Get view (camera) matrix
    * Updated at every beginFrame()
    */
-  const M4x4& getView() { return view; }
+  const M4x4& getView();
 
   /**
    * Get projection * view matrix
    * Updated at every beginFrame()
    */
-  const M4x4& getViewProj() { return viewProj; }
+  const M4x4& getViewProj();
 
   /**
    * @brief
@@ -80,6 +87,7 @@ class RendererCore3D {
  private:
   M4x4 view, projection, viewProj;
   float fov;
+  bool is3DSupportEnabled;
 
   RendererSettings* settings;
 

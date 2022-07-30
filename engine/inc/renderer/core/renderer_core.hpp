@@ -47,7 +47,10 @@ class RendererCore {
   /** World background color */
   void setClearScreenColor(const Color& color);
 
-  /** Clear screen and update view frustum for frustum culling. */
+  /** Clear screen and update view frustum for frustum culling. NO 3D support */
+  void beginFrame();
+
+  /** Clear screen and update view frustum for frustum culling. 3D support */
   void beginFrame(const CameraInfo3D& cameraInfo);
 
   /** VSync and swap frame double buffer. */

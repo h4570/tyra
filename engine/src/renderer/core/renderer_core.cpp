@@ -27,6 +27,12 @@ void RendererCore::init() {
 
 void RendererCore::setClearScreenColor(const Color& color) { bgColor = color; }
 
+void RendererCore::beginFrame() {
+  renderer3D.update();
+  Threading::switchThread();
+  path3.clearScreen(&gs.zBuffer, bgColor);
+}
+
 void RendererCore::beginFrame(const CameraInfo3D& cameraInfo) {
   renderer3D.update(cameraInfo);
   Threading::switchThread();

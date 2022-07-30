@@ -37,7 +37,10 @@ class Renderer {
 
   void setFrameLimit(const bool& onoff) { core.setFrameLimit(onoff); }
 
-  /** Update view frustum for frustum culling. */
+  /** Update view frustum for frustum culling. 3D support - off */
+  void beginFrame();
+
+  /** Update view frustum for frustum culling. 3D support - on */
   void beginFrame(const CameraInfo3D& cameraInfo);
 
   /** VSync and swap frame double buffer. */

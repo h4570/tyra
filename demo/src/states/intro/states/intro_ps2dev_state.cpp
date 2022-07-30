@@ -1,0 +1,99 @@
+/*
+# ______       ____   ___
+#   |     \/   ____| |___|
+#   |     |   |   \  |   |
+#-----------------------------------------------------------------------
+# Copyright 2022, tyra - https://github.com/h4570/tyra
+# Licenced under Apache License 2.0
+# Sandro Sobczyński <sandro.sobczynski@gmail.com>
+*/
+
+#include "states/intro/states/intro_ps2dev_state.hpp"
+#include "loaders/texture/png_loader.hpp"
+#include "file/file_utils.hpp"
+#include "debug/debug.hpp"
+#include "thread/threading.hpp"
+
+using Tyra::FileUtils;
+using Tyra::PngLoader;
+using Tyra::Threading;
+
+namespace Demo {
+
+IntroPs2DevState::IntroPs2DevState(Engine* t_engine) : State(t_engine) {
+  state = STATE_PS2DEV;
+  _wantFinish = false;
+  initialized = false;
+  initialDelayElapsed = false;
+  frameSkipper = 0;
+  fadeinActivated = true;
+  fadeoutActivated = false;
+}
+
+IntroPs2DevState::~IntroPs2DevState() {
+  if (!initialized) return;
+
+  delete sprite;
+  engine->renderer.core.texture.repository.free(texture->getId());
+}
+
+void IntroPs2DevState::onStart() {
+  const auto& settings = engine->renderer.core.getSettings();
+
+  TYRA_LOG("Init!");
+
+  initialDelayTimer.prime();
+
+  sprite = new Sprite;
+  sprite->size.set(256.0F, 64.0F);
+  sprite->position.set(settings.getWidth() / 2 - sprite->size.x / 2,
+                       settings.getHeight() / 2 - sprite->size.y / 2);
+  sprite->color.a = 0;
+
+  texture = engine->renderer.core.texture.repository.add(
+      FileUtils::fromCwd("intro/ps2dev.png"));
+  texture->addLink(sprite->getId());
+
+  initialized = true;
+}
+
+void IntroPs2DevState::update() {
+  engine->renderer.beginFrame();
+
+  if (initialDelayTimer.getTimeDelta() >= 60000) initialDelayElapsed = true;
+
+  frameSkipper++;
+  if (frameSkipper > 3) {
+    frameSkipper = 0;
+  }
+
+  if (fadeinActivated && initialDelayElapsed && frameSkipper == 0) {
+    if (sprite->color.a < 128.0F)
+      sprite->color.a += 2.0F;
+    else {
+      fadeoutActivated = true;
+      fadeinActivated = false;
+    }
+    if (sprite->color.a >= 96.0F && sprite->color.a < 128.0F) {
+      sprite->color.g -= 6.0F;
+      sprite->color.b -= 6.0F;
+    }
+  }
+
+  Threading::switchThread();
+
+  if (fadeoutActivated && frameSkipper == 0) {
+    if (sprite->color.a > 0)
+      sprite->color.a -= 4;
+    else
+      _wantFinish = true;
+  }
+
+  engine->renderer.renderer2D.render(sprite);
+
+  engine->renderer.endFrame();
+}
+
+IntroStateType IntroPs2DevState::onFinish() { return STATE_TYRA; }
+
+}  // namespace Demo

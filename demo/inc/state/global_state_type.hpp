@@ -8,14 +8,10 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "demo.hpp"
+#pragma once
 
-namespace Tyra {
+namespace Demo {
 
-Demo::Demo(Engine* t_engine) { engine = t_engine; }
-Demo::~Demo() {}
+enum GlobalStateType { STATE_INTRO, STATE_GAME, STATE_EXIT };
 
-void Demo::init() { TYRA_LOG("Init!"); }
-void Demo::loop() {}
-
-}  // namespace Tyra
+}  // namespace Demo

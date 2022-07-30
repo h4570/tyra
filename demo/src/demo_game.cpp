@@ -8,13 +8,16 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "engine.hpp"
 #include "demo_game.hpp"
+#include "states/intro/intro_state.hpp"
 
-int main() {
-  Tyra::Engine engine;
-  Demo::DemoGame game(&engine);
-  engine.run(&game);
-  SleepThread();
-  return 0;
-}
+namespace Demo {
+
+DemoGame::DemoGame(Engine* t_engine)
+    : engine(t_engine), stateManager(STATE_INTRO) {}
+DemoGame::~DemoGame() {}
+
+void DemoGame::init() { stateManager.add(new IntroState(engine)); }
+void DemoGame::loop() { stateManager.update(); }
+
+}  // namespace Demo

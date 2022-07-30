@@ -30,6 +30,8 @@ class Math {
   static inline float sin(float x) { return cos(x - HALF_PI); }
   static inline float tan(float x) { return sin(x) / cos(x); }
   static float invSqrt(float x);
+  static bool equalf(const float& a, const float& b,
+                     const float& epsilon = 0.00001F);
 
  private:
   Math();

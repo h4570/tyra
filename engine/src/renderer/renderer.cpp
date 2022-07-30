@@ -20,6 +20,8 @@ void Renderer::init() {
   renderer2D.init(&core);
 }
 
+void Renderer::beginFrame() { core.beginFrame(); }
+
 void Renderer::beginFrame(const CameraInfo3D& cameraInfo) {
   core.beginFrame(cameraInfo);
 }

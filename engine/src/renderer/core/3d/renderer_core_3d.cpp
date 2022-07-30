@@ -12,13 +12,19 @@
 
 namespace Tyra {
 
-RendererCore3D::RendererCore3D() { fov = 60.0F; }
+RendererCore3D::RendererCore3D() {
+  fov = 60.0F;
+  is3DSupportEnabled = false;
+}
 RendererCore3D::~RendererCore3D() {}
+
+void RendererCore3D::update() { is3DSupportEnabled = false; }
 
 void RendererCore3D::update(const CameraInfo3D& cameraInfo) {
   frustumPlanes.update(cameraInfo, fov);
   M4x4::lookAt(&view, *cameraInfo.position, *cameraInfo.looksAt);
   viewProj = projection * view;
+  is3DSupportEnabled = true;
 }
 
 void RendererCore3D::init(RendererSettings* t_settings, Path1* t_path1) {
@@ -29,7 +35,20 @@ void RendererCore3D::init(RendererSettings* t_settings, Path1* t_path1) {
   TYRA_LOG("RendererCore3D initialized!");
 }
 
-// TODO, usunac albo private core? przesunac set/get fov?
+const M4x4& RendererCore3D::getView() {
+  TYRA_ASSERT(is3DSupportEnabled,
+              "You can't compute 3D without camera information. Please correct "
+              "your beginFrame()");
+  return view;
+}
+
+const M4x4& RendererCore3D::getViewProj() {
+  TYRA_ASSERT(is3DSupportEnabled,
+              "You can't compute 3D without camera information. Please correct "
+              "your beginFrame()");
+  return viewProj;
+}
+
 void RendererCore3D::setFov(const float& t_fov) {
   fov = t_fov;
   setProjection();

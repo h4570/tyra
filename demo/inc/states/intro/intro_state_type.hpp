@@ -10,21 +10,14 @@
 
 #pragma once
 
-#include <engine.hpp>
-#include <game.hpp>
+namespace Demo {
 
-namespace Tyra {
-
-class Demo : public Game {
- public:
-  Demo(Engine* engine);
-  ~Demo();
-
-  void init();
-  void loop();
-
- private:
-  Engine* engine;
+enum IntroStateType {
+  STATE_PS2DEV,
+  STATE_TYRA,
+  STATE_WAR_INFO,
+  STATE_PRESS_KEY,
+  STATE_INTRO_END
 };
 
-}  // namespace Tyra
+}  // namespace Demo
