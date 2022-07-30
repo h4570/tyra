@@ -14,14 +14,14 @@
 
 #include "states/intro/states/intro_ps2dev_state.hpp"
 #include "states/intro/states/intro_tyra_state.hpp"
-#include "states/intro/states/intro_war_info_state.hpp"
+#include "states/intro/states/intro_press_key_state.hpp"
 
 using Tyra::FileUtils;
 
 namespace Demo {
 
 IntroState::IntroState(Engine* t_engine)
-    : State(t_engine), stateManager(STATE_WAR_INFO) {
+    : State(t_engine), stateManager(STATE_PRESS_KEY) {
   state = STATE_INTRO;
   _wantFinish = false;
 }
@@ -36,7 +36,7 @@ void IntroState::onStart() {
 
   stateManager.add(new IntroPs2DevState(engine));
   stateManager.add(new IntroTyraState(engine));
-  stateManager.add(new IntroWarInfoState(engine));
+  stateManager.add(new IntroPressKeyState(engine));
 }
 
 void IntroState::update() { stateManager.update(); }

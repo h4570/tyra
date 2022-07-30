@@ -15,7 +15,6 @@ namespace Demo {
 enum IntroStateType {
   STATE_PS2DEV,
   STATE_TYRA,
-  STATE_WAR_INFO,
   STATE_PRESS_KEY,
   STATE_INTRO_END
 };

@@ -18,13 +18,14 @@
 using Tyra::Sprite;
 using Tyra::Texture;
 using Tyra::Timer;
+using Tyra::Vec2;
 
 namespace Demo {
 
-class IntroWarInfoState : public State<IntroStateType> {
+class IntroPressKeyState : public State<IntroStateType> {
  public:
-  IntroWarInfoState(Engine* t_engine);
-  ~IntroWarInfoState();
+  IntroPressKeyState(Engine* t_engine);
+  ~IntroPressKeyState();
 
   const IntroStateType& getState() const { return state; }
 
@@ -38,12 +39,20 @@ class IntroWarInfoState : public State<IntroStateType> {
   IntroStateType onFinish();
 
  private:
+  void updateMap();
+
   IntroStateType state;
   bool _wantFinish;
   bool initialized;
 
-  Texture* warInfoTexture;
-  Sprite* warInfoSprite;
+  const static u8 mapRows = 3;
+  const static u8 mapCols = 3;
+
+  Vec2 mapPosition;
+  u8 mapDirection;
+
+  Texture* mapTextures[mapRows][mapCols];
+  Sprite* mapSprites[mapRows][mapCols];
 };
 
 }  // namespace Demo

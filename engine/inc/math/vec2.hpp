@@ -35,6 +35,28 @@ class Vec2 {
   Vec2();
   ~Vec2();
 
+  void operator=(const Vec2& v);
+
+  Vec2 operator+(const Vec2& v) const;
+  Vec2 operator-(const Vec2& v) const;
+  Vec2 operator*(const Vec2& v) const;
+  Vec2 operator/(const Vec2& v) const;
+
+  Vec2 operator+(const float& v) const;
+  Vec2 operator-(const float& v) const;
+  Vec2 operator*(const float& v) const;
+  Vec2 operator/(const float& v) const;
+
+  void operator+=(const Vec2& v);
+  void operator-=(const Vec2& v);
+  void operator*=(const Vec2& v);
+  void operator/=(const Vec2& v);
+
+  void operator+=(const float& v);
+  void operator-=(const float& v);
+  void operator*=(const float& v);
+  void operator/=(const float& v);
+
   void set(const float& t_x, const float& t_y);
   void set(const Vec2& v);
   void rotate(const float& t_angle, const float& t_x, const float& t_y);

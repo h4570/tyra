@@ -170,6 +170,6 @@ void IntroTyraState::renderFillers() {
   engine->renderer.renderer2D.render(fillerSprite);
 }
 
-IntroStateType IntroTyraState::onFinish() { return STATE_WAR_INFO; }
+IntroStateType IntroTyraState::onFinish() { return STATE_PRESS_KEY; }
 
 }  // namespace Demo

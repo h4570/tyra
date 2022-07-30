@@ -56,6 +56,10 @@ std::string FileUtils::getCwd() {
   return result;
 }
 
+std::string FileUtils::fromCwd(const std::string& relativePath) {
+  return fromCwd(relativePath.c_str());
+}
+
 std::string FileUtils::fromCwd(const char* file) {
   auto cwd = getCwd();
   return cwd + file;

@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace Tyra {
 
 class FileUtils {
@@ -18,6 +20,7 @@ class FileUtils {
   ~FileUtils();
 
   static std::string getCwd();
+  static std::string fromCwd(const std::string& relativePath);
   static std::string fromCwd(const char* relativePath);
 
   const char* getElfName() const { return elfName; };

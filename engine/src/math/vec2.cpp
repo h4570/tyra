@@ -54,6 +54,55 @@ void Vec2::rotate(const float& t_angle, const float& t_x, const float& t_y) {
   y = ynew + t_y;
 }
 
+void Vec2::operator=(const Vec2& v) {
+  x = v.x;
+  y = v.y;
+}
+
+Vec2 Vec2::operator+(const Vec2& v) const { return Vec2(x + v.x, y + v.y); }
+Vec2 Vec2::operator-(const Vec2& v) const { return Vec2(x - v.x, y - v.y); }
+Vec2 Vec2::operator*(const Vec2& v) const { return Vec2(x * v.x, y * v.y); }
+Vec2 Vec2::operator/(const Vec2& v) const { return Vec2(x / v.x, y / v.y); }
+
+Vec2 Vec2::operator+(const float& v) const { return Vec2(x + v, y + v); }
+Vec2 Vec2::operator-(const float& v) const { return Vec2(x - v, y - v); }
+Vec2 Vec2::operator*(const float& v) const { return Vec2(x * v, y * v); }
+Vec2 Vec2::operator/(const float& v) const { return Vec2(x / v, y / v); }
+
+void Vec2::operator+=(const Vec2& v) {
+  x += v.x;
+  y += v.y;
+}
+void Vec2::operator-=(const Vec2& v) {
+  x -= v.x;
+  y -= v.y;
+}
+void Vec2::operator*=(const Vec2& v) {
+  x *= v.x;
+  y *= v.y;
+}
+void Vec2::operator/=(const Vec2& v) {
+  x /= v.x;
+  y /= v.y;
+}
+
+void Vec2::operator+=(const float& v) {
+  x += v;
+  y += v;
+}
+void Vec2::operator-=(const float& v) {
+  x -= v;
+  y -= v;
+}
+void Vec2::operator*=(const float& v) {
+  x *= v;
+  y *= v;
+}
+void Vec2::operator/=(const float& v) {
+  x /= v;
+  y /= v;
+}
+
 void Vec2::print() const {
   auto text = getPrint(nullptr);
   printf("%s\n", text.c_str());
