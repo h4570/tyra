@@ -37,10 +37,12 @@ IntroTyraState::~IntroTyraState() {
 
   engine->renderer.core.texture.repository.free(tyraTexture->getId());
   engine->renderer.core.texture.repository.free(bgTexture->getId());
+  engine->renderer.core.texture.repository.free(bg2Texture->getId());
   engine->renderer.core.texture.repository.free(fillerTexture->getId());
 
   delete tyraSprite;
   delete bgSprite;
+  delete bg2Sprite;
   delete fillerSprite;
 }
 

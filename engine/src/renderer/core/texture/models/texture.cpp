@@ -24,18 +24,20 @@ Texture::Texture(TextureBuilderData* t_data) {
 
   name = t_data->name;
 
-  TYRA_ASSERT(t_data->width <= 256 && t_data->height <= 256,
-              "Tyra supports only 256x256 textures max!");
+  TYRA_ASSERT(t_data->width <= 512 && t_data->height <= 512,
+              "Tyra supports only 512x512 textures max!");
 
   TYRA_ASSERT(t_data->width == 8 || t_data->width == 16 ||
                   t_data->width == 32 || t_data->width == 64 ||
-                  t_data->width == 128 || t_data->width == 256,
-              "Texture width/height should be 8/16/32/64/128/256!");
+                  t_data->width == 128 || t_data->width == 256 ||
+                  t_data->width == 512,
+              "Texture width/height should be 8/16/32/64/128/256/512!");
 
   TYRA_ASSERT(t_data->height == 8 || t_data->height == 16 ||
                   t_data->height == 32 || t_data->height == 64 ||
-                  t_data->height == 128 || t_data->height == 256,
-              "Texture width/height should be 8/16/32/64/128/256!");
+                  t_data->height == 128 || t_data->height == 256 ||
+                  t_data->height == 512,
+              "Texture width/height should be 8/16/32/64/128/256/512!");
 
   core = new TextureData(t_data->data, t_data->bpp, t_data->gsComponents,
                          t_data->width, t_data->height);

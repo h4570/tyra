@@ -31,10 +31,24 @@ IntroWarInfoState::~IntroWarInfoState() {
   if (!initialized) return;
 }
 
-void IntroWarInfoState::onStart() { initialized = true; }
+void IntroWarInfoState::onStart() {
+  warInfoSprite = new Sprite;
+  warInfoSprite->size.set(512.0F, 512.0F);
+  warInfoSprite->position.set(0.0F, 0.0F);
+
+  warInfoTexture = engine->renderer.core.texture.repository.add(
+      FileUtils::fromCwd("intro/war_info.png"));
+  warInfoTexture->addLink(warInfoSprite->getId());
+
+  initialized = true;
+}
 
 void IntroWarInfoState::update() {
   engine->renderer.beginFrame();
+
+  Threading::switchThread();
+
+  engine->renderer.renderer2D.render(warInfoSprite);
 
   engine->renderer.endFrame();
 }

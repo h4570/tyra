@@ -41,6 +41,9 @@ class IntroWarInfoState : public State<IntroStateType> {
   IntroStateType state;
   bool _wantFinish;
   bool initialized;
+
+  Texture* warInfoTexture;
+  Sprite* warInfoSprite;
 };
 
 }  // namespace Demo
