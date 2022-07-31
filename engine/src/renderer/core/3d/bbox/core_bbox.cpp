@@ -195,7 +195,7 @@ CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,
     for (u8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
       boxCalcTemp = model * _vertices[y];
 
-      auto isOut = frustumPlanes[i].distanceTo(boxCalcTemp) < margin;
+      auto isOut = frustumPlanes[i].distanceTo(boxCalcTemp) <= margin;
 
       if (isOut)
         boxOut++;

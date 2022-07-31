@@ -19,8 +19,6 @@ EEClipAlgorithm::~EEClipAlgorithm() { delete[] tempVertices; }
 float EEClipAlgorithm::clipMargin = -10.0F;
 
 void EEClipAlgorithm::init(const RendererSettings& settings) {
-  // halfWidth = settings.getWidth() / 2;
-  // halfHeight = settings.getHeight() / 2;
   halfWidth = 0.5F;
   halfHeight = 0.5F;
   near = settings.getNear() - (-clipMargin);
