@@ -30,17 +30,12 @@ IntroPs2DevState::IntroPs2DevState(Engine* t_engine) : State(t_engine) {
   fadeoutActivated = false;
 }
 
-IntroPs2DevState::~IntroPs2DevState() {
-  if (!initialized) return;
-
-  delete sprite;
-  engine->renderer.core.texture.repository.free(texture->getId());
-}
+IntroPs2DevState::~IntroPs2DevState() {}
 
 void IntroPs2DevState::onStart() {
-  const auto& settings = engine->renderer.core.getSettings();
+  TYRA_LOG("Intro - ps2dev. RAM: ", engine->info.getAvailableRAM(), "MB");
 
-  TYRA_LOG("Init!");
+  const auto& settings = engine->renderer.core.getSettings();
 
   initialDelayTimer.prime();
 
@@ -57,10 +52,24 @@ void IntroPs2DevState::onStart() {
   initialized = true;
 }
 
+IntroStateType IntroPs2DevState::onFinish() {
+  if (!initialized) return STATE_TYRA;
+
+  delete sprite;
+  engine->renderer.core.texture.repository.free(texture->getId());
+
+  initialized = false;
+  return STATE_TYRA;
+}
+
 void IntroPs2DevState::update() {
   engine->renderer.beginFrame();
 
   if (initialDelayTimer.getTimeDelta() >= 60000) initialDelayElapsed = true;
+
+  if (engine->pad.getClicked().Cross) {
+    _wantFinish = true;
+  }
 
   frameSkipper++;
   if (frameSkipper > 3) {
@@ -93,7 +102,5 @@ void IntroPs2DevState::update() {
 
   engine->renderer.endFrame();
 }
-
-IntroStateType IntroPs2DevState::onFinish() { return STATE_TYRA; }
 
 }  // namespace Demo

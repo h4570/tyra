@@ -37,26 +37,11 @@ IntroPressKeyState::IntroPressKeyState(Engine* t_engine)
   fillersOffset = -512.0F;
 }
 
-IntroPressKeyState::~IntroPressKeyState() {
-  if (!initialized) return;
-
-  for (u8 i = 0; i < mapRows; i++)
-    for (u8 j = 0; j < mapCols; j++) {
-      engine->renderer.core.texture.repository.free(mapTextures[i][j]->getId());
-      delete mapSprites[i][j];
-    }
-
-  engine->renderer.core.texture.repository.free(fillerTexture->getId());
-  delete fillerSprite;
-
-  engine->renderer.core.texture.repository.free(logoTexture->getId());
-  delete logoSprite;
-
-  engine->renderer.core.texture.repository.free(pressKeyTexture->getId());
-  delete pressKeySprite;
-}
+IntroPressKeyState::~IntroPressKeyState() {}
 
 void IntroPressKeyState::onStart() {
+  TYRA_LOG("Intro - presskey. RAM: ", engine->info.getAvailableRAM(), "MB");
+
   for (u8 i = 0; i < mapRows; i++) {
     for (u8 j = 0; j < mapCols; j++) {
       mapSprites[i][j] = new Sprite;
@@ -104,6 +89,28 @@ void IntroPressKeyState::onStart() {
   initialized = true;
 }
 
+IntroStateType IntroPressKeyState::onFinish() {
+  if (!initialized) return STATE_INTRO_END;
+
+  for (u8 i = 0; i < mapRows; i++)
+    for (u8 j = 0; j < mapCols; j++) {
+      engine->renderer.core.texture.repository.free(mapTextures[i][j]->getId());
+      delete mapSprites[i][j];
+    }
+
+  engine->renderer.core.texture.repository.free(fillerTexture->getId());
+  delete fillerSprite;
+
+  engine->renderer.core.texture.repository.free(logoTexture->getId());
+  delete logoSprite;
+
+  engine->renderer.core.texture.repository.free(pressKeyTexture->getId());
+  delete pressKeySprite;
+
+  initialized = false;
+  return STATE_INTRO_END;
+}
+
 void IntroPressKeyState::update() {
   engine->renderer.beginFrame();
 
@@ -114,6 +121,10 @@ void IntroPressKeyState::update() {
   } else if (mapDirection == 1 && mapPosition.x <= 0.0F &&
              mapPosition.y <= 0.0F) {
     mapDirection = 0;
+  }
+
+  if (engine->pad.getClicked().Cross) {
+    _wantFinish = true;
   }
 
   const float offset = 0.1F;
@@ -171,8 +182,6 @@ void IntroPressKeyState::update() {
 
   engine->renderer.endFrame();
 }
-
-IntroStateType IntroPressKeyState::onFinish() { return STATE_INTRO_END; }
 
 void IntroPressKeyState::renderFiller() {
   fillerSprite->position.x = -1.0F + fillersOffset;

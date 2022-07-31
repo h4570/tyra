@@ -19,20 +19,56 @@ namespace Demo {
 template <typename StateTypeT>
 class StateManager {
  public:
-  StateManager(const StateTypeT& initialState) {
+  StateManager(const StateTypeT& t_initialState,
+               const StateTypeT& t_exitState) {
     stateInitialized = false;
-    currentState = initialState;
+    currentState = t_initialState;
+    exitState = t_exitState;
   }
 
-  ~StateManager() {
-    for (auto& state : states) {
-      delete state;
-    }
-  }
+  ~StateManager() { freeAll(); }
 
   const StateTypeT& getCurrentState() const { return currentState; }
 
+  const StateTypeT& getExitState() const { return exitState; }
+
+  bool finished() const { return currentState == exitState; }
+
+  std::vector<State<StateTypeT>*>* getAll() { return &states; }
+
+  State<StateTypeT>* get(const StateTypeT& stateType) {
+    for (auto& state : states) {
+      if (state->getState() == stateType) {
+        return state;
+      }
+    }
+    return nullptr;
+  }
+
   void add(State<StateTypeT>* state) { states.push_back(state); }
+
+  /** remove (without free) */
+  void remove(const State<StateTypeT>* state) {
+    states.erase(std::remove(states.begin(), states.end(), state),
+                 states.end());
+  }
+
+  /** free and remove */
+  void free(const State<StateTypeT>* state) {
+    auto* found = get(state);
+    if (!found) return;
+
+    remove(found);
+    delete found;
+  }
+
+  /** free and remove all */
+  void freeAll() {
+    for (auto& state : states) {
+      delete state;
+    }
+    states.clear();
+  }
 
   void update() {
     for (auto& state : states) {
@@ -57,7 +93,7 @@ class StateManager {
  private:
   bool stateInitialized;
   std::vector<State<StateTypeT>*> states;
-  StateTypeT currentState;
+  StateTypeT currentState, exitState;
 };
 
 }  // namespace Demo

@@ -33,10 +33,10 @@ class IntroPressKeyState : public State<IntroStateType> {
 
   void onStart();
 
-  void update();
-
   /** @return Next game state */
   IntroStateType onFinish();
+
+  void update();
 
  private:
   void renderFiller();

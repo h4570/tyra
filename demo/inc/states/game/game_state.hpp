@@ -12,15 +12,13 @@
 
 #include "state/state.hpp"
 #include "state/global_state_type.hpp"
-#include "state/state_manager.hpp"
-#include "./intro_state_type.hpp"
 
 namespace Demo {
 
-class IntroState : public State<GlobalStateType> {
+class GameState : public State<GlobalStateType> {
  public:
-  IntroState(Engine* t_engine);
-  ~IntroState();
+  GameState(Engine* t_engine);
+  ~GameState();
 
   const GlobalStateType& getState() const { return state; }
 
@@ -37,8 +35,6 @@ class IntroState : public State<GlobalStateType> {
   GlobalStateType state;
   bool _wantFinish;
   bool initialized;
-
-  StateManager<IntroStateType> stateManager;
 };
 
 }  // namespace Demo

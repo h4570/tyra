@@ -32,21 +32,11 @@ IntroTyraState::IntroTyraState(Engine* t_engine) : State(t_engine) {
   frameSkipper = 0;
 }
 
-IntroTyraState::~IntroTyraState() {
-  if (!initialized) return;
-
-  engine->renderer.core.texture.repository.free(tyraTexture->getId());
-  engine->renderer.core.texture.repository.free(bgTexture->getId());
-  engine->renderer.core.texture.repository.free(bg2Texture->getId());
-  engine->renderer.core.texture.repository.free(fillerTexture->getId());
-
-  delete tyraSprite;
-  delete bgSprite;
-  delete bg2Sprite;
-  delete fillerSprite;
-}
+IntroTyraState::~IntroTyraState() {}
 
 void IntroTyraState::onStart() {
+  TYRA_LOG("Intro - tyra. RAM: ", engine->info.getAvailableRAM(), "MB");
+
   const auto& settings = engine->renderer.core.getSettings();
 
   initialDelayTimer.prime();
@@ -90,6 +80,23 @@ void IntroTyraState::onStart() {
   initialized = true;
 }
 
+IntroStateType IntroTyraState::onFinish() {
+  if (!initialized) return STATE_PRESS_KEY;
+
+  engine->renderer.core.texture.repository.free(tyraTexture->getId());
+  engine->renderer.core.texture.repository.free(bgTexture->getId());
+  engine->renderer.core.texture.repository.free(bg2Texture->getId());
+  engine->renderer.core.texture.repository.free(fillerTexture->getId());
+
+  delete tyraSprite;
+  delete bgSprite;
+  delete bg2Sprite;
+  delete fillerSprite;
+
+  initialized = false;
+  return STATE_PRESS_KEY;
+}
+
 void IntroTyraState::update() {
   engine->renderer.beginFrame();
 
@@ -98,6 +105,10 @@ void IntroTyraState::update() {
   frameSkipper++;
   if (frameSkipper > 3) {
     frameSkipper = 0;
+  }
+
+  if (engine->pad.getClicked().Cross) {
+    _wantFinish = true;
   }
 
   const float slideUpMaxPost = -128.0F;
@@ -169,7 +180,5 @@ void IntroTyraState::renderFillers() {
   fillerSprite->position.set(386.0F, 128.0F);
   engine->renderer.renderer2D.render(fillerSprite);
 }
-
-IntroStateType IntroTyraState::onFinish() { return STATE_PRESS_KEY; }
 
 }  // namespace Demo

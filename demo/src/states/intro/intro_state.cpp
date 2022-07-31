@@ -21,26 +21,44 @@ using Tyra::FileUtils;
 namespace Demo {
 
 IntroState::IntroState(Engine* t_engine)
-    : State(t_engine), stateManager(STATE_PS2DEV) {
+    : State(t_engine), stateManager(STATE_PS2DEV, STATE_INTRO_END) {
   state = STATE_INTRO;
   _wantFinish = false;
+  initialized = false;
 }
 
 IntroState::~IntroState() {}
 
 void IntroState::onStart() {
+  TYRA_LOG("Intro. RAM: ", engine->info.getAvailableRAM(), "MB");
+
   engine->audio.loadSong(FileUtils::fromCwd("intro/intro.wav"));
   engine->audio.setSongLoop(false);
   engine->audio.setSongVolume(80);
-  engine->audio.playSong();
+  // engine->audio.playSong();
 
   stateManager.add(new IntroPs2DevState(engine));
   stateManager.add(new IntroTyraState(engine));
   stateManager.add(new IntroPressKeyState(engine));
+
+  initialized = true;
 }
 
-void IntroState::update() { stateManager.update(); }
+GlobalStateType IntroState::onFinish() {
+  if (!initialized) return STATE_GAME;
 
-GlobalStateType IntroState::onFinish() { return STATE_EXIT; }
+  stateManager.freeAll();
+
+  initialized = false;
+  return STATE_GAME;
+}
+
+void IntroState::update() {
+  stateManager.update();
+
+  if (stateManager.finished()) {
+    _wantFinish = true;
+  }
+}
 
 }  // namespace Demo
