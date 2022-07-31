@@ -20,12 +20,16 @@ class StaPipOptions : public PipelineOptions {
   ~StaPipOptions() {}
 
   /**
-   * @brief False -> disables "clip against each plane" algorithm.
-   * Mandatory, default: True.
+   * @brief True -> enables "clip against each plane" algorithm.
+   * Mandatory, default: False.
    *
    * Full clip checks are slow, but they are
    * preventing visual artifacts, which can happen
-   * for big 3D objects (or objects near camera eyes)
+   * for big 3D objects (or objects near camera eyes).
+   *
+   * There is other way to prevent these glitches. Just convert your triangles
+   * to smaller triangles (for example 1 big triangle to 10 smaller). It will
+   * be way faster than enabling this option...
    */
   bool fullClipChecks;
 };
