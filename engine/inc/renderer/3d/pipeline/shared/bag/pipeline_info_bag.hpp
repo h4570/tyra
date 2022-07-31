@@ -15,6 +15,7 @@
 #include "math/vec4.hpp"
 #include "../pipeline_shading_type.hpp"
 #include "../pipeline_texture_mapping_type.hpp"
+#include "../pipeline_transformation_type.hpp"
 
 namespace Tyra {
 
@@ -28,6 +29,7 @@ class PipelineInfoBag {
 
   PipelineShadingType shadingType;
   PipelineTextureMappingType textureMappingType;
+  PipelineTransformationType transformationType;
   bool blendingEnabled;
   bool antiAliasingEnabled;
 

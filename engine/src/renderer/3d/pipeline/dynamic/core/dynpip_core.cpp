@@ -63,7 +63,11 @@ void DynPipCore::initParts(DynPipBag* bag) {
     texBuffers = new RendererCoreTextureBuffers{temp.id, temp.core, temp.clut};
   }
 
-  mvp = rendererCore->renderer3D.getViewProj() * *bag->info->model;
+  if (bag->info->transformationType == TyraMP) {
+    mvp = rendererCore->renderer3D.getProjection() * *bag->info->model;
+  } else {
+    mvp = rendererCore->renderer3D.getViewProj() * *bag->info->model;
+  }
 
   qbufferRenderer.sendObjectData(bag, &mvp, texBuffers);
 

@@ -13,6 +13,7 @@
 #include "../shared/pipeline_shading_type.hpp"
 #include "../shared/pipeline_lighting_options.hpp"
 #include "../shared/pipeline_texture_mapping_type.hpp"
+#include "../shared/pipeline_transformation_type.hpp"
 #include "./pipeline_frustum_culling.hpp"
 
 namespace Tyra {
@@ -25,14 +26,27 @@ class PipelineOptions {
     blendingEnabled = true;
     shadingType = TyraShadingFlat;
     textureMappingType = TyraLinear;
+    transformationType = TyraMVP;
   }
   ~PipelineOptions() {}
 
+  /** Type of frustum culling */
   PipelineFrustumCulling frustumCulling;
+
+  /** Flat or gouraud */
   PipelineShadingType shadingType;
+
+  /** Linear or nearest */
   PipelineTextureMappingType textureMappingType;
+
+  /** Blending texture with color */
   bool blendingEnabled;
+
+  /** Anti-aliasing */
   bool antiAliasingEnabled;
+
+  /** Multiply by model matrix by MVP or MP */
+  PipelineTransformationType transformationType;
 
   /** Optional */
   PipelineLightingOptions* lighting;

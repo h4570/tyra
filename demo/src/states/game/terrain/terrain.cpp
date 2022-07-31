@@ -20,7 +20,7 @@ namespace Demo {
 Terrain::Terrain(TextureRepository* repo) {
   TyrobjLoader loader;
   auto* data = loader.load(
-      FileUtils::fromCwd("game/models/terrain/terrain.obj"), 1, 5.0F, true);
+      FileUtils::fromCwd("game/models/terrain/terrain.obj"), 1, 25.0F, true);
   data->normalsEnabled = false;
   mesh = new StaticMesh(*data);
   mesh->getMaterial(0)->color.r = 96.0F;

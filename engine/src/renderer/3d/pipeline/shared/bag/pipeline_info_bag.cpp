@@ -14,6 +14,7 @@ namespace Tyra {
 
 PipelineInfoBag::PipelineInfoBag() {
   shadingType = TyraShadingFlat;
+  transformationType = TyraMVP;
   textureMappingType = TyraLinear;
   blendingEnabled = true;
   antiAliasingEnabled = false;

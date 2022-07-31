@@ -47,6 +47,11 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
       !(frustumCulling != PipelineFrustumCulling_Precise &&
         infoBag->fullClipChecks == true),
       "Full clip checks are only supported with frustum culling == Precise!");
+  TYRA_ASSERT(options->transformationType == TyraMVP ||
+                  (!options->fullClipChecks &&
+                   options->frustumCulling == PipelineFrustumCulling_None),
+              "Please disable clip checks and frustum culling if not using MVP "
+              "matrix!");
 
   if (frustumCulling == PipelineFrustumCulling_Simple) {
     auto* frame = mesh->getFrame();
@@ -95,12 +100,14 @@ PipelineInfoBag* StaticPipeline::getInfoBag(StaticMesh* mesh,
     result->shadingType = options->shadingType;
     result->fullClipChecks = options->fullClipChecks;
     result->textureMappingType = options->textureMappingType;
+    result->transformationType = options->transformationType;
   } else {
     result->antiAliasingEnabled = false;
     result->blendingEnabled = true;
     result->shadingType = TyraShadingFlat;
     result->textureMappingType = TyraLinear;
     result->fullClipChecks = false;
+    result->transformationType = TyraMVP;
   }
 
   result->model = model;

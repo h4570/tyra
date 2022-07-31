@@ -212,11 +212,13 @@ PipelineInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
     result->blendingEnabled = options->blendingEnabled;
     result->shadingType = options->shadingType;
     result->textureMappingType = options->textureMappingType;
+    result->transformationType = options->transformationType;
   } else {
     result->antiAliasingEnabled = false;
     result->blendingEnabled = true;
     result->shadingType = TyraShadingFlat;
     result->textureMappingType = TyraLinear;
+    result->transformationType = TyraMVP;
   }
 
   result->model = model;

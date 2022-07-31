@@ -18,6 +18,7 @@ using Tyra::Renderer;
 using Tyra::StaPipOptions;
 using Tyra::StaticMesh;
 using Tyra::TextureRepository;
+using Tyra::Vec4;
 
 namespace Demo {
 
@@ -30,6 +31,7 @@ class Weapon {
   StaPipOptions* options;
 
   void update();
+  // void debugPosition(Pad* pad);
 
  private:
   void allocateOptions();

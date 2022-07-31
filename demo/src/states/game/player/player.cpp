@@ -18,9 +18,9 @@ Player::Player(Engine* engine)
       camera(&engine->pad) {
   staticPairs.push_back(new RendererStaticPair{weapon.mesh, weapon.options});
   pad = &engine->pad;
-  position = Vec4(3.0F, 3.0F, 0.0F);
+  position = Vec4(3.0F, 15.0F, 0.0F);
   camera.lookAt = Vec4(0.0F, 0.0F, -30.0F);
-  speed = 0.5F;
+  speed = 2.0F;
 }
 
 Player::~Player() {

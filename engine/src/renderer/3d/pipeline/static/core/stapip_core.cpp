@@ -96,6 +96,10 @@ void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
   TYRA_ASSERT(
       !bag->texture || (bag->texture->texture && bag->texture->coordinates),
       "If you want texture, please provide texture and coordinates!");
+  TYRA_ASSERT(bag->info->transformationType == TyraMVP ||
+                  (!bag->info->fullClipChecks && !frustumCull),
+              "Please disable clip checks and frustum culling if not using MVP "
+              "matrix!");
   TYRA_ASSERT(!(frustumCull == false && bag->info->fullClipChecks == true),
               "Full clip checks are not supported with frustum culling = off!");
 
@@ -126,7 +130,13 @@ void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
 
   packager.setRenderBBox(renderBbox);
 
-  auto mvp = rendererCore->renderer3D.getViewProj() * *bag->info->model;
+  M4x4 mvp;
+
+  if (bag->info->transformationType == TyraMP) {
+    mvp = rendererCore->renderer3D.getProjection() * *bag->info->model;
+  } else {
+    mvp = rendererCore->renderer3D.getViewProj() * *bag->info->model;
+  }
 
   RendererCoreTextureBuffers* texBuffers = nullptr;
   if (bag->texture) {
