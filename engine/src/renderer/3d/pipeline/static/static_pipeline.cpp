@@ -94,10 +94,12 @@ PipelineInfoBag* StaticPipeline::getInfoBag(StaticMesh* mesh,
     result->blendingEnabled = options->blendingEnabled;
     result->shadingType = options->shadingType;
     result->fullClipChecks = options->fullClipChecks;
+    result->textureMappingType = options->textureMappingType;
   } else {
     result->antiAliasingEnabled = false;
     result->blendingEnabled = true;
     result->shadingType = TyraShadingFlat;
+    result->textureMappingType = TyraLinear;
     result->fullClipChecks = false;
   }
 
@@ -127,8 +129,9 @@ StaPipTextureBag* StaticPipeline::getTextureBag(
 
   result->texture =
       rendererCore->texture.repository.getBySpriteOrMesh(material->getId());
-  TYRA_ASSERT(result->texture, "Texture for material id: ", material->getId(),
-              "was not found in texture repository!");
+  TYRA_ASSERT(
+      result->texture, "Texture for material id: ", material->getId(),
+      "was not found in texture repository! Did you forget to add texture?");
 
   result->coordinates = materialFrame->getTextureCoords();
 

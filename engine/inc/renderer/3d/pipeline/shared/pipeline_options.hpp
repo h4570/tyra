@@ -10,8 +10,9 @@
 
 #pragma once
 
-#include "renderer/3d/pipeline/shared/pipeline_shading_type.hpp"
+#include "../shared/pipeline_shading_type.hpp"
 #include "../shared/pipeline_lighting_options.hpp"
+#include "../shared/pipeline_texture_mapping_type.hpp"
 #include "./pipeline_frustum_culling.hpp"
 
 namespace Tyra {
@@ -23,11 +24,13 @@ class PipelineOptions {
     antiAliasingEnabled = false;
     blendingEnabled = true;
     shadingType = TyraShadingFlat;
+    textureMappingType = TyraLinear;
   }
   ~PipelineOptions() {}
 
   PipelineFrustumCulling frustumCulling;
   PipelineShadingType shadingType;
+  PipelineTextureMappingType textureMappingType;
   bool blendingEnabled;
   bool antiAliasingEnabled;
 

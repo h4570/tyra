@@ -12,6 +12,10 @@
 
 #include "state/state.hpp"
 #include "state/global_state_type.hpp"
+#include "./player/player.hpp"
+#include "./renderer/game_renderer.hpp"
+#include "./terrain/terrain.hpp"
+#include "./debug_object.hpp"
 
 namespace Demo {
 
@@ -35,6 +39,12 @@ class GameState : public State<GlobalStateType> {
   GlobalStateType state;
   bool _wantFinish;
   bool initialized;
+  u8 fpsChecker;
+
+  GameRenderer renderer;
+  Player player;
+  Terrain terrain;
+  DebugObject dbgObj;
 };
 
 }  // namespace Demo

@@ -41,8 +41,8 @@ void DynPipCore::setPrim() {
 void DynPipCore::setLod() {
   lod.calculation = LOD_USE_K;
   lod.max_level = 0;
-  lod.mag_filter = LOD_MAG_NEAREST;
-  lod.min_filter = LOD_MIN_NEAREST;
+  lod.mag_filter = LOD_MAG_LINEAR;
+  lod.min_filter = LOD_MIN_LINEAR;
   lod.mipmap_select = LOD_MIPMAP_REGISTER;
   lod.l = 0;
   lod.k = 0.0F;
@@ -68,6 +68,20 @@ void DynPipCore::initParts(DynPipBag* bag) {
   qbufferRenderer.sendObjectData(bag, &mvp, texBuffers);
 
   delete texBuffers;
+}
+
+void DynPipCore::updatePrimLod(PipelineInfoBag* bag) {
+  prim.antialiasing = bag->antiAliasingEnabled;
+  prim.blending = bag->blendingEnabled;
+  prim.shading = bag->shadingType;
+
+  if (bag->textureMappingType == TyraLinear) {
+    lod.mag_filter = LOD_MAG_LINEAR;
+    lod.min_filter = LOD_MIN_LINEAR;
+  } else {
+    lod.mag_filter = LOD_MAG_NEAREST;
+    lod.min_filter = LOD_MIN_NEAREST;
+  }
 }
 
 void DynPipCore::renderPart(DynPipBag** bags, const u32& count,

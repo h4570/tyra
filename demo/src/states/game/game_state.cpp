@@ -9,19 +9,20 @@
 */
 
 #include "states/game/game_state.hpp"
-#include "file/file_utils.hpp"
-#include "thread/threading.hpp"
 #include "debug/debug.hpp"
-
-using Tyra::FileUtils;
-using Tyra::Threading;
 
 namespace Demo {
 
-GameState::GameState(Engine* t_engine) : State(t_engine) {
+GameState::GameState(Engine* t_engine)
+    : State(t_engine),
+      renderer(&t_engine->renderer),
+      player(t_engine),
+      terrain(&t_engine->renderer.core.texture.repository),
+      dbgObj(&t_engine->renderer.core.texture.repository) {
   state = STATE_GAME;
   _wantFinish = false;
   initialized = false;
+  fpsChecker = 0;
 }
 
 GameState::~GameState() {}
@@ -42,8 +43,26 @@ GlobalStateType GameState::onFinish() {
 }
 
 void GameState::update() {
-  engine->renderer.beginFrame();
-  Threading::switchThread();
+  if (fpsChecker++ > 100) {
+    TYRA_LOG("FPS: ", engine->info.getFps());
+    fpsChecker = 0;
+  }
+
+  auto cameraInfo = player.getCameraInfo();
+  engine->renderer.beginFrame(cameraInfo);
+
+  player.update();
+  dbgObj.setPosition(*cameraInfo.looksAt);
+
+  renderer.clear();
+  {
+    renderer.add(player.staticPairs);
+    renderer.add(player.dynamicPairs);
+    renderer.add(terrain.pair);
+    renderer.add(dbgObj.pair);
+  }
+  renderer.render();
+
   engine->renderer.endFrame();
 }
 

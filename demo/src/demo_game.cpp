@@ -15,7 +15,7 @@
 namespace Demo {
 
 DemoGame::DemoGame(Engine* t_engine)
-    : engine(t_engine), stateManager(STATE_INTRO, STATE_EXIT) {}
+    : engine(t_engine), stateManager(STATE_GAME, STATE_EXIT) {}
 DemoGame::~DemoGame() {}
 
 void DemoGame::init() {

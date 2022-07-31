@@ -29,6 +29,7 @@ class DynPipCore {
 
   /** Force starting VU1 program instead of continueing */
   void clear() { qbufferRenderer.clearLastProgramName(); }
+  void updatePrimLod(PipelineInfoBag* bag);
 
   /**
    * Send model matrix, lighting data and other

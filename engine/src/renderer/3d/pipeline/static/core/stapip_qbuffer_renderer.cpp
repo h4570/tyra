@@ -159,6 +159,14 @@ void StaPipQBufferRenderer::setInfo(PipelineInfoBag* bag) {
   prim->antialiasing = bag->antiAliasingEnabled;
   prim->blending = bag->blendingEnabled;
   prim->shading = bag->shadingType;
+
+  if (bag->textureMappingType == TyraLinear) {
+    lod->mag_filter = LOD_MAG_LINEAR;
+    lod->min_filter = LOD_MIN_LINEAR;
+  } else {
+    lod->mag_filter = LOD_MAG_NEAREST;
+    lod->min_filter = LOD_MIN_NEAREST;
+  }
 }
 
 void StaPipQBufferRenderer::sendStaticData() const {

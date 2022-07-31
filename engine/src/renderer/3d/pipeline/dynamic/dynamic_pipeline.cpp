@@ -75,6 +75,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
 
   setBuffersDefaultVars(buffers, mesh, infoBag);
   core.clear();
+  core.updatePrimLod(infoBag);
 
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
@@ -210,10 +211,12 @@ PipelineInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
     result->antiAliasingEnabled = options->antiAliasingEnabled;
     result->blendingEnabled = options->blendingEnabled;
     result->shadingType = options->shadingType;
+    result->textureMappingType = options->textureMappingType;
   } else {
     result->antiAliasingEnabled = false;
     result->blendingEnabled = true;
     result->shadingType = TyraShadingFlat;
+    result->textureMappingType = TyraLinear;
   }
 
   result->model = model;
@@ -243,8 +246,9 @@ DynPipTextureBag* DynamicPipeline::getTextureBag(
 
   result->texture =
       rendererCore->texture.repository.getBySpriteOrMesh(material->getId());
-  TYRA_ASSERT(result->texture, "Texture for material id: ", material->getId(),
-              "was not found in texture repository!");
+  TYRA_ASSERT(
+      result->texture, "Texture for material id: ", material->getId(),
+      "was not found in texture repository! Did you forget to add texture?");
 
   result->coordinatesFrom = &materialFrameFrom->getTextureCoords()[startIndex];
   result->coordinatesTo = &materialFrameTo->getTextureCoords()[startIndex];
