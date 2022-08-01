@@ -24,10 +24,22 @@ typedef void* png_colorp;
 
 namespace Tyra {
 
+struct PngPixel3 {
+  u8 r, g, b;
+};
+
+struct PngPixel4 {
+  u8 r, g, b, a;
+};
+
 class PngLoader : public TextureLoader {
  public:
   PngLoader();
   ~PngLoader();
+
+  inline TextureBuilderData* load(const std::string& fullpath) {
+    return load(fullpath.c_str());
+  }
 
   TextureBuilderData* load(const char* fullpath);
 

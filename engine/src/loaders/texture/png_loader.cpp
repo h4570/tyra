@@ -107,11 +107,7 @@ void PngLoader::handle32bpp(TextureBuilderData* result, png_structp pngPtr,
 
   png_read_image(pngPtr, rowPointers);
 
-  struct Pixel {
-    u8 r, g, b, a;
-  };
-
-  struct Pixel* pixels = (struct Pixel*)result->data;
+  struct PngPixel4* pixels = (struct PngPixel4*)result->data;
 
   int k = 0;
   for (int i = 0; i < result->height; i++) {
@@ -145,10 +141,7 @@ void PngLoader::handle24bpp(TextureBuilderData* result, png_structp pngPtr,
 
   png_read_image(pngPtr, rowPointers);
 
-  struct Pixel3 {
-    u8 r, g, b;
-  };
-  struct Pixel3* pixels = (struct Pixel3*)result->data;
+  struct PngPixel3* pixels = (struct PngPixel3*)result->data;
 
   int k = 0;
   for (int i = 0; i < result->height; i++) {

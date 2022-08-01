@@ -16,8 +16,12 @@ using Tyra::FileUtils;
 using Tyra::TyrobjLoader;
 
 namespace Demo {
-
-Terrain::Terrain(TextureRepository* repo) {
+Terrain::Terrain(TextureRepository* repo)
+    : heightmap(-5.0F,                               // Min height
+                70.0F,                               // Max height
+                Vec4(-196.6F, 0.0F, -412.0F, 1.0F),  // Left up
+                Vec4(286.0F, 0.0F, 443.3F, 1.0F)     // Right down
+      ) {
   TyrobjLoader loader;
   auto* data = loader.load(
       FileUtils::fromCwd("game/models/terrain/terrain.obj"), 1, 25.0F, true);
@@ -35,14 +39,8 @@ Terrain::Terrain(TextureRepository* repo) {
   pair = new RendererStaticPair{mesh, options};
 }
 
-// float testRotation = 0.0F;
-
-void Terrain::update() {
-  // testRotation += 0.001F;
-  mesh->rotation.identity();
-  mesh->rotation.rotateZ(0.1F);
-  mesh->rotation.rotateY(-4.3F);
-  // TYRA_LOG(testRotation);
+float Terrain::getHeightOffset(const Vec4& playerPosition) {
+  return heightmap.getHeightOffset(playerPosition);
 }
 
 Terrain::~Terrain() {

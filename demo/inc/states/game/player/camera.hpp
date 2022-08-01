@@ -31,7 +31,7 @@ class Camera {
 
   CameraInfo3D getCameraInfo() { return CameraInfo3D(&position, &lookAt); }
 
-  void update(const Vec4& playerPosition);
+  void update(const Vec4& playerPosition, const float& terrainHeight);
 
  private:
   float circleRotation, lengthFromOrigin, height;

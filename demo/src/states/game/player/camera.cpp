@@ -21,7 +21,7 @@ Camera::Camera(Pad* t_pad) : lookAt(0.0F), position(0.0F), pad(t_pad) {
 
 Camera::~Camera() {}
 
-void Camera::update(const Vec4& playerPosition) {
+void Camera::update(const Vec4& playerPosition, const float& terrainHeight) {
   const float rotationOffset = 0.03F;
   const float heightOffset = 0.5F;
 
@@ -40,7 +40,7 @@ void Camera::update(const Vec4& playerPosition) {
   }
 
   unitCircle.x = (sin(circleRotation) * lengthFromOrigin);
-  unitCircle.y = height + playerPosition.y;
+  unitCircle.y = height + playerPosition.y + terrainHeight;
   unitCircle.z = (cos(circleRotation) * lengthFromOrigin);
 
   lookAt = unitCircle + playerPosition;

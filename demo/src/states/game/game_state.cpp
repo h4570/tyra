@@ -51,7 +51,9 @@ void GameState::update() {
   auto cameraInfo = player.getCameraInfo();
   engine->renderer.beginFrame(cameraInfo);
 
-  player.update();
+  float terrainHeight = terrain.getHeightOffset(player.getPosition());
+  player.update(terrainHeight);
+
   dbgObj.setPosition(*cameraInfo.looksAt);
 
   renderer.clear();

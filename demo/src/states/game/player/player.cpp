@@ -18,7 +18,7 @@ Player::Player(Engine* engine)
       camera(&engine->pad) {
   staticPairs.push_back(new RendererStaticPair{weapon.mesh, weapon.options});
   pad = &engine->pad;
-  position = Vec4(3.0F, 15.0F, 0.0F);
+  position = Vec4(3.0F, 50.0F, 0.0F);
   camera.lookAt = Vec4(0.0F, 0.0F, -30.0F);
   speed = 2.0F;
 }
@@ -32,13 +32,13 @@ Player::~Player() {
   }
 }
 
-void Player::update() {
-  handlePlayerPosition();
-  camera.update(position);
+void Player::update(const float& terrainHeight) {
+  handlePlayerPosition(terrainHeight);
+  camera.update(position, terrainHeight);
   weapon.update();
 }
 
-void Player::handlePlayerPosition() {
+void Player::handlePlayerPosition(const float& terrainHeight) {
   const auto& leftJoy = pad->getLeftJoyPad();
 
   auto normalizedCamera = Vec4(camera.unitCircle);
@@ -46,6 +46,7 @@ void Player::handlePlayerPosition() {
   normalizedCamera *= speed;
 
   Vec4 nextPosition(position);
+  nextPosition.y = terrainHeight;
 
   if (leftJoy.v <= 100) {
     nextPosition.x += normalizedCamera.x;

@@ -27,17 +27,18 @@ class Player {
   Player(Engine* engine);
   ~Player();
 
+  const Vec4& getPosition() const { return position; }
   CameraInfo3D getCameraInfo() { return camera.getCameraInfo(); }
 
   std::vector<RendererStaticPair*> staticPairs;
   std::vector<RendererDynamicPair*> dynamicPairs;
 
-  void update();
+  void update(const float& terrainHeight);
 
  private:
-  void handlePlayerPosition();
+  void handlePlayerPosition(const float& terrainHeight);
 
-float speed;
+  float speed;
   Pad* pad;
   Vec4 position;
   Weapon weapon;

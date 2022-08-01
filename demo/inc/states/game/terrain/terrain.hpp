@@ -14,10 +14,12 @@
 #include <renderer/3d/pipeline/static/stapip_options.hpp>
 #include "states/game/renderer/renderer_static_pair.hpp"
 #include <renderer/renderer.hpp>
+#include "./heightmap.hpp"
 
 using Tyra::StaPipOptions;
 using Tyra::StaticMesh;
 using Tyra::TextureRepository;
+using Tyra::Vec4;
 
 namespace Demo {
 
@@ -26,11 +28,12 @@ class Terrain {
   Terrain(TextureRepository* repo);
   ~Terrain();
 
+  Heightmap heightmap;
   StaticMesh* mesh;
   StaPipOptions* options;
   RendererStaticPair* pair;
 
-  void update();
+  float getHeightOffset(const Vec4& playerPosition);
 
  private:
   void allocateOptions();
