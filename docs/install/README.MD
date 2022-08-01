@@ -22,4 +22,4 @@ git clone https://github.com/h4570/tyra.git
 5. In `c_cpp_properties.json` fix all `YOUR-INTELLISENSE-PATH` with path from point 2.
 6. Click `CTRL+SHIFT+P`, type `Tasks: Run task` and run `Start docker container` - Repeat this step every time you want to start working with Tyra (every reboot)
 7. Click `CTRL+SHIFT+P`, type `Tasks: Run build task`
-8. Tyra should automatically compile engine, `wellinator` sample and run `PCSX2`. If you want to compile & run other sample, please change `buildDirectory` in `settings.json`
+8. Tyra should automatically compile engine, `demo` game and run `PCSX2`. If you want to compile & run tutorials, please change `buildDirectory` in `settings.json` to example `tutorials/01-hello`

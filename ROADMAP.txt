@@ -1,5 +1,6 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
-- [General] Tyra version 
+- [General] Allow to edit all data from mesh/texture
+- [General] Tyra version, render it on start 
 - [Renderer] Fog
 - [Demo] Create cool demo which will show all features of Tyra
 - [General] CI in Github via docker image

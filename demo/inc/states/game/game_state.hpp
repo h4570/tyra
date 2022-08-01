@@ -42,9 +42,9 @@ class GameState : public State<GlobalStateType> {
   u8 fpsChecker;
 
   GameRenderer renderer;
-  Player player;
-  Terrain terrain;
-  DebugObject dbgObj;
+  Player* player;
+  Terrain* terrain;
+  DebugObject* dbgObj;
 };
 
 }  // namespace Demo

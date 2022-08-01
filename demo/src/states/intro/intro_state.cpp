@@ -35,7 +35,7 @@ void IntroState::onStart() {
   engine->audio.loadSong(FileUtils::fromCwd("intro/intro.wav"));
   engine->audio.setSongLoop(false);
   engine->audio.setSongVolume(80);
-  // engine->audio.playSong();
+  engine->audio.playSong();
 
   stateManager.add(new IntroPs2DevState(engine));
   stateManager.add(new IntroTyraState(engine));
