@@ -20,7 +20,7 @@ class StaPipOptions : public PipelineOptions {
   ~StaPipOptions() {}
 
   /**
-   * @brief True -> enables "clip against each plane" algorithm.
+   * @brief Experimental! True -> enables "clip against each plane" algorithm.
    * Mandatory, default: False.
    *
    * Full clip checks are slow, but they are

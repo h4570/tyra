@@ -34,7 +34,7 @@ class PipelineInfoBag {
   bool antiAliasingEnabled;
 
   /**
-   * @brief False -> disables "clip against each plane" algorithm.
+   * @brief Experimental! False -> disables "clip against each plane" algorithm.
    * Default: True.
    *
    * Full clip checks are slow, but they are

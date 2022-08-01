@@ -41,8 +41,8 @@ class MinecraftPipeline : public Renderer3DPipeline {
    * @param count number of blocks to render
    * @param t_tex texture to use
    * @param isMulti is this a 6 texture voxel?
-   * @param fullClipChecks false = faster, simple PS2 clipping. True = slower
-   * "against each plane" clipping.
+   * @param fullClipChecks false = faster, simple PS2 clipping. True = slower,
+   * experimental "against each plane" clipping.
    */
   void render(McpipBlock* blocks, const u32& count, Texture* t_tex,
               const bool& isMulti = false, const bool& fullClipChecks = false);
