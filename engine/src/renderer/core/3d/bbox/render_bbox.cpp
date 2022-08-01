@@ -38,7 +38,6 @@ RenderBBox::RenderBBox(Vec4* t_vertices) : CoreBBox(t_vertices) {}
  */
 CoreBBoxFrustum RenderBBox::clipIsInFrustum(const Plane* frustumPlanes,
                                             const M4x4& model) const {
-  return isInFrustum(frustumPlanes, model);
   auto result = isInFrustum(frustumPlanes, model);
 
   if (result != PARTIALLY_IN_FRUSTUM) {
