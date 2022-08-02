@@ -20,13 +20,10 @@ namespace Demo {
 Skybox::Skybox(TextureRepository* repo) {
   TyrobjLoader loader;
   auto* data = loader.load(FileUtils::fromCwd("game/models/skybox/skybox.obj"),
-                           1, 400.0F, true);
+                           1, 100.0F, true);
   data->normalsEnabled = false;
   mesh = new StaticMesh(*data);
   delete data;
-
-  mesh->scale.scaleX(2.0F);
-  mesh->scale.scaleZ(2.0F);
 
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
@@ -58,6 +55,7 @@ void Skybox::allocateOptions() {
   options = new StaPipOptions();
   options->frustumCulling = Tyra::PipelineFrustumCulling_None;
   options->shadingType = Tyra::TyraShadingGouraud;
+  options->zTestType = Tyra::StaPipZTest_AllPass;
   options->textureMappingType = Tyra::TyraNearest;
   options->blendingEnabled = true;
   options->antiAliasingEnabled = false;

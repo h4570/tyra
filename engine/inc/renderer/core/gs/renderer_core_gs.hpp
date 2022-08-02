@@ -27,6 +27,10 @@ class RendererCoreGS {
 
   void flipBuffers();
 
+  void setStandardZTest();
+
+  void setAllPassZTest();
+
  private:
   constexpr static float gsCenter = 4096.0F;
   constexpr static float screenCenter = gsCenter / 2.0F;
@@ -34,6 +38,7 @@ class RendererCoreGS {
   RendererSettings* settings;
   framebuffer_t frameBuffers[2];
   packet2_t* flipPacket;
+  packet2_t* zTestPacket;
   u8 context;
   u8 currentField;
 
@@ -43,6 +48,7 @@ class RendererCoreGS {
   void updateCurrentField();
   qword_t* setXYOffset(qword_t* q, const int& drawContext, const float& x,
                        const float& y);
+  qword_t* addAllPassZTest(qword_t* q, int context, zbuffer_t* z);
 };
 
 }  // namespace Tyra

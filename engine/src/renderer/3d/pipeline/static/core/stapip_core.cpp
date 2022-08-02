@@ -73,7 +73,7 @@ u32 StaPipCore::getMaxVertCountByParams(const bool& isSingleColor,
 }
 
 void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
-                        StaPipBagPackagesBBox* bbox) {
+                        const StaPipZTest& zTest, StaPipBagPackagesBBox* bbox) {
   if (bag->count <= 0) return;
 
   TYRA_ASSERT(bag->vertices != nullptr,
@@ -126,6 +126,10 @@ void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
       }
       return;
     }
+  }
+
+  if (zTest == StaPipZTest_AllPass) {
+    rendererCore->gs.setAllPassZTest();
   }
 
   packager.setRenderBBox(renderBbox);
@@ -203,6 +207,10 @@ void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
   if (texBuffers) delete texBuffers;
 
   qbufferRenderer.flushBuffers();
+
+  if (zTest == StaPipZTest_AllPass) {
+    rendererCore->gs.setStandardZTest();
+  }
 
   Verbose("Render finished");
 }

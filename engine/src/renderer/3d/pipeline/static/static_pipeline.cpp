@@ -40,6 +40,7 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
   auto model = mesh->getModelMatrix();
   auto* infoBag = getInfoBag(mesh, options, &model);
 
+  auto zTesting = options ? options->zTestType : StaPipZTest_Standard;
   auto frustumCulling =
       options ? options->frustumCulling : PipelineFrustumCulling_Simple;
 
@@ -75,7 +76,8 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
     bag.texture = getTextureBag(material, materialFrame);
     bag.lighting = getLightingBag(materialFrame, &model, options);
 
-    core.render(&bag, frustumCulling == PipelineFrustumCulling_Precise);
+    core.render(&bag, frustumCulling == PipelineFrustumCulling_Precise,
+                zTesting);
 
     deallocDrawBags(&bag, material);
   }
