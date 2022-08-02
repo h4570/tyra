@@ -40,9 +40,10 @@ void Camera::update(const Vec4& playerPosition, const float& terrainHeight) {
   }
 
   unitCircle.x = (sin(circleRotation) * lengthFromOrigin);
-  unitCircle.y = height + playerPosition.y + terrainHeight;
+  unitCircle.y = height;
   unitCircle.z = (cos(circleRotation) * lengthFromOrigin);
 
+  position = playerPosition;
   lookAt = unitCircle + playerPosition;
 }
 

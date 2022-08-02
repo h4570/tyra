@@ -15,6 +15,7 @@
 #include "./player/player.hpp"
 #include "./renderer/game_renderer.hpp"
 #include "./terrain/terrain.hpp"
+#include "./skybox/skybox.hpp"
 #include "./debug_object.hpp"
 
 namespace Demo {
@@ -44,6 +45,7 @@ class GameState : public State<GlobalStateType> {
   GameRenderer renderer;
   Player* player;
   Terrain* terrain;
+  Skybox* skybox;
   DebugObject* dbgObj;
 };
 

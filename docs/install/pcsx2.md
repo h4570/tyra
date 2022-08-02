@@ -17,3 +17,5 @@ Arrows = Right joy
 Space = X
 Circle = C
 ```
+
+- Enable **"EE timing hack"** in PCSX2 hacks!

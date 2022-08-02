@@ -65,19 +65,21 @@ void Path3::sendTexture(Texture* texture,
                         const RendererCoreTextureBuffers& texBuffers) {
   packet2_reset(texturePacket, false);
 
+  int coreWidth = texBuffers.core->width <= 64 ? 64 : texBuffers.core->width;
   packet2_update(
       texturePacket,
       draw_texture_transfer(texturePacket->base, texture->getCoreData().data,
                             texture->getWidth(), texture->getHeight(),
                             texture->getCoreData().psm,
-                            texBuffers.core->address, texBuffers.core->width));
+                            texBuffers.core->address, coreWidth));
 
   if (texBuffers.clut != nullptr) {
     auto* clut = texture->getClutData();
-    packet2_update(texturePacket, draw_texture_transfer(
-                                      texturePacket->next, clut->data,
-                                      clut->width, clut->height, clut->psm,
-                                      texBuffers.clut->address, clut->width));
+    int clutWidth = texBuffers.clut->width <= 64 ? 64 : texBuffers.clut->width;
+    packet2_update(texturePacket,
+                   draw_texture_transfer(texturePacket->next, clut->data,
+                                         clut->width, clut->height, clut->psm,
+                                         texBuffers.clut->address, clutWidth));
   }
 
   packet2_chain_open_cnt(texturePacket, 0, 0, 0);

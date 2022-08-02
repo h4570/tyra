@@ -30,6 +30,7 @@ void GameState::onStart() {
 
   player = new Player(engine);
   terrain = new Terrain(&engine->renderer.core.texture.repository);
+  skybox = new Skybox(&engine->renderer.core.texture.repository);
   dbgObj = new DebugObject(&engine->renderer.core.texture.repository);
 
   initialized = true;
@@ -40,6 +41,7 @@ GlobalStateType GameState::onFinish() {
 
   delete player;
   delete terrain;
+  delete skybox;
   delete dbgObj;
   initialized = false;
 
@@ -54,10 +56,8 @@ void GameState::update() {
 
   // TODO: Get next player position and calculate all stuf for NEXT position
   // (not current!)
-  // TODO: Fix camera for heightmap
-  // TODO: Change map
   // TODO: Implement collision
-
+  skybox->update(player->getPosition());
   auto cameraInfo = player->getCameraInfo();
   engine->renderer.beginFrame(cameraInfo);
 
@@ -68,6 +68,7 @@ void GameState::update() {
 
   renderer.clear();
   {
+    renderer.add(skybox->pair);
     renderer.add(player->staticPairs);
     renderer.add(player->dynamicPairs);
     renderer.add(terrain->pair);

@@ -101,7 +101,8 @@ Weapon::~Weapon() {
 
 void Weapon::allocateOptions() {
   options = new StaPipOptions();
-  options->shadingType = Tyra::TyraShadingGouraud;
+  options->textureMappingType = Tyra::TyraNearest;
+  options->shadingType = Tyra::TyraShadingFlat;
   options->blendingEnabled = false;
   options->fullClipChecks = false;
   options->frustumCulling = Tyra::PipelineFrustumCulling_None;

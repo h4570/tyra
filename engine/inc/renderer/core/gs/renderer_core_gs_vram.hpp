@@ -29,14 +29,13 @@ class RendererCoreGSVRam {
 
   int allocate(const TextureData& texData);
   int allocateBuffer(const int& width, const int& height, const int& psm);
+  int allocate(const int& width, const int& height, const int& psm,
+               const int& alignment);
 
   /** Free texture, FIFO order */
   void free(const int& address);
 
  private:
-  int allocate(const int& width, const int& height, const int& psm,
-               const int& alignment);
-
   int getSize(int width, const int& height, const int& psm,
               const int& alignment);
 
