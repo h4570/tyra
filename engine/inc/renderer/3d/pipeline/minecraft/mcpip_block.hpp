@@ -19,12 +19,16 @@ namespace Tyra {
 
 class McpipBlock {
  public:
-  McpipBlock() {}
+  McpipBlock() {
+    model = nullptr;
+    color = nullptr;
+    textureOffset = nullptr;
+  }
   ~McpipBlock() {}
 
-  M4x4 model;
-  Color color;
-  Vec4 textureOffset;
+  M4x4* model;
+  Color* color;
+  Vec4* textureOffset;
 };
 
 }  // namespace Tyra

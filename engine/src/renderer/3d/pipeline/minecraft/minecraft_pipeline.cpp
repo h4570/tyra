@@ -78,8 +78,8 @@ void MinecraftPipeline::initBBox() {
   bbox = new RenderBBox(block.vertices, block.count);
 }
 
-void MinecraftPipeline::render(McpipBlock* blocks, const u32& count,
-                               Texture* t_tex, const bool& isMulti,
+void MinecraftPipeline::render(std::vector<McpipBlock*> blocks, Texture* t_tex,
+                               const bool& isMulti,
                                const bool& fullClipChecks) {
   auto texBuffers = rendererCore->texture.useTexture(t_tex);
 
@@ -87,7 +87,7 @@ void MinecraftPipeline::render(McpipBlock* blocks, const u32& count,
   std::vector<u32> cullIndexes;
 
   if (!fullClipChecks) {
-    for (u32 i = 0; i < count; i++) cullIndexes.push_back(i);
+    for (u32 i = 0; i < blocks.size(); i++) cullIndexes.push_back(i);
     cull(blocks, cullIndexes, &texBuffers, true, isMulti);
     return;
   }
@@ -95,8 +95,8 @@ void MinecraftPipeline::render(McpipBlock* blocks, const u32& count,
   u32 culled = 0, clipped = 0;
   std::vector<u32> clipIndexes;
 
-  for (u32 i = 0; i < count; i++) {
-    auto frustum = isInFrustum(blocks[i]);
+  for (u32 i = 0; i < blocks.size(); i++) {
+    auto frustum = isInFrustum(*blocks[i]);
     if (frustum == CoreBBoxFrustum::IN_FRUSTUM) {
       cullIndexes.push_back(i);
       culled++;
@@ -112,10 +112,10 @@ void MinecraftPipeline::render(McpipBlock* blocks, const u32& count,
 
 CoreBBoxFrustum MinecraftPipeline::isInFrustum(const McpipBlock& block) const {
   const auto* frustumPlanes = rendererCore->renderer3D.frustumPlanes.getAll();
-  return bbox->clipIsInFrustum(frustumPlanes, block.model);
+  return bbox->clipIsInFrustum(frustumPlanes, *block.model);
 }
 
-void MinecraftPipeline::cull(McpipBlock* blocks,
+void MinecraftPipeline::cull(std::vector<McpipBlock*> blocks,
                              const std::vector<u32>& indexes,
                              RendererCoreTextureBuffers* texBuffers,
                              const bool& isCullOnly, const bool& isMulti) {
@@ -134,7 +134,7 @@ void MinecraftPipeline::cull(McpipBlock* blocks,
     u32 blockPointerArrayCount = 0;
     for (u32 j = 0; j < subArraySize; j++) {
       blockPointerArray[blockPointerArrayCount++] =
-          &blocks[indexes[i * maxBlocksPerQBuffer + j]];
+          blocks[indexes[i * maxBlocksPerQBuffer + j]];
     }
 
     if (isCullOnly) {
@@ -158,14 +158,14 @@ void MinecraftPipeline::cull(McpipBlock* blocks,
 // -- 1st qbuff: 500 - 221 = 279
 // Tags: 279 - for example 20 = 259
 // Vert + ST from EE = 259 / 2 = 129 verts | OK!
-void MinecraftPipeline::clip(McpipBlock* blocks,
+void MinecraftPipeline::clip(std::vector<McpipBlock*> blocks,
                              const std::vector<u32>& indexes,
                              RendererCoreTextureBuffers* texBuffers,
                              const bool& isMulti) {
   changeMode(McPipAsIs, false);
 
   for (u32 i = 0; i < indexes.size(); i++) {
-    manager.clip(&blocks[indexes[i]], texBuffers, isMulti);
+    manager.clip(blocks[indexes[i]], texBuffers, isMulti);
   }
 }
 

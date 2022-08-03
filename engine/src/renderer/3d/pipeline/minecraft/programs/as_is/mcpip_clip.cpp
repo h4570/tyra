@@ -61,7 +61,7 @@ void McpipClip::addData(McpipBlock* block, const bool& isMulti,
                         RendererCoreTextureBuffers* texBuffers,
                         packet2_t* packet, const u8& context) {
   std::vector<EEClipVertex> clippedVertices;
-  auto mvp = rendererCore->renderer3D.getViewProj() * block->model;
+  auto mvp = rendererCore->renderer3D.getViewProj() * (*block->model);
 
   const auto* blockData = isMulti ? multiBlockData : singleBlockData;
 
@@ -96,7 +96,7 @@ void McpipClip::addCorrections(std::vector<EEClipVertex>* vertices,
                                McpipBlock* block) {
   for (u32 i = 0; i < vertices->size(); i++) {
     (*vertices)[i].position /= (*vertices)[i].position.w;  // Perspective divide
-    (*vertices)[i].st += block->textureOffset;             // Texture offset
+    (*vertices)[i].st += *block->textureOffset;            // Texture offset
   }
 }
 
@@ -132,7 +132,7 @@ void McpipClip::addDataToPacket(packet2_t* packet, const u8& context,
     packet2_utils_gs_add_texbuff_clut(packet, texBuffers->core,
                                       &rendererCore->texture.clut);
 
-    Packet2TyraUtils::addColor(packet, block->color);
+    Packet2TyraUtils::addColor(packet, *block->color);
   }
   packet2_utils_vu_close_unpack(packet);
 

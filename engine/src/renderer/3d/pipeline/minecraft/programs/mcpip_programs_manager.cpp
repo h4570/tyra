@@ -21,8 +21,8 @@ BlockizerProgramsManager::BlockizerProgramsManager() {
 }
 
 void BlockizerProgramsManager::allocateOnUse() {
-  dynamicPackets[0] = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-  dynamicPackets[1] = packet2_create(300, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  dynamicPackets[0] = packet2_create(800, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  dynamicPackets[1] = packet2_create(800, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   staticPacket = packet2_create(2, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 }
 

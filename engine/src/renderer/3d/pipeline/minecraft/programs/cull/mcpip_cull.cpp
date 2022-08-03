@@ -131,9 +131,15 @@ void McpipCull::addData(packet2_t* packet, McpipBlock** blockPointerArray,
   u32 addr = VU1_MCPIP_CULL_DYNAMIC_BLOCKS_DATA;
 
   for (u32 i = 0; i < blockPointerArrayCount; i++) {
-    packet2_utils_vu_add_unpack_data(packet, addr, blockPointerArray[i],
-                                     VU1_MCPIP_CULL_QWORDS_PER_BLOCK, true);
-    addr += VU1_MCPIP_CULL_QWORDS_PER_BLOCK;
+    packet2_utils_vu_add_unpack_data(packet, addr, blockPointerArray[i]->model,
+                                     4, true);
+    addr += 4;
+    packet2_utils_vu_add_unpack_data(packet, addr, blockPointerArray[i]->color,
+                                     1, true);
+    addr += 1;
+    packet2_utils_vu_add_unpack_data(
+        packet, addr, blockPointerArray[i]->textureOffset, 1, true);
+    addr += 1;
   }
 }
 

@@ -37,14 +37,13 @@ class MinecraftPipeline : public Renderer3DPipeline {
   /**
    * @brief Render voxels
    *
-   * @param blocks blocks to render
-   * @param count number of blocks to render
+   * @param blocks array of McpipBlock pointers
    * @param t_tex texture to use
    * @param isMulti is this a 6 texture voxel?
    * @param fullClipChecks false = faster, simple PS2 clipping. True = slower,
    * experimental "against each plane" clipping.
    */
-  void render(McpipBlock* blocks, const u32& count, Texture* t_tex,
+  void render(std::vector<McpipBlock*> blocks, Texture* t_tex,
               const bool& isMulti = false, const bool& fullClipChecks = false);
 
   inline const float& getTextureOffset() const {
@@ -74,11 +73,11 @@ class MinecraftPipeline : public Renderer3DPipeline {
 
   void changeMode(const McpipProgramName& requestedMode, const u8& force);
 
-  void cull(McpipBlock* blocks, const std::vector<u32>& indexes,
+  void cull(std::vector<McpipBlock*> blocks, const std::vector<u32>& indexes,
             RendererCoreTextureBuffers* texBuffers, const bool& isCullOnly,
             const bool& isMulti = false);
 
-  void clip(McpipBlock* blocks, const std::vector<u32>& indexes,
+  void clip(std::vector<McpipBlock*> blocks, const std::vector<u32>& indexes,
             RendererCoreTextureBuffers* texBuffers,
             const bool& isMulti = false);
 

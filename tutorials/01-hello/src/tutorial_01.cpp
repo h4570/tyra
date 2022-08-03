@@ -97,17 +97,16 @@ void Tutorial01 ::init() {
   for (u32 i = 0; i < picturesCount; i++)
     pictures[i] = get2DPicture(&engine->renderer);
 
-  u32 rows = 2;     // 64
-  u32 columns = 2;  // 64
+  u32 rows = 4;     // 64
+  u32 columns = 4;  // 64
   blocksCount = rows * columns;
 
   float offset = 4.0F;
-  blocks = new McpipBlock[blocksCount];
   translations = new M4x4[blocksCount];
   rotations = new M4x4[blocksCount];
   scales = new M4x4[blocksCount];
   float center = (rows / 2.0F) * offset;
-
+  auto* color = new Color(128.0F, 128.0F, 128.0F, 128.0F);
   for (u32 i = 0; i < blocksCount; i++) {
     u32 column = i % columns;
     u32 row = i / rows;
@@ -121,11 +120,13 @@ void Tutorial01 ::init() {
     u32 randRow = 0;
     u32 randColumn = 0;
 
-    blocks[i].textureOffset =
-        Vec4(mcPip.getTextureOffset() * randRow,
-             mcPip.getTextureOffset() * randColumn, 0.0F, 1.0F);
+    McpipBlock* block = new McpipBlock();
+    block->textureOffset =
+        new Vec4(mcPip.getTextureOffset() * randRow,
+                 mcPip.getTextureOffset() * randColumn, 0.0F, 1.0F);
 
-    blocks[i].color = Color(128.0F, 128.0F, 128.0F, 128.0F);
+    block->color = color;
+    blocks.push_back(block);
   }
 
   // engine->audio.playSong();
@@ -153,7 +154,10 @@ void Tutorial01 ::loop() {
       rotations[i].rotateY(0.04F);
       // rotations[i].rotateZ(0.01F);
 
-      blocks[i].model = translations[i] * rotations[i] * scales[i];
+      if (blocks[i]->model) {
+        delete blocks[i]->model;
+      }
+      blocks[i]->model = new M4x4(translations[i] * rotations[i] * scales[i]);
     }
 
     for (u32 i = 0; i < picturesCount; i++)
@@ -178,7 +182,7 @@ void Tutorial01 ::loop() {
     }
 
     engine->renderer.renderer3D.usePipeline(&mcPip);
-    { mcPip.render(blocks, blocksCount, blocksTex2, true); }
+    { mcPip.render(blocks, blocksTex2, true); }
   }
   engine->renderer.endFrame();
 }

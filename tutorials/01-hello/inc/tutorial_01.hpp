@@ -54,7 +54,7 @@ class Tutorial01 : public Game {
   Texture* blocksTex2;
 
   u32 blocksCount;
-  McpipBlock* blocks;
+  std::vector<McpipBlock*> blocks;
   M4x4* translations;
   M4x4* rotations;
   M4x4* scales;
