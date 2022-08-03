@@ -10,6 +10,7 @@
 */
 
 #include "loaders/3d/builder/mesh_builder_data.hpp"
+#include "debug/debug.hpp"
 
 namespace Tyra {
 
@@ -17,6 +18,8 @@ MeshBuilderData::MeshBuilderData() {
   normalsEnabled = false;
   textureCoordsEnabled = false;
   manyColorsEnabled = false;
+  materials = nullptr;
+  frames = nullptr;
 }
 
 MeshBuilderData::~MeshBuilderData() {
@@ -44,6 +47,7 @@ void MeshBuilderData::allocate(const u32& framesCount,
 void MeshBuilderData::allocateFrames(const u32& count) {
   this->framesCount = count;
 
+  TYRA_ASSERT(frames == nullptr, "Frames are already allocated");
   frames = new MeshBuilderFrameData*[count];
 
   for (u32 i = 0; i < count; i++) {
@@ -54,6 +58,7 @@ void MeshBuilderData::allocateFrames(const u32& count) {
 void MeshBuilderData::allocateMaterials(const u32& count) {
   this->materialsCount = count;
 
+  TYRA_ASSERT(materials == nullptr, "Materials are already allocated");
   materials = new MeshBuilderMaterialData*[count];
 
   for (u32 i = 0; i < count; i++) {

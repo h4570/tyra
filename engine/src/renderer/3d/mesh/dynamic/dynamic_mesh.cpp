@@ -18,7 +18,9 @@ namespace Tyra {
 DynamicMesh::DynamicMesh(const MeshBuilderData& data) : Mesh(data) {
   framesCount = data.framesCount;
 
-  TYRA_ASSERT(framesCount > 1, "Frames count must be greater than 1");
+  TYRA_ERROR(framesCount > 1,
+             "Frames count should be greater than 1 for DynamicMesh! Maybe you "
+             "should use StaticMesh?");
 
   frames = new MeshFrame*[framesCount];
   for (u32 i = 0; i < framesCount; i++) {

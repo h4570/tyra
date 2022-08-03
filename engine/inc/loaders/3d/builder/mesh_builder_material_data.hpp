@@ -16,10 +16,6 @@
 
 namespace Tyra {
 
-/**
- * Data is not deallocated here.
- * Ownership is moved to Mesh class.
- */
 class MeshBuilderMaterialData {
  public:
   MeshBuilderMaterialData();

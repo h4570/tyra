@@ -56,13 +56,13 @@ class TyrobjLoader : public Loader {
                          const u16& frameIndex, const TyraobjData& inputData,
                          MeshBuilderData* outputData);
   void readNormals(TyraobjReadInfo* info, FILE* file, const u16& frameIndex,
-                   const TyraobjData& inputData, MeshBuilderData* outputData);
+                   MeshBuilderData* outputData);
   void readColors(TyraobjReadInfo* info, FILE* file, const u16& frameIndex,
-                  const TyraobjData& inputData, MeshBuilderData* outputData);
-  void readMaterials(TyraobjReadInfo* info, FILE* file, const u16& frameIndex,
+                  MeshBuilderData* outputData);
+  void readMaterials(TyraobjReadInfo* info, FILE* file,
                      const TyraobjData& inputData, MeshBuilderData* outputData);
-  void readFaces(TyraobjReadInfo* info, FILE* file, const u16& frameIndex,
-                 const TyraobjData& inputData, MeshBuilderData* outputData);
+  void readFaces(TyraobjReadInfo* info, FILE* file,
+                 MeshBuilderData* outputData);
 };
 
 }  // namespace Tyra

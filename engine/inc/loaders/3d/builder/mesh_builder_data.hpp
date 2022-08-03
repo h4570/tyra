@@ -19,13 +19,6 @@ namespace Tyra {
 class MeshBuilderData {
  public:
   MeshBuilderData();
-
-  /**
-   * Frames array and materials array will be deallocated, but
-   * data (vert,st, ...) inside it not.
-   * Data ownership is transferred to
-   * the Mesh class.
-   */
   ~MeshBuilderData();
 
   MeshBuilderFrameData** frames;

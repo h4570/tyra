@@ -10,6 +10,7 @@
 */
 
 #include "loaders/3d/builder/mesh_builder_material_data.hpp"
+#include "debug/debug.hpp"
 
 namespace Tyra {
 
@@ -38,6 +39,9 @@ MeshBuilderMaterialData::~MeshBuilderMaterialData() {
 }
 
 void MeshBuilderMaterialData::allocateFaces(const u32& t_count) {
+  TYRA_ASSERT(vertexFaces == nullptr && textureCoordFaces == nullptr &&
+                  normalFaces == nullptr && colorFaces == nullptr,
+              "Faces are already allocated");
   vertexFaces = new u32[t_count];
   textureCoordFaces = new u32[t_count];
   normalFaces = new u32[t_count];

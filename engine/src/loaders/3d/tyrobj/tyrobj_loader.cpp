@@ -135,13 +135,19 @@ void TyrobjLoader::loadFile(FILE* file, const std::string& path,
     } else if (strcmp(lineHeader, "vt") == 0) {
       readTextureCoords(&readInfo, file, frameIndex, inputData, outputData);
     } else if (strcmp(lineHeader, "vn") == 0) {
-      readNormals(&readInfo, file, frameIndex, inputData, outputData);
+      readNormals(&readInfo, file, frameIndex, outputData);
     } else if (strcmp(lineHeader, "vc") == 0) {
-      readColors(&readInfo, file, frameIndex, inputData, outputData);
+      readColors(&readInfo, file, frameIndex, outputData);
     } else if (strcmp(lineHeader, "usemtl") == 0) {
-      readMaterials(&readInfo, file, frameIndex, inputData, outputData);
+      readInfo.materialsI++;
+      readInfo.faceI = 0;
+      if (frameIndex == 0) {
+        readMaterials(&readInfo, file, inputData, outputData);
+      }
     } else if (strcmp(lineHeader, "f") == 0) {
-      readFaces(&readInfo, file, frameIndex, inputData, outputData);
+      if (frameIndex == 0) {
+        readFaces(&readInfo, file, outputData);
+      }
     }
 
     res = fscanf(file, "%s", lineHeader);
@@ -182,7 +188,6 @@ void TyrobjLoader::readTextureCoords(TyraobjReadInfo* info, FILE* file,
 
 void TyrobjLoader::readNormals(TyraobjReadInfo* info, FILE* file,
                                const u16& frameIndex,
-                               const TyraobjData& inputData,
                                MeshBuilderData* outputData) {
   Vec4 vector(0.0F, 0.0F, 0.0F, 1.0F);
   fscanf(file, "%f %f %f\n", &vector.x, &vector.y, &vector.z);
@@ -191,7 +196,6 @@ void TyrobjLoader::readNormals(TyraobjReadInfo* info, FILE* file,
 
 void TyrobjLoader::readColors(TyraobjReadInfo* info, FILE* file,
                               const u16& frameIndex,
-                              const TyraobjData& inputData,
                               MeshBuilderData* outputData) {
   Color color(128.0F, 128.0F, 128.0F, 128.0F);
   fscanf(file, "%f %f %f %f\n", &color.r, &color.g, &color.b, &color.a);
@@ -199,23 +203,18 @@ void TyrobjLoader::readColors(TyraobjReadInfo* info, FILE* file,
 }
 
 void TyrobjLoader::readMaterials(TyraobjReadInfo* info, FILE* file,
-                                 const u16& frameIndex,
                                  const TyraobjData& inputData,
                                  MeshBuilderData* outputData) {
   char temp[30];
   fscanf(file, "%s\n", temp);
-  info->materialsI++;
   outputData->materials[info->materialsI]->allocateFaces(
       inputData.materialsFaces[info->materialsI]);
   outputData->materials[info->materialsI]->name = temp;
-  info->faceI = 0;
 }
 
 int test123 = 0;
 
 void TyrobjLoader::readFaces(TyraobjReadInfo* info, FILE* file,
-                             const u16& frameIndex,
-                             const TyraobjData& inputData,
                              MeshBuilderData* outputData) {
   int* x = new int[9];
   fpos_t start;
