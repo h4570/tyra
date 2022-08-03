@@ -8,19 +8,16 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
+#pragma once
+
 #include "renderer/3d/pipeline/shared/bag/pipeline_info_bag.hpp"
 
 namespace Tyra {
 
-PipelineInfoBag::PipelineInfoBag() {
-  shadingType = TyraShadingFlat;
-  transformationType = TyraMVP;
-  textureMappingType = TyraLinear;
-  blendingEnabled = true;
-  antiAliasingEnabled = false;
-  model = nullptr;
-}
-
-PipelineInfoBag::~PipelineInfoBag() {}
+class DynPipInfoBag : public PipelineInfoBag {
+ public:
+  DynPipInfoBag() {}
+  ~DynPipInfoBag() {}
+};
 
 }  // namespace Tyra

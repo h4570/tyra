@@ -72,9 +72,11 @@ u32 StaPipCore::getMaxVertCountByParams(const bool& isSingleColor,
       ->getMaxVertCount(isSingleColor, qbufferRenderer.getBufferSize());
 }
 
-void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
-                        const StaPipZTest& zTest, StaPipBagPackagesBBox* bbox) {
+void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   if (bag->count <= 0) return;
+
+  bool frustumCull =
+      bag->info->frustumCulling == PipelineInfoBagFrustumCulling_Precise;
 
   TYRA_ASSERT(bag->vertices != nullptr,
               "Vertices are required in 3D render bag!");
@@ -100,7 +102,7 @@ void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
                   (!bag->info->fullClipChecks && !frustumCull),
               "Please disable clip checks and frustum culling if not using MVP "
               "matrix!");
-  TYRA_ASSERT(!(frustumCull == false && bag->info->fullClipChecks == true),
+  TYRA_ASSERT(!(!frustumCull && bag->info->fullClipChecks == true),
               "Full clip checks are not supported with frustum culling = off!");
 
   u32 maxVertCount = getMaxVertCountByBag(bag);
@@ -128,7 +130,7 @@ void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
     }
   }
 
-  if (zTest == StaPipZTest_AllPass) {
+  if (bag->info->zTestType == StaPipZTest_AllPass) {
     rendererCore->gs.setAllPassZTest();
   }
 
@@ -208,7 +210,7 @@ void StaPipCore::render(StaPipBag* bag, const bool& frustumCull,
 
   qbufferRenderer.flushBuffers();
 
-  if (zTest == StaPipZTest_AllPass) {
+  if (bag->info->zTestType == StaPipZTest_AllPass) {
     rendererCore->gs.setStandardZTest();
   }
 

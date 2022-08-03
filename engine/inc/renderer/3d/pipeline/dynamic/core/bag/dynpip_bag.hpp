@@ -12,7 +12,7 @@
 
 #include "math/vec4.hpp"
 
-#include "renderer/3d/pipeline/shared/bag/pipeline_info_bag.hpp"
+#include "./dynpip_info_bag.hpp"
 #include "./dynpip_color_bag.hpp"
 #include "./dynpip_lighting_bag.hpp"
 #include "./dynpip_texture_bag.hpp"
@@ -31,7 +31,7 @@ class DynPipBag {
   ~DynPipBag();
 
   /** Mandatory. Object info. */
-  PipelineInfoBag* info;
+  DynPipInfoBag* info;
 
   /** Mandatory. Object color(s). */
   DynPipColorBag* color;

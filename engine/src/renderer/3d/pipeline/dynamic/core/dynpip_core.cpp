@@ -56,7 +56,7 @@ u32 DynPipCore::getMaxVertCountByParams(const bool& isLightingEnabled,
       ->getMaxVertCount(qbufferRenderer.getBufferSize());
 }
 
-void DynPipCore::initParts(DynPipBag* bag) {
+void DynPipCore::sendObjectDataToVU1(DynPipBag* bag) {
   RendererCoreTextureBuffers* texBuffers = nullptr;
   if (bag->texture) {
     auto temp = rendererCore->texture.useTexture(bag->texture->texture);
@@ -74,7 +74,9 @@ void DynPipCore::initParts(DynPipBag* bag) {
   delete texBuffers;
 }
 
-void DynPipCore::updatePrimLod(PipelineInfoBag* bag) {
+void DynPipCore::begin(PipelineInfoBag* bag) {
+  qbufferRenderer.clearLastProgramName();
+
   prim.antialiasing = bag->antiAliasingEnabled;
   prim.blending = bag->blendingEnabled;
   prim.shading = bag->shadingType;
@@ -88,8 +90,7 @@ void DynPipCore::updatePrimLod(PipelineInfoBag* bag) {
   }
 }
 
-void DynPipCore::renderPart(DynPipBag** bags, const u32& count,
-                            const bool& frustumCull) {
+void DynPipCore::render(DynPipBag** bags, const u32& count) {
   if (count <= 0) return;
 
   TYRA_ASSERT(
@@ -113,7 +114,7 @@ void DynPipCore::renderPart(DynPipBag** bags, const u32& count,
                                     bags[0]->texture->coordinatesTo),
               "If you want texture, please provide texture and coordinates!");
 
-  if (!frustumCull) {
+  if (bags[0]->info->frustumCulling == PipelineInfoBagFrustumCulling_None) {
     qbufferRenderer.render(bags, count);
     return;
   }

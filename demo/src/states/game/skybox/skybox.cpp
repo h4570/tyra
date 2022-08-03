@@ -27,7 +27,6 @@ Skybox::Skybox(TextureRepository* repo) {
 
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
-    material->print();
     material->color.r = 16.0F;
     material->color.g = 16.0F;
     material->color.b = 16.0F;

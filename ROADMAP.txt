@@ -35,6 +35,7 @@ because Mesh rendering uses only core.render()
 - [3D] Add drawBBox(x, y , color, size)
 - [File] Async file loading
 - [tyrobj] Add multicolor support to tyrobj
+- [Tyrobj] Improve obj importing for multiple usemtl with same names
 - [Renderer] Interlacing
 - [General] Add cpp lint checker in GitHub
 - [General] Control generated id to avoid duplication. Maybe Just increment from 0? Add interface IIdentificable?

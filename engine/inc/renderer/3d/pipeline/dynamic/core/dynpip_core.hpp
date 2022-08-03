@@ -28,18 +28,16 @@ class DynPipCore {
   void init(RendererCore* t_core);
 
   /** Force starting VU1 program instead of continueing */
-  void clear() { qbufferRenderer.clearLastProgramName(); }
-  void updatePrimLod(PipelineInfoBag* bag);
+  void begin(PipelineInfoBag* bag);
 
   /**
    * Send model matrix, lighting data and other
    * repetitve stuff to VU1
    */
-  void initParts(DynPipBag* data);
+  void sendObjectDataToVU1(DynPipBag* data);
 
   /** Render 3D via "bags" */
-  void renderPart(DynPipBag** bags, const u32& count,
-                  const bool& frustumCull = true);
+  void render(DynPipBag** bags, const u32& count);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
   u32 getMaxVertCountByParams(const bool& isLightingEnabled,

@@ -28,10 +28,12 @@ void GameState::onStart() {
 
   engine->audio.stopSong();
 
+  auto* repository = &engine->renderer.core.texture.repository;
   player = new Player(engine);
-  terrain = new Terrain(&engine->renderer.core.texture.repository);
-  skybox = new Skybox(&engine->renderer.core.texture.repository);
-  dbgObj = new DebugObject(&engine->renderer.core.texture.repository);
+  enemy = new Enemy(repository);
+  terrain = new Terrain(repository);
+  skybox = new Skybox(repository);
+  dbgObj = new DebugObject(repository);
 
   initialized = true;
 }
@@ -40,6 +42,7 @@ GlobalStateType GameState::onFinish() {
   if (!initialized) return STATE_EXIT;
 
   delete player;
+  delete enemy;
   delete terrain;
   delete skybox;
   delete dbgObj;
@@ -54,23 +57,20 @@ void GameState::update() {
     fpsChecker = 0;
   }
 
-  // TODO: Get next player position and calculate all stuf for NEXT position
-  // (not current!)
-  // TODO: Implement collision
   skybox->update(player->getPosition());
   auto cameraInfo = player->getCameraInfo();
   engine->renderer.beginFrame(cameraInfo);
 
+  dbgObj->setPosition(*cameraInfo.looksAt);
   float terrainHeight = terrain->getHeightOffset(player->getPosition());
   player->update(terrainHeight);
-
-  dbgObj->setPosition(*cameraInfo.looksAt);
+  enemy->update(player->getPosition());
 
   renderer.clear();
   {
     renderer.add(skybox->pair);
-    renderer.add(player->staticPairs);
-    renderer.add(player->dynamicPairs);
+    renderer.add(player->pair);
+    renderer.add(enemy->pairs);
     renderer.add(terrain->pair);
     renderer.add(dbgObj->pair);
   }

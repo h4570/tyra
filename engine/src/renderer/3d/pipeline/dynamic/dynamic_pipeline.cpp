@@ -9,6 +9,7 @@
 */
 
 #include "renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
+#include "renderer/3d/pipeline/shared/bag/pipeline_info_bag.hpp"
 
 namespace Tyra {
 
@@ -49,13 +50,18 @@ void DynamicPipeline::onUseEnd() {
 }
 
 void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
+  bool optionsManuallyAllocated = false;
+
+  if (!options) {
+    options = new DynPipOptions();
+    optionsManuallyAllocated = true;
+  }
+
   auto model = mesh->getModelMatrix();
   auto* infoBag = getInfoBag(mesh, options, &model);
   PipelineDirLightsBag* dirLights = nullptr;
-  auto frustumCulling =
-      options ? options->frustumCulling : PipelineFrustumCulling_Simple;
 
-  if (frustumCulling == PipelineFrustumCulling_Simple) {
+  if (options->frustumCulling == PipelineFrustumCulling_Simple) {
     auto* frameTo = mesh->getFrame(mesh->getNextAnimationFrame());
     if (frameTo->getBBox().isInFrustum(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
@@ -74,8 +80,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   u16 bufferIndex = 0;
 
   setBuffersDefaultVars(buffers, mesh, infoBag);
-  core.clear();
-  core.updatePrimLod(infoBag);
+  core.begin(infoBag);
 
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
@@ -110,28 +115,29 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
                                        dirLights, startIndex);
 
       if (!isPartInitialized) {
-        core.initParts(&buffer);
+        core.sendObjectDataToVU1(&buffer);
         isPartInitialized = true;
       }
 
-      setBuffer(buffers, &buffer, &bufferIndex, frustumCulling);
+      setBuffer(buffers, &buffer, &bufferIndex);
     }
 
     delete colorBag;
   }
 
-  sendRestOfBuffers(buffers, &bufferIndex, frustumCulling);
+  sendRestOfBuffers(buffers, &bufferIndex);
 
   if (dirLights) {
     delete dirLights;
   }
 
   delete infoBag;
+
+  if (optionsManuallyAllocated) delete options;
 }
 
 void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
-                                u16* bufferIndex,
-                                const PipelineFrustumCulling& frustumCulling) {
+                                u16* bufferIndex) {
   auto isEndOf1stDBuffer = *bufferIndex == halfBuffersCount - 1;
   auto isEndOf2ndDBuffer = *bufferIndex == buffersCount - 1;
 
@@ -143,8 +149,7 @@ void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
     for (u32 i = 0; i < halfBuffersCount; i++)
       sendBuffers[i] = &buffers[offset + i];
 
-    core.renderPart(sendBuffers, halfBuffersCount,
-                    frustumCulling == PipelineFrustumCulling_Precise);
+    core.render(sendBuffers, halfBuffersCount);
 
     delete[] sendBuffers;
   }
@@ -155,9 +160,7 @@ void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
     *bufferIndex += 1;
 }
 
-void DynamicPipeline::sendRestOfBuffers(
-    DynPipBag* buffers, u16* bufferIndex,
-    const PipelineFrustumCulling& frustumCulling) {
+void DynamicPipeline::sendRestOfBuffers(DynPipBag* buffers, u16* bufferIndex) {
   auto isEndOf1stDBuffer = *bufferIndex <= halfBuffersCount - 1;
 
   u32 offset = isEndOf1stDBuffer ? 0 : halfBuffersCount;
@@ -170,15 +173,14 @@ void DynamicPipeline::sendRestOfBuffers(
     sendBuffers[i] = &buffers[offset + i];
   }
 
-  core.renderPart(sendBuffers, size,
-                  frustumCulling == PipelineFrustumCulling_Precise);
+  core.render(sendBuffers, size);
 
   delete[] sendBuffers;
 }
 
 void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
                                             DynamicMesh* mesh,
-                                            PipelineInfoBag* infoBag) {
+                                            DynPipInfoBag* infoBag) {
   for (u32 i = 0; i < buffersCount; i++) {
     buffers[i].info = infoBag;
     buffers[i].interpolation = mesh->getAnimState().interpolation;
@@ -202,25 +204,20 @@ void DynamicPipeline::freeBuffer(DynPipBag* bag) {
   }
 }
 
-PipelineInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
-                                             const DynPipOptions* options,
-                                             M4x4* model) const {
-  auto* result = new PipelineInfoBag();
+DynPipInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
+                                           const DynPipOptions* options,
+                                           M4x4* model) const {
+  auto* result = new DynPipInfoBag();
 
-  if (options) {
-    result->antiAliasingEnabled = options->antiAliasingEnabled;
-    result->blendingEnabled = options->blendingEnabled;
-    result->shadingType = options->shadingType;
-    result->textureMappingType = options->textureMappingType;
-    result->transformationType = options->transformationType;
-  } else {
-    result->antiAliasingEnabled = false;
-    result->blendingEnabled = true;
-    result->shadingType = TyraShadingFlat;
-    result->textureMappingType = TyraLinear;
-    result->transformationType = TyraMVP;
-  }
-
+  result->antiAliasingEnabled = options->antiAliasingEnabled;
+  result->blendingEnabled = options->blendingEnabled;
+  result->shadingType = options->shadingType;
+  result->textureMappingType = options->textureMappingType;
+  result->transformationType = options->transformationType;
+  result->frustumCulling =
+      options->frustumCulling == PipelineFrustumCulling_Precise
+          ? PipelineInfoBagFrustumCulling_Precise
+          : PipelineInfoBagFrustumCulling_None;
   result->model = model;
 
   return result;

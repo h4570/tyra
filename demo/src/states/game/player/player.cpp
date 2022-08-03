@@ -16,21 +16,14 @@ Player::Player(Engine* engine)
     : position(0.0F),
       weapon(&engine->renderer.core.texture.repository),
       camera(&engine->pad) {
-  staticPairs.push_back(new RendererStaticPair{weapon.mesh, weapon.options});
+  pair = new RendererStaticPair{weapon.mesh, weapon.options};
   pad = &engine->pad;
   position = Vec4(3.0F, 50.0F, 0.0F);
   camera.lookAt = Vec4(0.0F, 0.0F, -30.0F);
   speed = 2.0F;
 }
 
-Player::~Player() {
-  for (auto pair : staticPairs) {
-    delete pair;
-  }
-  for (auto pair : dynamicPairs) {
-    delete pair;
-  }
-}
+Player::~Player() { delete pair; }
 
 void Player::update(const float& terrainHeight) {
   handlePlayerPosition(terrainHeight);

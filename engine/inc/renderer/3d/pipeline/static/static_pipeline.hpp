@@ -53,7 +53,7 @@ class StaticPipeline : public Renderer3DPipeline {
 
   void addVertices(MeshMaterialFrame* materialFrame, StaPipBag* bag) const;
 
-  PipelineInfoBag* getInfoBag(StaticMesh* mesh, const StaPipOptions* options,
+  StaPipInfoBag* getInfoBag(StaticMesh* mesh, const StaPipOptions* options,
                               M4x4* model) const;
 
   StaPipColorBag* getColorBag(MeshMaterial* material,

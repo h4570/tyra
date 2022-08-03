@@ -25,6 +25,10 @@ Weapon::Weapon(TextureRepository* repo) {
   mesh = new StaticMesh(*data);
   delete data;
 
+  mesh->getMaterial(0)->color.r = 64.0F;
+  mesh->getMaterial(0)->color.g = 64.0F;
+  mesh->getMaterial(0)->color.b = 64.0F;
+
   mesh->translation.translateX(2.85F);
   mesh->translation.translateY(-3.40F);
   mesh->translation.translateZ(-10.50F);

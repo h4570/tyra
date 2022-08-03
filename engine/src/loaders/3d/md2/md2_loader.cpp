@@ -149,9 +149,6 @@ MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
 
   texCoord_t* texCoord;
 
-  TYRA_LOG("Skin width: ", header.skinwidth,
-           " Skin height: ", header.skinheight);
-
   for (u32 i = 0; i < stsCount; i++) {
     texCoord =
         reinterpret_cast<texCoord_t*>(&stsBuffer[sizeof(texCoord_t) * i]);

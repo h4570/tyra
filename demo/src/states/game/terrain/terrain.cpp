@@ -27,9 +27,9 @@ Terrain::Terrain(TextureRepository* repo)
       FileUtils::fromCwd("game/models/terrain/terrain.obj"), 1, 25.0F, true);
   data->normalsEnabled = false;
   mesh = new StaticMesh(*data);
-  mesh->getMaterial(0)->color.r = 96.0F;
-  mesh->getMaterial(0)->color.g = 96.0F;
-  mesh->getMaterial(0)->color.b = 96.0F;
+  mesh->getMaterial(0)->color.r = 32.0F;
+  mesh->getMaterial(0)->color.g = 32.0F;
+  mesh->getMaterial(0)->color.b = 32.0F;
   delete data;
 
   repo->addByMesh(mesh, FileUtils::fromCwd("game/models/terrain/"), "png");

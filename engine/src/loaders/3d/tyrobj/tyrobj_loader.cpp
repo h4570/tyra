@@ -243,8 +243,7 @@ void TyrobjLoader::readFaces(TyraobjReadInfo* info, FILE* file,
              &normalIndex[1], &vertexIndex[2], &coordIndex[2], &normalIndex[2]);
     } break;
 
-    /** Loaded only two digits (V, VT) succesfuly. Not setting
-    VN. */
+    /** Loaded only two digits (V, VT) succesfuly. Not setting VN. */
     case 3: {
       fscanf(file, "%d/%d/ %d/%d/ %d/%d/\n", &vertexIndex[0], &coordIndex[0],
              &vertexIndex[1], &coordIndex[1], &vertexIndex[2], &coordIndex[2]);

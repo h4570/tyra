@@ -16,33 +16,43 @@
 #include "../pipeline_shading_type.hpp"
 #include "../pipeline_texture_mapping_type.hpp"
 #include "../pipeline_transformation_type.hpp"
+#include "./pipeline_info_bag_frustum_culling.hpp"
 
 namespace Tyra {
 
 class PipelineInfoBag {
  public:
-  PipelineInfoBag();
-  ~PipelineInfoBag();
+  PipelineInfoBag() {
+    shadingType = TyraShadingFlat;
+    transformationType = TyraMVP;
+    textureMappingType = TyraLinear;
+    blendingEnabled = true;
+    antiAliasingEnabled = false;
+    model = nullptr;
+    frustumCulling = PipelineInfoBagFrustumCulling_None;
+  }
+  ~PipelineInfoBag() {}
 
   /** Mandatory. Model matrix */
   M4x4* model;
 
+  /** Flat or gouraud */
   PipelineShadingType shadingType;
+
+  /** Linear or nearest */
   PipelineTextureMappingType textureMappingType;
+
+  /** Multiply by model matrix by view-projection or projection matrix */
   PipelineTransformationType transformationType;
+
+  /** Blending texture with color */
   bool blendingEnabled;
+
+  /** Anti-aliasing */
   bool antiAliasingEnabled;
 
-  /**
-   * @brief Experimental! False -> disables "clip against each plane" algorithm.
-   * Default: True.
-   *
-   * Full clip checks are slow, but they are
-   * preventing visual artifacts, which can happen
-   * for big 3D objects (or objects near camera eyes)
-   * Force enabled in dynamic pipe, because of efficiency.
-   */
-  bool fullClipChecks;
+  /** Type of frustum culling */
+  PipelineInfoBagFrustumCulling frustumCulling;
 };
 
 }  // namespace Tyra

@@ -53,18 +53,16 @@ class DynamicPipeline : public Renderer3DPipeline {
   DynPipBag* buffers;
   static const u32 halfBuffersCount;
 
-  void setBuffer(DynPipBag* buffers, DynPipBag* buffer, u16* bufferIndex,
-                 const PipelineFrustumCulling& frustumCulling);
+  void setBuffer(DynPipBag* buffers, DynPipBag* buffer, u16* bufferIndex);
 
-  void sendRestOfBuffers(DynPipBag* buffers, u16* bufferIndex,
-                         const PipelineFrustumCulling& frustumCulling);
+  void sendRestOfBuffers(DynPipBag* buffers, u16* bufferIndex);
 
   void addVertices(MeshMaterialFrame* materialFrameFrom,
                    MeshMaterialFrame* materialFrameTo, DynPipBag* bag,
                    const u32& startIndex) const;
 
-  PipelineInfoBag* getInfoBag(DynamicMesh* mesh, const DynPipOptions* options,
-                              M4x4* model) const;
+  DynPipInfoBag* getInfoBag(DynamicMesh* mesh, const DynPipOptions* options,
+                            M4x4* model) const;
 
   DynPipColorBag* getColorBag(MeshMaterial* material) const;
 
@@ -82,7 +80,7 @@ class DynamicPipeline : public Renderer3DPipeline {
   void setLightingColorsCache(PipelineLightingOptions* lightingOptions);
   void freeBuffer(DynPipBag* bag);
   void setBuffersDefaultVars(DynPipBag* buffers, DynamicMesh* mesh,
-                             PipelineInfoBag* infoBag);
+                             DynPipInfoBag* infoBag);
   void setBuffersColorBag(DynPipBag* buffers, DynPipColorBag* colorBag);
 };
 

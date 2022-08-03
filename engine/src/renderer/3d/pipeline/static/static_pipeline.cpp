@@ -10,6 +10,7 @@
 
 #include "renderer/3d/pipeline/static/static_pipeline.hpp"
 #include "debug/debug.hpp"
+#include "renderer/3d/pipeline/static/core/bag/stapip_info_bag.hpp"
 
 namespace Tyra {
 
@@ -37,15 +38,18 @@ void StaticPipeline::onUseEnd() {
 }
 
 void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
+  bool optionsManuallyAllocated = false;
+
+  if (!options) {
+    options = new StaPipOptions();
+    optionsManuallyAllocated = true;
+  }
+
   auto model = mesh->getModelMatrix();
   auto* infoBag = getInfoBag(mesh, options, &model);
 
-  auto zTesting = options ? options->zTestType : StaPipZTest_Standard;
-  auto frustumCulling =
-      options ? options->frustumCulling : PipelineFrustumCulling_Simple;
-
   TYRA_ASSERT(
-      !(frustumCulling != PipelineFrustumCulling_Precise &&
+      !(options->frustumCulling != PipelineFrustumCulling_Precise &&
         infoBag->fullClipChecks == true),
       "Full clip checks are only supported with frustum culling == Precise!");
   TYRA_ASSERT(options->transformationType == TyraMVP ||
@@ -54,7 +58,7 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
               "Please disable clip checks and frustum culling if not using MVP "
               "matrix!");
 
-  if (frustumCulling == PipelineFrustumCulling_Simple) {
+  if (options->frustumCulling == PipelineFrustumCulling_Simple) {
     auto* frame = mesh->getFrame();
     if (frame->getBBox().isInFrustum(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
@@ -68,21 +72,19 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
   for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
     auto* material = mesh->getMaterial(i);
     auto* materialFrame = material->getFrame(0);
-
     StaPipBag bag;
     addVertices(materialFrame, &bag);
     bag.info = infoBag;
     bag.color = getColorBag(material, materialFrame);
     bag.texture = getTextureBag(material, materialFrame);
     bag.lighting = getLightingBag(materialFrame, &model, options);
-
-    core.render(&bag, frustumCulling == PipelineFrustumCulling_Precise,
-                zTesting);
+    core.render(&bag);
 
     deallocDrawBags(&bag, material);
   }
-
   delete infoBag;
+
+  if (optionsManuallyAllocated) delete options;
 }
 
 void StaticPipeline::addVertices(MeshMaterialFrame* materialFrame,
@@ -91,27 +93,22 @@ void StaticPipeline::addVertices(MeshMaterialFrame* materialFrame,
   bag->vertices = materialFrame->getVertices();
 }
 
-PipelineInfoBag* StaticPipeline::getInfoBag(StaticMesh* mesh,
-                                            const StaPipOptions* options,
-                                            M4x4* model) const {
-  auto* result = new PipelineInfoBag();
+StaPipInfoBag* StaticPipeline::getInfoBag(StaticMesh* mesh,
+                                          const StaPipOptions* options,
+                                          M4x4* model) const {
+  auto* result = new StaPipInfoBag();
 
-  if (options) {
-    result->antiAliasingEnabled = options->antiAliasingEnabled;
-    result->blendingEnabled = options->blendingEnabled;
-    result->shadingType = options->shadingType;
-    result->fullClipChecks = options->fullClipChecks;
-    result->textureMappingType = options->textureMappingType;
-    result->transformationType = options->transformationType;
-  } else {
-    result->antiAliasingEnabled = false;
-    result->blendingEnabled = true;
-    result->shadingType = TyraShadingFlat;
-    result->textureMappingType = TyraLinear;
-    result->fullClipChecks = false;
-    result->transformationType = TyraMVP;
-  }
-
+  result->antiAliasingEnabled = options->antiAliasingEnabled;
+  result->blendingEnabled = options->blendingEnabled;
+  result->shadingType = options->shadingType;
+  result->textureMappingType = options->textureMappingType;
+  result->transformationType = options->transformationType;
+  result->frustumCulling =
+      options->frustumCulling == PipelineFrustumCulling_Precise
+          ? PipelineInfoBagFrustumCulling_Precise
+          : PipelineInfoBagFrustumCulling_None;
+  result->fullClipChecks = options->fullClipChecks;
+  result->zTestType = options->zTestType;
   result->model = model;
 
   return result;

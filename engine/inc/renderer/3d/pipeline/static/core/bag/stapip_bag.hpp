@@ -11,7 +11,7 @@
 #pragma once
 
 #include "math/vec4.hpp"
-#include "renderer/3d/pipeline/shared/bag/pipeline_info_bag.hpp"
+#include "./stapip_info_bag.hpp"
 #include "./stapip_color_bag.hpp"
 #include "./stapip_lighting_bag.hpp"
 #include "./stapip_texture_bag.hpp"
@@ -31,7 +31,7 @@ class StaPipBag {
   ~StaPipBag();
 
   /** Mandatory. Object info. */
-  PipelineInfoBag* info;
+  StaPipInfoBag* info;
 
   /** Mandatory. Object color(s). */
   StaPipColorBag* color;

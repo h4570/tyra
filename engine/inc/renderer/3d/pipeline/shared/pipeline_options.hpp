@@ -45,7 +45,7 @@ class PipelineOptions {
   /** Anti-aliasing */
   bool antiAliasingEnabled;
 
-  /** Multiply by model matrix by MVP or MP */
+  /** Multiply by model matrix by view-projection or projection matrix */
   PipelineTransformationType transformationType;
 
   /** Optional */

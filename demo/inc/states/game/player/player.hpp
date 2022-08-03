@@ -30,8 +30,7 @@ class Player {
   const Vec4& getPosition() const { return position; }
   CameraInfo3D getCameraInfo() { return camera.getCameraInfo(); }
 
-  std::vector<RendererStaticPair*> staticPairs;
-  std::vector<RendererDynamicPair*> dynamicPairs;
+  RendererStaticPair* pair;
 
   void update(const float& terrainHeight);
 
