@@ -17,6 +17,40 @@
 
 namespace Tyra {
 
+MeshMaterial::MeshMaterial(const MeshBuilder2Data& data,
+                           const u32& materialIndex) {
+  TYRA_ASSERT(materialIndex < data.materials.size(), "Provided index \"",
+              materialIndex, "\" is out of range");
+
+  auto* material = data.materials[materialIndex];
+
+  TYRA_ASSERT(material->frames.size() > 0,
+              "Material must have at least one frame");
+
+  id = rand() % 1000000;
+
+  if (data.lightMapEnabled) {
+    singleColorFlag = false;
+    TYRA_ASSERT(material->frames[0]->colors != nullptr,
+                "Colors faces are required");
+  } else {
+    singleColorFlag = true;
+  }
+
+  color.set(128.0F, 128.0F, 128.0F, 128.0F);
+
+  _name = material->name;
+  TYRA_ASSERT(_name.length() > 0, "MeshMaterial name cannot be empty");
+
+  framesCount = material->frames.size();
+  frames = new MeshMaterialFrame*[framesCount];
+  for (u32 i = 0; i < framesCount; i++) {
+    frames[i] = new MeshMaterialFrame(data, i, materialIndex);
+  }
+
+  _isMother = true;
+}
+
 MeshMaterial::MeshMaterial(const MeshBuilderData& data,
                            const u32& materialIndex)
     : color(false) {

@@ -31,6 +31,23 @@ MeshFrame::MeshFrame(const MeshBuilderData& data, const u32& index) {
   _isMother = true;
 }
 
+MeshFrame::MeshFrame(const MeshBuilder2Data& data, const u32& index) {
+  id = rand() % 1000000;
+
+  auto bboxes = new CoreBBox*[data.materials.size()];
+  for (u32 i = 0; i < data.materials.size(); i++) {
+    bboxes[i] = new CoreBBox(data.materials[i]->frames[index]->vertices,
+                             data.materials[i]->frames[index]->count);
+  }
+
+  bbox = new BBox(bboxes, data.materials.size());
+
+  for (u32 i = 0; i < data.materials.size(); i++) delete bboxes[i];
+  delete[] bboxes;
+
+  _isMother = true;
+}
+
 MeshFrame::MeshFrame(const MeshFrame& frame) {
   id = rand() % 1000000;
 

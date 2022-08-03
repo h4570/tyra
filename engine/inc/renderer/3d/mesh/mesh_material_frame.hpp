@@ -11,6 +11,7 @@
 #pragma once
 
 #include "loaders/3d/builder/mesh_builder_data.hpp"
+#include "loaders/3d/builder2/mesh_builder2_data.hpp"
 #include "./renderer/3d/bbox/bbox.hpp"
 
 namespace Tyra {
@@ -19,6 +20,8 @@ class MeshMaterialFrame {
  public:
   explicit MeshMaterialFrame(const MeshBuilderData& data, const u32& frameIndex,
                              const u32& materialIndex);
+  explicit MeshMaterialFrame(const MeshBuilder2Data& data,
+                             const u32& frameIndex, const u32& materialIndex);
   explicit MeshMaterialFrame(const MeshMaterialFrame& frame);
   ~MeshMaterialFrame();
 
@@ -26,7 +29,7 @@ class MeshMaterialFrame {
   const u8& isMother() const { return _isMother; }
   const BBox& getBBox() const { return *bbox; }
 
-  const u32& getVertexCount() const { return vertexCount; }
+  const u32& getVertexCount() const { return count; }
   Vec4* getVertices() const { return vertices; }
   Vec4* getNormals() const { return normals; }
   Vec4* getTextureCoords() const { return textureCoords; }
@@ -50,7 +53,7 @@ class MeshMaterialFrame {
   BBox* bbox;
 
   u8 _isMother;
-  u32 id, vertexCount;
+  u32 id, count;
   Vec4 *vertices, *textureCoords, *normals;
   Color* colors;
 };

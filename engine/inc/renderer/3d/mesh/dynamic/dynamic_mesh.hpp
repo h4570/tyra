@@ -21,6 +21,7 @@ namespace Tyra {
 class DynamicMesh : public Mesh {
  public:
   explicit DynamicMesh(const MeshBuilderData& data);
+  explicit DynamicMesh(const MeshBuilder2Data& data);
   explicit DynamicMesh(const DynamicMesh& mesh);
   ~DynamicMesh();
 

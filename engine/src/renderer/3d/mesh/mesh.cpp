@@ -29,6 +29,22 @@ Mesh::Mesh(const MeshBuilderData& data) {
   _isMother = true;
 }
 
+Mesh::Mesh(const MeshBuilder2Data& data) {
+  init();
+
+  TYRA_ASSERT(data.materials.size() > 0,
+              "Materials count must be greater than 0");
+
+  materialsCount = data.materials.size();
+  materials = new MeshMaterial*[materialsCount];
+
+  for (u32 i = 0; i < materialsCount; i++) {
+    materials[i] = new MeshMaterial(data, i);
+  }
+
+  _isMother = true;
+}
+
 Mesh::Mesh(const Mesh& mesh) {
   init();
 

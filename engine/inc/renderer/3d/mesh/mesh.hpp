@@ -20,6 +20,7 @@ namespace Tyra {
 class Mesh {
  public:
   explicit Mesh(const MeshBuilderData& data);
+  explicit Mesh(const MeshBuilder2Data& data);
   explicit Mesh(const Mesh& mesh);
   ~Mesh();
 
