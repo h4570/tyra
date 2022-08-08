@@ -2,6 +2,7 @@
     "recommendations": [
         "ms-vscode.cpptools-extension-pack",
         "ryzngard.vscode-header-source",
-        "maziac.asm-code-lens"
+        "maziac.asm-code-lens",
+        "dmnsgn.vscode-wavefront"
     ]
 }
