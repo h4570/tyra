@@ -9,56 +9,30 @@
 */
 
 #include "states/game/enemy/enemy.hpp"
-#include <loaders/3d/tyrobj/tyrobj_loader.hpp>
+#include "loaders/3d/obj_loader/obj_loader.hpp"
 #include <file/file_utils.hpp>
 
 using Tyra::FileUtils;
-using Tyra::TyrobjLoader;
+using Tyra::ObjLoader;
 
 namespace Demo {
 
 Enemy::Enemy(TextureRepository* repo) {
-  TyrobjLoader loader;
+  ObjLoader loader;
 
   auto* bodyData = loader.load(
-      FileUtils::fromCwd("game/models/soldier/soldier.obj"), 4, 30.0F, true);
+      FileUtils::fromCwd("game/models/soldier/soldier.obj"), 4, 20.0F, true);
   bodyData->normalsEnabled = false;
   bodyMesh = new DynamicMesh(*bodyData);
 
-  TYRA_LOG("First vertex: ", bodyData->frames[0]->vertices[0].getPrint());
-  TYRA_LOG("Last vertex: ",
-           bodyData->frames[0]
-               ->vertices[bodyData->frames[0]->verticesCount - 1]
-               .getPrint());
-
-  TYRA_LOG("First index: ", bodyData->materials[0]->vertexFaces[0]);
-  TYRA_LOG(
-      "Last index: ",
-      bodyData->materials[0]->vertexFaces[bodyData->materials[0]->count - 1]);
-
   delete bodyData;
 
-  bodyMesh->getMaterial(0)->color.r = 16.0F;
-  bodyMesh->getMaterial(0)->color.g = 16.0F;
-  bodyMesh->getMaterial(0)->color.b = 16.0F;
-
   bodyMesh->playAnimation(0, bodyMesh->getFramesCount() - 1);
-  bodyMesh->setAnimSpeed(0.15F);
+  bodyMesh->setAnimSpeed(0.1F);
 
   repo->addByMesh(bodyMesh, FileUtils::fromCwd("game/models/soldier/"), "png");
 
-  // auto* headData = loader.load(
-  //     FileUtils::fromCwd("game/models/soldier/head.md2"), scale, true);
-  // headData->normalsEnabled = false;
-  // headMesh = new DynamicMesh(*headData);
-  // delete headData;
-
-  // headMesh->getMaterial(0)->color.r = 16.0F;
-  // headMesh->getMaterial(0)->color.g = 16.0F;
-  // headMesh->getMaterial(0)->color.b = 16.0F;
-
-  // repo->addByMesh(headMesh, FileUtils::fromCwd("game/models/soldier/"),
-  // "png");
+  bodyMesh->translation.translateY(-5.0F);
 
   allocateOptions();
 

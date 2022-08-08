@@ -12,9 +12,9 @@
 #include <string>
 #include "debug/debug.hpp"
 #include "loaders/3d/builder/mesh_builder_data.hpp"
-#include "loaders/3d/md2/anorms.hpp"
+#include "loaders/3d/md2_loader/anorms.hpp"
 #include "loaders/loader.hpp"
-#include "loaders/3d/md2/md2_loader.hpp"
+#include "loaders/3d/md2_loader/md2_loader.hpp"
 
 namespace Tyra {
 
@@ -96,9 +96,10 @@ MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
   u32 stsCount = header.num_st;
   u32 trianglesCount = header.num_tris;
 
-  auto framesBuffer = new char[framesCount * header.framesize];
+  auto framesBufferSize = framesCount * header.framesize;
+  auto framesBuffer = new char[framesBufferSize];
   fseek(file, header.ofs_frames, SEEK_SET);
-  fread(framesBuffer, framesCount * header.framesize, 1, file);
+  fread(framesBuffer, framesBufferSize, 1, file);
 
   auto stsBuffer = new char[stsCount * sizeof(texCoord_t)];
   fseek(file, header.ofs_st, SEEK_SET);
@@ -116,15 +117,15 @@ MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
   result->textureCoordsEnabled = true;
   result->manyColorsEnabled = false;
 
+  result->materials[0]->allocateFaces(trianglesCount * 3);
+  result->materials[0]->name = getFilenameWithoutExtension(filename);
+
   frame_t* frame;
   Vec4 temp(0.0F, 0.0F, 0.0F, 1.0F);
   for (u32 j = 0; j < framesCount; j++) {
     result->frames[j]->allocateVertices(vertexCount);
     result->frames[j]->allocateNormals(vertexCount);
     result->frames[j]->allocateTextureCoords(stsCount);
-
-    result->materials[0]->allocateFaces(trianglesCount * 3);
-    result->materials[0]->name = getFilenameWithoutExtension(filename);
 
     frame = reinterpret_cast<frame_t*>(&framesBuffer[header.framesize * j]);
 
@@ -178,8 +179,6 @@ MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
       }
     }
   }
-
-  TYRA_LOG("MD2 file \"", filename, "\" loaded!");
 
   delete[] framesBuffer;
   delete[] stsBuffer;

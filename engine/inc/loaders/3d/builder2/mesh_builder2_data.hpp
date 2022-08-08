@@ -19,7 +19,7 @@ namespace Tyra {
 /**
  * Data needed for constructing mesh class.
  * All dynamic data ownership is moved to mesh class, so
- * there is no any deallocation!
+ * verts, coords.. are not deallocated!
  */
 class MeshBuilder2Data {
  public:

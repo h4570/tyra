@@ -17,6 +17,7 @@ namespace Tyra {
 class Loader {
  protected:
   std::string getFilenameFromPath(const std::string& path);
+  std::string getPathFromFilename(const std::string& path);
   std::string getFilenameWithoutExtension(const std::string& filename);
   std::string getExtensionOfFilename(const std::string& filename);
 };

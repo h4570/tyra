@@ -37,7 +37,7 @@ MeshMaterial::MeshMaterial(const MeshBuilder2Data& data,
     singleColorFlag = true;
   }
 
-  color.set(128.0F, 128.0F, 128.0F, 128.0F);
+  color.set(material->ambient);
 
   _name = material->name;
   TYRA_ASSERT(_name.length() > 0, "MeshMaterial name cannot be empty");

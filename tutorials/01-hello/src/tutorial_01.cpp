@@ -10,8 +10,8 @@
 
 #include "tutorial_01.hpp"
 #include "file/file_utils.hpp"
-#include "loaders/3d/md2/md2_loader.hpp"
-#include "loaders/3d/tyrobj/tyrobj_loader.hpp"
+#include "loaders/3d/md2_loader/md2_loader.hpp"
+#include "loaders/3d/obj_loader/obj_loader.hpp"
 #include "thread/threading.hpp"
 
 namespace Tyra {
@@ -201,9 +201,9 @@ StaticMesh* getStaticMesh(Renderer* renderer) {
 }
 
 StaticMesh* getSkybox(Renderer* renderer) {
-  TyrobjLoader loader;
+  ObjLoader loader;
   auto* data =
-      loader.load(FileUtils::fromCwd("skybox/skybox.tyrobj"), 1, 200.0F, true);
+      loader.load(FileUtils::fromCwd("skybox/skybox.obj"), 1, 200.0F, true);
   auto* result = new StaticMesh(*data);
   // result->translation.translateZ(-30.0F);
   delete data;
@@ -231,9 +231,8 @@ DynamicMesh* getWarrior(Renderer* renderer) {
 }
 
 DynamicMesh* getCube(Renderer* renderer) {
-  TyrobjLoader loader;
-  auto* data =
-      loader.load(FileUtils::fromCwd("untitled.tyrobj"), 2, 3.0F, false);
+  ObjLoader loader;
+  auto* data = loader.load(FileUtils::fromCwd("untitled.obj"), 2, 3.0F, false);
 
   auto* result = new DynamicMesh(*data);
   result->translation.translateZ(-30.0F);

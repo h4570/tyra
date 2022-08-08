@@ -13,7 +13,13 @@
 
 namespace Tyra {
 
-MeshBuilder2MaterialData::MeshBuilder2MaterialData() {}
-MeshBuilder2MaterialData::~MeshBuilder2MaterialData() {}
+MeshBuilder2MaterialData::MeshBuilder2MaterialData() {
+  ambient.set(128.0F, 128.0F, 128.0F, 128.0F);
+}
+MeshBuilder2MaterialData::~MeshBuilder2MaterialData() {
+  for (auto& frame : frames) {
+    delete frame;
+  }
+}
 
 }  // namespace Tyra

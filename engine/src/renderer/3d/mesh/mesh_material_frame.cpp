@@ -56,10 +56,12 @@ MeshMaterialFrame::MeshMaterialFrame(const MeshBuilder2Data& data,
 
   TYRA_ASSERT(frame->count > 0, "Vertex count must be greater than 0");
   TYRA_ASSERT(frame->vertices != nullptr, "Vertex array can't be null");
-  TYRA_ASSERT(frame->normals != nullptr, "Normal array can't be null");
-  TYRA_ASSERT(frame->textureCoords != nullptr,
+  TYRA_ASSERT(!data.normalsEnabled || frame->normals != nullptr,
+              "Normal array can't be null");
+  TYRA_ASSERT(!data.textureCoordsEnabled || frame->textureCoords != nullptr,
               "Texture coordinate array can't be null");
-  TYRA_ASSERT(frame->colors != nullptr, "Color array can't be null");
+  TYRA_ASSERT(!data.lightMapEnabled || frame->colors != nullptr,
+              "Color array can't be null");
 
   bbox = new BBox(frame->vertices, frame->count);
 

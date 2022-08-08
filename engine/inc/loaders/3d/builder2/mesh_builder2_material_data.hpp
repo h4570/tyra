@@ -14,6 +14,7 @@
 #include <vector>
 #include <string>
 #include "./mesh_builder2_material_frame_data.hpp"
+#include "renderer/models/color.hpp"
 
 namespace Tyra {
 
@@ -24,6 +25,7 @@ class MeshBuilder2MaterialData {
 
   std::vector<MeshBuilder2MaterialFrameData*> frames;
   std::string name;
+  Color ambient;
 };
 
 }  // namespace Tyra

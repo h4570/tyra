@@ -19,6 +19,10 @@ MeshBuilder2Data::MeshBuilder2Data() {
   lightMapEnabled = false;
 }
 
-MeshBuilder2Data::~MeshBuilder2Data() {}
+MeshBuilder2Data::~MeshBuilder2Data() {
+  for (auto& material : materials) {
+    delete material;
+  }
+}
 
 }  // namespace Tyra

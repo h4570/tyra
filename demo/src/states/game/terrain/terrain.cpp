@@ -9,11 +9,11 @@
 */
 
 #include "states/game/terrain/terrain.hpp"
-#include <loaders/3d/tyrobj/tyrobj_loader.hpp>
+#include <loaders/3d/obj_loader/obj_loader.hpp>
 #include <file/file_utils.hpp>
 
 using Tyra::FileUtils;
-using Tyra::TyrobjLoader;
+using Tyra::ObjLoader;
 
 namespace Demo {
 Terrain::Terrain(TextureRepository* repo)
@@ -22,7 +22,7 @@ Terrain::Terrain(TextureRepository* repo)
                 Vec4(-196.6F, 0.0F, -412.0F, 1.0F),  // Left up
                 Vec4(286.0F, 0.0F, 443.3F, 1.0F)     // Right down
       ) {
-  TyrobjLoader loader;
+  ObjLoader loader;
   auto* data = loader.load(
       FileUtils::fromCwd("game/models/terrain/terrain.obj"), 1, 25.0F, true);
   data->normalsEnabled = false;

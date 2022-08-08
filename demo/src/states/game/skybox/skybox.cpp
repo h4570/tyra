@@ -9,16 +9,16 @@
 */
 
 #include "states/game/skybox/skybox.hpp"
-#include <loaders/3d/tyrobj/tyrobj_loader.hpp>
+#include <loaders/3d/obj_loader/obj_loader.hpp>
 #include <file/file_utils.hpp>
 
 using Tyra::FileUtils;
-using Tyra::TyrobjLoader;
+using Tyra::ObjLoader;
 
 namespace Demo {
 
 Skybox::Skybox(TextureRepository* repo) {
-  TyrobjLoader loader;
+  ObjLoader loader;
   auto* data = loader.load(FileUtils::fromCwd("game/models/skybox/skybox.obj"),
                            1, 100.0F, true);
   data->normalsEnabled = false;
