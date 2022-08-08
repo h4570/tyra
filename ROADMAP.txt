@@ -1,8 +1,14 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 - [General] builder2
+- [Obj] soldier_000001
+- [General] vec3/vec4/m4x4 functions from ms
 - [General] std::vector in mesh instead of array**
 - [General] Allow to edit all data from mesh/texture
 - [General] manycolor -> lightmap
+- [General] rename invertT -> invertY
+- [General] ładować ambient i wrzucać do material. Zmienic nazwe na ambient
+- [General] wszystkie new M4x4 i = M4x4 na M4x4::Identity
+- [General] wyeksportowac z blendera warianty, color, tex, tex+normal, color+normal i sprawdzic
 
 - [General] USB test
 - [General] Tyra version, render it on start 
@@ -17,7 +23,7 @@
 
 - [Tutorials] 3. Minecraft cube - explain this pipeline, and explain that there are many 3D pipelines
 
-- [Tutorials] 4. Mesh rendering - explain staticPipeline, render .tyrobj file via Mesh class, explain that this is high-level 
+- [Tutorials] 4. Mesh rendering - explain staticPipeline, render .obj file via Mesh class, explain that this is high-level 
 abstract 3D object class, and what it have (animation etc)
 
 - [Tutorials] 5. Manual rendering via staticPipeline - via Render3DBag (core.render()), render simple poly,
@@ -32,14 +38,16 @@ because Mesh rendering uses only core.render()
 
 - [General] Check all left TODOs -> Github issues
 
+- [General] Credits: clipping, obj loader
+
 ------------ Github issues for Tyra v2 ------------
 - [General] Async file loading
 - [3D] Add drawLine(x, y , color, size)
 - [2D] Fixed font support
 - [3D] Add drawBBox(x, y , color, size)
 - [File] Async file loading
-- [tyrobj] Add multicolor support to tyrobj
-- [Tyrobj] Improve obj importing for multiple usemtl with same names
+- [obj] Add multicolor support to obj
+- [Obj] Improve obj importing for multiple usemtl with same names
 - [tyrdata] Custom 3D data file with precalculated bboxes with support of async loading
 - [Renderer] Interlacing
 - [General] Add cpp lint checker in GitHub
