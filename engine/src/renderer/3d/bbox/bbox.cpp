@@ -29,7 +29,7 @@ BBox::BBox(const BBox& t_bbox) : CoreBBox(t_bbox) { setData(); }
 
 BBox::BBox(const BBox& t_bbox, const M4x4& t_matrix) {
   for (u32 i = 0; i < 8; i++) {
-    _vertices[i] = t_matrix * _vertices[i];
+    _vertices[i] = t_matrix * t_bbox._vertices[i];
   }
 
   setData();
