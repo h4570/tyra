@@ -21,7 +21,7 @@ Enemy::Enemy(TextureRepository* repo) {
   ObjLoader loader;
 
   auto* bodyData = loader.load(
-      FileUtils::fromCwd("game/models/soldier/soldier.obj"), 4, 20.0F, true);
+      FileUtils::fromCwd("game/models/soldier/soldier.obj"), 4, 25.0F, true);
   bodyData->normalsEnabled = false;
   bodyMesh = new DynamicMesh(*bodyData);
 

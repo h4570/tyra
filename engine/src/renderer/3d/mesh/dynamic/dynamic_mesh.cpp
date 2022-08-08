@@ -33,9 +33,11 @@ DynamicMesh::DynamicMesh(const MeshBuilderData& data) : Mesh(data) {
 DynamicMesh::DynamicMesh(const MeshBuilder2Data& data) : Mesh(data) {
   framesCount = data.materials[0]->frames.size();
 
-  TYRA_WARN(
-      "Frames count should be greater than 1 for DynamicMesh! Maybe you "
-      "should use StaticMesh?");
+  if (framesCount == 1) {
+    TYRA_WARN(
+        "Frames count should be greater than 1 for DynamicMesh! Maybe you "
+        "should use StaticMesh?");
+  }
 
   frames = new MeshFrame*[framesCount];
   for (u32 i = 0; i < framesCount; i++) {
