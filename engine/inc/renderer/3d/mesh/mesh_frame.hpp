@@ -11,7 +11,6 @@
 #pragma once
 
 #include "./mesh_material.hpp"
-#include "loaders/3d/builder/mesh_builder_data.hpp"
 #include "loaders/3d/builder2/mesh_builder2_data.hpp"
 #include "renderer/3d/bbox/bbox.hpp"
 
@@ -19,7 +18,6 @@ namespace Tyra {
 
 class MeshFrame {
  public:
-  explicit MeshFrame(const MeshBuilderData& data, const u32& index);
   explicit MeshFrame(const MeshBuilder2Data& data, const u32& index);
   explicit MeshFrame(const MeshFrame& frame);
   ~MeshFrame();

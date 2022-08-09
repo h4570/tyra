@@ -30,7 +30,8 @@ Plane::~Plane() {}
 // Methods
 // ----
 
-/** Set plane by specyfying 3 points.
+/**
+ * Set plane by specyfying 3 points.
  * This function assumes that the points
  * are given in counter clockwise order
  */

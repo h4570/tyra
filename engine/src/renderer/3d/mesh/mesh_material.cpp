@@ -51,35 +51,6 @@ MeshMaterial::MeshMaterial(const MeshBuilder2Data& data,
   _isMother = true;
 }
 
-MeshMaterial::MeshMaterial(const MeshBuilderData& data,
-                           const u32& materialIndex)
-    : color(false) {
-  TYRA_ASSERT(materialIndex < data.materialsCount && materialIndex >= 0,
-              "Provided index \"", materialIndex, "\" is out of range");
-
-  id = rand() % 1000000;
-
-  if (data.manyColorsEnabled) {
-    singleColorFlag = false;
-    TYRA_ASSERT(data.frames[0]->colors != nullptr, "Colors faces are required");
-  } else {
-    singleColorFlag = true;
-  }
-
-  color.set(128.0F, 128.0F, 128.0F, 128.0F);
-
-  _name = data.materials[materialIndex]->name;
-  TYRA_ASSERT(_name.length() > 0, "MeshMaterial name cannot be empty");
-
-  framesCount = data.framesCount;
-  frames = new MeshMaterialFrame*[framesCount];
-  for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new MeshMaterialFrame(data, i, materialIndex);
-  }
-
-  _isMother = true;
-}
-
 MeshMaterial::MeshMaterial(const MeshMaterial& mesh) {
   id = rand() % 1000000;
 

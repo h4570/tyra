@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../../loader.hpp"
-#include "../builder/mesh_builder_data.hpp"
+#include "../builder2/mesh_builder2_data.hpp"
 #include <string>
 
 namespace Tyra {
@@ -22,11 +22,11 @@ class MD2Loader : public Loader {
   MD2Loader();
   ~MD2Loader();
 
-  MeshBuilderData* load(const char* fullpath, const float& scale,
-                        const bool& invertT);
+  MeshBuilder2Data* load(const char* fullpath, const float& scale,
+                         const bool& invertT);
 
-  inline MeshBuilderData* load(const std::string& fullpath, const float& scale,
-                               const bool& invertT) {
+  inline MeshBuilder2Data* load(const std::string& fullpath, const float& scale,
+                                const bool& invertT) {
     return load(fullpath.c_str(), scale, invertT);
   }
 };

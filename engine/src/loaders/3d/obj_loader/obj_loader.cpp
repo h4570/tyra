@@ -72,8 +72,10 @@ MeshBuilder2Data* ObjLoader::load(const char* fullpath, const u16& count,
         "mtlib in obj file");
 
     if (i == 1) {
-      setInitialData(result, attrib, shapes, materials, count);
+      addOutputMaterialsAndFrames(result, attrib, shapes, materials, count);
     }
+
+    scan(result, attrib, shapes, materials, i - 1);
 
     importFrame(result, attrib, shapes, materials, i - 1, scale, invertY,
                 count);
@@ -82,7 +84,7 @@ MeshBuilder2Data* ObjLoader::load(const char* fullpath, const u16& count,
   return result;
 }
 
-void ObjLoader::setInitialData(
+void ObjLoader::addOutputMaterialsAndFrames(
     MeshBuilder2Data* output, const tinyobj::attrib_t& attrib,
     const std::vector<tinyobj::shape_t>& shapes,
     const std::vector<tinyobj::material_t>& materials, const u16& framesCount) {
@@ -113,93 +115,127 @@ void ObjLoader::setInitialData(
   }
 }
 
+void ObjLoader::scan(MeshBuilder2Data* output, const tinyobj::attrib_t& attrib,
+                     const std::vector<tinyobj::shape_t>& shapes,
+                     const std::vector<tinyobj::material_t>& materials,
+                     const u16& frameIndex) {
+  struct MaterialVertexCount {
+    size_t materialId;
+    int count;
+  };
+
+  std::vector<MaterialVertexCount> materialVertexCounts;
+  for (size_t i = 0; i < materials.size(); i++) {
+    MaterialVertexCount counter = {i, 0};
+    materialVertexCounts.push_back(counter);
+  }
+
+  for (size_t s = 0; s < shapes.size(); s++) {
+    const auto& mesh = shapes[s].mesh;
+
+    for (size_t f = 0; f < mesh.num_face_vertices.size(); f++) {
+      const auto& materialId = mesh.material_ids[f];
+      const auto& vertCountPerFace = size_t(mesh.num_face_vertices[f]);
+
+      TYRA_ASSERT(vertCountPerFace == 3,
+                  "TinyObjLoader should triangulate mesh, internal error!");
+
+      materialVertexCounts[materialId].count += vertCountPerFace;
+    }
+  }
+
+  for (size_t i = 0; i < materials.size(); i++) {
+    const auto& counter = materialVertexCounts[i];
+
+    auto* outFrame = output->materials[i]->frames[frameIndex];
+
+    outFrame->count = counter.count;
+    outFrame->vertices = new Vec4[counter.count];
+
+    if (output->textureCoordsEnabled)
+      outFrame->textureCoords = new Vec4[counter.count];
+
+    if (output->normalsEnabled) outFrame->normals = new Vec4[counter.count];
+  }
+}
+
 void ObjLoader::importFrame(MeshBuilder2Data* output,
                             const tinyobj::attrib_t& attrib,
                             const std::vector<tinyobj::shape_t>& shapes,
                             const std::vector<tinyobj::material_t>& materials,
                             const u16& frameIndex, const float& scale,
                             const bool& invertY, const u16& count) {
-  for (size_t i = 0; i < shapes.size(); i++) {
-    const auto& mesh = shapes[i].mesh;
+  struct MaterialInsertControl {
+    size_t materialId;
+    int inserted;
+  };
 
-    // Loop over shapes
-    for (size_t s = 0; s < shapes.size(); s++) {
-      size_t index_offset = 0;
-      // Loop over faces
-      for (size_t f = 0; f < mesh.num_face_vertices.size(); f++) {
-        auto materialId = mesh.material_ids[f];
-        auto* outFrame = output->materials[materialId]->frames[frameIndex];
+  std::vector<MaterialInsertControl> materialInsertControls;
+  for (size_t i = 0; i < materials.size(); i++) {
+    MaterialInsertControl control = {i, 0};
+    materialInsertControls.push_back(control);
+  }
 
-        auto isAllocated = outFrame->vertices != nullptr;
+  // Loop over shapes
+  for (size_t s = 0; s < shapes.size(); s++) {
+    const auto& mesh = shapes[s].mesh;
 
-        if (!isAllocated) {
-          auto vertCount = mesh.num_face_vertices.size() * 3;
+    size_t index_offset = 0;
+    // Loop over faces
+    for (size_t f = 0; f < mesh.num_face_vertices.size(); f++) {
+      auto materialId = mesh.material_ids[f];
+      auto& materialInsertControl = materialInsertControls[materialId];
+      size_t vertCountPerFace = size_t(mesh.num_face_vertices[f]);
 
-          outFrame->count = vertCount;
-          outFrame->vertices = new Vec4[vertCount];
+      auto* outFrame = output->materials[materialId]->frames[frameIndex];
 
-          if (output->textureCoordsEnabled)
-            outFrame->textureCoords = new Vec4[vertCount];
+      TYRA_ASSERT(count == 1 || vertCountPerFace == 3,
+                  "Please triangulate obj files if you are animating!",
+                  "Recommended Blender options: ",
+                  "- Obj exporting: triangulate off, keep vertex order",
+                  "- Object modifiers: triangulate (as first!), then other "
+                  "modifiers");
 
-          if (output->normalsEnabled) outFrame->normals = new Vec4[vertCount];
-        } else {
-          TYRA_ASSERT(outFrame->count == mesh.num_face_vertices.size() * 3,
-                      "Multiple usage of the same \"usemtl\" is not supported! "
-                      "Please merge them!");
+      // Loop over vertices in the face.
+      for (size_t v = 0; v < vertCountPerFace; v++) {
+        // access to vertex
+        tinyobj::index_t idx = mesh.indices[index_offset + v];
+        tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
+        tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
+        tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
+
+        outFrame->vertices[materialInsertControl.inserted].set(vx, vy, vz,
+                                                               1.0F);
+        outFrame->vertices[materialInsertControl.inserted] *= scale;
+
+        // Check if `normal_index` is zero or positive. negative = no normal
+        // data
+        if (idx.normal_index >= 0) {
+          tinyobj::real_t nx = attrib.normals[3 * size_t(idx.normal_index) + 0];
+          tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
+          tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
+
+          outFrame->normals[materialInsertControl.inserted].set(nx, ny, nz,
+                                                                1.0F);
         }
 
-        size_t fv = size_t(mesh.num_face_vertices[f]);
+        // Check if `texcoord_index` is zero or positive. negative =
+        // notexcoord data
+        if (idx.texcoord_index >= 0) {
+          tinyobj::real_t tx =
+              attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
+          tinyobj::real_t ty =
+              attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
 
-        TYRA_ASSERT(count == 1 || fv == 3,
-                    "Please triangulate obj files if you are animating!",
-                    "Recommended Blender options: ",
-                    "- Obj exporting: triangulate off, keep vertex order",
-                    "- Object modifiers: triangulate (as first!), then other "
-                    "modifiers");
-
-        // Loop over vertices in the face.
-        for (size_t v = 0; v < fv; v++) {
-          // access to vertex
-          tinyobj::index_t idx = mesh.indices[index_offset + v];
-          tinyobj::real_t vx =
-              attrib.vertices[3 * size_t(idx.vertex_index) + 0];
-          tinyobj::real_t vy =
-              attrib.vertices[3 * size_t(idx.vertex_index) + 1];
-          tinyobj::real_t vz =
-              attrib.vertices[3 * size_t(idx.vertex_index) + 2];
-
-          outFrame->vertices[index_offset + v].set(vx, vy, vz, 1.0F);
-          outFrame->vertices[index_offset + v] *= scale;
-
-          // Check if `normal_index` is zero or positive. negative = no normal
-          // data
-          if (idx.normal_index >= 0) {
-            tinyobj::real_t nx =
-                attrib.normals[3 * size_t(idx.normal_index) + 0];
-            tinyobj::real_t ny =
-                attrib.normals[3 * size_t(idx.normal_index) + 1];
-            tinyobj::real_t nz =
-                attrib.normals[3 * size_t(idx.normal_index) + 2];
-
-            outFrame->normals[index_offset + v].set(nx, ny, nz, 1.0F);
-          }
-
-          // Check if `texcoord_index` is zero or positive. negative =
-          // notexcoord data
-          if (idx.texcoord_index >= 0) {
-            tinyobj::real_t tx =
-                attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
-            tinyobj::real_t ty =
-                attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
-
-            auto finalY = invertY ? 1.0F - ty : ty;
-            outFrame->textureCoords[index_offset + v].set(tx, finalY, 1.0F,
-                                                          0.0F);
-          }
+          auto finalY = invertY ? 1.0F - ty : ty;
+          outFrame->textureCoords[materialInsertControl.inserted].set(
+              tx, finalY, 1.0F, 0.0F);
         }
 
-        index_offset += fv;
+        materialInsertControl.inserted++;
       }
+
+      index_offset += vertCountPerFace;
     }
   }
 }

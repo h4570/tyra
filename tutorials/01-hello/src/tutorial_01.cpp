@@ -107,6 +107,7 @@ void Tutorial01 ::init() {
   scales = new M4x4[blocksCount];
   float center = (rows / 2.0F) * offset;
   auto* color = new Color(128.0F, 128.0F, 128.0F, 128.0F);
+
   for (u32 i = 0; i < blocksCount; i++) {
     u32 column = i % columns;
     u32 row = i / rows;

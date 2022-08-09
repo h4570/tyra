@@ -36,6 +36,7 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
   for (u32 i = 0; i < buffer->size / 3; i++) {
     for (u8 j = 0; j < 3; j++) {
       inputVerts[j] = *mvp * buffer->vertices[i * 3 + j];
+
       inputTriangle[j] = {
           &inputVerts[j],
           buffer->bag->lighting ? &buffer->normals[i * 3 + j] : nullptr,

@@ -123,7 +123,7 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
         rendererCore->renderer3D.frustumPlanes.getAll(), *bag->info->model);
 
     if (frustumCheck == OUTSIDE_FRUSTUM) {
-      if (frustumCull && !bbox) {
+      if (!bbox) {
         delete renderBbox;
       }
       return;
@@ -206,6 +206,7 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   if (frustumCull && !bbox) {
     delete renderBbox;
   }
+
   if (texBuffers) delete texBuffers;
 
   qbufferRenderer.flushBuffers();

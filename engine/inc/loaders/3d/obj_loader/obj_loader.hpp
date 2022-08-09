@@ -34,10 +34,16 @@ class ObjLoader : public Loader {
   }
 
  private:
-  void setInitialData(MeshBuilder2Data* output, const tinyobj::attrib_t& attrib,
-                      const std::vector<tinyobj::shape_t>& shapes,
-                      const std::vector<tinyobj::material_t>& materials,
-                      const u16& framesCount);
+  void addOutputMaterialsAndFrames(
+      MeshBuilder2Data* output, const tinyobj::attrib_t& attrib,
+      const std::vector<tinyobj::shape_t>& shapes,
+      const std::vector<tinyobj::material_t>& materials,
+      const u16& framesCount);
+
+  void scan(MeshBuilder2Data* output, const tinyobj::attrib_t& attrib,
+            const std::vector<tinyobj::shape_t>& shapes,
+            const std::vector<tinyobj::material_t>& materials,
+            const u16& frameIndex);
 
   void importFrame(MeshBuilder2Data* output, const tinyobj::attrib_t& attrib,
                    const std::vector<tinyobj::shape_t>& shapes,

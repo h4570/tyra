@@ -13,22 +13,6 @@
 
 namespace Tyra {
 
-Mesh::Mesh(const MeshBuilderData& data) {
-  init();
-
-  TYRA_ASSERT(data.materialsCount > 0,
-              "Materials count must be greater than 0");
-
-  materialsCount = data.materialsCount;
-  materials = new MeshMaterial*[materialsCount];
-
-  for (u32 i = 0; i < materialsCount; i++) {
-    materials[i] = new MeshMaterial(data, i);
-  }
-
-  _isMother = true;
-}
-
 Mesh::Mesh(const MeshBuilder2Data& data) {
   init();
 

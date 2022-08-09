@@ -30,6 +30,8 @@ void DynPipRenderer::allocateOnUse(const u32& t_packetSize) {
   staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
+  packetSize = t_packetSize;
+
   for (u16 i = 0; i < 2; i++)
     packets[i] =
         packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
@@ -174,6 +176,10 @@ void DynPipRenderer::addBufferDataToPacket(DynPipVU1Program* program,
 void DynPipRenderer::sendPacket() {
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
+
+  TYRA_ASSERT(packet2_get_qw_count(currentPacket) <= packetSize,
+              "Packet is too big. Internal error.");
+
   // Switch packet, so we can proceed during DMA transfer
   context = !context;
 }

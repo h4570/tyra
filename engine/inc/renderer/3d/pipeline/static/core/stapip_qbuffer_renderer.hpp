@@ -85,7 +85,7 @@ class StaPipQBufferRenderer {
   static const u16 buffersCount;
 
   StaPipVU1Program* getProgramByName(const StaPipProgramName& name);
-  void addBufferDataToPacket(StaPipQBuffer** buffers, const u32& count);
+  void addBuffersDataToPacket(const u32& from, const u32& to);
   void sendPacket();
   StaPipVU1Program* getAsIsProgramByBag(const StaPipBag* bag);
   StaPipVU1Program* getCullProgramByType(const StaPipProgramType& programType);

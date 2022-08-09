@@ -19,18 +19,6 @@
 
 namespace Tyra {
 
-MeshFrame::MeshFrame(const MeshBuilderData& data, const u32& index) {
-  TYRA_ASSERT(index < data.framesCount && index >= 0, "Provided index \"",
-              index, "\" is out of range");
-
-  id = rand() % 1000000;
-
-  bbox =
-      new BBox(data.frames[index]->vertices, data.frames[index]->verticesCount);
-
-  _isMother = true;
-}
-
 MeshFrame::MeshFrame(const MeshBuilder2Data& data, const u32& index) {
   id = rand() % 1000000;
 

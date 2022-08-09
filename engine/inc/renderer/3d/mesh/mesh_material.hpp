@@ -11,15 +11,13 @@
 #pragma once
 
 #include "debug/debug.hpp"
-#include "loaders/3d/builder/mesh_builder_data.hpp"
-#include "loaders/3d/builder2/mesh_builder2_data.hpp"
 #include "./mesh_material_frame.hpp"
+#include "loaders/3d/builder2/mesh_builder2_data.hpp"
 
 namespace Tyra {
 
 class MeshMaterial {
  public:
-  explicit MeshMaterial(const MeshBuilderData& data, const u32& materialIndex);
   explicit MeshMaterial(const MeshBuilder2Data& data, const u32& materialIndex);
   explicit MeshMaterial(const MeshMaterial& material);
   ~MeshMaterial();

@@ -189,6 +189,7 @@ CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,
     const auto margin = margins == nullptr ? 0.0F : margins[i];
     boxOut = 0;
     boxIn = 0;
+
     // for each corner of the box do ...
     // get out of the cycle as soon as a box as corners
     // both inside and out of the frustum
@@ -202,6 +203,7 @@ CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,
       else
         boxIn++;
     }
+
     // if all corners are out
     if (!boxIn)
       return OUTSIDE_FRUSTUM;

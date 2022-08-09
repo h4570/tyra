@@ -162,49 +162,53 @@ void StaPipQBuffer::reallocateManually(const u16& t_size) {
 }
 
 void StaPipQBuffer::deallocateDynamicData() {
-  if (_isDynamicallyAllocated) {
-    delete[] vertices;
+  if (!_isDynamicallyAllocated) return;
 
-    if (_stAllocated) {
-      delete[] sts;
-      _stAllocated = false;
-    }
+  delete[] vertices;
 
-    if (_colorAllocated) {
-      delete[] colors;
-      _colorAllocated = false;
-    }
-
-    if (_normalAllocated) {
-      delete[] normals;
-      _normalAllocated = false;
-    }
-
-    _isDynamicallyAllocated = false;
+  if (_stAllocated) {
+    delete[] sts;
+    _stAllocated = false;
   }
+
+  if (_colorAllocated) {
+    delete[] colors;
+    _colorAllocated = false;
+  }
+
+  if (_normalAllocated) {
+    delete[] normals;
+    _normalAllocated = false;
+  }
+
+  _isDynamicallyAllocated = false;
 }
 
-/** When we not receive maxVertCount vertices, we must align it by ourself.
- * Too bad - not efficient. */
+/**
+ * When we not receive maxVertCount vertices, we must align it by ourself.
+ * Too bad - not efficient.
+ */
 void StaPipQBuffer::allocateDynamicData(u16 size, StaPipBag* bag) {
   TYRA_ASSERT(size <= maxVertCount, "Wrong size. Max buffer size in VU1 is ",
               maxVertCount, ". Provided: ", size);
   TYRA_ASSERT(!_isDynamicallyAllocated, "Buffer is already allocated");
 
-  vertices = new (std::align_val_t(sizeof(VECTOR))) Vec4[size];
+  if (size == 0) return;
+
+  vertices = new Vec4[size];
 
   if (bag->texture != nullptr) {
-    sts = new (std::align_val_t(sizeof(VECTOR))) Vec4[size];
+    sts = new Vec4[size];
     _stAllocated = true;
   }
 
   if (bag->color->many != nullptr) {
-    colors = new (std::align_val_t(sizeof(VECTOR))) Vec4[size];
+    colors = new Vec4[size];
     _colorAllocated = true;
   }
 
   if (bag->lighting != nullptr) {
-    normals = new (std::align_val_t(sizeof(VECTOR))) Vec4[size];
+    normals = new Vec4[size];
     _normalAllocated = true;
   }
 

@@ -8,13 +8,12 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
+#include "loaders/3d/md2_loader/md2_loader.hpp"
 #include <stdio.h>
 #include <string>
 #include "debug/debug.hpp"
-#include "loaders/3d/builder/mesh_builder_data.hpp"
 #include "loaders/3d/md2_loader/anorms.hpp"
 #include "loaders/loader.hpp"
-#include "loaders/3d/md2_loader/md2_loader.hpp"
 
 namespace Tyra {
 
@@ -75,8 +74,8 @@ MD2Loader::MD2Loader() {}
 
 MD2Loader::~MD2Loader() {}
 
-MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
-                                 const bool& invertT) {
+MeshBuilder2Data* MD2Loader::load(const char* fullpath, const float& scale,
+                                  const bool& invertT) {
   std::string path = fullpath;
   TYRA_ASSERT(!path.empty(), "Provided path is empty!");
 
@@ -111,47 +110,58 @@ MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
 
   fclose(file);
 
-  auto result = new MeshBuilderData();
-  result->allocate(framesCount, 1);
+  auto result = new MeshBuilder2Data();
+
+  auto* material = new MeshBuilder2MaterialData();
+  material->name = getFilenameWithoutExtension(filename);
+
+  result->materials.push_back(material);
   result->normalsEnabled = true;
   result->textureCoordsEnabled = true;
-  result->manyColorsEnabled = false;
+  result->lightMapEnabled = false;
 
-  result->materials[0]->allocateFaces(trianglesCount * 3);
-  result->materials[0]->name = getFilenameWithoutExtension(filename);
+  Vec4** tempVertices = new Vec4*[framesCount];
+  Vec4** tempNormals = new Vec4*[framesCount];
+  Vec4** tempTexCoords = new Vec4*[framesCount];
 
-  frame_t* frame;
+  for (u32 i = 0; i < framesCount; i++) {
+    auto* outputFrame = new MeshBuilder2MaterialFrameData();
+    material->frames.push_back(outputFrame);
+
+    tempVertices[i] = new Vec4[vertexCount];
+    tempNormals[i] = new Vec4[vertexCount];
+    tempTexCoords[i] = new Vec4[stsCount];
+  }
+
   Vec4 temp(0.0F, 0.0F, 0.0F, 1.0F);
-  for (u32 j = 0; j < framesCount; j++) {
-    result->frames[j]->allocateVertices(vertexCount);
-    result->frames[j]->allocateNormals(vertexCount);
-    result->frames[j]->allocateTextureCoords(stsCount);
 
-    frame = reinterpret_cast<frame_t*>(&framesBuffer[header.framesize * j]);
+  for (u32 frameIndex = 0; frameIndex < framesCount; frameIndex++) {
+    auto* frame = reinterpret_cast<frame_t*>(
+        &framesBuffer[header.framesize * frameIndex]);
 
-    for (u32 i = 0; i < vertexCount; i++) {
-      temp.set(
-          ((frame->verts[i].v[0] * frame->scale[0]) + frame->translate[0]) *
-              scale,
-          ((frame->verts[i].v[1] * frame->scale[1]) + frame->translate[1]) *
-              scale,
-          ((frame->verts[i].v[2] * frame->scale[2]) + frame->translate[2]) *
-              scale);
+    for (u32 vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++) {
+      temp.set(((frame->verts[vertexIndex].v[0] * frame->scale[0]) +
+                frame->translate[0]) *
+                   scale,
+               ((frame->verts[vertexIndex].v[1] * frame->scale[1]) +
+                frame->translate[1]) *
+                   scale,
+               ((frame->verts[vertexIndex].v[2] * frame->scale[2]) +
+                frame->translate[2]) *
+                   scale);
 
-      result->frames[j]->vertices[i].set(temp);
+      tempVertices[frameIndex][vertexIndex].set(temp);
 
-      temp.set(ANORMS[frame->verts[i].lightnormalindex][0],
-               ANORMS[frame->verts[i].lightnormalindex][1],
-               ANORMS[frame->verts[i].lightnormalindex][2]);
+      temp.set(ANORMS[frame->verts[vertexIndex].lightnormalindex][0],
+               ANORMS[frame->verts[vertexIndex].lightnormalindex][1],
+               ANORMS[frame->verts[vertexIndex].lightnormalindex][2]);
 
-      result->frames[j]->normals[i].set(temp);
+      tempNormals[frameIndex][vertexIndex].set(temp);
     }
   }
 
-  texCoord_t* texCoord;
-
   for (u32 i = 0; i < stsCount; i++) {
-    texCoord =
+    auto* texCoord =
         reinterpret_cast<texCoord_t*>(&stsBuffer[sizeof(texCoord_t) * i]);
 
     temp.set(static_cast<float>(texCoord->s) / header.skinwidth,
@@ -159,8 +169,14 @@ MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
 
     if (invertT) temp.y = 1.0F - temp.y;
 
-    for (u32 j = 0; j < framesCount; j++)
-      result->frames[j]->textureCoords[i].set(temp);
+    for (u32 j = 0; j < framesCount; j++) tempTexCoords[j][i].set(temp);
+  }
+
+  for (u32 x = 0; x < framesCount; x++) {
+    material->frames[x]->count = trianglesCount * 3;
+    material->frames[x]->vertices = new Vec4[trianglesCount * 3];
+    material->frames[x]->normals = new Vec4[trianglesCount * 3];
+    material->frames[x]->textureCoords = new Vec4[trianglesCount * 3];
   }
 
   triangle_t* triangle;
@@ -168,17 +184,30 @@ MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
     triangle =
         reinterpret_cast<triangle_t*>(&trianglesBuffer[sizeof(triangle_t) * i]);
 
-    for (u8 j = 0; j < 3; j++) {
-      for (u32 x = 0; x < framesCount; x++) {
-        result->materials[0]->vertexFaces[(i * 3) + j] = triangle->index_xyz[j];
+    for (u32 x = 0; x < framesCount; x++) {
+      auto* workFrame = material->frames[x];
 
-        result->materials[0]->textureCoordFaces[(i * 3) + j] =
-            triangle->index_st[j];
+      for (u8 j = 0; j < 3; j++) {
+        workFrame->vertices[i * 3 + j] =
+            tempVertices[x][triangle->index_xyz[j]];
 
-        result->materials[0]->normalFaces[(i * 3) + j] = triangle->index_xyz[j];
+        workFrame->normals[i * 3 + j] = tempNormals[x][triangle->index_xyz[j]];
+
+        workFrame->textureCoords[i * 3 + j] =
+            tempTexCoords[x][triangle->index_st[j]];
       }
     }
   }
+
+  for (u32 i = 0; i < framesCount; i++) {
+    delete[] tempVertices[i];
+    delete[] tempNormals[i];
+    delete[] tempTexCoords[i];
+  }
+
+  delete[] tempVertices;
+  delete[] tempNormals;
+  delete[] tempTexCoords;
 
   delete[] framesBuffer;
   delete[] stsBuffer;

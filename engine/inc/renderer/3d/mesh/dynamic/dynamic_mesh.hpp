@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "loaders/3d/builder/mesh_builder_data.hpp"
 #include "../mesh_frame.hpp"
 #include "../mesh_material_frame.hpp"
 #include "./dynamic_mesh_anim_state.hpp"
@@ -20,7 +19,6 @@ namespace Tyra {
 
 class DynamicMesh : public Mesh {
  public:
-  explicit DynamicMesh(const MeshBuilderData& data);
   explicit DynamicMesh(const MeshBuilder2Data& data);
   explicit DynamicMesh(const DynamicMesh& mesh);
   ~DynamicMesh();

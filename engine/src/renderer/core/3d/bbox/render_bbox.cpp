@@ -46,16 +46,16 @@ CoreBBoxFrustum RenderBBox::clipIsInFrustum(const Plane* frustumPlanes,
 
   // Oh no, it probably needs clipping
 
-  float margins[6];  // This probably needs more calibration
+  float guardBand[6];  // This probably needs more calibration
 
-  margins[0] = -15.0F;  // Top
-  margins[1] = -10.0F;  // BOTTOM
-  margins[2] = -25.0F;  // LEFT
-  margins[3] = -25.0F;  // RIGHT
-  margins[4] = -10.0F;  // NEAR
-  margins[5] = -10.0F;  // FAR
+  guardBand[0] = -15.0F;  // Top
+  guardBand[1] = -10.0F;  // BOTTOM
+  guardBand[2] = -25.0F;  // LEFT
+  guardBand[3] = -25.0F;  // RIGHT
+  guardBand[4] = -10.0F;  // NEAR
+  guardBand[5] = -10.0F;  // FAR
 
-  return isInFrustum(frustumPlanes, model, margins);  // Let's check it again
-}
+  return isInFrustum(frustumPlanes, model, guardBand);  // Let's check it again
+}  // namespace Tyra
 
 }  // namespace Tyra

@@ -50,6 +50,7 @@ class DynPipRenderer {
 
   prim_t* prim;
   lod_t* lod;
+  u16 packetSize;
 
   packet2_t* packets[2];
   packet2_t* programsPacket;

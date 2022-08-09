@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "loaders/3d/builder/mesh_builder_data.hpp"
 #include "loaders/3d/builder2/mesh_builder2_data.hpp"
 #include "./renderer/3d/bbox/bbox.hpp"
 
@@ -18,8 +17,6 @@ namespace Tyra {
 
 class MeshMaterialFrame {
  public:
-  explicit MeshMaterialFrame(const MeshBuilderData& data, const u32& frameIndex,
-                             const u32& materialIndex);
   explicit MeshMaterialFrame(const MeshBuilder2Data& data,
                              const u32& frameIndex, const u32& materialIndex);
   explicit MeshMaterialFrame(const MeshMaterialFrame& frame);
@@ -41,15 +38,6 @@ class MeshMaterialFrame {
   std::string getPrint(const char* name = nullptr) const;
 
  private:
-  void allocateVertices(const MeshBuilderData& data, const u32& frameIndex,
-                        const u32& materialIndex);
-  void allocateTextureCoords(const MeshBuilderData& data, const u32& frameIndex,
-                             const u32& materialIndex);
-  void allocateNormals(const MeshBuilderData& data, const u32& frameIndex,
-                       const u32& materialIndex);
-  void allocateColors(const MeshBuilderData& data, const u32& frameIndex,
-                      const u32& materialIndex);
-
   BBox* bbox;
 
   u8 _isMother;
