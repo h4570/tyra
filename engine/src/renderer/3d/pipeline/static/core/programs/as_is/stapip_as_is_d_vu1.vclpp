@@ -76,6 +76,11 @@ vertexLoop:
         CalculateTyraDirectionalLights{ outputColor3, normal3, lightDirections, lightColors, lightMatrix, ambientColor }
         FixColor{ outputColor3 }
 
+        iaddiu      adcBit,     VI00, 0x0
+        isw.w       adcBit,     XYZ2_STORE_OFFSET(destAddress)
+        isw.w       adcBit,     XYZ2_STORE_OFFSET+2(destAddress)
+        isw.w       adcBit,     XYZ2_STORE_OFFSET+4(destAddress)
+
         ;--- Store vertex1
         sq      outputColor1,   RGBA_STORE_OFFSET(destAddress)
         sq.xyz  vertex1,        XYZ2_STORE_OFFSET(destAddress)

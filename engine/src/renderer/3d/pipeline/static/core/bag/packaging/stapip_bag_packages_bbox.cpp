@@ -72,7 +72,7 @@ const u32& StaPipBagPackagesBBox::getVertexCount() const { return vertexCount; }
 
 RenderBBox StaPipBagPackagesBBox::createChildBBox(const u32& index,
                                                   const u16& partsSize) const {
-  return RenderBBox(*bboxParts, index, partsSize);
+  return RenderBBox(*bboxParts, index, index + partsSize);
 }
 
 void StaPipBagPackagesBBox::print() const {

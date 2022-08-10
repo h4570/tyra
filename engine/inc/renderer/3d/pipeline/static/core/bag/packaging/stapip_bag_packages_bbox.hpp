@@ -42,6 +42,8 @@ class StaPipBagPackagesBBox {
   /** @brief Get amount of vertices */
   const u32& getVertexCount() const;
 
+  const std::vector<CoreBBox>& getParts() const { return *bboxParts; }
+
   /**
    * @brief For example if we want to build a bbox from 96-112 vertices, we
    * should input index = 3, partsSize = 1

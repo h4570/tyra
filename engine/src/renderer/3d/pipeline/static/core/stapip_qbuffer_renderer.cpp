@@ -11,7 +11,7 @@
 #include "renderer/3d/pipeline/static/core/stapip_qbuffer_renderer.hpp"
 #include "renderer/3d/pipeline/static/core/programs/stapip_vu1_shared_defines.h"
 
-#define TYRA_QBUFF_RENDERER_VERBOSE_LOG 1
+// #define TYRA_QBUFF_RENDERER_VERBOSE_LOG 1
 
 #ifdef TYRA_QBUFF_RENDERER_VERBOSE_LOG
 #define Verbose(...) Debug::writeLines("VRB: ", ##__VA_ARGS__, "\n")
@@ -272,10 +272,10 @@ void StaPipQBufferRenderer::cull(StaPipQBuffer* buffer) {
 
   dBufferPrograms[getQBufferIndex(buffer)] = getCullProgramByBag(buffer->bag);
 
+  Verbose("Add cull[", getQBufferIndex(buffer), "]: ", buffer->size);
+
   auto is1stDBuffer = is1stDBufferFlushTime();
   auto is2ndDBuffer = is2ndDBufferFlushTime();
-
-  Verbose("Add cull[", getQBufferIndex(buffer), "]: ", buffer->size);
 
   if (is1stDBuffer || is2ndDBuffer) {
     auto from = is1stDBuffer ? 0 : buffersCount / 2;
@@ -321,7 +321,7 @@ void StaPipQBufferRenderer::clearLastProgramName() {
 
 void StaPipQBufferRenderer::addBuffersDataToPacket(const u32& from,
                                                    const u32& to) {
-  currentPacket = packets[context];
+  auto* currentPacket = packets[context];
   packet2_reset(currentPacket, false);
 
   for (u32 i = from; i < to; i++) {
@@ -346,6 +346,7 @@ void StaPipQBufferRenderer::addBuffersDataToPacket(const u32& from,
 }
 
 void StaPipQBufferRenderer::sendPacket() {
+  auto* currentPacket = packets[context];
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
 

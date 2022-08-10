@@ -1381,8 +1381,6 @@ QSL3@:
 ;//---------------------------------------------------------
 ;// PerformClipCheck - checks if the vertex is outside the viewing frustum. 
 ;// If it is, then the appropriate clipping flags are set.
-;// Not using sqi instruction, because VCL cannot optimize it.
-;// Primtag contains information about how many polys we will send
 ;// 2 - Bitwise AND the clipping flags with 0x3FFFF, this makes sure that 
 ;//     we get the clipping judgement for the last three verts 
 ;//     (i.e. that make up the triangle we are about to draw)

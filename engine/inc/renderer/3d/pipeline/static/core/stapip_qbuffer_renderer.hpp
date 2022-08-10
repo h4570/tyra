@@ -97,7 +97,6 @@ class StaPipQBufferRenderer {
   packet2_t** packets;
   StaPipVU1Program** dBufferPrograms;
   StaPipQBuffer** buffers;
-  packet2_t* currentPacket;
   packet2_t* staticDataPacket;
   packet2_t* objectDataPacket;
 

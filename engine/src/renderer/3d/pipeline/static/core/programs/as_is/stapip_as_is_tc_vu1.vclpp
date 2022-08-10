@@ -101,6 +101,11 @@ processing:
         PerformTexturePerspectiveCorrection{ outputStq3, stq3 }
         FixColor{ color3 }
 
+        iaddiu      adcBit,     VI00, 0x0
+        isw.w       adcBit,     XYZ2_STORE_OFFSET(destAddress)
+        isw.w       adcBit,     XYZ2_STORE_OFFSET+3(destAddress)
+        isw.w       adcBit,     XYZ2_STORE_OFFSET+6(destAddress)
+
         ;--- Store vertex1
         sq      outputStq1,     STQ_STORE_OFFSET(destAddress)
         sq      color1,         RGBA_STORE_OFFSET(destAddress)

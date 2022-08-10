@@ -46,6 +46,7 @@ CoreBBoxFrustum RenderBBox::clipIsInFrustum(const Plane* frustumPlanes,
 
   // Oh no, it probably needs clipping
 
+  // This is crappy guard band, but it works xd
   float guardBand[6];  // This probably needs more calibration
 
   guardBand[0] = -15.0F;  // Top

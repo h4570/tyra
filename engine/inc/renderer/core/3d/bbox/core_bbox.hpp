@@ -31,6 +31,7 @@ class CoreBBox {
                     const u32& startIndex, const u32& stopIndex);
 
   const Vec4& operator[](const u8& i) { return _vertices[i]; }
+  const u8 getVertexCount() { return 8; }
   const Vec4& getVertex(const u8& i) { return _vertices[i]; }
   Vec4* getVertices() { return _vertices; }
 
