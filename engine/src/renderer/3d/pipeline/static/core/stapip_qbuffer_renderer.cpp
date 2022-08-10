@@ -11,6 +11,14 @@
 #include "renderer/3d/pipeline/static/core/stapip_qbuffer_renderer.hpp"
 #include "renderer/3d/pipeline/static/core/programs/stapip_vu1_shared_defines.h"
 
+#define TYRA_QBUFF_RENDERER_VERBOSE_LOG 1
+
+#ifdef TYRA_QBUFF_RENDERER_VERBOSE_LOG
+#define Verbose(...) Debug::writeLines("VRB: ", ##__VA_ARGS__, "\n")
+#else
+#define Verbose(...) ((void)0)
+#endif
+
 namespace Tyra {
 
 /**
@@ -50,7 +58,7 @@ void StaPipQBufferRenderer::allocateOnUse() {
   staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
-  packets = new packet2_t*[buffersCount];
+  packets = new packet2_t*[2];
   for (u16 i = 0; i < 2; i++)
     packets[i] =
         packet2_create(qbuffersPacketSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
@@ -213,8 +221,13 @@ void StaPipQBufferRenderer::setDoubleBuffer() {
 
 StaPipQBuffer* StaPipQBufferRenderer::getBuffer() {
   currentBufferIndex = nextBufferIndex++;
+  Verbose("Proposing buffer: ", currentBufferIndex);
   auto* result = buffers[currentBufferIndex];
-  if (nextBufferIndex >= buffersCount) nextBufferIndex = 0;
+  if (nextBufferIndex >= buffersCount) {
+    Verbose("Rollup - clearing buffer indices. currentBufferIndex: ",
+            currentBufferIndex, " (before)nextBufferIndex: ", nextBufferIndex);
+    nextBufferIndex = 0;
+  }
   return result;
 }
 
@@ -222,6 +235,7 @@ u16 StaPipQBufferRenderer::getQBufferIndex(StaPipQBuffer* buffer) {
   for (u16 i = 0; i < buffersCount; i++) {
     if (buffers[i] == buffer) return i;
   }
+  TYRA_TRAP("Buffer not found!");
   return 0;
 }
 
@@ -240,13 +254,15 @@ void StaPipQBufferRenderer::flushBuffers() {
   if (!is1stDBuffer && !is2ndDBuffer) {
     auto offset = currentBufferIndex >= buffersCount / 2 ? buffersCount / 2 : 0;
     auto size = (currentBufferIndex + 1) - offset;
-    auto dbuffer = &buffers[offset];
-    addBufferDataToPacket(dbuffer, size);
+    Verbose("-- End flush. from: ", offset, " to: ", offset + size);
+    addBuffersDataToPacket(offset, offset + size);
     sendPacket();
   }
 
   currentBufferIndex = 0;
   nextBufferIndex = 0;
+
+  Verbose("End flush - zeroing buffer indices.");
 }
 
 void StaPipQBufferRenderer::cull(StaPipQBuffer* buffer) {
@@ -259,9 +275,16 @@ void StaPipQBufferRenderer::cull(StaPipQBuffer* buffer) {
   auto is1stDBuffer = is1stDBufferFlushTime();
   auto is2ndDBuffer = is2ndDBufferFlushTime();
 
+  Verbose("Add cull[", getQBufferIndex(buffer), "]: ", buffer->size);
+
   if (is1stDBuffer || is2ndDBuffer) {
-    auto dbuffer = &buffers[is1stDBuffer ? 0 : buffersCount / 2];
-    addBufferDataToPacket(dbuffer, buffersCount / 2);
+    auto from = is1stDBuffer ? 0 : buffersCount / 2;
+    auto to = from + buffersCount / 2;
+
+    Verbose("-- Half flush at ", getQBufferIndex(buffer), ". from: ", from,
+            " to: ", to);
+
+    addBuffersDataToPacket(from, to);
     sendPacket();
   }
 }
@@ -275,12 +298,19 @@ void StaPipQBufferRenderer::clip(StaPipQBuffer* buffer) {
 
   clipper.clip(buffer);
 
+  Verbose("Add clip[", getQBufferIndex(buffer), "]: ", buffer->size);
+
   auto is1stDBuffer = is1stDBufferFlushTime();
   auto is2ndDBuffer = is2ndDBufferFlushTime();
 
   if (is1stDBuffer || is2ndDBuffer) {
-    auto dbuffer = &buffers[is1stDBuffer ? 0 : buffersCount / 2];
-    addBufferDataToPacket(dbuffer, buffersCount / 2);
+    auto from = is1stDBuffer ? 0 : buffersCount / 2;
+    auto to = from + buffersCount / 2;
+
+    Verbose("-- Half flush at ", getQBufferIndex(buffer), ". from: ", from,
+            " to: ", to);
+
+    addBuffersDataToPacket(from, to);
     sendPacket();
   }
 }
@@ -289,20 +319,24 @@ void StaPipQBufferRenderer::clearLastProgramName() {
   lastProgramName = StaPipUndefinedProgram;
 }
 
-void StaPipQBufferRenderer::addBufferDataToPacket(StaPipQBuffer** buffers,
-                                                  const u32& count) {
+void StaPipQBufferRenderer::addBuffersDataToPacket(const u32& from,
+                                                   const u32& to) {
   currentPacket = packets[context];
   packet2_reset(currentPacket, false);
 
-  for (u32 i = 0; i < count; i++) {
+  for (u32 i = from; i < to; i++) {
     if (!buffers[i]->any()) continue;
 
-    dBufferPrograms[i]->addBufferDataToPacket(currentPacket, buffers[i], prim);
+    auto* program = dBufferPrograms[i];
 
-    if (lastProgramName != dBufferPrograms[i]->getName()) {
-      packet2_utils_vu_add_start_program(
-          currentPacket, dBufferPrograms[i]->getDestinationAddress());
-      lastProgramName = dBufferPrograms[i]->getName();
+    program->addBufferDataToPacket(currentPacket, buffers[i], prim);
+
+    Verbose("Send ", program->getStringName(), "[", i, "]: ", buffers[i]->size);
+
+    if (lastProgramName != program->getName()) {
+      packet2_utils_vu_add_start_program(currentPacket,
+                                         program->getDestinationAddress());
+      lastProgramName = program->getName();
     } else {
       packet2_utils_vu_add_continue_program(currentPacket);
     }
@@ -314,6 +348,9 @@ void StaPipQBufferRenderer::addBufferDataToPacket(StaPipQBuffer** buffers,
 void StaPipQBufferRenderer::sendPacket() {
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
+
+  TYRA_ASSERT(packet2_get_qw_count(currentPacket) <= qbuffersPacketSize,
+              "Packet is too big. Internal error");
 
   // Switch packet, so we can proceed during DMA transfer
   context = !context;
