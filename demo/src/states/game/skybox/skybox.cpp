@@ -14,23 +14,22 @@
 
 using Tyra::FileUtils;
 using Tyra::ObjLoader;
+using Tyra::ObjLoaderOptions;
 
 namespace Demo {
 
 Skybox::Skybox(TextureRepository* repo) {
   ObjLoader loader;
+
+  ObjLoaderOptions objOptions;
+  objOptions.flipUVs = true;
+  objOptions.scale = 100.0F;
+
   auto* data = loader.load(FileUtils::fromCwd("game/models/skybox/skybox.obj"),
-                           1, 100.0F, true);
+                           objOptions);
   data->normalsEnabled = false;
   mesh = new StaticMesh(*data);
   delete data;
-
-  for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
-    auto* material = mesh->getMaterial(i);
-    material->color.r = 16.0F;
-    material->color.g = 16.0F;
-    material->color.b = 16.0F;
-  }
 
   repo->addByMesh(mesh, FileUtils::fromCwd("game/models/skybox/"), "png");
 

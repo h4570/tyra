@@ -33,7 +33,7 @@ MeshFrame::MeshFrame(const MeshBuilderData& data, const u32& index) {
   for (u32 i = 0; i < data.materials.size(); i++) delete bboxes[i];
   delete[] bboxes;
 
-  _isMother = true;
+  isMother = true;
 }
 
 MeshFrame::MeshFrame(const MeshFrame& frame) {
@@ -41,11 +41,11 @@ MeshFrame::MeshFrame(const MeshFrame& frame) {
 
   bbox = frame.bbox;
 
-  _isMother = false;
+  isMother = false;
 }
 
 MeshFrame::~MeshFrame() {
-  if (_isMother) {
+  if (isMother) {
     delete bbox;
   }
 }

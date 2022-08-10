@@ -29,7 +29,7 @@ BBox::BBox(const BBox& t_bbox) : CoreBBox(t_bbox) { setData(); }
 
 BBox::BBox(const BBox& t_bbox, const M4x4& t_matrix) {
   for (u32 i = 0; i < 8; i++) {
-    _vertices[i] = t_matrix * t_bbox._vertices[i];
+    vertices[i] = t_matrix * t_bbox.vertices[i];
   }
 
   setData();
@@ -44,31 +44,31 @@ BBox BBox::getTransformed(const M4x4& t_matrix) {
 void BBox::setData() {
   // This might be shortened with Vec4 operator overloading, but current
   // implementation is more human readable.
-  _height = _vertices[0].y - _vertices[2].y;
-  _width = _vertices[0].x - _vertices[4].x;
-  _depth = _vertices[0].z - _vertices[1].z;
+  _height = vertices[0].y - vertices[2].y;
+  _width = vertices[0].x - vertices[4].x;
+  _depth = vertices[0].z - vertices[1].z;
 
-  _centerVector = _vertices[0];
+  _centerVector = vertices[0];
   _centerVector.x += (_width / 2);
   _centerVector.y += (_height / 2);
   _centerVector.z += (_depth / 2);
 
   // Z-Axis faces
-  _frontFace = BBoxFace(_vertices[1], _vertices[7], _vertices[1].z);
-  _backFace = BBoxFace(_vertices[0], _vertices[6], _vertices[0].z);
+  _frontFace = BBoxFace(vertices[1], vertices[7], vertices[1].z);
+  _backFace = BBoxFace(vertices[0], vertices[6], vertices[0].z);
   // X-Axis faces
-  _leftFace = BBoxFace(_vertices[0], _vertices[3], _vertices[0].x);
-  _rightFace = BBoxFace(_vertices[4], _vertices[7], _vertices[4].x);
+  _leftFace = BBoxFace(vertices[0], vertices[3], vertices[0].x);
+  _rightFace = BBoxFace(vertices[4], vertices[7], vertices[4].x);
   // Y-Axis faces
-  _topFace = BBoxFace(_vertices[2], _vertices[7], _vertices[2].y);
-  _bottomFace = BBoxFace(_vertices[0], _vertices[5], _vertices[0].y);
+  _topFace = BBoxFace(vertices[2], vertices[7], vertices[2].y);
+  _bottomFace = BBoxFace(vertices[0], vertices[5], vertices[0].y);
 }
 
 Vec4 BBox::min() {
   Vec4 temp, _min;
   u8 isInitialized = 0;
 
-  const Vec4* vertices = getVertices();
+  const Vec4* vertices = vertices;
   for (u8 i = 0; i < 8; i++) {
     temp.set(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
     if (isInitialized == 0) {
@@ -88,7 +88,7 @@ Vec4 BBox::max() {
   Vec4 temp, _max;
   u8 isInitialized = 0;
 
-  const Vec4* vertices = getVertices();
+  const Vec4* vertices = vertices;
   for (u8 i = 0; i < 8; i++) {
     temp.set(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
     if (isInitialized == 0) {
@@ -108,7 +108,7 @@ void BBox::getMinMax(Vec4* res_min, Vec4* res_max) {
   Vec4 temp = Vec4();
 
   u8 isInitialized = 0;
-  const Vec4* vertices = getVertices();
+  const Vec4* vertices = vertices;
   for (u8 i = 0; i < 8; i++) {
     temp.set(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
     if (isInitialized == 0) {

@@ -14,20 +14,22 @@
 
 using Tyra::FileUtils;
 using Tyra::ObjLoader;
+using Tyra::ObjLoaderOptions;
 
 namespace Demo {
 
 Weapon::Weapon(TextureRepository* repo) {
   ObjLoader loader;
-  auto* data = loader.load(FileUtils::fromCwd("game/models/ak47/ak47.obj"), 1,
-                           .5F, true);
+
+  ObjLoaderOptions objOptions;
+  objOptions.flipUVs = true;
+  objOptions.scale = .5F;
+
+  auto* data =
+      loader.load(FileUtils::fromCwd("game/models/ak47/ak47.obj"), objOptions);
   data->normalsEnabled = false;
   mesh = new StaticMesh(*data);
   delete data;
-
-  mesh->getMaterial(0)->color.r = 64.0F;
-  mesh->getMaterial(0)->color.g = 64.0F;
-  mesh->getMaterial(0)->color.b = 64.0F;
 
   mesh->translation.translateX(2.85F);
   mesh->translation.translateY(-3.40F);

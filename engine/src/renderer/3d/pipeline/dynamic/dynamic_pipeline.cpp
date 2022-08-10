@@ -62,8 +62,8 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   PipelineDirLightsBag* dirLights = nullptr;
 
   if (options->frustumCulling == PipelineFrustumCulling_Simple) {
-    auto* frameTo = mesh->getFrame(mesh->getNextAnimationFrame());
-    if (frameTo->getBBox().isInFrustum(
+    auto* frameTo = mesh->frames[mesh->animState.nextFrame];
+    if (frameTo->bbox->isInFrustum(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
         CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
       return;
@@ -82,17 +82,15 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   setBuffersDefaultVars(buffers, mesh, infoBag);
   core.begin(infoBag);
 
-  for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
-    auto* material = mesh->getMaterial(i);
-    auto* frameFrom = material->getFrame(mesh->getCurrentAnimationFrame());
-    auto* frameTo = material->getFrame(mesh->getNextAnimationFrame());
+  for (u32 i = 0; i < mesh->materials.size(); i++) {
+    auto* material = mesh->materials[i];
+    auto* frameFrom = material->frames[mesh->animState.currentFrame];
+    auto* frameTo = material->frames[mesh->animState.nextFrame];
 
-    auto partSize =
-        core.getMaxVertCountByParams(options && options->lighting,
-                                     material->getFrame(0)->getTextureCoords());
+    auto partSize = core.getMaxVertCountByParams(
+        options && options->lighting, material->frames[0]->textureCoords);
 
-    u32 partsCount =
-        ceil(frameFrom->getVertexCount() / static_cast<float>(partSize));
+    u32 partsCount = ceil(frameFrom->count / static_cast<float>(partSize));
 
     auto* colorBag = getColorBag(material);
 
@@ -103,9 +101,8 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
       auto& buffer = buffers[bufferIndex];
 
       freeBuffer(&buffer);
-      buffer.count = k == partsCount - 1
-                         ? frameFrom->getVertexCount() - k * partSize
-                         : partSize;
+      buffer.count =
+          k == partsCount - 1 ? frameFrom->count - k * partSize : partSize;
 
       u32 startIndex = k * partSize;
 
@@ -183,7 +180,7 @@ void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
                                             DynPipInfoBag* infoBag) {
   for (u32 i = 0; i < buffersCount; i++) {
     buffers[i].info = infoBag;
-    buffers[i].interpolation = mesh->getAnimState().interpolation;
+    buffers[i].interpolation = mesh->animState.interpolation;
   }
 }
 
@@ -226,31 +223,33 @@ DynPipInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
 void DynamicPipeline::addVertices(MeshMaterialFrame* materialFrameFrom,
                                   MeshMaterialFrame* materialFrameTo,
                                   DynPipBag* bag, const u32& startIndex) const {
-  bag->verticesFrom = &materialFrameFrom->getVertices()[startIndex];
-  bag->verticesTo = &materialFrameTo->getVertices()[startIndex];
+  bag->verticesFrom = &materialFrameFrom->vertices[startIndex];
+  bag->verticesTo = &materialFrameTo->vertices[startIndex];
 }
 
 DynPipColorBag* DynamicPipeline::getColorBag(MeshMaterial* material) const {
   auto* result = new DynPipColorBag();
-  result->single = &material->color;
+  result->single = &material->ambient;
   return result;
 }
 
 DynPipTextureBag* DynamicPipeline::getTextureBag(
     MeshMaterial* material, MeshMaterialFrame* materialFrameFrom,
     MeshMaterialFrame* materialFrameTo, const u32& startIndex) {
-  if (!materialFrameFrom->getTextureCoords()) return nullptr;
+  if (!materialFrameFrom->textureCoords) return nullptr;
 
   auto* result = new DynPipTextureBag();
 
   result->texture =
-      rendererCore->texture.repository.getBySpriteOrMesh(material->getId());
-  TYRA_ASSERT(
-      result->texture, "Texture for material id: ", material->getId(),
-      "was not found in texture repository! Did you forget to add texture?");
+      rendererCore->texture.repository.getBySpriteOrMesh(material->id);
 
-  result->coordinatesFrom = &materialFrameFrom->getTextureCoords()[startIndex];
-  result->coordinatesTo = &materialFrameTo->getTextureCoords()[startIndex];
+  TYRA_ASSERT(
+      result->texture, "Texture for material: ", material->name,
+      "Id: ", material->id,
+      "Was not found in texture repository! Did you forget to add texture?");
+
+  result->coordinatesFrom = &materialFrameFrom->textureCoords[startIndex];
+  result->coordinatesTo = &materialFrameTo->textureCoords[startIndex];
 
   return result;
 }
@@ -259,7 +258,7 @@ DynPipLightingBag* DynamicPipeline::getLightingBag(
     MeshMaterialFrame* materialFrameFrom, MeshMaterialFrame* materialFrameTo,
     M4x4* model, const DynPipOptions* options,
     PipelineDirLightsBag* dirLightsBag, const u32& startIndex) const {
-  if (!materialFrameFrom->getNormals() || options == nullptr ||
+  if (!materialFrameFrom->normals || options == nullptr ||
       options->lighting == nullptr)
     return nullptr;
 
@@ -268,8 +267,8 @@ DynPipLightingBag* DynamicPipeline::getLightingBag(
   result->lightMatrix = model;
   result->dirLights = dirLightsBag;
 
-  result->normalsFrom = &materialFrameFrom->getNormals()[startIndex];
-  result->normalsTo = &materialFrameTo->getNormals()[startIndex];
+  result->normalsFrom = &materialFrameFrom->normals[startIndex];
+  result->normalsTo = &materialFrameTo->normals[startIndex];
 
   return result;
 }

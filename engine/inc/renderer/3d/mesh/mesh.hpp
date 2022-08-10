@@ -23,17 +23,14 @@ class Mesh {
   explicit Mesh(const Mesh& mesh);
   ~Mesh();
 
-  /** Translation matrix */
-  M4x4 translation;
+  u8 isMother;
 
-  /** Rotation matrix */
-  M4x4 rotation;
+  u32 id;
 
-  /** Scale matrix */
-  M4x4 scale;
+  M4x4 translation, rotation, scale;
 
-  inline const u32& getId() const { return id; }
-  inline const u8& isMother() const { return _isMother; }
+  std::vector<MeshMaterial*> materials;
+
   M4x4 getModelMatrix() const;
 
   /** Get position from translation matrix */
@@ -43,18 +40,8 @@ class Mesh {
 
   void setPosition(const Vec4& v);
 
-  /** Returns material, which is a mesh "subgroup". */
-  MeshMaterial* getMaterial(const u32& i) const { return materials[i]; }
-
-  MeshMaterial** getMaterials() { return materials; }
-
-  const u32& getMaterialsCount() const { return materialsCount; }
-
  protected:
   void init();
-  u8 _isMother;
-  u32 id, materialsCount;
-  MeshMaterial** materials;
 };
 
 }  // namespace Tyra

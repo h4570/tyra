@@ -22,12 +22,6 @@ class StaticMesh : public Mesh {
   StaticMesh(const StaticMesh& mesh);
   ~StaticMesh();
 
-  MeshFrame* getFrame() { return frame; }
-
-  /** @returns bounding box object of current frame. */
-  const BBox& getBoundingBox() const { return frame->getBBox(); }
-
- private:
   MeshFrame* frame;
 };
 

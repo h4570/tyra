@@ -19,41 +19,33 @@ Mesh::Mesh(const MeshBuilderData& data) {
   TYRA_ASSERT(data.materials.size() > 0,
               "Materials count must be greater than 0");
 
-  materialsCount = data.materials.size();
-  materials = new MeshMaterial*[materialsCount];
-
-  for (u32 i = 0; i < materialsCount; i++) {
-    materials[i] = new MeshMaterial(data, i);
+  for (u32 i = 0; i < data.materials.size(); i++) {
+    materials.push_back(new MeshMaterial(data, i));
   }
 
-  _isMother = true;
+  isMother = true;
 }
 
 Mesh::Mesh(const Mesh& mesh) {
   init();
 
-  materialsCount = mesh.materialsCount;
-  materials = new MeshMaterial*[materialsCount];
-
-  for (u32 i = 0; i < materialsCount; i++) {
-    materials[i] = new MeshMaterial(*mesh.materials[i]);
+  for (u32 i = 0; i < mesh.materials.size(); i++) {
+    materials.push_back(new MeshMaterial(*mesh.materials[i]));
   }
 
-  _isMother = false;
+  isMother = false;
 }
 
 M4x4 Mesh::getModelMatrix() const { return translation * rotation * scale; }
 
 Mesh::~Mesh() {
-  for (u32 i = 0; i < materialsCount; i++) {
+  for (u32 i = 0; i < materials.size(); i++) {
     delete materials[i];
   }
-  delete[] materials;
 }
 
 void Mesh::init() {
   id = rand() % 1000000;
-  materialsCount = 0;
   translation = M4x4::Identity;
   rotation = M4x4::Identity;
   scale = M4x4::Identity;

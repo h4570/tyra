@@ -59,8 +59,8 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
               "matrix!");
 
   if (options->frustumCulling == PipelineFrustumCulling_Simple) {
-    auto* frame = mesh->getFrame();
-    if (frame->getBBox().isInFrustum(
+    auto* frame = mesh->frame;
+    if (frame->bbox->isInFrustum(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
         CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
       return;
@@ -69,9 +69,9 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
 
   if (options && options->lighting) setLightingColorsCache(options->lighting);
 
-  for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
-    auto* material = mesh->getMaterial(i);
-    auto* materialFrame = material->getFrame(0);
+  for (u32 i = 0; i < mesh->materials.size(); i++) {
+    auto* material = mesh->materials[i];
+    auto* materialFrame = material->frames[0];
     StaPipBag bag;
     addVertices(materialFrame, &bag);
     bag.info = infoBag;
@@ -89,8 +89,8 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
 
 void StaticPipeline::addVertices(MeshMaterialFrame* materialFrame,
                                  StaPipBag* bag) const {
-  bag->count = materialFrame->getVertexCount();
-  bag->vertices = materialFrame->getVertices();
+  bag->count = materialFrame->count;
+  bag->vertices = materialFrame->vertices;
 }
 
 StaPipInfoBag* StaticPipeline::getInfoBag(StaticMesh* mesh,
@@ -118,10 +118,10 @@ StaPipColorBag* StaticPipeline::getColorBag(
     MeshMaterial* material, MeshMaterialFrame* materialFrame) const {
   auto* result = new StaPipColorBag();
 
-  if (material->isSingleColorActivated()) {
-    result->single = &material->color;
+  if (material->lightmapFlag) {
+    result->single = &material->ambient;
   } else {
-    result->many = materialFrame->getColors();
+    result->many = materialFrame->colors;
   }
 
   return result;
@@ -129,17 +129,19 @@ StaPipColorBag* StaticPipeline::getColorBag(
 
 StaPipTextureBag* StaticPipeline::getTextureBag(
     MeshMaterial* material, MeshMaterialFrame* materialFrame) {
-  if (!materialFrame->getTextureCoords()) return nullptr;
+  if (!materialFrame->textureCoords) return nullptr;
 
   auto* result = new StaPipTextureBag();
 
   result->texture =
-      rendererCore->texture.repository.getBySpriteOrMesh(material->getId());
-  TYRA_ASSERT(
-      result->texture, "Texture for material id: ", material->getId(),
-      "was not found in texture repository! Did you forget to add texture?");
+      rendererCore->texture.repository.getBySpriteOrMesh(material->id);
 
-  result->coordinates = materialFrame->getTextureCoords();
+  TYRA_ASSERT(
+      result->texture, "Texture for material: ", material->name,
+      "Id: ", material->id,
+      "Was not found in texture repository! Did you forget to add texture?");
+
+  result->coordinates = materialFrame->textureCoords;
 
   return result;
 }
@@ -147,13 +149,14 @@ StaPipTextureBag* StaticPipeline::getTextureBag(
 StaPipLightingBag* StaticPipeline::getLightingBag(
     MeshMaterialFrame* materialFrame, M4x4* model,
     const StaPipOptions* options) const {
-  if (!materialFrame->getNormals() || options == nullptr ||
+  if (!materialFrame->normals || options == nullptr ||
       options->lighting == nullptr)
     return nullptr;
 
   auto* result = new StaPipLightingBag();
-  auto* dirLightsBag = new PipelineDirLightsBag(true);  // TODO: 1 dir
-  //   lights per obiekt, dealokowac recznie
+
+  // TODO: Make it once per rendering, very redundant
+  auto* dirLightsBag = new PipelineDirLightsBag(true);
   result->dirLights = dirLightsBag;
 
   result->lightMatrix = model;
@@ -161,7 +164,7 @@ StaPipLightingBag* StaticPipeline::getLightingBag(
   result->dirLights->setLightsManually(
       colorsCache, options->lighting->directionalDirections);
 
-  result->normals = materialFrame->getNormals();
+  result->normals = materialFrame->normals;
 
   return result;
 }

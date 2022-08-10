@@ -14,6 +14,7 @@
 
 using Tyra::FileUtils;
 using Tyra::ObjLoader;
+using Tyra::ObjLoaderOptions;
 
 namespace Demo {
 Terrain::Terrain(TextureRepository* repo)
@@ -23,13 +24,16 @@ Terrain::Terrain(TextureRepository* repo)
                 Vec4(286.0F, 0.0F, 443.3F, 1.0F)     // Right down
       ) {
   ObjLoader loader;
+
+  ObjLoaderOptions objOptions;
+  objOptions.flipUVs = true;
+  objOptions.scale = 25.0F;
+
   auto* data = loader.load(
-      FileUtils::fromCwd("game/models/terrain/terrain.obj"), 1, 25.0F, true);
+      FileUtils::fromCwd("game/models/terrain/terrain.obj"), objOptions);
   data->normalsEnabled = false;
   mesh = new StaticMesh(*data);
-  mesh->getMaterial(0)->color.r = 32.0F;
-  mesh->getMaterial(0)->color.g = 32.0F;
-  mesh->getMaterial(0)->color.b = 32.0F;
+
   delete data;
 
   repo->addByMesh(mesh, FileUtils::fromCwd("game/models/terrain/"), "png");

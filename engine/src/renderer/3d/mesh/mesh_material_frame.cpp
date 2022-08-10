@@ -44,11 +44,32 @@ MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
 
   count = frame->count;
   vertices = frame->vertices;
-  normals = frame->normals;
-  textureCoords = frame->textureCoords;
-  colors = frame->colors;
 
-  _isMother = true;
+  if (data.normalsEnabled) {
+    normals = frame->normals;
+  } else {
+    if (frame->normals != nullptr) delete[] frame->normals;
+
+    normals = nullptr;
+  }
+
+  if (data.textureCoordsEnabled) {
+    textureCoords = frame->textureCoords;
+  } else {
+    if (frame->textureCoords != nullptr) delete[] frame->textureCoords;
+
+    textureCoords = nullptr;
+  }
+
+  if (data.lightMapEnabled) {
+    colors = frame->colors;
+  } else {
+    if (frame->colors != nullptr) delete[] frame->colors;
+
+    colors = nullptr;
+  }
+
+  isMother = true;
 }
 
 MeshMaterialFrame::MeshMaterialFrame(const MeshMaterialFrame& frame) {
@@ -63,11 +84,11 @@ MeshMaterialFrame::MeshMaterialFrame(const MeshMaterialFrame& frame) {
 
   bbox = frame.bbox;
 
-  _isMother = false;
+  isMother = false;
 }
 
 MeshMaterialFrame::~MeshMaterialFrame() {
-  if (_isMother) {
+  if (isMother) {
     delete[] vertices;
     if (normals) delete[] normals;
     if (textureCoords) delete[] textureCoords;

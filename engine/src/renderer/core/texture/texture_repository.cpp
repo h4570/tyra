@@ -84,15 +84,15 @@ void TextureRepository::addByMesh(Mesh* mesh, const char* directory,
   std::string dirFixed = directory;
   if (dirFixed.back() != '/' && dirFixed.back() != ':') dirFixed += "/";
 
-  for (u32 i = 0; i < mesh->getMaterialsCount(); i++) {
+  for (u32 i = 0; i < mesh->materials.size(); i++) {
     std::string fullPath =
-        dirFixed + mesh->getMaterial(i)->getName() + "." + extension;
+        dirFixed + mesh->materials[i]->name + "." + extension;
 
     auto* data = loader.load(fullPath.c_str());
     Texture* texture = new Texture(data);
     delete data;
 
-    texture->addLink(mesh->getMaterial(i)->getId());
+    texture->addLink(mesh->materials[i]->id);
     textures.push_back(texture);
   }
 }

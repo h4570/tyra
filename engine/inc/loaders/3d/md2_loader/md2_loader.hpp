@@ -16,19 +16,21 @@
 
 namespace Tyra {
 
+struct MD2LoaderOptions {
+  bool flipUVs = false;
+  float scale = 1.0F;
+};
+
 /** Class responsible for loading & parsing Quake's II ".md2" 3D files */
 class MD2Loader : public Loader {
  public:
   MD2Loader();
   ~MD2Loader();
 
-  MeshBuilderData* load(const char* fullpath, const float& scale,
-                        const bool& invertT);
-
-  inline MeshBuilderData* load(const std::string& fullpath, const float& scale,
-                               const bool& invertT) {
-    return load(fullpath.c_str(), scale, invertT);
-  }
+  MeshBuilderData* load(const char* fullpath);
+  MeshBuilderData* load(const char* fullpath, MD2LoaderOptions options);
+  MeshBuilderData* load(const std::string& fullpath);
+  MeshBuilderData* load(const std::string& fullpath, MD2LoaderOptions options);
 };
 
 }  // namespace Tyra

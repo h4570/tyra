@@ -1,18 +1,9 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
-- [Obj] soldier_000001
-- [General] vec3/vec4/m4x4 functions from ms
-- [General] wszystkie new M4x4 i = M4x4 na M4x4::Identity
-- [General] std::vector in mesh instead of array**
-- [General] Allow to edit all data from mesh/texture
-- [General] manycolor -> lightmap
-- [General] rename invertT -> invertY
-- [General] ładować ambient i wrzucać do material. Zmienic nazwe na ambient
-- [General] odpalic de_dust2, doszlifowac guard band
 
+- [General] odpalic de_dust2, doszlifowac guard band
+- [Demo] Create cool demo which will show all features of Tyra
 - [General] USB test
 - [General] Tyra version, render it on start 
-- [Renderer] Fog
-- [Demo] Create cool demo which will show all features of Tyra
 - [General] CI in Github via docker image
 
 
@@ -40,6 +31,8 @@ because Mesh rendering uses only core.render()
 - [General] Credits: clipping, obj loader
 
 ------------ Github issues for Tyra v2 ------------
+- [rendere] fog
+- [rendere] bbox parts optimization
 - [md2] refactor
 - [3D] Add drawLine(x, y , color, size)
 - [2D] Fixed font support

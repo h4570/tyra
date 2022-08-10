@@ -30,10 +30,11 @@ class CoreBBox {
   explicit CoreBBox(const std::vector<CoreBBox>& t_bboxes,
                     const u32& startIndex, const u32& stopIndex);
 
-  const Vec4& operator[](const u8& i) { return _vertices[i]; }
+  Vec4 vertices[8];
+
+  const Vec4& operator[](const u8& i) { return vertices[i]; }
+
   const u8 getVertexCount() { return 8; }
-  const Vec4& getVertex(const u8& i) { return _vertices[i]; }
-  Vec4* getVertices() { return _vertices; }
 
   void print() const;
   void print(const char* name) const;
@@ -42,9 +43,6 @@ class CoreBBox {
 
   CoreBBoxFrustum isInFrustum(const Plane* frustumPlanes, const M4x4& model,
                               const float* margins = nullptr) const;
-
- protected:
-  Vec4 _vertices[8];
 };
 
 }  // namespace Tyra

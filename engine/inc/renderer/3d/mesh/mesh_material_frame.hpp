@@ -22,28 +22,20 @@ class MeshMaterialFrame {
   explicit MeshMaterialFrame(const MeshMaterialFrame& frame);
   ~MeshMaterialFrame();
 
-  const u32& getId() const { return id; }
-  const u8& isMother() const { return _isMother; }
-  const BBox& getBBox() const { return *bbox; }
+  u8 isMother;
 
-  const u32& getVertexCount() const { return count; }
-  Vec4* getVertices() const { return vertices; }
-  Vec4* getNormals() const { return normals; }
-  Vec4* getTextureCoords() const { return textureCoords; }
-  Color* getColors() const { return colors; }
+  u32 id, count;
+
+  Vec4 *vertices, *textureCoords, *normals;
+
+  Color* colors;
+
+  BBox* bbox;
 
   void print() const;
   void print(const char* name) const;
   void print(const std::string& name) const { print(name.c_str()); }
   std::string getPrint(const char* name = nullptr) const;
-
- private:
-  BBox* bbox;
-
-  u8 _isMother;
-  u32 id, count;
-  Vec4 *vertices, *textureCoords, *normals;
-  Color* colors;
 };
 
 }  // namespace Tyra

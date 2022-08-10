@@ -22,19 +22,16 @@ class MeshFrame {
   explicit MeshFrame(const MeshFrame& frame);
   ~MeshFrame();
 
-  const u32& getId() const { return id; }
-  const u8& isMother() const { return _isMother; }
-  const BBox& getBBox() const { return *bbox; }
+  u8 isMother;
+
+  u32 id;
+
+  BBox* bbox;
 
   void print() const;
   void print(const char* name) const;
   void print(const std::string& name) const { print(name.c_str()); }
   std::string getPrint(const char* name = nullptr) const;
-
- private:
-  u8 _isMother;
-  BBox* bbox;
-  u32 id;
 };
 
 }  // namespace Tyra

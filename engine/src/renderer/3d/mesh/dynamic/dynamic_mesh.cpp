@@ -16,38 +16,31 @@
 namespace Tyra {
 
 DynamicMesh::DynamicMesh(const MeshBuilderData& data) : Mesh(data) {
-  framesCount = data.materials[0]->frames.size();
-
-  if (framesCount == 1) {
+  if (data.materials[0]->frames.size() == 1) {
     TYRA_WARN(
         "Frames count should be greater than 1 for DynamicMesh! Maybe you "
         "should use StaticMesh?");
   }
 
-  frames = new MeshFrame*[framesCount];
-  for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new MeshFrame(data, i);
+  for (u32 i = 0; i < data.materials[0]->frames.size(); i++) {
+    frames.push_back(new MeshFrame(data, i));
   }
 
   initAnimation();
 }
 
 DynamicMesh::DynamicMesh(const DynamicMesh& mesh) : Mesh(mesh) {
-  framesCount = mesh.framesCount;
-
-  frames = new MeshFrame*[framesCount];
-  for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new MeshFrame(*mesh.frames[i]);
+  for (u32 i = 0; i < mesh.frames.size(); i++) {
+    frames.push_back(new MeshFrame(*mesh.frames[i]));
   }
 
   initAnimation();
 }
 
 DynamicMesh::~DynamicMesh() {
-  for (u32 i = 0; i < framesCount; i++) {
+  for (u32 i = 0; i < frames.size(); i++) {
     delete frames[i];
   }
-  delete[] frames;
 }
 
 void DynamicMesh::initAnimation() {
@@ -62,14 +55,18 @@ void DynamicMesh::initAnimation() {
   animState.speed = 0.1F;
 }
 
+void DynamicMesh::playAnimation(const u32& t_frame) {
+  playAnimation(t_frame, t_frame);
+}
+
 void DynamicMesh::playAnimation(const u32& t_startFrame,
                                 const u32& t_endFrame) {
-  TYRA_ASSERT(framesCount > 0,
+  TYRA_ASSERT(frames.size() > 0,
               "Cant play animation, because no mesh data was loaded!");
-  TYRA_ASSERT(framesCount != 1,
+  TYRA_ASSERT(frames.size() != 1,
               "Cant play animation, because this mesh have only one frame.");
   TYRA_ASSERT(
-      t_endFrame < framesCount,
+      t_endFrame < frames.size(),
       "End frame value is too high. Valid range: (0, getFramesCount()-1)");
   animState.startFrame = t_startFrame;
   animState.endFrame = t_endFrame;
@@ -81,12 +78,12 @@ void DynamicMesh::playAnimation(const u32& t_startFrame,
 
 void DynamicMesh::playAnimation(const u32& t_startFrame, const u32& t_endFrame,
                                 const u32& t_stayFrame) {
-  TYRA_ASSERT(framesCount > 0,
+  TYRA_ASSERT(frames.size() > 0,
               "Cant play animation, because no mesh data was loaded!");
-  TYRA_ASSERT(framesCount != 1,
+  TYRA_ASSERT(frames.size() != 1,
               "Cant play animation, because this mesh have only one frame.");
   TYRA_ASSERT(
-      t_endFrame < framesCount,
+      t_endFrame < frames.size(),
       "End frame value is too high. Valid range: (0, getFramesCount()-1)");
   animState.startFrame = t_startFrame;
   animState.endFrame = t_endFrame;

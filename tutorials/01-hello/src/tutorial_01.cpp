@@ -55,7 +55,7 @@ void Tutorial01 ::init() {
 
   warrior = getWarrior(&engine->renderer);
   warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
-      warrior->getMaterial(0)->getId());
+      warrior->materials[0]->id);
 
   warriorsCount = 22;
   warriors = new DynamicMesh*[warriorsCount];
@@ -65,10 +65,10 @@ void Tutorial01 ::init() {
     warriors[i]->translation.translateY(30.0F);
     warriors[i]->translation.translateZ(-10.0F);
     warriors[i]->translation.rotateX(-1.5F);
-    warriorTex->addLink(warriors[i]->getMaterial(0)->getId());
-    warriors[i]->playAnimation(0, warriors[i]->getFramesCount() - 1);
-    warriors[i]->setCurrentAnimationFrame(
-        getRandomInt(0, warriors[i]->getFramesCount() - 1));
+    warriorTex->addLink(warriors[i]->materials[0]->id);
+    warriors[i]->playAnimation(0, warriors[i]->frames.size() - 1);
+    warriors[i]->animState.currentFrame =
+        getRandomInt(0, warriors[i]->frames.size() - 1);
     warriors[i]->setAnimSpeed(getRandomFloat(0.1F, 0.9F));
   }
 
@@ -194,7 +194,10 @@ void Tutorial01 ::loop() {
 
 StaticMesh* getStaticMesh(Renderer* renderer) {
   MD2Loader loader;
-  auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), .08F, false);
+  MD2LoaderOptions options;
+  options.scale = .08F;
+
+  auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), options);
   auto* result = new StaticMesh(*data);
   // result->translation.translateZ(-30.0F);
   delete data;
@@ -223,7 +226,9 @@ StaticMesh* getSkybox(Renderer* renderer) {
 
 DynamicMesh* getWarrior(Renderer* renderer) {
   MD2Loader loader;
-  auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), .08F, false);
+  MD2LoaderOptions options;
+  options.scale = .08F;
+  auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), options);
   auto* result = new DynamicMesh(*data);
   // result->translation.translateZ(-30.0F);
   delete data;
@@ -231,7 +236,7 @@ DynamicMesh* getWarrior(Renderer* renderer) {
   renderer->core.texture.repository.addByMesh(result, FileUtils::getCwd(),
                                               "png");
 
-  result->playAnimation(0, result->getFramesCount() - 1);
+  result->playAnimation(0, result->frames.size() - 1);
   result->setAnimSpeed(0.15F);
 
   return result;
@@ -248,7 +253,7 @@ DynamicMesh* getCube(Renderer* renderer) {
   result->translation.translateZ(-30.0F);
   delete data;
 
-  result->playAnimation(0, result->getFramesCount() - 1);
+  result->playAnimation(0, result->frames.size() - 1);
   result->setAnimSpeed(0.15F);
 
   return result;

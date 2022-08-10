@@ -23,35 +23,17 @@ class DynamicMesh : public Mesh {
   explicit DynamicMesh(const DynamicMesh& mesh);
   ~DynamicMesh();
 
-  const DynamicMeshAnimState& getAnimState() const { return animState; }
+  std::vector<MeshFrame*> frames;
 
-  /** Returns single frame. */
-  MeshFrame* getFrame(const u32& i) { return frames[i]; }
-
-  MeshFrame** getFrames() { return frames; }
-
-  /** Count of frames. Static object (not animated) will have only 1 frame. */
-  const u32& getFramesCount() const { return framesCount; }
-
-  const u32& getCurrentAnimationFrame() const { return animState.currentFrame; }
-  const u32& getNextAnimationFrame() const { return animState.nextFrame; }
-  const u32& getStartAnimationFrame() const { return animState.startFrame; }
-  const u32& getEndAnimationFrame() const { return animState.endFrame; }
-  const u32& getStayAnimationFrame() const { return animState.stayFrame; }
-
-  void setCurrentAnimationFrame(const u32& v) { animState.currentFrame = v; }
-  void setNextAnimationFrame(const u32& v) { animState.nextFrame = v; }
-  void setStartAnimationFrame(const u32& v) { animState.startFrame = v; }
-  void setEndAnimationFrame(const u32& v) { animState.endFrame = v; }
-  void setStayAnimationFrame(const u32& v) { animState.stayFrame = v; }
+  DynamicMeshAnimState animState;
 
   /** @returns bounding box object of current frame. */
   const BBox& getCurrentBoundingBox() const {
-    return frames[animState.currentFrame]->getBBox();
+    return *frames[animState.currentFrame]->bbox;
   }
 
   /** Loop in one frame */
-  void playAnimation(const u32& t_frame) { playAnimation(t_frame, t_frame); }
+  void playAnimation(const u32& t_frame);
 
   /** Play animation in loop from startFrame to endFrame */
   void playAnimation(const u32& t_startFrame, const u32& t_endFrame);
@@ -73,9 +55,6 @@ class DynamicMesh : public Mesh {
 
  private:
   void initAnimation();
-  DynamicMeshAnimState animState;
-  u32 framesCount;
-  MeshFrame** frames;
 };
 
 }  // namespace Tyra

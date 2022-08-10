@@ -17,71 +17,71 @@ namespace Tyra {
 
 CoreBBox::CoreBBox() {
   for (u32 i = 0; i < 8; i++) {
-    _vertices[i] = Vec4(0.0F, 0.0F, 0.0F, 1.0F);
+    vertices[i] = Vec4(0.0F, 0.0F, 0.0F, 1.0F);
   }
 }
 
 CoreBBox::CoreBBox(CoreBBox** t_bboxes, const u32& count) {
-  float lowX = t_bboxes[0]->_vertices[0].x;
-  float lowY = t_bboxes[0]->_vertices[0].y;
-  float lowZ = t_bboxes[0]->_vertices[0].z;
+  float lowX = t_bboxes[0]->vertices[0].x;
+  float lowY = t_bboxes[0]->vertices[0].y;
+  float lowZ = t_bboxes[0]->vertices[0].z;
 
-  float hiX = t_bboxes[0]->_vertices[7].x;
-  float hiY = t_bboxes[0]->_vertices[7].y;
-  float hiZ = t_bboxes[0]->_vertices[7].z;
+  float hiX = t_bboxes[0]->vertices[7].x;
+  float hiY = t_bboxes[0]->vertices[7].y;
+  float hiZ = t_bboxes[0]->vertices[7].z;
 
   for (u32 i = 0; i < count; i++) {
-    if (lowX > t_bboxes[i]->_vertices[0].x) lowX = t_bboxes[i]->_vertices[0].x;
-    if (hiX < t_bboxes[i]->_vertices[7].x) hiX = t_bboxes[i]->_vertices[7].x;
+    if (lowX > t_bboxes[i]->vertices[0].x) lowX = t_bboxes[i]->vertices[0].x;
+    if (hiX < t_bboxes[i]->vertices[7].x) hiX = t_bboxes[i]->vertices[7].x;
 
-    if (lowY > t_bboxes[i]->_vertices[0].y) lowY = t_bboxes[i]->_vertices[0].y;
-    if (hiY < t_bboxes[i]->_vertices[7].y) hiY = t_bboxes[i]->_vertices[7].y;
+    if (lowY > t_bboxes[i]->vertices[0].y) lowY = t_bboxes[i]->vertices[0].y;
+    if (hiY < t_bboxes[i]->vertices[7].y) hiY = t_bboxes[i]->vertices[7].y;
 
-    if (lowZ > t_bboxes[i]->_vertices[0].z) lowZ = t_bboxes[i]->_vertices[0].z;
-    if (hiZ < t_bboxes[i]->_vertices[7].z) hiZ = t_bboxes[i]->_vertices[7].z;
+    if (lowZ > t_bboxes[i]->vertices[0].z) lowZ = t_bboxes[i]->vertices[0].z;
+    if (hiZ < t_bboxes[i]->vertices[7].z) hiZ = t_bboxes[i]->vertices[7].z;
   }
 
-  _vertices[0].set(lowX, lowY, lowZ);
-  _vertices[1].set(lowX, lowY, hiZ);
-  _vertices[2].set(lowX, hiY, lowZ);
-  _vertices[3].set(lowX, hiY, hiZ);
+  vertices[0].set(lowX, lowY, lowZ);
+  vertices[1].set(lowX, lowY, hiZ);
+  vertices[2].set(lowX, hiY, lowZ);
+  vertices[3].set(lowX, hiY, hiZ);
 
-  _vertices[4].set(hiX, lowY, lowZ);
-  _vertices[5].set(hiX, lowY, hiZ);
-  _vertices[6].set(hiX, hiY, lowZ);
-  _vertices[7].set(hiX, hiY, hiZ);
+  vertices[4].set(hiX, lowY, lowZ);
+  vertices[5].set(hiX, lowY, hiZ);
+  vertices[6].set(hiX, hiY, lowZ);
+  vertices[7].set(hiX, hiY, hiZ);
 }
 
 CoreBBox::CoreBBox(const std::vector<CoreBBox>& t_bboxes, const u32& startIndex,
                    const u32& stopIndex) {
-  float lowX = t_bboxes[startIndex]._vertices[0].x;
-  float lowY = t_bboxes[startIndex]._vertices[0].y;
-  float lowZ = t_bboxes[startIndex]._vertices[0].z;
+  float lowX = t_bboxes[startIndex].vertices[0].x;
+  float lowY = t_bboxes[startIndex].vertices[0].y;
+  float lowZ = t_bboxes[startIndex].vertices[0].z;
 
-  float hiX = t_bboxes[startIndex]._vertices[7].x;
-  float hiY = t_bboxes[startIndex]._vertices[7].y;
-  float hiZ = t_bboxes[startIndex]._vertices[7].z;
+  float hiX = t_bboxes[startIndex].vertices[7].x;
+  float hiY = t_bboxes[startIndex].vertices[7].y;
+  float hiZ = t_bboxes[startIndex].vertices[7].z;
 
   for (u32 i = startIndex; i < stopIndex; i++) {
-    if (lowX > t_bboxes[i]._vertices[0].x) lowX = t_bboxes[i]._vertices[0].x;
-    if (hiX < t_bboxes[i]._vertices[7].x) hiX = t_bboxes[i]._vertices[7].x;
+    if (lowX > t_bboxes[i].vertices[0].x) lowX = t_bboxes[i].vertices[0].x;
+    if (hiX < t_bboxes[i].vertices[7].x) hiX = t_bboxes[i].vertices[7].x;
 
-    if (lowY > t_bboxes[i]._vertices[0].y) lowY = t_bboxes[i]._vertices[0].y;
-    if (hiY < t_bboxes[i]._vertices[7].y) hiY = t_bboxes[i]._vertices[7].y;
+    if (lowY > t_bboxes[i].vertices[0].y) lowY = t_bboxes[i].vertices[0].y;
+    if (hiY < t_bboxes[i].vertices[7].y) hiY = t_bboxes[i].vertices[7].y;
 
-    if (lowZ > t_bboxes[i]._vertices[0].z) lowZ = t_bboxes[i]._vertices[0].z;
-    if (hiZ < t_bboxes[i]._vertices[7].z) hiZ = t_bboxes[i]._vertices[7].z;
+    if (lowZ > t_bboxes[i].vertices[0].z) lowZ = t_bboxes[i].vertices[0].z;
+    if (hiZ < t_bboxes[i].vertices[7].z) hiZ = t_bboxes[i].vertices[7].z;
   }
 
-  _vertices[0].set(lowX, lowY, lowZ);
-  _vertices[1].set(lowX, lowY, hiZ);
-  _vertices[2].set(lowX, hiY, lowZ);
-  _vertices[3].set(lowX, hiY, hiZ);
+  vertices[0].set(lowX, lowY, lowZ);
+  vertices[1].set(lowX, lowY, hiZ);
+  vertices[2].set(lowX, hiY, lowZ);
+  vertices[3].set(lowX, hiY, hiZ);
 
-  _vertices[4].set(hiX, lowY, lowZ);
-  _vertices[5].set(hiX, lowY, hiZ);
-  _vertices[6].set(hiX, hiY, lowZ);
-  _vertices[7].set(hiX, hiY, hiZ);
+  vertices[4].set(hiX, lowY, lowZ);
+  vertices[5].set(hiX, lowY, hiZ);
+  vertices[6].set(hiX, hiY, lowZ);
+  vertices[7].set(hiX, hiY, hiZ);
 }
 
 CoreBBox::CoreBBox(Vec4* t_vertices, u32* faces, u32 count) {
@@ -100,15 +100,15 @@ CoreBBox::CoreBBox(Vec4* t_vertices, u32* faces, u32 count) {
     if (hiZ < t_vertices[faces[i]].z) hiZ = t_vertices[faces[i]].z;
   }
 
-  _vertices[0].set(lowX, lowY, lowZ);
-  _vertices[1].set(lowX, lowY, hiZ);
-  _vertices[2].set(lowX, hiY, lowZ);
-  _vertices[3].set(lowX, hiY, hiZ);
+  vertices[0].set(lowX, lowY, lowZ);
+  vertices[1].set(lowX, lowY, hiZ);
+  vertices[2].set(lowX, hiY, lowZ);
+  vertices[3].set(lowX, hiY, hiZ);
 
-  _vertices[4].set(hiX, lowY, lowZ);
-  _vertices[5].set(hiX, lowY, hiZ);
-  _vertices[6].set(hiX, hiY, lowZ);
-  _vertices[7].set(hiX, hiY, hiZ);
+  vertices[4].set(hiX, lowY, lowZ);
+  vertices[5].set(hiX, lowY, hiZ);
+  vertices[6].set(hiX, hiY, lowZ);
+  vertices[7].set(hiX, hiY, hiZ);
 }
 
 CoreBBox::CoreBBox(Vec4* t_vertices, u32 count) {
@@ -127,24 +127,24 @@ CoreBBox::CoreBBox(Vec4* t_vertices, u32 count) {
     if (hiZ < t_vertices[i].z) hiZ = t_vertices[i].z;
   }
 
-  _vertices[0].set(lowX, lowY, lowZ);
-  _vertices[1].set(lowX, lowY, hiZ);
-  _vertices[2].set(lowX, hiY, lowZ);
-  _vertices[3].set(lowX, hiY, hiZ);
+  vertices[0].set(lowX, lowY, lowZ);
+  vertices[1].set(lowX, lowY, hiZ);
+  vertices[2].set(lowX, hiY, lowZ);
+  vertices[3].set(lowX, hiY, hiZ);
 
-  _vertices[4].set(hiX, lowY, lowZ);
-  _vertices[5].set(hiX, lowY, hiZ);
-  _vertices[6].set(hiX, hiY, lowZ);
-  _vertices[7].set(hiX, hiY, hiZ);
+  vertices[4].set(hiX, lowY, lowZ);
+  vertices[5].set(hiX, lowY, hiZ);
+  vertices[6].set(hiX, hiY, lowZ);
+  vertices[7].set(hiX, hiY, hiZ);
 }
 
 CoreBBox::CoreBBox(const CoreBBox& t_bbox) {
   for (auto i = 0; i < 8; i++)
-    Vec4::copy(&_vertices[i], t_bbox._vertices[i].xyzw);
+    Vec4::copy(&vertices[i], t_bbox.vertices[i].xyzw);
 }
 
 CoreBBox::CoreBBox(Vec4* t_vertices) {
-  for (auto i = 0; i < 8; i++) Vec4::copy(&_vertices[i], t_vertices[i].xyzw);
+  for (auto i = 0; i < 8; i++) Vec4::copy(&vertices[i], t_vertices[i].xyzw);
 }
 
 void CoreBBox::print() const {
@@ -167,8 +167,8 @@ std::string CoreBBox::getPrint(const char* name) const {
   res << std::fixed << std::setprecision(4);
   res << std::endl;
   for (auto i = 0; i < 8; i++) {
-    res << i << ": " << _vertices[i].x << ", " << _vertices[i].y << ", "
-        << _vertices[i].z << ", " << _vertices[i].w;
+    res << i << ": " << vertices[i].x << ", " << vertices[i].y << ", "
+        << vertices[i].z << ", " << vertices[i].w;
 
     if (i != 7)
       res << std::endl;
@@ -194,7 +194,7 @@ CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,
     // get out of the cycle as soon as a box as corners
     // both inside and out of the frustum
     for (u8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
-      boxCalcTemp = model * _vertices[y];
+      boxCalcTemp = model * vertices[y];
 
       auto isOut = frustumPlanes[i].distanceTo(boxCalcTemp) <= margin;
 

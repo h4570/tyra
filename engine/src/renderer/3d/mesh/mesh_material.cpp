@@ -30,70 +30,57 @@ MeshMaterial::MeshMaterial(const MeshBuilderData& data,
   id = rand() % 1000000;
 
   if (data.lightMapEnabled) {
-    singleColorFlag = false;
+    lightmapFlag = false;
     TYRA_ASSERT(material->frames[0]->colors != nullptr,
                 "Colors faces are required");
   } else {
-    singleColorFlag = true;
+    lightmapFlag = true;
   }
 
-  color.set(material->ambient);
+  ambient.set(material->ambient);
 
-  _name = material->name;
-  TYRA_ASSERT(_name.length() > 0, "MeshMaterial name cannot be empty");
+  name = material->name;
+  TYRA_ASSERT(name.length() > 0, "MeshMaterial name cannot be empty");
 
-  framesCount = material->frames.size();
-  frames = new MeshMaterialFrame*[framesCount];
   u32 lastVertexCount = 0;
 
-  for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new MeshMaterialFrame(data, i, materialIndex);
+  for (u32 i = 0; i < material->frames.size(); i++) {
+    frames.push_back(new MeshMaterialFrame(data, i, materialIndex));
 
     if (i > 0) {
-      TYRA_ASSERT(frames[i]->getVertexCount() == lastVertexCount,
+      TYRA_ASSERT(frames[i]->count == lastVertexCount,
                   "Vertex count must be the same for all frames");
     }
 
-    lastVertexCount = frames[i]->getVertexCount();
+    lastVertexCount = frames[i]->count;
   }
 
-  _isMother = true;
+  isMother = true;
 }
 
 MeshMaterial::MeshMaterial(const MeshMaterial& mesh) {
   id = rand() % 1000000;
 
-  singleColorFlag = mesh.singleColorFlag;
-  framesCount = mesh.framesCount;
-  _name = mesh._name;
+  lightmapFlag = mesh.lightmapFlag;
+  name = mesh.name;
 
-  color.set(128.0F, 128.0F, 128.0F, 128.0F);
+  ambient.set(128.0F, 128.0F, 128.0F, 128.0F);
 
-  frames = new MeshMaterialFrame*[framesCount];
-  for (u32 i = 0; i < framesCount; i++) {
-    frames[i] = new MeshMaterialFrame(*mesh.frames[i]);
+  for (u32 i = 0; i < mesh.frames.size(); i++) {
+    frames.push_back(new MeshMaterialFrame(*mesh.frames[i]));
   }
 
-  _isMother = false;
+  isMother = false;
 }
 
 MeshMaterial::~MeshMaterial() {
-  for (u32 i = 0; i < framesCount; i++) {
+  for (u32 i = 0; i < frames.size(); i++) {
     delete frames[i];
   }
-  delete[] frames;
 }
 
 const BBox& MeshMaterial::getBBox(const u32& frame) const {
-  return frames[frame]->getBBox();
-}
-
-void MeshMaterial::setSingleColorFlag(const u8& flag) {
-  TYRA_ASSERT(
-      frames[0]->getColors() != nullptr,
-      "Colors and color faces are required to use color-per-vertex mode");
-
-  singleColorFlag = flag;
+  return *frames[frame]->bbox;
 }
 
 void MeshMaterial::print() const {
@@ -117,9 +104,9 @@ std::string MeshMaterial::getPrint(const char* name) const {
   res << std::endl;
   res << std::fixed << std::setprecision(2);
   res << "Id: " << id << ", " << std::endl;
-  res << "Name: " << _name << ", " << std::endl;
-  res << "Frames count: " << framesCount << ", " << std::endl;
-  res << "Single color?: " << static_cast<u32>(singleColorFlag) << std::endl;
+  res << "Name: " << name << ", " << std::endl;
+  res << "Frames count: " << frames.size() << ", " << std::endl;
+  res << "Single color?: " << static_cast<u32>(lightmapFlag) << std::endl;
   res << ")";
 
   return res.str();

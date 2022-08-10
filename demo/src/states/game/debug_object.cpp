@@ -15,18 +15,24 @@
 using Tyra::Color;
 using Tyra::FileUtils;
 using Tyra::ObjLoader;
+using Tyra::ObjLoaderOptions;
 
 namespace Demo {
 
 DebugObject::DebugObject(TextureRepository* repo) {
   ObjLoader loader;
+
+  ObjLoaderOptions objOptions;
+  objOptions.flipUVs = true;
+  objOptions.scale = .5F;
+
   auto* data =
-      loader.load(FileUtils::fromCwd("game/models/debug.obj"), 1, .5F, true);
+      loader.load(FileUtils::fromCwd("game/models/debug.obj"), objOptions);
   data->normalsEnabled = false;
   data->textureCoordsEnabled = false;
   mesh = new StaticMesh(*data);
   delete data;
-  mesh->getMaterial(0)->color = Color(192.0F, 32.0F, 32.0F, 128.0F);
+
   rotator = 0.0F;
   allocateOptions();
 
