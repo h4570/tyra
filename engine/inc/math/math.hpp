@@ -26,9 +26,11 @@ class Math {
   constexpr static float HALF_PI = 1.5707963267948966192313216916398F;
   static float cos(float x);
   static float asin(float x);
+  static float atan2(float y, float x);
   static float mod(float x, float y);
-  static inline float sin(float x) { return cos(x - HALF_PI); }
-  static inline float tan(float x) { return sin(x) / cos(x); }
+  static float acos(float x);
+  static float sin(float x);
+  static float tan(float x);
   static float invSqrt(float x);
   static bool equalf(const float& a, const float& b,
                      const float& epsilon = 0.00001F);

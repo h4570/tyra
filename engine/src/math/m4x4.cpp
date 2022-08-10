@@ -17,10 +17,20 @@ namespace Tyra {
 
 VECTOR M4x4::upVec = {0.0F, 1.0F, 0.0F, 1.0F};
 VECTOR M4x4::viewVec = {0.0F, 0.0F, 0.0F, 1.0F};
-M4x4 M4x4::Identity = M4x4(1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,
-                           0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F);
 
-M4x4::M4x4() {}
+const M4x4 M4x4::Identity =
+    M4x4(1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F,
+         0.0F, 0.0F, 0.0F, 1.0F);
+
+M4x4::M4x4(const float& m11, const float& m12, const float& m13,
+           const float& m14, const float& m21, const float& m22,
+           const float& m23, const float& m24, const float& m31,
+           const float& m32, const float& m33, const float& m34,
+           const float& m41, const float& m42, const float& m43,
+           const float& m44) {
+  set(m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43,
+      m44);
+}
 
 void M4x4::copy(M4x4* out, const float* in) {
   asm volatile(
@@ -35,6 +45,8 @@ void M4x4::copy(M4x4* out, const float* in) {
       :
       : "r"(out->data), "r"(in));
 }
+
+void M4x4::copy(M4x4* out, const M4x4& in) { copy(out, in.data); }
 
 void M4x4::operator=(const M4x4& v) { copy(this, v); }
 
@@ -55,6 +67,16 @@ Vec4 M4x4::operator*(const Vec4& v) const {
       : "r"(result.xyzw), "r"(v.xyzw), "r"(this->data));
   return result;
 }
+
+M4x4 M4x4::operator*(const M4x4& v) const {
+  M4x4 result;
+  cross(result.data, this->data, v.data);
+  return result;
+}
+
+void M4x4::operator*=(const M4x4& v) { cross(this->data, this->data, v.data); }
+
+float& M4x4::operator[](const u8& index) { return data[index]; }
 
 void M4x4::set(const float& m11, const float& m12, const float& m13,
                const float& m14, const float& m21, const float& m22,
@@ -97,6 +119,85 @@ void M4x4::identity() {
       :
       : "r"(this->data));
 }
+
+void M4x4::translate(const Vec4& v) {
+  M4x4 temp = M4x4::Identity;
+  temp.translationX(v.x);
+  temp.translationY(v.y);
+  temp.translationZ(v.z);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::translateX(const float& v) {
+  M4x4 temp = M4x4::Identity;
+  temp.translationX(v);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::translateY(const float& v) {
+  M4x4 temp = M4x4::Identity;
+  temp.translationY(v);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::translateZ(const float& v) {
+  M4x4 temp = M4x4::Identity;
+  temp.translationZ(v);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::rotate(const Vec4& v) {
+  M4x4 temp = M4x4::Identity;
+
+  temp.rotationZ(v.z);
+  cross(this->data, temp.data, this->data);
+
+  temp.identity();
+  temp.rotationY(v.y);
+  cross(this->data, temp.data, this->data);
+
+  temp.identity();
+  temp.rotationX(v.x);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::rotateX(const float& radians) {
+  M4x4 temp = M4x4::Identity;
+  temp.rotationX(radians);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::rotateY(const float& radians) {
+  M4x4 temp = M4x4::Identity;
+  temp.rotationY(radians);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::rotateZ(const float& radians) {
+  M4x4 temp = M4x4::Identity;
+  temp.rotationZ(radians);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::rotateByAngle(const float& angle, const Vec4& axis) {
+  M4x4 temp;
+  temp.rotationByAngle(angle, axis);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::scale(const float& v) { scale(Vec4(v, v, v, 1.0F)); }
+
+void M4x4::scale(const Vec4& v) {
+  M4x4 temp = M4x4::Identity;
+  temp.setScale(v);
+  cross(this->data, temp.data, this->data);
+}
+
+void M4x4::scaleX(const float& v) { scale(Vec4(v, 1.0F, 1.0F, 1.0F)); }
+
+void M4x4::scaleY(const float& v) { scale(Vec4(1.0F, v, 1.0F, 1.0F)); }
+
+void M4x4::scaleZ(const float& v) { scale(Vec4(1.0F, 1.0F, v, 1.0F)); }
 
 M4x4 M4x4::perspective(const float& fov, const float& width,
                        const float& height, const float& projectionScale,

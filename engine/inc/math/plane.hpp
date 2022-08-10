@@ -25,9 +25,8 @@ class Plane {
   ~Plane();
 
   void update(const Vec4& a, const Vec4& b, const Vec4& c);
-  inline float distanceTo(const Vec4& t_vec) const {
-    return this->distance + this->normal.innerProduct(t_vec);
-  }
+
+  float distanceTo(const Vec4& t_vec) const;
 
   void print() const;
   void print(const char* name) const;

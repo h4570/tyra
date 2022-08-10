@@ -63,6 +63,9 @@ class Vec4 {
   void operator*=(const Vec4& v);
   void operator/=(const float& v);
 
+  /** (0,0,0,1) */
+  void unit();
+
   inline void set(const Vec4& v) { copy(this, v.xyzw); }
   inline void set(const float* v) { copy(this, v); }
   void set(const float& x, const float& y = 0.0F, const float& z = 0.0F,
@@ -94,13 +97,7 @@ class Vec4 {
    * @param max Opposite max vertex (ex. far, right, up vertex of bounding
    * box)
    */
-  u8 collidesBox(const Vec4& min, const Vec4& max) const {
-    return ((this->x <= max.x && this->x >= min.x) &&
-            (this->y < max.y && this->y >= min.y) &&
-            (this->z <= max.z && this->z >= min.z))
-               ? 1
-               : 0;
-  }
+  bool collidesBox(const Vec4& min, const Vec4& max) const;
 
   /**
    * Checks if this vector is on given box (this->y >= box.y)
@@ -109,12 +106,7 @@ class Vec4 {
    * @param max Opposite max vertex (ex. far, right, up vertex of bounding
    * box)
    */
-  u8 isOnBox(const Vec4& min, const Vec4& max) const {
-    return ((this->x <= max.x && this->x >= min.x) && (this->y >= max.y) &&
-            (this->z <= max.z && this->z >= min.z))
-               ? 1
-               : 0;
-  }
+  bool isOnBox(const Vec4& min, const Vec4& max) const;
 
   /** Check if given triangle should be backface culled */
   static u8 shouldBeBackfaceCulled(const Vec4* cameraPos, const Vec4* v0,

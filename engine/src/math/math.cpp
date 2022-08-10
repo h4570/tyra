@@ -14,6 +14,22 @@
 
 #include "math/math.hpp"
 
+extern volatile const u32 TYRA_MATH_ATAN_TABLE[9] alignas(sizeof(float)) = {
+    0x3f7ffff5, 0xbeaaa61c, 0x3e4c40a6, 0xbe0e6c63, 0x3dc577df,
+    0xbd6501c4, 0x3cb31652, 0xbb84d7e7, 0x3f490fdb,
+};
+
+extern volatile const float TYRA_MATH_ATAN_TABLE2[8] = {
+    0.0f,
+    (Tyra::Math::PI / 2.0f),
+    (Tyra::Math::PI / 2.0f),
+    (Tyra::Math::PI),
+    (-Tyra::Math::PI),
+    (-Tyra::Math::PI / 2.0f),
+    (-Tyra::Math::PI / 2.0f),
+    0.0f,
+};
+
 namespace Tyra {
 
 float Math::cos(float x) {
@@ -76,6 +92,98 @@ float Math::cos(float x) {
 }
 
 float Math::invSqrt(float x) { return 1.0F / sqrt(x); }
+
+float Math::atan2(float y, float x) {
+  float r;
+  asm volatile(
+      "mtc1		$0, %0      \n\t"
+      "abs.s		$f1, %1   \n\t"
+      "abs.s		$f2, %2   \n\t"
+      "c.lt.s		%2, %0    \n\t"
+      "move		$9, $0      \n\t"
+      "bc1f		_atan_00    \n\t"
+      "addiu		$9, $9, 4   \n\t"
+      "_atan_00:            \n\t"
+      "c.eq.s		%2, %0      \n\t"
+      "bc1f		_atan_00_1    \n\t"
+      "c.eq.s		%1, %2      \n\t"
+      "bc1t		_atan_06      \n\t"
+      "c.lt.s		%1, %0      \n\t"
+      "bc1f		_atan_00_1    \n\t"
+      "addiu		$9, $0, 3	    \n\t"
+      "_atan_00_1:		    \n\t"
+      "mul.s		%1, %1, %2    \n\t"
+      "c.lt.s		%1, %0	    \n\t"
+      "bc1f		_atan_01    \n\t"
+      "addiu		$9, $9, 2			    \n\t"
+      "c.lt.s		$f2, $f1	    \n\t"
+      "bc1f		_atan_02    \n\t"
+      "addiu		$9, $9, 1	    \n\t"
+      "b			_atan_02	    \n\t"
+      "_atan_01:			    \n\t"
+      "c.lt.s		$f1, $f2    \n\t"
+      "bc1f		_atan_02    \n\t"
+      "addiu		$9, $9, 1	    \n\t"
+      "_atan_02:			    \n\t"
+      "c.lt.s		$f1, $f2    \n\t"
+      "bc1f		_atan_03    \n\t"
+      "mov.s		%1, $f2    \n\t"
+      "mov.s		%2, $f1    \n\t"
+      "b			_atan_04    \n\t"
+      "_atan_03:    \n\t"
+      "mov.s		%1, $f1    \n\t"
+      "mov.s		%2, $f2    \n\t"
+      "_atan_04:    \n\t"
+      "mfc1		$6, %1    \n\t"
+      "mfc1		$7, %2    \n\t"
+      "la			$8, TYRA_MATH_ATAN_TABLE    \n\t"
+      "lqc2		$vf4, 0x0($8)    \n\t"
+      "lqc2		$vf5, 0x10($8)    \n\t"
+      "lqc2		$vf6, 0x20($8)    \n\t"
+      "qmtc2		$6, $vf21    \n\t"
+      "qmtc2		$7, $vf22    \n\t"
+      "vadd.x		$vf23, $vf21, $vf22    \n\t"
+      "vsub.x		$vf22, $vf22, $vf21    \n\t"
+      "vdiv     $Q, $vf22x, $vf23x    \n\t"
+      "vwaitq    \n\t"
+      "vaddq.x  $vf21, $vf0, $Q		    \n\t"
+      "vmul.x		$vf22, $vf21, $vf21    \n\t"
+      "vmulax.x	$ACC, $vf21, $vf4	    \n\t"
+      "vmul.x		$vf21, $vf21, $vf22    \n\t"
+      "vmadday.x	$ACC, $vf21, $vf4	    \n\t"
+      "vmul.x		$vf21, $vf21, $vf22    \n\t"
+      "vmaddaz.x	$ACC, $vf21, $vf4	    \n\t"
+      "vmul.x		$vf21, $vf21, $vf22    \n\t"
+      "vmaddaw.x	$ACC, $vf21, $vf4	    \n\t"
+      "vmul.x		$vf21, $vf21, $vf22    \n\t"
+      "vmaddax.x	$ACC, $vf21, $vf5	    \n\t"
+      "vmul.x		$vf21, $vf21, $vf22    \n\t"
+      "vmadday.x	$ACC, $vf21, $vf5	    \n\t"
+      "vmul.x		$vf21, $vf21, $vf22    \n\t"
+      "vmaddaz.x	$ACC, $vf21, $vf5	    \n\t"
+      "vmul.x		$vf21, $vf21, $vf22    \n\t"
+      "vmaddaw.x	$ACC, $vf21, $vf5	    \n\t"
+      "vmaddw.x	$vf21, $vf6, $vf0    \n\t"
+      "qmfc2		$6, $vf21    \n\t"
+      "mtc1		$6, %0    \n\t"
+      "andi		$8, $9, 1    \n\t"
+      "sll			$9, $9, 2    \n\t"
+      "la			$7, TYRA_MATH_ATAN_TABLE2    \n\t"
+      "add			$9, $9, $7    \n\t"
+      "lw			$7, 0x0($9)    \n\t"
+      "mtc1		$7, %1    \n\t"
+      "beq			$8, $0, _atan_05    \n\t"
+      "sub.s		%0, %1, %0    \n\t"
+      "b			_atan_06    \n\t"
+      "_atan_05:    \n\t"
+      "add.s		%0, %1, %0    \n\t"
+      "_atan_06:    \n\t"
+      : "=&f"(r)
+      : "f"(x), "f"(y)
+      : "$6", "$7", "$8", "$9", "$f0", "$f1", "$f2");
+
+  return r;
+}
 
 float Math::asin(float x) {
   float r;
@@ -161,5 +269,15 @@ float Math::mod(float x, float y) {
 
   return f;
 }
+
+float Math::acos(float x) {
+  float y = sqrt(1.0f - x * x);
+  float t = atan2(y, x);
+  return t;
+}
+
+float Math::sin(float x) { return cos(x - HALF_PI); }
+
+float Math::tan(float x) { return sin(x) / cos(x); }
 
 }  // namespace Tyra

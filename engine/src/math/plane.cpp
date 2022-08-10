@@ -14,27 +14,19 @@
 #include "math/plane.hpp"
 
 namespace Tyra {
+
 Plane::Plane() { this->distance = 0; }
 
-/** Create by specyfying 3 points.
- * This function assumes that the points
- * are given in counter clockwise order
- */
 Plane::Plane(const Vec4& a, const Vec4& b, const Vec4& c) {
   this->update(a, b, c);
 }
 
 Plane::~Plane() {}
 
-// ----
-// Methods
-// ----
+float Plane::distanceTo(const Vec4& t_vec) const {
+  return this->distance + this->normal.innerProduct(t_vec);
+}
 
-/**
- * Set plane by specyfying 3 points.
- * This function assumes that the points
- * are given in counter clockwise order
- */
 void Plane::update(const Vec4& a, const Vec4& b, const Vec4& c) {
   Vec4 aux1 = a - b;
   Vec4 aux2 = c - b;

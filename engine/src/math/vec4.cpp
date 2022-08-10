@@ -69,7 +69,7 @@ Vec4 Vec4::operator*(const float& v) const {
       "sqc2       $vf6,   0x0(%0)         \n\t"
       :
       : "r"(res.xyzw), "r"(this->xyzw), "f"(v));
-  res.w = w;  // Comment below. TODO: fix it in asm
+  res.w = w;
   return res;
 }
 
@@ -124,6 +124,10 @@ void Vec4::operator=(const Vec4& v) { copy(this, v); }
 
 Vec4 Vec4::operator-(void) const { return Vec4(-x, -y, -z); }
 
+void Vec4::unit() {
+  asm volatile("sqc2		$vf0, 0x00(%0)	\n" : : "r"(this->xyzw));
+}
+
 void Vec4::copy(Vec4* out, const float* in) {
   asm volatile(
       "lqc2		$vf1, 0x00(%1)	\n"
@@ -158,6 +162,21 @@ int Vec4::getRelativeCosBetween(const Vec4& v) const {
 }
 int Vec4::getRelativeAngleBetween(const Vec4& v) const {
   return acos(getRelativeCosBetween(v));
+}
+
+bool Vec4::collidesBox(const Vec4& min, const Vec4& max) const {
+  return ((this->x <= max.x && this->x >= min.x) &&
+          (this->y < max.y && this->y >= min.y) &&
+          (this->z <= max.z && this->z >= min.z))
+             ? 1
+             : 0;
+}
+
+bool Vec4::isOnBox(const Vec4& min, const Vec4& max) const {
+  return ((this->x <= max.x && this->x >= min.x) && (this->y >= max.y) &&
+          (this->z <= max.z && this->z >= min.z))
+             ? 1
+             : 0;
 }
 
 float Vec4::innerProduct(const Vec4& v) const {
