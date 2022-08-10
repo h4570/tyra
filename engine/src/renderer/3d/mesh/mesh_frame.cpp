@@ -19,7 +19,7 @@
 
 namespace Tyra {
 
-MeshFrame::MeshFrame(const MeshBuilder2Data& data, const u32& index) {
+MeshFrame::MeshFrame(const MeshBuilderData& data, const u32& index) {
   id = rand() % 1000000;
 
   auto bboxes = new CoreBBox*[data.materials.size()];

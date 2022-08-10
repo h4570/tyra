@@ -15,7 +15,7 @@
 
 namespace Tyra {
 
-DynamicMesh::DynamicMesh(const MeshBuilder2Data& data) : Mesh(data) {
+DynamicMesh::DynamicMesh(const MeshBuilderData& data) : Mesh(data) {
   framesCount = data.materials[0]->frames.size();
 
   if (framesCount == 1) {

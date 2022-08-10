@@ -74,8 +74,8 @@ MD2Loader::MD2Loader() {}
 
 MD2Loader::~MD2Loader() {}
 
-MeshBuilder2Data* MD2Loader::load(const char* fullpath, const float& scale,
-                                  const bool& invertT) {
+MeshBuilderData* MD2Loader::load(const char* fullpath, const float& scale,
+                                 const bool& invertT) {
   std::string path = fullpath;
   TYRA_ASSERT(!path.empty(), "Provided path is empty!");
 
@@ -110,9 +110,9 @@ MeshBuilder2Data* MD2Loader::load(const char* fullpath, const float& scale,
 
   fclose(file);
 
-  auto result = new MeshBuilder2Data();
+  auto result = new MeshBuilderData();
 
-  auto* material = new MeshBuilder2MaterialData();
+  auto* material = new MeshBuilderMaterialData();
   material->name = getFilenameWithoutExtension(filename);
 
   result->materials.push_back(material);
@@ -125,7 +125,7 @@ MeshBuilder2Data* MD2Loader::load(const char* fullpath, const float& scale,
   Vec4** tempTexCoords = new Vec4*[framesCount];
 
   for (u32 i = 0; i < framesCount; i++) {
-    auto* outputFrame = new MeshBuilder2MaterialFrameData();
+    auto* outputFrame = new MeshBuilderMaterialFrameData();
     material->frames.push_back(outputFrame);
 
     tempVertices[i] = new Vec4[vertexCount];

@@ -9,17 +9,22 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "loaders/3d/builder2/mesh_builder2_material_data.hpp"
+#pragma once
+
+#include <tamtypes.h>
+#include "math/vec4.hpp"
+#include "renderer/models/color.hpp"
 
 namespace Tyra {
 
-MeshBuilder2MaterialData::MeshBuilder2MaterialData() {
-  ambient.set(128.0F, 128.0F, 128.0F, 128.0F);
-}
-MeshBuilder2MaterialData::~MeshBuilder2MaterialData() {
-  for (auto& frame : frames) {
-    delete frame;
-  }
-}
+class MeshBuilderMaterialFrameData {
+ public:
+  MeshBuilderMaterialFrameData();
+  ~MeshBuilderMaterialFrameData();
+
+  u32 count;
+  Vec4 *vertices, *textureCoords, *normals;
+  Color* colors;
+};
 
 }  // namespace Tyra

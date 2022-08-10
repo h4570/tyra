@@ -1,17 +1,13 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
-- [General] Znalezc problem w loaderze/ach
-- [General] Assert czy ramki w obj maja taka sama ilosc danych
-- [General] Clip glitch na tutorial01
-- [General] Rename builder2
 - [Obj] soldier_000001
 - [General] vec3/vec4/m4x4 functions from ms
+- [General] wszystkie new M4x4 i = M4x4 na M4x4::Identity
 - [General] std::vector in mesh instead of array**
 - [General] Allow to edit all data from mesh/texture
-- [General] odpalic de_dust2, doszlifowac guard band
 - [General] manycolor -> lightmap
 - [General] rename invertT -> invertY
 - [General] ładować ambient i wrzucać do material. Zmienic nazwe na ambient
-- [General] wszystkie new M4x4 i = M4x4 na M4x4::Identity
+- [General] odpalic de_dust2, doszlifowac guard band
 
 - [General] USB test
 - [General] Tyra version, render it on start 

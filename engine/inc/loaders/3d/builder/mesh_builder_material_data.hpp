@@ -11,20 +11,21 @@
 
 #pragma once
 
-#include <tamtypes.h>
-#include "math/vec4.hpp"
+#include <vector>
+#include <string>
+#include "./mesh_builder_material_frame_data.hpp"
 #include "renderer/models/color.hpp"
 
 namespace Tyra {
 
-class MeshBuilder2MaterialFrameData {
+class MeshBuilderMaterialData {
  public:
-  MeshBuilder2MaterialFrameData();
-  ~MeshBuilder2MaterialFrameData();
+  MeshBuilderMaterialData();
+  ~MeshBuilderMaterialData();
 
-  u32 count;
-  Vec4 *vertices, *textureCoords, *normals;
-  Color* colors;
+  std::vector<MeshBuilderMaterialFrameData*> frames;
+  std::string name;
+  Color ambient;
 };
 
 }  // namespace Tyra

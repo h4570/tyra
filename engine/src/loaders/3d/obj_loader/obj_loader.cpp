@@ -28,8 +28,8 @@ ObjLoader::ObjLoader() {}
 
 ObjLoader::~ObjLoader() {}
 
-MeshBuilder2Data* ObjLoader::load(const char* fullpath, const u16& count,
-                                  const float& scale, const bool& invertY) {
+MeshBuilderData* ObjLoader::load(const char* fullpath, const u16& count,
+                                 const float& scale, const bool& invertY) {
   std::string path = fullpath;
   std::string basePath = getPathFromFilename(path);
 
@@ -38,7 +38,7 @@ MeshBuilder2Data* ObjLoader::load(const char* fullpath, const u16& count,
   auto rawFilename = getFilenameWithoutExtension(path);
   auto extension = getExtensionOfFilename(path);
 
-  auto* result = new MeshBuilder2Data();
+  auto* result = new MeshBuilderData();
 
   tinyobj::ObjReaderConfig readerConfig;
   readerConfig.triangulate = count == 1;
@@ -85,7 +85,7 @@ MeshBuilder2Data* ObjLoader::load(const char* fullpath, const u16& count,
 }
 
 void ObjLoader::addOutputMaterialsAndFrames(
-    MeshBuilder2Data* output, const tinyobj::attrib_t& attrib,
+    MeshBuilderData* output, const tinyobj::attrib_t& attrib,
     const std::vector<tinyobj::shape_t>& shapes,
     const std::vector<tinyobj::material_t>& materials, const u16& framesCount) {
   if (attrib.texcoords.size()) output->textureCoordsEnabled = true;
@@ -98,7 +98,7 @@ void ObjLoader::addOutputMaterialsAndFrames(
               "file");
 
   for (size_t i = 0; i < materials.size(); i++) {
-    auto* material = new MeshBuilder2MaterialData();
+    auto* material = new MeshBuilderMaterialData();
 
     material->name = materials[i].name;
 
@@ -107,7 +107,7 @@ void ObjLoader::addOutputMaterialsAndFrames(
                           materials[i].ambient[2] * 255.0F, 128.0F);
 
     for (size_t j = 0; j < framesCount; j++) {
-      auto* frame = new MeshBuilder2MaterialFrameData();
+      auto* frame = new MeshBuilderMaterialFrameData();
       material->frames.push_back(frame);
     }
 
@@ -115,7 +115,7 @@ void ObjLoader::addOutputMaterialsAndFrames(
   }
 }
 
-void ObjLoader::scan(MeshBuilder2Data* output, const tinyobj::attrib_t& attrib,
+void ObjLoader::scan(MeshBuilderData* output, const tinyobj::attrib_t& attrib,
                      const std::vector<tinyobj::shape_t>& shapes,
                      const std::vector<tinyobj::material_t>& materials,
                      const u16& frameIndex) {
@@ -159,7 +159,7 @@ void ObjLoader::scan(MeshBuilder2Data* output, const tinyobj::attrib_t& attrib,
   }
 }
 
-void ObjLoader::importFrame(MeshBuilder2Data* output,
+void ObjLoader::importFrame(MeshBuilderData* output,
                             const tinyobj::attrib_t& attrib,
                             const std::vector<tinyobj::shape_t>& shapes,
                             const std::vector<tinyobj::material_t>& materials,

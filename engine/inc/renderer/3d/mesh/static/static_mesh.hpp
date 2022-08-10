@@ -18,7 +18,7 @@ namespace Tyra {
 
 class StaticMesh : public Mesh {
  public:
-  StaticMesh(const MeshBuilder2Data& data);
+  StaticMesh(const MeshBuilderData& data);
   StaticMesh(const StaticMesh& mesh);
   ~StaticMesh();
 

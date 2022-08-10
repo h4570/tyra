@@ -12,7 +12,7 @@
 #pragma once
 
 #include <vector>
-#include "./mesh_builder2_material_data.hpp"
+#include "./mesh_builder_material_data.hpp"
 
 namespace Tyra {
 
@@ -21,12 +21,12 @@ namespace Tyra {
  * All dynamic data ownership is moved to mesh class, so
  * verts, coords.. are not deallocated!
  */
-class MeshBuilder2Data {
+class MeshBuilderData {
  public:
-  MeshBuilder2Data();
-  ~MeshBuilder2Data();
+  MeshBuilderData();
+  ~MeshBuilderData();
 
-  std::vector<MeshBuilder2MaterialData*> materials;
+  std::vector<MeshBuilderMaterialData*> materials;
 
   bool textureCoordsEnabled, normalsEnabled, lightMapEnabled;
 };

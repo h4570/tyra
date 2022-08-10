@@ -9,19 +9,16 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "loaders/3d/builder2/mesh_builder2_data.hpp"
+#include "loaders/3d/builder/mesh_builder_material_data.hpp"
 
 namespace Tyra {
 
-MeshBuilder2Data::MeshBuilder2Data() {
-  textureCoordsEnabled = false;
-  normalsEnabled = false;
-  lightMapEnabled = false;
+MeshBuilderMaterialData::MeshBuilderMaterialData() {
+  ambient.set(128.0F, 128.0F, 128.0F, 128.0F);
 }
-
-MeshBuilder2Data::~MeshBuilder2Data() {
-  for (auto& material : materials) {
-    delete material;
+MeshBuilderMaterialData::~MeshBuilderMaterialData() {
+  for (auto& frame : frames) {
+    delete frame;
   }
 }
 

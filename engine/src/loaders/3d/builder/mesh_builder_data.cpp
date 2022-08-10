@@ -9,23 +9,20 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#pragma once
-
-#include <vector>
-#include <string>
-#include "./mesh_builder2_material_frame_data.hpp"
-#include "renderer/models/color.hpp"
+#include "loaders/3d/builder/mesh_builder_data.hpp"
 
 namespace Tyra {
 
-class MeshBuilder2MaterialData {
- public:
-  MeshBuilder2MaterialData();
-  ~MeshBuilder2MaterialData();
+MeshBuilderData::MeshBuilderData() {
+  textureCoordsEnabled = false;
+  normalsEnabled = false;
+  lightMapEnabled = false;
+}
 
-  std::vector<MeshBuilder2MaterialFrameData*> frames;
-  std::string name;
-  Color ambient;
-};
+MeshBuilderData::~MeshBuilderData() {
+  for (auto& material : materials) {
+    delete material;
+  }
+}
 
 }  // namespace Tyra

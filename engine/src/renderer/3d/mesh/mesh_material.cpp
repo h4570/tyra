@@ -17,7 +17,7 @@
 
 namespace Tyra {
 
-MeshMaterial::MeshMaterial(const MeshBuilder2Data& data,
+MeshMaterial::MeshMaterial(const MeshBuilderData& data,
                            const u32& materialIndex) {
   TYRA_ASSERT(materialIndex < data.materials.size(), "Provided index \"",
               materialIndex, "\" is out of range");
@@ -44,8 +44,17 @@ MeshMaterial::MeshMaterial(const MeshBuilder2Data& data,
 
   framesCount = material->frames.size();
   frames = new MeshMaterialFrame*[framesCount];
+  u32 lastVertexCount = 0;
+
   for (u32 i = 0; i < framesCount; i++) {
     frames[i] = new MeshMaterialFrame(data, i, materialIndex);
+
+    if (i > 0) {
+      TYRA_ASSERT(frames[i]->getVertexCount() == lastVertexCount,
+                  "Vertex count must be the same for all frames");
+    }
+
+    lastVertexCount = frames[i]->getVertexCount();
   }
 
   _isMother = true;

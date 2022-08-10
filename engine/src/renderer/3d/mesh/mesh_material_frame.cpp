@@ -18,7 +18,7 @@
 
 namespace Tyra {
 
-MeshMaterialFrame::MeshMaterialFrame(const MeshBuilder2Data& data,
+MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
                                      const u32& frameIndex,
                                      const u32& materialIndex) {
   TYRA_ASSERT(materialIndex < data.materials.size(), "Provided index \"",

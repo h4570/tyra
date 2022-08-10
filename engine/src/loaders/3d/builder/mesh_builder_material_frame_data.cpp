@@ -9,16 +9,16 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "loaders/3d/builder2/mesh_builder2_material_frame_data.hpp"
+#include "loaders/3d/builder/mesh_builder_material_frame_data.hpp"
 
 namespace Tyra {
 
-MeshBuilder2MaterialFrameData::MeshBuilder2MaterialFrameData() {
+MeshBuilderMaterialFrameData::MeshBuilderMaterialFrameData() {
   vertices = nullptr;
   textureCoords = nullptr;
   normals = nullptr;
   colors = nullptr;
 }
-MeshBuilder2MaterialFrameData::~MeshBuilder2MaterialFrameData() {}
+MeshBuilderMaterialFrameData::~MeshBuilderMaterialFrameData() {}
 
 }  // namespace Tyra

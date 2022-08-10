@@ -13,7 +13,7 @@
 
 namespace Tyra {
 
-Mesh::Mesh(const MeshBuilder2Data& data) {
+Mesh::Mesh(const MeshBuilderData& data) {
   init();
 
   TYRA_ASSERT(data.materials.size() > 0,
