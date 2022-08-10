@@ -112,6 +112,10 @@ void Tutorial01 ::init() {
     u32 column = i % columns;
     u32 row = i / rows;
 
+    translations[i].identity();
+    rotations[i].identity();
+    scales[i].identity();
+
     translations[i].translateX(row * offset - center);
     translations[i].translateY(column * offset - center);
     translations[i].translateZ(-10.0F);

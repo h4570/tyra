@@ -20,10 +20,12 @@ class M4x4 {
  public:
   MATRIX data alignas(sizeof(float) * 16);
 
+  static M4x4 Identity;
+
   /**
-   * @param identity true = identity matrix, false = random values
+   * Create matrix with random values
    */
-  explicit M4x4(const bool& identity = true);
+  explicit M4x4();
   M4x4(const M4x4& v) { copy(this, v); }
   explicit M4x4(const float* v) { copy(this, v); }
   inline M4x4(const float& m11, const float& m12, const float& m13,
@@ -76,7 +78,7 @@ class M4x4 {
            const float& m44);
 
   void translate(const Vec4& v) {
-    M4x4 temp = M4x4(true);
+    M4x4 temp = M4x4::Identity;
     temp.translationX(v.x);
     temp.translationY(v.y);
     temp.translationZ(v.z);
@@ -84,26 +86,26 @@ class M4x4 {
   }
 
   void translateX(const float& v) {
-    M4x4 temp = M4x4(true);
+    M4x4 temp = M4x4::Identity;
     temp.translationX(v);
     cross(this->data, temp.data, this->data);
   }
 
   void translateY(const float& v) {
-    M4x4 temp = M4x4(true);
+    M4x4 temp = M4x4::Identity;
     temp.translationY(v);
     cross(this->data, temp.data, this->data);
   }
 
   void translateZ(const float& v) {
-    M4x4 temp = M4x4(true);
+    M4x4 temp = M4x4::Identity;
     temp.translationZ(v);
     cross(this->data, temp.data, this->data);
   }
 
   /** Rotate M4x4. */
   void rotate(const Vec4& v) {
-    M4x4 temp = M4x4(true);
+    M4x4 temp = M4x4::Identity;
 
     temp.rotationZ(v.z);
     cross(this->data, temp.data, this->data);
@@ -119,21 +121,21 @@ class M4x4 {
 
   /** Rotate M4x4 by X. */
   void rotateX(const float& radians) {
-    M4x4 temp = M4x4(true);
+    M4x4 temp = M4x4::Identity;
     temp.rotationX(radians);
     cross(this->data, temp.data, this->data);
   }
 
   /** Rotate M4x4 by Y. */
   void rotateY(const float& radians) {
-    M4x4 temp = M4x4(true);
+    M4x4 temp = M4x4::Identity;
     temp.rotationY(radians);
     cross(this->data, temp.data, this->data);
   }
 
   /** Rotate M4x4 by Z. */
   void rotateZ(const float& radians) {
-    M4x4 temp = M4x4(true);
+    M4x4 temp = M4x4::Identity;
     temp.rotationZ(radians);
     cross(this->data, temp.data, this->data);
   }
@@ -151,7 +153,7 @@ class M4x4 {
   void scaleZ(const float& v) { scale(Vec4(1.0F, 1.0F, v, 1.0F)); }
 
   void scale(const Vec4& v) {
-    M4x4 temp = M4x4(true);
+    M4x4 temp = M4x4::Identity;
     temp.setScale(v);
     cross(this->data, temp.data, this->data);
   }

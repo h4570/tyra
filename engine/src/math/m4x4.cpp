@@ -17,10 +17,10 @@ namespace Tyra {
 
 VECTOR M4x4::upVec = {0.0F, 1.0F, 0.0F, 1.0F};
 VECTOR M4x4::viewVec = {0.0F, 0.0F, 0.0F, 1.0F};
+M4x4 M4x4::Identity = M4x4(1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,
+                           0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F);
 
-M4x4::M4x4(const bool& t_identity) {
-  if (t_identity) identity();
-}
+M4x4::M4x4() {}
 
 void M4x4::copy(M4x4* out, const float* in) {
   asm volatile(
@@ -131,7 +131,7 @@ M4x4 M4x4::perspective(const float& fov, const float& width,
 }
 
 M4x4 M4x4::lookAt(const Vec4& position, const Vec4& target) {
-  M4x4 res(true);
+  M4x4 res = M4x4::Identity;
   lookAt(&res, position, target);
   return res;
 }
