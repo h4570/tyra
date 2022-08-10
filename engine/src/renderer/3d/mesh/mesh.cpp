@@ -20,7 +20,15 @@ Mesh::Mesh(const MeshBuilderData& data) {
               "Materials count must be greater than 0");
 
   for (u32 i = 0; i < data.materials.size(); i++) {
-    materials.push_back(new MeshMaterial(data, i));
+    auto* material = new MeshMaterial(data, i);
+
+    if (material->frames.size() == 0) {
+      TYRA_WARN("Found empty material: ", material->name, ". Skipping...");
+      delete material;
+      continue;
+    }
+
+    materials.push_back(material);
   }
 
   isMother = true;

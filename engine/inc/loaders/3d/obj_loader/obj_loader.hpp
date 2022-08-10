@@ -29,6 +29,11 @@ struct ObjLoaderOptions {
   ObjLoaderAnimationOptions animation;
 };
 
+struct MaterialVertexCount {
+  size_t materialId;
+  int count;
+};
+
 /** Class responsible for loading & parsing obj files */
 class ObjLoader : public Loader {
  public:
@@ -45,13 +50,12 @@ class ObjLoader : public Loader {
   void addOutputMaterialsAndFrames(
       MeshBuilderData* output, const tinyobj::attrib_t& attrib,
       const std::vector<tinyobj::shape_t>& shapes,
-      const std::vector<tinyobj::material_t>& materials,
-      const u16& framesCount);
+      const std::vector<tinyobj::material_t>& materials, const u16& framesCount,
+      std::vector<MaterialVertexCount>& materialVertexCounts);
 
-  void scan(MeshBuilderData* output, const tinyobj::attrib_t& attrib,
-            const std::vector<tinyobj::shape_t>& shapes,
-            const std::vector<tinyobj::material_t>& materials,
-            const u16& frameIndex);
+  std::vector<MaterialVertexCount> scan(
+      const std::vector<tinyobj::shape_t>& shapes,
+      const std::vector<tinyobj::material_t>& materials);
 
   void importFrame(MeshBuilderData* output, const tinyobj::attrib_t& attrib,
                    const std::vector<tinyobj::shape_t>& shapes,

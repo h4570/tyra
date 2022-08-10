@@ -92,11 +92,10 @@ MeshBuilderData* ObjLoader::load(const char* fullpath,
         "mtlib in obj file");
 
     if (i == 1) {
+      auto scanResult = scan(shapes, materials);
       addOutputMaterialsAndFrames(result, attrib, shapes, materials,
-                                  options.animation.count);
+                                  options.animation.count, scanResult);
     }
-
-    scan(result, attrib, shapes, materials, i - 1);
 
     importFrame(result, attrib, shapes, materials, i - 1, options.scale,
                 options.flipUVs, options.animation.count);
@@ -105,10 +104,38 @@ MeshBuilderData* ObjLoader::load(const char* fullpath,
   return result;
 }
 
+std::vector<MaterialVertexCount> ObjLoader::scan(
+    const std::vector<tinyobj::shape_t>& shapes,
+    const std::vector<tinyobj::material_t>& materials) {
+  std::vector<MaterialVertexCount> result;
+
+  for (size_t i = 0; i < materials.size(); i++) {
+    MaterialVertexCount counter = {i, 0};
+    result.push_back(counter);
+  }
+
+  for (size_t s = 0; s < shapes.size(); s++) {
+    const auto& mesh = shapes[s].mesh;
+
+    for (size_t f = 0; f < mesh.num_face_vertices.size(); f++) {
+      const auto& materialId = mesh.material_ids[f];
+      const auto& vertCountPerFace = size_t(mesh.num_face_vertices[f]);
+
+      TYRA_ASSERT(vertCountPerFace == 3,
+                  "TinyObjLoader should triangulate mesh, internal error!");
+
+      result[materialId].count += vertCountPerFace;
+    }
+  }
+
+  return result;
+}
+
 void ObjLoader::addOutputMaterialsAndFrames(
     MeshBuilderData* output, const tinyobj::attrib_t& attrib,
     const std::vector<tinyobj::shape_t>& shapes,
-    const std::vector<tinyobj::material_t>& materials, const u16& framesCount) {
+    const std::vector<tinyobj::material_t>& materials, const u16& framesCount,
+    std::vector<MaterialVertexCount>& materialVertexCounts) {
   if (attrib.texcoords.size()) output->textureCoordsEnabled = true;
 
   if (attrib.normals.size()) output->normalsEnabled = true;
@@ -129,54 +156,21 @@ void ObjLoader::addOutputMaterialsAndFrames(
 
     for (size_t j = 0; j < framesCount; j++) {
       auto* frame = new MeshBuilderMaterialFrameData();
+
+      const auto& counter = materialVertexCounts[i];
+
+      frame->count = counter.count;
+      frame->vertices = new Vec4[counter.count];
+
+      if (output->textureCoordsEnabled)
+        frame->textureCoords = new Vec4[counter.count];
+
+      if (output->normalsEnabled) frame->normals = new Vec4[counter.count];
+
       material->frames.push_back(frame);
     }
 
     output->materials.push_back(material);
-  }
-}
-
-void ObjLoader::scan(MeshBuilderData* output, const tinyobj::attrib_t& attrib,
-                     const std::vector<tinyobj::shape_t>& shapes,
-                     const std::vector<tinyobj::material_t>& materials,
-                     const u16& frameIndex) {
-  struct MaterialVertexCount {
-    size_t materialId;
-    int count;
-  };
-
-  std::vector<MaterialVertexCount> materialVertexCounts;
-  for (size_t i = 0; i < materials.size(); i++) {
-    MaterialVertexCount counter = {i, 0};
-    materialVertexCounts.push_back(counter);
-  }
-
-  for (size_t s = 0; s < shapes.size(); s++) {
-    const auto& mesh = shapes[s].mesh;
-
-    for (size_t f = 0; f < mesh.num_face_vertices.size(); f++) {
-      const auto& materialId = mesh.material_ids[f];
-      const auto& vertCountPerFace = size_t(mesh.num_face_vertices[f]);
-
-      TYRA_ASSERT(vertCountPerFace == 3,
-                  "TinyObjLoader should triangulate mesh, internal error!");
-
-      materialVertexCounts[materialId].count += vertCountPerFace;
-    }
-  }
-
-  for (size_t i = 0; i < materials.size(); i++) {
-    const auto& counter = materialVertexCounts[i];
-
-    auto* outFrame = output->materials[i]->frames[frameIndex];
-
-    outFrame->count = counter.count;
-    outFrame->vertices = new Vec4[counter.count];
-
-    if (output->textureCoordsEnabled)
-      outFrame->textureCoords = new Vec4[counter.count];
-
-    if (output->normalsEnabled) outFrame->normals = new Vec4[counter.count];
   }
 }
 

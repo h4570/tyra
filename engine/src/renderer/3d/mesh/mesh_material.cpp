@@ -45,14 +45,22 @@ MeshMaterial::MeshMaterial(const MeshBuilderData& data,
   u32 lastVertexCount = 0;
 
   for (u32 i = 0; i < material->frames.size(); i++) {
-    frames.push_back(new MeshMaterialFrame(data, i, materialIndex));
+    if (material->frames[i]->count > 0) {
+      frames.push_back(new MeshMaterialFrame(data, i, materialIndex));
 
-    if (i > 0) {
-      TYRA_ASSERT(frames[i]->count == lastVertexCount,
-                  "Vertex count must be the same for all frames");
+      if (i > 0) {
+        TYRA_ASSERT(frames[i]->count == lastVertexCount,
+                    "Vertex count must be the same for all frames");
+      }
+
+      lastVertexCount = frames[i]->count;
+    } else {  // We will not use it, lets clean it up
+      auto* frame = material->frames[i];
+      if (frame->vertices != nullptr) delete[] frame->vertices;
+      if (frame->normals != nullptr) delete[] frame->normals;
+      if (frame->textureCoords != nullptr) delete[] frame->textureCoords;
+      if (frame->colors != nullptr) delete[] frame->colors;
     }
-
-    lastVertexCount = frames[i]->count;
   }
 
   isMother = true;

@@ -55,6 +55,7 @@ Terrain::~Terrain() {
 
 void Terrain::allocateOptions() {
   options = new StaPipOptions();
+  options->frustumCulling = Tyra::PipelineFrustumCulling_None;
   options->shadingType = Tyra::TyraShadingGouraud;
   options->blendingEnabled = true;
   options->antiAliasingEnabled = false;

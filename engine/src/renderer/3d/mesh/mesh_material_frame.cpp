@@ -21,17 +21,20 @@ namespace Tyra {
 MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
                                      const u32& frameIndex,
                                      const u32& materialIndex) {
+  auto* material = data.materials[materialIndex];
+
   TYRA_ASSERT(materialIndex < data.materials.size(), "Provided index \"",
               materialIndex, "\" is out of range");
 
-  TYRA_ASSERT(frameIndex < data.materials[materialIndex]->frames.size(),
-              "Provided index \"", frameIndex, "\" is out of range");
+  TYRA_ASSERT(frameIndex < material->frames.size(), "Provided index \"",
+              frameIndex, "\" is out of range");
 
   id = rand() % 1000000;
 
-  auto* frame = data.materials[materialIndex]->frames[frameIndex];
+  auto* frame = material->frames[frameIndex];
 
-  TYRA_ASSERT(frame->count > 0, "Vertex count must be greater than 0");
+  TYRA_ASSERT(frame->count > 0, "Vertex count must be greater than 0",
+              "Material name: ", material->name);
   TYRA_ASSERT(frame->vertices != nullptr, "Vertex array can't be null");
   TYRA_ASSERT(!data.normalsEnabled || frame->normals != nullptr,
               "Normal array can't be null");
