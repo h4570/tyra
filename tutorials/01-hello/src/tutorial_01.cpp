@@ -203,8 +203,10 @@ StaticMesh* getStaticMesh(Renderer* renderer) {
 
 StaticMesh* getSkybox(Renderer* renderer) {
   ObjLoader loader;
-  auto* data =
-      loader.load(FileUtils::fromCwd("skybox/skybox.obj"), 1, 200.0F, true);
+  ObjLoaderOptions options;
+  options.flipUVs = true;
+  options.scale = 200.0F;
+  auto* data = loader.load(FileUtils::fromCwd("skybox/skybox.obj"), options);
   auto* result = new StaticMesh(*data);
   // result->translation.translateZ(-30.0F);
   delete data;
@@ -233,7 +235,10 @@ DynamicMesh* getWarrior(Renderer* renderer) {
 
 DynamicMesh* getCube(Renderer* renderer) {
   ObjLoader loader;
-  auto* data = loader.load(FileUtils::fromCwd("untitled.obj"), 2, 3.0F, false);
+  ObjLoaderOptions options;
+  options.animation.count = 2;
+  options.scale = 3.0F;
+  auto* data = loader.load(FileUtils::fromCwd("untitled.obj"), options);
 
   auto* result = new DynamicMesh(*data);
   result->translation.translateZ(-30.0F);

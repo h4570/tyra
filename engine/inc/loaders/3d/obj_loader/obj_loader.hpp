@@ -18,20 +18,28 @@
 
 namespace Tyra {
 
-/** Class responsible for loading & parsing custom Tyra obj files */
+struct ObjLoaderAnimationOptions {
+  u16 count = 1;
+  u16 startingIndex = 1;
+};
+
+struct ObjLoaderOptions {
+  bool flipUVs = false;
+  float scale = 1.0F;
+  ObjLoaderAnimationOptions animation;
+};
+
+/** Class responsible for loading & parsing obj files */
 class ObjLoader : public Loader {
  public:
   ObjLoader();
   ~ObjLoader();
 
-  /** Load multiple obj files (dynamic) */
-  MeshBuilderData* load(const char* fullpath, const u16& count,
-                        const float& scale, const bool& invertT);
-
-  inline MeshBuilderData* load(const std::string& fullpath, const u16& count,
-                               const float& scale, const bool& invertT) {
-    return load(fullpath.c_str(), count, scale, invertT);
-  }
+  MeshBuilderData* load(const char* fullpath);
+  MeshBuilderData* load(const char* fullpath, const ObjLoaderOptions& options);
+  MeshBuilderData* load(const std::string& fullpath);
+  MeshBuilderData* load(const std::string& fullpath,
+                        const ObjLoaderOptions& options);
 
  private:
   void addOutputMaterialsAndFrames(

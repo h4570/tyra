@@ -28,8 +28,21 @@ ObjLoader::ObjLoader() {}
 
 ObjLoader::~ObjLoader() {}
 
-MeshBuilderData* ObjLoader::load(const char* fullpath, const u16& count,
-                                 const float& scale, const bool& invertY) {
+MeshBuilderData* ObjLoader::load(const char* fullpath) {
+  return load(fullpath, ObjLoaderOptions());
+}
+
+MeshBuilderData* ObjLoader::load(const std::string& fullpath) {
+  return load(fullpath.c_str(), ObjLoaderOptions());
+}
+
+MeshBuilderData* ObjLoader::load(const std::string& fullpath,
+                                 const ObjLoaderOptions& options) {
+  return load(fullpath.c_str(), options);
+}
+
+MeshBuilderData* ObjLoader::load(const char* fullpath,
+                                 const ObjLoaderOptions& options) {
   std::string path = fullpath;
   std::string basePath = getPathFromFilename(path);
 
@@ -41,13 +54,20 @@ MeshBuilderData* ObjLoader::load(const char* fullpath, const u16& count,
   auto* result = new MeshBuilderData();
 
   tinyobj::ObjReaderConfig readerConfig;
-  readerConfig.triangulate = count == 1;
-  readerConfig.triangulation_method = count == 1 ? "earcut" : "simple";
+  readerConfig.triangulate = options.animation.count == 1;
+  readerConfig.triangulation_method =
+      options.animation.count == 1 ? "earcut" : "simple";
   readerConfig.mtl_search_path = basePath;
 
-  for (u16 i = 1; i <= count; i++) {
-    std::string filePath = rawFilename + std::to_string(i) + "." + extension;
-    if (count == 1) filePath = path;
+  for (auto i = 1; i <= options.animation.count; i++) {
+    int indexStringLength = std::to_string(i).length();
+    auto numbersWithLeadingZeros =
+        std::string(6 - std::min(6, indexStringLength), '0') +
+        std::to_string(i);
+
+    std::string filePath =
+        rawFilename + "_" + numbersWithLeadingZeros + "." + extension;
+    if (options.animation.count == 1) filePath = path;
 
     tinyobj::ObjReader reader;
 
@@ -72,13 +92,14 @@ MeshBuilderData* ObjLoader::load(const char* fullpath, const u16& count,
         "mtlib in obj file");
 
     if (i == 1) {
-      addOutputMaterialsAndFrames(result, attrib, shapes, materials, count);
+      addOutputMaterialsAndFrames(result, attrib, shapes, materials,
+                                  options.animation.count);
     }
 
     scan(result, attrib, shapes, materials, i - 1);
 
-    importFrame(result, attrib, shapes, materials, i - 1, scale, invertY,
-                count);
+    importFrame(result, attrib, shapes, materials, i - 1, options.scale,
+                options.flipUVs, options.animation.count);
   }
 
   return result;
@@ -102,9 +123,9 @@ void ObjLoader::addOutputMaterialsAndFrames(
 
     material->name = materials[i].name;
 
-    material->ambient.set(materials[i].ambient[0] * 255.0F,
-                          materials[i].ambient[1] * 255.0F,
-                          materials[i].ambient[2] * 255.0F, 128.0F);
+    material->ambient.set(materials[i].ambient[0] * 128.0F,
+                          materials[i].ambient[1] * 128.0F,
+                          materials[i].ambient[2] * 128.0F, 128.0F);
 
     for (size_t j = 0; j < framesCount; j++) {
       auto* frame = new MeshBuilderMaterialFrameData();
