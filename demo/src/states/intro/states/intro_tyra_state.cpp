@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -63,19 +63,19 @@ void IntroTyraState::onStart() {
 
   tyraTexture = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("intro/tyra.png"));
-  tyraTexture->addLink(tyraSprite->getId());
+  tyraTexture->addLink(tyraSprite->id);
 
   bgTexture = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("intro/tyra_bg.png"));
-  bgTexture->addLink(bgSprite->getId());
+  bgTexture->addLink(bgSprite->id);
 
   bg2Texture = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("intro/tyra_bg2.png"));
-  bg2Texture->addLink(bg2Sprite->getId());
+  bg2Texture->addLink(bg2Sprite->id);
 
   fillerTexture = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("intro/filler.png"));
-  fillerTexture->addLink(fillerSprite->getId());
+  fillerTexture->addLink(fillerSprite->id);
 
   initialized = true;
 }
@@ -83,10 +83,10 @@ void IntroTyraState::onStart() {
 IntroStateType IntroTyraState::onFinish() {
   if (!initialized) return STATE_PRESS_KEY;
 
-  engine->renderer.core.texture.repository.free(tyraTexture->getId());
-  engine->renderer.core.texture.repository.free(bgTexture->getId());
-  engine->renderer.core.texture.repository.free(bg2Texture->getId());
-  engine->renderer.core.texture.repository.free(fillerTexture->getId());
+  engine->renderer.core.texture.repository.free(tyraTexture->id);
+  engine->renderer.core.texture.repository.free(bgTexture->id);
+  engine->renderer.core.texture.repository.free(bg2Texture->id);
+  engine->renderer.core.texture.repository.free(fillerTexture->id);
 
   delete tyraSprite;
   delete bgSprite;

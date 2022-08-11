@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -18,7 +18,12 @@ Renderer2D::~Renderer2D() {}
 void Renderer2D::init(RendererCore* t_rendererCore) { core = t_rendererCore; }
 
 void Renderer2D::render(Sprite* sprite) {
-  auto* texture = core->texture.repository.getBySpriteOrMesh(sprite->getId());
+  auto* texture = core->texture.repository.getBySpriteOrMesh(sprite->id);
+
+  TYRA_ASSERT(
+      texture, "Texture for sprite with id: ", sprite->id,
+      "Was not found in texture repository! Did you forget to add texture?");
+
   auto texBuffers = core->texture.useTexture(texture);
   core->texture.updateClutBuffer(texBuffers.clut);
   core->renderer2D.render(sprite, texBuffers, texture);

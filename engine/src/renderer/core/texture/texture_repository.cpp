@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -31,13 +31,13 @@ Texture* TextureRepository::getBySpriteOrMesh(const u32& t_id) const {
 
 Texture* TextureRepository::getByTextureId(const u32& t_id) const {
   for (u32 i = 0; i < textures.size(); i++)
-    if (t_id == textures[i]->getId()) return textures[i];
+    if (t_id == textures[i]->id) return textures[i];
   return nullptr;
 }
 
 const s32 TextureRepository::getIndexOf(const u32& t_texId) const {
   for (u32 i = 0; i < textures.size(); i++)
-    if (textures[i]->getId() == t_texId) return i;
+    if (textures[i]->id == t_texId) return i;
   return -1;
 }
 

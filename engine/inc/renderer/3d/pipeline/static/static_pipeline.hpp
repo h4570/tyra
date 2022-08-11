@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -54,7 +54,7 @@ class StaticPipeline : public Renderer3DPipeline {
   void addVertices(MeshMaterialFrame* materialFrame, StaPipBag* bag) const;
 
   StaPipInfoBag* getInfoBag(StaticMesh* mesh, const StaPipOptions* options,
-                              M4x4* model) const;
+                            M4x4* model) const;
 
   StaPipColorBag* getColorBag(MeshMaterial* material,
                               MeshMaterialFrame* materialFrame) const;

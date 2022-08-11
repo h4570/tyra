@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Wellington Carvalho <wellcoj@gmail.com>
 */
 
@@ -13,6 +13,7 @@
 #include <tamtypes.h>
 #include <stddef.h>
 #include "time/timer.hpp"
+#include "./version.hpp"
 
 namespace Tyra {
 
@@ -20,6 +21,8 @@ class Info {
  public:
   Info();
   ~Info();
+
+  Version version;
 
   /** Called by engine */
   void update();

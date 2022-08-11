@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -57,7 +57,7 @@ void IntroPressKeyState::onStart() {
 
       mapTextures[i][j] = engine->renderer.core.texture.repository.add(
           FileUtils::fromCwd(path));
-      mapTextures[i][j]->addLink(mapSprites[i][j]->getId());
+      mapTextures[i][j]->addLink(mapSprites[i][j]->id);
     }
   }
 
@@ -67,7 +67,7 @@ void IntroPressKeyState::onStart() {
 
   fillerTexture = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("intro/filler.png"));
-  fillerTexture->addLink(fillerSprite->getId());
+  fillerTexture->addLink(fillerSprite->id);
 
   pressKeySprite = new Sprite;
   pressKeySprite->size.set(256.0F, 64.0F);
@@ -76,7 +76,7 @@ void IntroPressKeyState::onStart() {
 
   pressKeyTexture = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("intro/press-key.png"));
-  pressKeyTexture->addLink(pressKeySprite->getId());
+  pressKeyTexture->addLink(pressKeySprite->id);
 
   logoSprite = new Sprite;
   logoSprite->size.set(256.0F, 128.0F);
@@ -84,7 +84,7 @@ void IntroPressKeyState::onStart() {
 
   logoTexture = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("intro/lastalive.png"));
-  logoTexture->addLink(logoSprite->getId());
+  logoTexture->addLink(logoSprite->id);
 
   initialized = true;
 }
@@ -94,17 +94,17 @@ IntroStateType IntroPressKeyState::onFinish() {
 
   for (u8 i = 0; i < mapRows; i++)
     for (u8 j = 0; j < mapCols; j++) {
-      engine->renderer.core.texture.repository.free(mapTextures[i][j]->getId());
+      engine->renderer.core.texture.repository.free(mapTextures[i][j]->id);
       delete mapSprites[i][j];
     }
 
-  engine->renderer.core.texture.repository.free(fillerTexture->getId());
+  engine->renderer.core.texture.repository.free(fillerTexture->id);
   delete fillerSprite;
 
-  engine->renderer.core.texture.repository.free(logoTexture->getId());
+  engine->renderer.core.texture.repository.free(logoTexture->id);
   delete logoSprite;
 
-  engine->renderer.core.texture.repository.free(pressKeyTexture->getId());
+  engine->renderer.core.texture.repository.free(pressKeyTexture->id);
   delete pressKeySprite;
 
   initialized = false;

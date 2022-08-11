@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -27,11 +27,11 @@ RendererCoreTextureBuffers RendererCoreTextureSender::allocate(
   texbuffer_t* core = allocateTextureCore(t_texture);
   texbuffer_t* clut = nullptr;
 
-  auto texClut = t_texture->getClutData();
+  auto texClut = t_texture->clut;
   if (texClut != nullptr && texClut->width > 0) {
     clut = allocateTextureClut(t_texture);
   }
-  return {t_texture->getId(), core, clut};
+  return {t_texture->id, core, clut};
 }
 
 float RendererCoreTextureSender::getSizeInMB(texbuffer_t* texBuffer) {
@@ -56,13 +56,13 @@ void RendererCoreTextureSender::deallocate(
 texbuffer_t* RendererCoreTextureSender::allocateTextureCore(
     Texture* t_texture) {
   auto* result = new texbuffer_t;
-  const auto& core = t_texture->getCoreData();
+  const auto* core = t_texture->core;
 
   result->width = t_texture->getWidth();
-  result->psm = core.psm;
-  result->info.components = core.components;
+  result->psm = core->psm;
+  result->info.components = core->components;
 
-  auto address = gs->vram.allocate(core);
+  auto address = gs->vram.allocate(*core);
   TYRA_ASSERT(address > 0, "Texture buffer allocation error, no memory!");
   result->address = address;
 
@@ -75,7 +75,7 @@ texbuffer_t* RendererCoreTextureSender::allocateTextureCore(
 texbuffer_t* RendererCoreTextureSender::allocateTextureClut(
     Texture* t_texture) {
   auto* result = new texbuffer_t;
-  const auto* clut = t_texture->getClutData();
+  const auto* clut = t_texture->clut;
 
   result->width = clut->width;
   result->psm = clut->psm;

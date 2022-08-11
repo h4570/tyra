@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -38,7 +38,7 @@ void RendererCoreTexture::updateClutBuffer(texbuffer_t* clutBuffer) {
 RendererCoreTextureBuffers RendererCoreTexture::useTexture(Texture* t_tex) {
   TYRA_ASSERT(t_tex != nullptr, "Provided nullptr texture!");
 
-  auto allocated = getAllocatedBuffersByTextureId(t_tex->getId());
+  auto allocated = getAllocatedBuffersByTextureId(t_tex->id);
   if (allocated.id != 0) return allocated;
 
   if (gs->vram.getSizeInMB(*t_tex) >= gs->vram.getFreeSpaceInMB()) {

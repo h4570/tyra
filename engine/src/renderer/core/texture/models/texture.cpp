@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -50,9 +50,33 @@ Texture::Texture(TextureBuilderData* t_data) {
 }
 
 Texture::~Texture() {
-  if (getTextureLinksCount() > 0) links.clear();
+  if (links.size() > 0) links.clear();
   if (core) delete core;
   if (clut) delete clut;
+}
+
+const s32 Texture::getIndexOfLink(const u32& t_id) const {
+  for (u32 i = 0; i < links.size(); i++)
+    if (links[i].id == t_id) return i;
+  return -1;
+}
+
+const u8 Texture::isLinkedWith(const u32& t_id) const {
+  s32 index = getIndexOfLink(t_id);
+  if (index != -1)
+    return true;
+  else
+    return false;
+}
+
+void Texture::removeLinkByIndex(const u32& t_index) {
+  links.erase(links.begin() + t_index);
+}
+
+void Texture::removeLinkById(const u32& t_id) {
+  s32 index = getIndexOfLink(t_id);
+  TYRA_ASSERT(index != -1, "Cant remove link, because it was not found!");
+  removeLinkByIndex(index);
 }
 
 float Texture::getSizeInMB() const {

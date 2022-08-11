@@ -1,9 +1,7 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [General] odpalic de_dust2, doszlifowac guard band
 - [Demo] Create cool demo which will show all features of Tyra
 - [General] USB test
-- [General] Tyra version, render it on start 
 - [General] CI in Github via docker image
 
 

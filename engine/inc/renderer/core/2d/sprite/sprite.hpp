@@ -1,10 +1,10 @@
 /*
-# ______       ____   ___
+# _____        ____   ___
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
 # Copyright 2022, tyra - https://github.com/h4570/tyra
-# Licenced under Apache License 2.0
+# Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -23,6 +23,7 @@ class Sprite {
   Sprite();
   ~Sprite();
 
+  u32 id;
   Vec2 position, size;
   float scale;
   Color color;
@@ -30,9 +31,6 @@ class Sprite {
   // ----
   // Getters
   // ----
-
-  /** Auto generated unique Id. */
-  inline const u32& getId() const { return id; };
 
   /** Get sprite drawing mode. */
   inline const SpriteMode& getMode() const { return mode; };
@@ -61,7 +59,6 @@ class Sprite {
   inline const u8& isFlippedHorizontally() const { return _flipH; };
 
  private:
-  u32 id;
   SpriteMode mode;
   u8 _isSizeSet, _flipH, _flipV;
   void setDefaultColor();
