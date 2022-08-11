@@ -34,10 +34,10 @@ class Pad {
   void init();
   void update();
 
-  inline const PadButtons& getClicked() { return clicked; }
-  inline const PadButtons& getPressed() { return pressed; }
-  inline const PadJoy& getLeftJoyPad() { return leftJoyPad; }
-  inline const PadJoy& getRightJoyPad() { return rightJoyPad; }
+  inline const PadButtons& getClicked() const { return clicked; }
+  inline const PadButtons& getPressed() const { return pressed; }
+  inline const PadJoy& getLeftJoyPad() const { return leftJoyPad; }
+  inline const PadJoy& getRightJoyPad() const { return rightJoyPad; }
 
  private:
   char padBuf[256] alignas(sizeof(char) * 256);

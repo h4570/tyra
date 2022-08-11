@@ -37,14 +37,14 @@ class Audio {
   void init();
 
   /**
-   * Load 24bit 22050Hz Stereo WAV.
+   * Load 24bit 22kHz Stereo WAV.
    * Can be used multiple times for song switching.
    * @param t_path Example: "host:song.wav" or "host:folder/song.wav"
    */
   void loadSong(const char* t_path);
 
   /**
-   * Load 24bit 22050Hz Stereo WAV.
+   * Load 24bit 22kHz Stereo WAV.
    * Can be used multiple times for song switching.
    * @param t_path Example: "host:song.wav" or "host:folder/song.wav"
    */
@@ -89,15 +89,17 @@ class Audio {
   void removeSongListener(const u32& t_id);
 
   /**
-   * Load ADPCM sample. ADPCM sample is an output from
-   * "adpenc" tool, shipped with PS2SDK.
+   * Load ADPCM sample.
+   * ADPCM sample is an output from "Convert WAV to ADPCM" task (adpenc tool).
+   * Adpenc expects 22kHz 16bit file.
    * @param t_path Example: "host:hit.adpcm" or "host:folder/jump.adpcm"
    */
   audsrv_adpcm_t* loadADPCM(const char* t_path);
 
   /**
-   * Load ADPCM sample. ADPCM sample is an output from
-   * "adpenc" tool, shipped with PS2SDK.
+   * Load ADPCM sample.
+   * ADPCM sample is an output from "Convert WAV to ADPCM" task (adpenc tool).
+   * Adpenc expects 22kHz 16bit file.
    * @param t_path Example: "host:hit.adpcm" or "host:folder/jump.adpcm"
    */
   inline audsrv_adpcm_t* loadADPCM(const std::string& t_path) {

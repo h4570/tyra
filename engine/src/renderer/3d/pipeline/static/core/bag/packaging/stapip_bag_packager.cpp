@@ -16,6 +16,7 @@
 namespace Tyra {
 
 StaPipBagPackager::StaPipBagPackager() {}
+
 StaPipBagPackager::~StaPipBagPackager() {}
 
 void StaPipBagPackager::init(Renderer3DFrustumPlanes* t_frustumPlanes) {

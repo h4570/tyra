@@ -221,7 +221,7 @@ audsrv_adpcm_t* Audio::loadADPCM(const char* t_path) {
   u8 data[adpcmFileSize];
   rewind(file);
   fread(data, sizeof(u8), adpcmFileSize, file);
-  audsrv_adpcm_t* result = new audsrv_adpcm_t();
+  auto* result = new audsrv_adpcm_t();
   result->size = 0;
   result->buffer = 0;
   result->loop = 0;

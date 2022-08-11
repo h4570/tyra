@@ -177,7 +177,7 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
 
   if (checkYesFrustumInClipYes || checkYesFrustumInClipNo || checkNoClipNo) {
     u16 packagesCount = 0;
-    auto biggerPkgs = packager.create(&packagesCount, bag, maxVertCount);
+    auto* biggerPkgs = packager.create(&packagesCount, bag, maxVertCount);
     Verbose("Material - in frustum. Pkgs: ", packagesCount,
             " size: ", static_cast<int>(biggerPkgs[0].size));
     for (u16 i = 0; i < packagesCount; i++) {
