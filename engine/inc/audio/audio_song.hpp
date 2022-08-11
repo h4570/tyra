@@ -30,7 +30,7 @@ class AudioSong {
   bool inLoop;
 
   /**
-   * Load 24bit 22kHz Stereo WAV.
+   * Load 16bit 22kHz Stereo WAV.
    * Can be used multiple times for song switching.
    * @param t_path Example: "host:song.wav" or "host:folder/song.wav"
    */

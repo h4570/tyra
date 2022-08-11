@@ -10,6 +10,9 @@
 
 #include "states/game/game_state.hpp"
 #include "debug/debug.hpp"
+#include "file/file_utils.hpp"
+
+using Tyra::FileUtils;
 
 namespace Demo {
 
@@ -27,6 +30,10 @@ void GameState::onStart() {
   TYRA_LOG("Game. RAM: ", engine->info.getAvailableRAM(), "MB");
 
   engine->audio.song.stop();
+  engine->audio.song.load(FileUtils::fromCwd("game/ambiance.wav"));
+  engine->audio.song.inLoop = true;
+  engine->audio.song.setVolume(100);
+  engine->audio.song.play();
 
   auto* repository = &engine->renderer.core.texture.repository;
   player = new Player(engine);

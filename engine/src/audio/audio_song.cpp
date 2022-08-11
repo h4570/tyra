@@ -51,7 +51,6 @@ void AudioSong::load(const char* t_path) {
   TYRA_ASSERT(wav != NULL, "Failed to open wav file!");
   rewindSongToStart();
   songLoaded = true;
-  TYRA_LOG("Song loaded!");
 }
 
 void AudioSong::load(const std::string& t_path) { load(t_path.c_str()); }
@@ -138,14 +137,11 @@ void AudioSong::setVolume(const u8& t_vol) {
 void AudioSong::work() {
   if (!songPlaying || !songLoaded) return;
   if (songFinished) {
-    TYRA_LOG("AudioSong: Song finished. ");
     if (inLoop) {
-      TYRA_LOG("Running again.");
       for (u32 i = 0; i < getListenersCount(); i++)
         songListeners[i]->listener->onAudioFinish();
       rewindSongToStart();
     } else {
-      TYRA_LOG("Stopping song.");
       stop();
       return;
     }

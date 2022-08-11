@@ -57,7 +57,7 @@ Weapon::Weapon(Engine* engine) {
   adpcmChannelsCount = 8;
   adpcmCurrentChannel = 0;
 
-  const u8 shootVolume = 40;
+  const u8 shootVolume = 25;
   for (u8 i = 0; i < adpcmChannelsCount; i++) {
     audio->adpcm.setVolume(shootVolume, i);
   }
