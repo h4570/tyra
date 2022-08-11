@@ -18,29 +18,29 @@ using Tyra::ObjLoaderOptions;
 
 namespace Demo {
 Terrain::Terrain(TextureRepository* repo)
-    : heightmap(-5.0F,                                // Min height
-                450.0F,                               // Max height
-                Vec4(-784.6F, 0.0F, -1648.0F, 1.0F),  // Left up
-                Vec4(1144.0F, 0.0F, 1772.3F, 1.0F)    // Right down
+    : heightmap(20.0F,                                // Min height
+                320.0F,                               // Max height
+                Vec4(-750.0F, 0.0F, -1400.0F, 1.0F),  // Left up
+                Vec4(920.0F, 0.0F, 1520.0F, 1.0F)     // Right down
       ) {
-  // ObjLoader loader;
+  ObjLoader loader;
 
-  // ObjLoaderOptions objOptions;
-  // objOptions.flipUVs = true;
-  // objOptions.scale = 100.0F;
+  ObjLoaderOptions objOptions;
+  objOptions.flipUVs = true;
+  objOptions.scale = 100.0F;
 
-  // auto* data = loader.load(
-  //     FileUtils::fromCwd("game/models/terrain/terrain.obj"), objOptions);
-  // data->normalsEnabled = false;
-  // mesh = new StaticMesh(*data);
+  auto* data = loader.load(
+      FileUtils::fromCwd("game/models/terrain/terrain.obj"), objOptions);
+  data->normalsEnabled = false;
+  mesh = new StaticMesh(*data);
 
-  // delete data;
+  delete data;
 
-  // repo->addByMesh(mesh, FileUtils::fromCwd("game/models/terrain/"), "png");
+  repo->addByMesh(mesh, FileUtils::fromCwd("game/models/terrain/"), "png");
 
-  // allocateOptions();
+  allocateOptions();
 
-  // pair = new RendererStaticPair{mesh, options};
+  pair = new RendererStaticPair{mesh, options};
 }
 
 float Terrain::getHeightOffset(const Vec4& playerPosition) {

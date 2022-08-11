@@ -37,7 +37,7 @@ void Player::handlePlayerPosition(const float& terrainHeight) {
   normalizedCamera *= speed;
 
   Vec4 nextPosition(position);
-  nextPosition.y = terrainHeight - 100.0F;
+  nextPosition.y = terrainHeight - 60.0F;
 
   if (leftJoy.v <= 100) {
     nextPosition.x += normalizedCamera.x;

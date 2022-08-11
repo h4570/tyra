@@ -19,45 +19,55 @@ using Tyra::ObjLoaderOptions;
 namespace Demo {
 
 Enemy::Enemy(TextureRepository* repo) {
-  // ObjLoader loader;
+  ObjLoader loader;
 
-  // ObjLoaderOptions objOptions;
-  // objOptions.animation.count = 4;
-  // objOptions.flipUVs = true;
-  // objOptions.scale = 35.0F;
+  ObjLoaderOptions objOptions;
+  objOptions.animation.count = 4;
+  objOptions.flipUVs = true;
+  objOptions.scale = 60.0F;
 
-  // auto* bodyData = loader.load(
-  //     FileUtils::fromCwd("game/models/soldier/soldier.obj"), objOptions);
-  // bodyData->normalsEnabled = false;
-  // bodyMesh = new DynamicMesh(*bodyData);
+  auto* data = loader.load(
+      FileUtils::fromCwd("game/models/soldier/soldier.obj"), objOptions);
+  data->normalsEnabled = false;
+  mesh = new DynamicMesh(*data);
 
-  // delete bodyData;
+  delete data;
 
-  // bodyMesh->playAnimation(0, bodyMesh->frames.size() - 1);
-  // bodyMesh->setAnimSpeed(0.1F);
+  mesh->playAnimation(0, mesh->frames.size() - 1);
+  mesh->setAnimSpeed(0.1F);
 
-  // repo->addByMesh(bodyMesh, FileUtils::fromCwd("game/models/soldier/"),
-  // "png");
+  repo->addByMesh(mesh, FileUtils::fromCwd("game/models/soldier/"), "png");
 
-  // bodyMesh->translation.translateY(-5.0F);
+  mesh->translation.translateY(-5.0F);
 
-  // allocateOptions();
+  allocateOptions();
 
-  // pairs.push_back(new RendererDynamicPair{bodyMesh, options});
-  // // pairs.push_back(new RendererDynamicPair{gunMesh, options});
+  pair = new RendererDynamicPair{mesh, options};
+
+  direction = Vec4(1.0F, 0.0F, 1.0F, 0.0F);
 }
 
 Enemy::~Enemy() {
-  delete bodyMesh;
-  // delete gunMesh;
+  delete mesh;
   delete options;
-  for (auto* pair : pairs) {
-    delete pair;
-  }
+  delete pair;
 }
 
-void Enemy::update(const Vec4& playerPosition) {
-  // bodyMesh->animate();
+void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition) {
+  auto* pos = mesh->getPosition();
+  auto nextPos = *pos + direction;
+
+  if (heightmap.isOutside(nextPos)) {
+    direction.x = -direction.x;
+    direction.z = -direction.z;
+  }
+
+  nextPos = *pos + direction;
+  nextPos.y = heightmap.getHeightOffset(nextPos) - 150.0F;
+  mesh->translation.identity();
+  mesh->translation.translate(nextPos);
+
+  mesh->animate();
 }
 
 void Enemy::allocateOptions() { options = new DynPipOptions(); }

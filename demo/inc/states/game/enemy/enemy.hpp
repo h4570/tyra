@@ -13,6 +13,7 @@
 #include <renderer/3d/mesh/dynamic/dynamic_mesh.hpp>
 #include <renderer/3d/pipeline/dynamic/dynpip_options.hpp>
 #include "states/game/renderer/renderer_dynamic_pair.hpp"
+#include "states/game/terrain/heightmap.hpp"
 #include <renderer/renderer.hpp>
 
 using Tyra::DynamicMesh;
@@ -28,14 +29,14 @@ class Enemy {
   Enemy(TextureRepository* repo);
   ~Enemy();
 
-  DynamicMesh* bodyMesh;
-  DynamicMesh* gunMesh;
+  DynamicMesh* mesh;
   DynPipOptions* options;
-  std::vector<RendererDynamicPair*> pairs;
+  RendererDynamicPair* pair;
 
-  void update(const Vec4& playerPosition);
+  void update(const Heightmap& heightmap, const Vec4& playerPosition);
 
  private:
+  Vec4 direction;
   void allocateOptions();
 };
 

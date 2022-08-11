@@ -34,6 +34,11 @@ Heightmap::Heightmap(const float& t_minHeight, const float& t_maxHeight,
   delete data;
 }
 
+bool Heightmap::isOutside(const Vec4& position) const {
+  return position.x <= leftUp.x || position.x >= rightDown.x ||
+         position.z <= leftUp.z || position.z >= rightDown.z;
+}
+
 Heightmap::~Heightmap() {
   if (map) {
     for (int i = 0; i < mapHeight; i++) {
@@ -43,7 +48,7 @@ Heightmap::~Heightmap() {
   }
 }
 
-const float& Heightmap::getHeightOffset(const Vec4& playerPosition) {
+const float& Heightmap::getHeightOffset(const Vec4& playerPosition) const {
   float widthPercentage = getWidthPercentage(playerPosition);
   float heightPercentage = getHeightPercentage(playerPosition);
 
@@ -56,11 +61,11 @@ const float& Heightmap::getHeightOffset(const Vec4& playerPosition) {
   return map[x][y];
 }
 
-float Heightmap::getWidthPercentage(const Vec4& playerPosition) {
+float Heightmap::getWidthPercentage(const Vec4& playerPosition) const {
   return (playerPosition.x - leftUp.x) / (rightDown.x - leftUp.x);
 }
 
-float Heightmap::getHeightPercentage(const Vec4& playerPosition) {
+float Heightmap::getHeightPercentage(const Vec4& playerPosition) const {
   return (playerPosition.z - leftUp.z) / (rightDown.z - leftUp.z);
 }
 
@@ -100,7 +105,7 @@ void Heightmap::allocateMap(const unsigned char* data, const int& width,
 }
 
 float Heightmap::getGameHeight(const u8& inputColor, const u8& minColor,
-                               const u8& maxColor) {
+                               const u8& maxColor) const {
   const float mapRange = maxColor - minColor;
   const float gameRange = maxHeight - minHeight;
 

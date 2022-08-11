@@ -1,10 +1,12 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [Demo] Game fadein
-- [Demo] Running soldier
-- [Demo] Heightmap for soldier
-- [Demo] Running animation for soldier
+- [Demo] Enemy running and rotating to player
+- [Demo] Crosshair
 - [Demo] 2D Health bar
+- [Demo] Change enemy to monster
+- [Demo] More monsters!
+- [Demo] Add ship and other reality stuff
+- [Demo] Game fadein
 - [General] USB test
 - [General] CI in Github via docker image
 
