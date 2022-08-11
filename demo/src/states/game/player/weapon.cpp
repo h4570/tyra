@@ -18,13 +18,16 @@ using Tyra::ObjLoaderOptions;
 
 namespace Demo {
 
-Weapon::Weapon(TextureRepository* repo) {
+Weapon::Weapon(Engine* engine) {
   ObjLoader loader;
 
   ObjLoaderOptions objOptions;
   objOptions.flipUVs = true;
   objOptions.scale = .5F;
 
+  pad = &engine->pad;
+  audio = &engine->audio;
+  auto* repo = &engine->renderer.core.texture.repository;
   auto* data =
       loader.load(FileUtils::fromCwd("game/models/ak47/ak47.obj"), objOptions);
   data->normalsEnabled = false;
@@ -42,10 +45,75 @@ Weapon::Weapon(TextureRepository* repo) {
 
   repo->addByMesh(mesh, FileUtils::fromCwd("game/models/ak47/"), "png");
 
+  initialPosition = *mesh->getPosition();
+
   allocateOptions();
+
+  shootAdpcm =
+      audio->adpcm.load(FileUtils::fromCwd("game/models/ak47/ak47.adpcm"));
+
+  isShootAnimation1 = isShootAnimation2 = false;
+
+  adpcmChannelsCount = 8;
+  adpcmCurrentChannel = 0;
+
+  const u8 shootVolume = 40;
+  for (u8 i = 0; i < adpcmChannelsCount; i++) {
+    audio->adpcm.setVolume(shootVolume, i);
+  }
 }
 
-void Weapon::update() {}
+Weapon::~Weapon() {
+  delete mesh;
+  delete options;
+  delete shootAdpcm;
+}
+
+u8 Weapon::getShootChannel() {
+  auto result = adpcmCurrentChannel++;
+
+  if (adpcmCurrentChannel >= adpcmChannelsCount) {
+    adpcmCurrentChannel = 0;
+  }
+  return result;
+}
+
+void Weapon::update() {
+  if (!isShootAnimation1 && !isShootAnimation2 && pad->getPressed().Cross) {
+    shootTimer.prime();
+    audio->adpcm.tryPlay(shootAdpcm, getShootChannel());
+    isShootAnimation1 = true;
+  }
+
+  auto* position = mesh->getPosition();
+
+  const float recoil = 0.5F;
+  const float speed = 500;
+
+  if (isShootAnimation1) {
+    position->z += recoil;
+    position->y -= recoil / 4;
+    if (shootTimer.getTimeDelta() > speed) {
+      isShootAnimation1 = false;
+      shootTimer.prime();
+      isShootAnimation2 = true;
+    }
+  }
+
+  if (isShootAnimation2) {
+    position->z -= recoil / 2;
+    position->y += recoil / 8;
+    if (shootTimer.getTimeDelta() > speed * 2) {
+      isShootAnimation2 = false;
+      *position = initialPosition;
+      if (pad->getPressed().Cross) {
+        shootTimer.prime();
+        audio->adpcm.tryPlay(shootAdpcm, getShootChannel());
+        isShootAnimation1 = true;
+      }
+    }
+  }
+}
 
 // float tX = 0.0F;
 // float tY = -3.0F;
@@ -99,11 +167,6 @@ void Weapon::update() {}
 
 //   TYRA_LOG("tX: ", tX, " tY: ", tY, " tZ: ", tZ, " rY: ", rY, " rZ: ", rZ);
 // }
-
-Weapon::~Weapon() {
-  delete mesh;
-  delete options;
-}
 
 void Weapon::allocateOptions() {
   options = new StaPipOptions();

@@ -19,31 +19,32 @@ using Tyra::ObjLoaderOptions;
 namespace Demo {
 
 Enemy::Enemy(TextureRepository* repo) {
-  ObjLoader loader;
+  // ObjLoader loader;
 
-  ObjLoaderOptions objOptions;
-  objOptions.animation.count = 4;
-  objOptions.flipUVs = true;
-  objOptions.scale = 25.0F;
+  // ObjLoaderOptions objOptions;
+  // objOptions.animation.count = 4;
+  // objOptions.flipUVs = true;
+  // objOptions.scale = 35.0F;
 
-  auto* bodyData = loader.load(
-      FileUtils::fromCwd("game/models/soldier/soldier.obj"), objOptions);
-  bodyData->normalsEnabled = false;
-  bodyMesh = new DynamicMesh(*bodyData);
+  // auto* bodyData = loader.load(
+  //     FileUtils::fromCwd("game/models/soldier/soldier.obj"), objOptions);
+  // bodyData->normalsEnabled = false;
+  // bodyMesh = new DynamicMesh(*bodyData);
 
-  delete bodyData;
+  // delete bodyData;
 
-  bodyMesh->playAnimation(0, bodyMesh->frames.size() - 1);
-  bodyMesh->setAnimSpeed(0.1F);
+  // bodyMesh->playAnimation(0, bodyMesh->frames.size() - 1);
+  // bodyMesh->setAnimSpeed(0.1F);
 
-  repo->addByMesh(bodyMesh, FileUtils::fromCwd("game/models/soldier/"), "png");
+  // repo->addByMesh(bodyMesh, FileUtils::fromCwd("game/models/soldier/"),
+  // "png");
 
-  bodyMesh->translation.translateY(-5.0F);
+  // bodyMesh->translation.translateY(-5.0F);
 
-  allocateOptions();
+  // allocateOptions();
 
-  pairs.push_back(new RendererDynamicPair{bodyMesh, options});
-  // pairs.push_back(new RendererDynamicPair{gunMesh, options});
+  // pairs.push_back(new RendererDynamicPair{bodyMesh, options});
+  // // pairs.push_back(new RendererDynamicPair{gunMesh, options});
 }
 
 Enemy::~Enemy() {
@@ -55,7 +56,9 @@ Enemy::~Enemy() {
   }
 }
 
-void Enemy::update(const Vec4& playerPosition) { bodyMesh->animate(); }
+void Enemy::update(const Vec4& playerPosition) {
+  // bodyMesh->animate();
+}
 
 void Enemy::allocateOptions() { options = new DynPipOptions(); }
 

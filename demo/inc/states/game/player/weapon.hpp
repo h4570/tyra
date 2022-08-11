@@ -13,28 +13,46 @@
 #include <renderer/3d/mesh/static/static_mesh.hpp>
 #include <renderer/3d/pipeline/static/stapip_options.hpp>
 #include <renderer/renderer.hpp>
+#include <engine.hpp>
+#include <pad/pad.hpp>
+#include <audio/audio.hpp>
+#include <time/timer.hpp>
 
+using Tyra::Audio;
+using Tyra::Engine;
+using Tyra::Pad;
 using Tyra::Renderer;
 using Tyra::StaPipOptions;
 using Tyra::StaticMesh;
 using Tyra::TextureRepository;
+using Tyra::Timer;
 using Tyra::Vec4;
 
 namespace Demo {
 
 class Weapon {
  public:
-  Weapon(TextureRepository* repo);
+  Weapon(Engine* engine);
   ~Weapon();
 
   StaticMesh* mesh;
   StaPipOptions* options;
 
   void update();
-  // void debugPosition(Pad* pad);
 
  private:
+  bool isShootAnimation1, isShootAnimation2;
+  Pad* pad;
+  Audio* audio;
+  Timer shootTimer;
+  Vec4 initialPosition;
+  u8 adpcmCurrentChannel;
+  u8 adpcmChannelsCount;
+
+  audsrv_adpcm_t* shootAdpcm;
+
   void allocateOptions();
+  u8 getShootChannel();
 };
 
 }  // namespace Demo

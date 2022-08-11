@@ -39,12 +39,12 @@ Sprite* get2DPicture(Renderer* renderer);
 
 void Tutorial01 ::init() {
   // Song
-  engine->audio.loadSong(FileUtils::fromCwd("mafikizolo-loot.wav"));
+  engine->audio.load(FileUtils::fromCwd("mafikizolo-loot.wav"));
   engine->audio.setSongLoop(true);
-  engine->audio.setSongVolume(30);
+  engine->audio.setVolume(30);
 
-  adpcmSample = engine->audio.loadADPCM(FileUtils::fromCwd("walk.adpcm"));
-  engine->audio.setADPCMVolume(80, 1);
+  adpcmSample = engine->audio.load(FileUtils::fromCwd("walk.adpcm"));
+  engine->audio.setVolume(80, 1);
 
   engine->renderer.setClearScreenColor(Color(64.0F, 64.0F, 64.0F));
 
@@ -134,7 +134,7 @@ void Tutorial01 ::init() {
     blocks.push_back(block);
   }
 
-  // engine->audio.playSong();
+  // engine->audio.play();
   // engine->renderer.setFrameLimit(false);
 }
 

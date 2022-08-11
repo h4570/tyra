@@ -11,32 +11,18 @@
 
 #pragma once
 
-#include "./audio_adpcm.hpp"
-#include "./audio_song.hpp"
-
 namespace Tyra {
 
-/** Class responsible for audio. */
-class Audio {
- public:
-  Audio();
-  ~Audio();
+enum AdpcmResult {
+  ADPCM_OK,
 
-  void init();
+  /** When provided channel by user is currently in use */
+  ADPCM_CHANNEL_USED,
 
-  AudioSong song;
-  AudioAdpcm adpcm;
+  /** When user did not provided channel and all are in use */
+  ADPCM_NO_FREE_CHANNELS,
 
-  void work();
-
- private:
-  ee_thread_t thread;
-  int threadId;
-  static const u16 threadStackSize;
-  u8* threadStack;
-
-  void initAUDSRV();
-  void initThread();
+  ADPCM_ERROR
 };
 
 }  // namespace Tyra

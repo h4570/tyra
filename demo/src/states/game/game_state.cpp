@@ -26,7 +26,7 @@ GameState::~GameState() {}
 void GameState::onStart() {
   TYRA_LOG("Game. RAM: ", engine->info.getAvailableRAM(), "MB");
 
-  engine->audio.stopSong();
+  engine->audio.song.stop();
 
   auto* repository = &engine->renderer.core.texture.repository;
   player = new Player(engine);
@@ -62,7 +62,8 @@ void GameState::update() {
   engine->renderer.beginFrame(cameraInfo);
 
   dbgObj->setPosition(*cameraInfo.looksAt);
-  float terrainHeight = terrain->getHeightOffset(player->getPosition());
+  float terrainHeight = 0.0F;
+  // float terrainHeight = terrain->getHeightOffset(player->getPosition());
   player->update(terrainHeight);
   enemy->update(player->getPosition());
 
@@ -70,8 +71,8 @@ void GameState::update() {
   {
     renderer.add(skybox->pair);
     renderer.add(player->pair);
-    renderer.add(enemy->pairs);
-    renderer.add(terrain->pair);
+    // renderer.add(enemy->pairs);
+    // renderer.add(terrain->pair);
     renderer.add(dbgObj->pair);
   }
   renderer.render();

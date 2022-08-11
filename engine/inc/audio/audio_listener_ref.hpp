@@ -11,32 +11,14 @@
 
 #pragma once
 
-#include "./audio_adpcm.hpp"
-#include "./audio_song.hpp"
+#include "./audio_listener.hpp"
+#include <tamtypes.h>
 
 namespace Tyra {
 
-/** Class responsible for audio. */
-class Audio {
- public:
-  Audio();
-  ~Audio();
-
-  void init();
-
-  AudioSong song;
-  AudioAdpcm adpcm;
-
-  void work();
-
- private:
-  ee_thread_t thread;
-  int threadId;
-  static const u16 threadStackSize;
-  u8* threadStack;
-
-  void initAUDSRV();
-  void initThread();
+struct AudioListenerRef {
+  AudioListener* listener;
+  u32 id;
 };
 
 }  // namespace Tyra

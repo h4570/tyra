@@ -1,11 +1,7 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 - [Demo] Game fadein
-- [Demo] Larger map
-- [Demo] Height map
 - [Demo] Ambient sound
-- [Demo] Shoot sound
-- [Demo] Shoot animation
 - [Demo] Running soldier
 - [Demo] Heightmap for soldier
 - [Demo] Running animation for soldier

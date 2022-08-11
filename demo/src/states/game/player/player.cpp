@@ -13,14 +13,12 @@
 namespace Demo {
 
 Player::Player(Engine* engine)
-    : position(0.0F),
-      weapon(&engine->renderer.core.texture.repository),
-      camera(&engine->pad) {
+    : position(0.0F), weapon(engine), camera(&engine->pad) {
   pair = new RendererStaticPair{weapon.mesh, weapon.options};
   pad = &engine->pad;
   position = Vec4(3.0F, 50.0F, 0.0F);
   camera.lookAt = Vec4(0.0F, 0.0F, -30.0F);
-  speed = 2.0F;
+  speed = 3.5F;
 }
 
 Player::~Player() { delete pair; }
@@ -39,7 +37,7 @@ void Player::handlePlayerPosition(const float& terrainHeight) {
   normalizedCamera *= speed;
 
   Vec4 nextPosition(position);
-  nextPosition.y = terrainHeight;
+  nextPosition.y = terrainHeight - 100.0F;
 
   if (leftJoy.v <= 100) {
     nextPosition.x += normalizedCamera.x;

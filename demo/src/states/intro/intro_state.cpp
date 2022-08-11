@@ -32,10 +32,10 @@ IntroState::~IntroState() {}
 void IntroState::onStart() {
   TYRA_LOG("Intro. RAM: ", engine->info.getAvailableRAM(), "MB");
 
-  engine->audio.loadSong(FileUtils::fromCwd("intro/intro.wav"));
-  engine->audio.setSongLoop(false);
-  engine->audio.setSongVolume(80);
-  engine->audio.playSong();
+  engine->audio.song.load(FileUtils::fromCwd("intro/intro.wav"));
+  engine->audio.song.inLoop = false;
+  engine->audio.song.setVolume(80);
+  engine->audio.song.play();
 
   stateManager.add(new IntroPs2DevState(engine));
   stateManager.add(new IntroTyraState(engine));
