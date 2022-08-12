@@ -150,9 +150,9 @@ void ObjLoader::addOutputMaterialsAndFrames(
 
     material->name = materials[i].name;
 
-    material->ambient.set(materials[i].ambient[0] * 128.0F,
-                          materials[i].ambient[1] * 128.0F,
-                          materials[i].ambient[2] * 128.0F, 128.0F);
+    material->ambient.set(materials[i].diffuse[0] * 128.0F,
+                          materials[i].diffuse[1] * 128.0F,
+                          materials[i].diffuse[2] * 128.0F, 128.0F);
 
     for (size_t j = 0; j < framesCount; j++) {
       auto* frame = new MeshBuilderMaterialFrameData();
