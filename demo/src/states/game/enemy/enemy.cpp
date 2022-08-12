@@ -9,37 +9,47 @@
 */
 
 #include "states/game/enemy/enemy.hpp"
-#include "loaders/3d/obj_loader/obj_loader.hpp"
-#include <file/file_utils.hpp>
+#include <functional>
+#include "debug/debug.hpp"
 
-using Tyra::FileUtils;
 using Tyra::Math;
-using Tyra::ObjLoader;
-using Tyra::ObjLoaderOptions;
 
 namespace Demo {
 
-Enemy::Enemy(TextureRepository* repo) {
-  ObjLoader loader;
+Enemy::Enemy(Engine* engine, const EnemyInfo& t_info) {
+  info = t_info;
 
-  ObjLoaderOptions objOptions;
-  objOptions.animation.count = 6;
-  objOptions.flipUVs = true;
-  objOptions.scale = 250.0F;
+  mesh = new DynamicMesh(*info.motherMesh);
 
-  auto* data = loader.load(FileUtils::fromCwd("game/models/zombie/zombie.obj"),
-                           objOptions);
-  data->normalsEnabled = false;
-  mesh = new DynamicMesh(*data);
+  auto* bodyMaterial = mesh->getMaterialByName("BodyMaterial");
+  auto* clothMaterial = mesh->getMaterialByName("ClothMaterial");
 
-  delete data;
+  TYRA_ASSERT(bodyMaterial != nullptr && clothMaterial != nullptr,
+              "Body and cloth materials not found!");
 
-  mesh->playAnimation(0, mesh->frames.size() - 1);
-  mesh->setAnimSpeed(0.1F);
+  info.bodyTexture->addLink(bodyMaterial->id);
+  info.clothTexture->addLink(clothMaterial->id);
 
-  repo->addByMesh(mesh, FileUtils::fromCwd("game/models/zombie/"), "png");
+  float r = Math::randomf(64.0F, 128.0F);
+  float g = Math::randomf(64.0F, 128.0F);
+  float b = Math::randomf(64.0F, 128.0F);
 
+  bodyMaterial->ambient.set(r, g, b);
+  clothMaterial->ambient.set(r, g, b);
+
+  walkSequence = {0, 1, 2};
+  fightSequence = {3, 4, 5};
+
+  mesh->setPosition(info.spawnPoint);
+
+  mesh->animation.setSequence(walkSequence);
+  mesh->animation.loop = true;
+  mesh->animation.setCallback(
+      std::bind(&Enemy::animationCallback, this, std::placeholders::_1));
   mesh->translation.translateY(-5.0F);
+
+  audio = &engine->audio;
+  audio->adpcm.setVolume(50, info.adpcmChannel);
 
   allocateOptions();
 
@@ -58,14 +68,10 @@ void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition) {
   auto diff = *enemyPosition - playerPosition;
   auto ang = Math::atan2(diff.x, diff.z);
 
-  if (diff.length() > 30.0F) {
-    diff.normalize();
-    const float speed = 1.5F;
-    auto nextPos = *enemyPosition - diff * speed;
-    nextPos.y = heightmap.getHeightOffset(nextPos) - 60.0F;
-
-    mesh->translation.identity();
-    mesh->translation.translate(nextPos);
+  if (diff.length() > 110.0F) {
+    walk(heightmap, diff);
+  } else {
+    fight();
   }
 
   const float naturalRotation = 3.1F;
@@ -73,7 +79,43 @@ void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition) {
   ang += naturalRotation;
   mesh->rotation.rotateByAngle(ang, Vec4(0.0F, 1.0F, 0.0F, 0.0F));
 
-  mesh->animate();
+  mesh->update();
+}
+
+void Enemy::walk(const Heightmap& heightmap, const Vec4& positionDiff) {
+  if (isFighting) {
+    mesh->animation.setSequence(walkSequence);
+  }
+
+  isFighting = false;
+  isWalking = true;
+
+  auto* enemyPosition = mesh->getPosition();
+  auto normalized = positionDiff;
+  normalized.normalize();
+  const float speed = 2.5F;
+  auto nextPos = *enemyPosition - normalized * speed;
+  nextPos.y = heightmap.getHeightOffset(nextPos) - 60.0F;
+
+  mesh->translation.identity();
+  mesh->translation.translate(nextPos);
+}
+
+void Enemy::fight() {
+  if (isWalking) {
+    mesh->animation.setSequence(fightSequence);
+  }
+
+  isFighting = true;
+  isWalking = false;
+}
+
+void Enemy::animationCallback(const AnimationSequenceCallback& callback) {
+  if (callback == AnimationSequenceCallback::AnimationSequenceCallback_Loop) {
+    if (isFighting) {
+      audio->adpcm.tryPlay(info.adpcmSample, info.adpcmChannel);
+    }
+  }
 }
 
 void Enemy::allocateOptions() { options = new DynPipOptions(); }

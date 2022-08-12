@@ -11,8 +11,7 @@
 #pragma once
 
 #include "../mesh_frame.hpp"
-#include "../mesh_material_frame.hpp"
-#include "./dynamic_mesh_anim_state.hpp"
+#include "./dynamic_mesh_animation.hpp"
 #include "../mesh.hpp"
 
 namespace Tyra {
@@ -25,36 +24,15 @@ class DynamicMesh : public Mesh {
 
   std::vector<MeshFrame*> frames;
 
-  DynamicMeshAnimState animState;
+  DynamicMeshAnimation animation;
 
   /** @returns bounding box object of current frame. */
   const BBox& getCurrentBoundingBox() const {
-    return *frames[animState.currentFrame]->bbox;
+    return *frames[animation.getState().currentFrame]->bbox;
   }
 
-  /** Loop in one frame */
-  void playAnimation(const u32& t_frame);
-
-  /** Play animation in loop from startFrame to endFrame */
-  void playAnimation(const u32& t_startFrame, const u32& t_endFrame);
-
-  /** Play animation from startFrame to endFrame and after loop in stayFrame
-   */
-  void playAnimation(const u32& t_startFrame, const u32& t_endFrame,
-                     const u32& t_stayFrame);
-
-  void setAnimSpeed(const float& t_value) { animState.speed = t_value; }
-
-  void animate();
-
-  /**
-   * Check if this class loaded mesh data first.
-   * Meshes which use loadFrom() method have false there.
-   */
-  const u8& isStayAnimationSet() const { return animState.isStayFrameSet; }
-
- private:
-  void initAnimation();
+  /** Update animation */
+  inline void update() { animation.update(); }
 };
 
 }  // namespace Tyra

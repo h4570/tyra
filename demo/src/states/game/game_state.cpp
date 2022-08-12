@@ -37,8 +37,8 @@ void GameState::onStart() {
 
   auto* repository = &engine->renderer.core.texture.repository;
   player = new Player(engine);
-  enemy = new Enemy(repository);
   terrain = new Terrain(repository);
+  enemyManager = new EnemyManager(engine, terrain->heightmap);
   skybox = new Skybox(repository);
   dbgObj = new DebugObject(repository);
 
@@ -49,7 +49,7 @@ GlobalStateType GameState::onFinish() {
   if (!initialized) return STATE_EXIT;
 
   delete player;
-  delete enemy;
+  delete enemyManager;
   delete terrain;
   delete skybox;
   delete dbgObj;
@@ -59,7 +59,7 @@ GlobalStateType GameState::onFinish() {
 }
 
 void GameState::update() {
-  if (fpsChecker++ > 100) {
+  if (fpsChecker++ > 50) {
     TYRA_LOG("FPS: ", engine->info.getFps());
     fpsChecker = 0;
   }
@@ -71,13 +71,13 @@ void GameState::update() {
   dbgObj->setPosition(*cameraInfo.looksAt);
 
   player->update(terrain->heightmap);
-  enemy->update(terrain->heightmap, player->getPosition());
+  enemyManager->update(terrain->heightmap, player->getPosition());
 
   renderer.clear();
   {
     renderer.add(skybox->pair);
     renderer.add(player->pair);
-    renderer.add(enemy->pair);
+    renderer.add(enemyManager->getPairs());
     renderer.add(terrain->pair);
     renderer.add(dbgObj->pair);
   }

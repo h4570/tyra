@@ -55,7 +55,7 @@ class Texture {
    * Returns index of link.
    * -1 if not found.
    * @param t_id
-   * For 3D: MeshMaterial material id.
+   * For 3D: MeshMaterial id.
    * For 2D: Sprite id.
    */
   const s32 getIndexOfLink(const u32& t_id) const;
@@ -68,11 +68,8 @@ class Texture {
   //  Other
   // ----
 
-  /** Assign texture to mesh and mesh material. */
-  void addLink(const u32& t_meshId, const u32& t_materialId);
-
-  /** Assign texture to sprite. */
-  void addLink(const u32& t_spriteId);
+  /** Assign texture to Sprite.Id or MeshMaterial.Id. */
+  void addLink(const u32& t_id);
 
   u32 getTextureSize() const;
 

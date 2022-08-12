@@ -62,7 +62,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
   PipelineDirLightsBag* dirLights = nullptr;
 
   if (options->frustumCulling == PipelineFrustumCulling_Simple) {
-    auto* frameTo = mesh->frames[mesh->animState.nextFrame];
+    auto* frameTo = mesh->frames[mesh->animation.getState().nextFrame];
     if (frameTo->bbox->isInFrustum(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
         CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
@@ -84,8 +84,8 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
 
   for (u32 i = 0; i < mesh->materials.size(); i++) {
     auto* material = mesh->materials[i];
-    auto* frameFrom = material->frames[mesh->animState.currentFrame];
-    auto* frameTo = material->frames[mesh->animState.nextFrame];
+    auto* frameFrom = material->frames[mesh->animation.getState().currentFrame];
+    auto* frameTo = material->frames[mesh->animation.getState().nextFrame];
 
     auto partSize = core.getMaxVertCountByParams(
         options && options->lighting, material->frames[0]->textureCoords);
@@ -97,6 +97,13 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
     setBuffersColorBag(buffers, colorBag);
     u8 isPartInitialized = false;
 
+    auto* texture =
+        rendererCore->texture.repository.getBySpriteOrMesh(material->id);
+
+    TYRA_ASSERT(
+        texture, "Texture for material: ", material->name, "Id: ", material->id,
+        "Was not found in texture repository! Did you forget to add texture?");
+
     for (u32 k = 0; k < partsCount; k++) {
       auto& buffer = buffers[bufferIndex];
 
@@ -107,7 +114,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
       u32 startIndex = k * partSize;
 
       addVertices(frameFrom, frameTo, &buffer, startIndex);
-      buffer.texture = getTextureBag(material, frameFrom, frameTo, startIndex);
+      buffer.texture = getTextureBag(texture, frameFrom, frameTo, startIndex);
       buffer.lighting = getLightingBag(frameFrom, frameTo, &model, options,
                                        dirLights, startIndex);
 
@@ -180,7 +187,7 @@ void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
                                             DynPipInfoBag* infoBag) {
   for (u32 i = 0; i < buffersCount; i++) {
     buffers[i].info = infoBag;
-    buffers[i].interpolation = mesh->animState.interpolation;
+    buffers[i].interpolation = mesh->animation.getState().interpolation;
   }
 }
 
@@ -234,19 +241,13 @@ DynPipColorBag* DynamicPipeline::getColorBag(MeshMaterial* material) const {
 }
 
 DynPipTextureBag* DynamicPipeline::getTextureBag(
-    MeshMaterial* material, MeshMaterialFrame* materialFrameFrom,
+    Texture* texture, MeshMaterialFrame* materialFrameFrom,
     MeshMaterialFrame* materialFrameTo, const u32& startIndex) {
   if (!materialFrameFrom->textureCoords) return nullptr;
 
   auto* result = new DynPipTextureBag();
 
-  result->texture =
-      rendererCore->texture.repository.getBySpriteOrMesh(material->id);
-
-  TYRA_ASSERT(
-      result->texture, "Texture for material: ", material->name,
-      "Id: ", material->id,
-      "Was not found in texture repository! Did you forget to add texture?");
+  result->texture = texture;
 
   result->coordinatesFrom = &materialFrameFrom->textureCoords[startIndex];
   result->coordinatesTo = &materialFrameTo->textureCoords[startIndex];

@@ -11,14 +11,15 @@
 
 #pragma once
 
-#include <tamtypes.h>
-
 namespace Tyra {
 
-struct DynamicMeshAnimState {
-  float interpolation;
-  u32 currentFrame;
-  u32 nextFrame;
+enum AnimationSequenceCallback {
+  /** On frame change */
+  AnimationSequenceCallback_NextFrame,
+  /** When animation in loop = false will end */
+  AnimationSequenceCallback_End,
+  /** When animation in loop = true will start from beginning */
+  AnimationSequenceCallback_Loop
 };
 
 }  // namespace Tyra

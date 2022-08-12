@@ -27,11 +27,13 @@ class Math {
   static float cos(float x);
   static float asin(float x);
   static float atan2(float y, float x);
-  static float mod(float x, float y);
-  static float acos(float x);
-  static float sin(float x);
-  static float tan(float x);
-  static float invSqrt(float x);
+  static float mod(const float& x, const float& y);
+  static float acos(const float& x);
+  static float sin(const float& x);
+  static float tan(const float& x);
+  static float invSqrt(const float& x);
+  static float randomf(const float& min, const float& max);
+  static int randomi(const int& min, const int& max);
   static bool equalf(const float& a, const float& b,
                      const float& epsilon = 0.00001F);
 

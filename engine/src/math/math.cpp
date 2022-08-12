@@ -13,6 +13,7 @@
 #endif
 
 #include "math/math.hpp"
+#include <stdlib.h>
 
 extern volatile const u32 TYRA_MATH_ATAN_TABLE[9] alignas(sizeof(float)) = {
     0x3f7ffff5, 0xbeaaa61c, 0x3e4c40a6, 0xbe0e6c63, 0x3dc577df,
@@ -91,7 +92,7 @@ float Math::cos(float x) {
   return r;
 }
 
-float Math::invSqrt(float x) { return 1.0F / sqrt(x); }
+float Math::invSqrt(const float& x) { return 1.0F / sqrt(x); }
 
 float Math::atan2(float y, float x) {
   float r;
@@ -185,6 +186,17 @@ float Math::atan2(float y, float x) {
   return r;
 }
 
+float Math::randomf(const float& min, const float& max) {
+  float random = ((float)rand()) / (float)RAND_MAX;
+  float diff = max - min;
+  float r = random * diff;
+  return min + r;
+}
+
+int Math::randomi(const int& min, const int& max) {
+  return rand() % (max - min + 1) + min;
+}
+
 float Math::asin(float x) {
   float r;
   asm volatile(
@@ -248,7 +260,7 @@ bool Math::equalf(const float& a, const float& b, const float& epsilon) {
   return fabs(a - b) < epsilon;
 }
 
-float Math::mod(float x, float y) {
+float Math::mod(const float& x, const float& y) {
   /*
    * Portable fmod(x,y) implementation for systems
    * that don't have it. Adapted from code found here:
@@ -270,14 +282,14 @@ float Math::mod(float x, float y) {
   return f;
 }
 
-float Math::acos(float x) {
+float Math::acos(const float& x) {
   float y = sqrt(1.0f - x * x);
   float t = atan2(y, x);
   return t;
 }
 
-float Math::sin(float x) { return cos(x - HALF_PI); }
+float Math::sin(const float& x) { return cos(x - HALF_PI); }
 
-float Math::tan(float x) { return sin(x) / cos(x); }
+float Math::tan(const float& x) { return sin(x) / cos(x); }
 
 }  // namespace Tyra

@@ -29,6 +29,9 @@ class Mesh {
 
   M4x4 translation, rotation, scale;
 
+  /** nullptr if not found */
+  MeshMaterial* getMaterialByName(const std::string& name);
+
   std::vector<MeshMaterial*> materials;
 
   M4x4 getModelMatrix() const;

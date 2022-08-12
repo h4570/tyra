@@ -46,6 +46,16 @@ Mesh::Mesh(const Mesh& mesh) {
 
 M4x4 Mesh::getModelMatrix() const { return translation * rotation * scale; }
 
+MeshMaterial* Mesh::getMaterialByName(const std::string& name) {
+  for (auto* material : materials) {
+    if (material->name == name) {
+      return material;
+    }
+  }
+
+  return nullptr;
+}
+
 Mesh::~Mesh() {
   for (u32 i = 0; i < materials.size(); i++) {
     delete materials[i];

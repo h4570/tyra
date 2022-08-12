@@ -17,7 +17,7 @@
 #include "./terrain/terrain.hpp"
 #include "./skybox/skybox.hpp"
 #include "./debug_object.hpp"
-#include "./enemy/enemy.hpp"
+#include "./enemy/enemy_manager.hpp"
 
 namespace Demo {
 
@@ -45,7 +45,7 @@ class GameState : public State<GlobalStateType> {
 
   GameRenderer renderer;
   Player* player;
-  Enemy* enemy;
+  EnemyManager* enemyManager;
   Terrain* terrain;
   Skybox* skybox;
   DebugObject* dbgObj;

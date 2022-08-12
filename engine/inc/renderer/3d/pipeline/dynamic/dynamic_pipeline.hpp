@@ -66,7 +66,7 @@ class DynamicPipeline : public Renderer3DPipeline {
 
   DynPipColorBag* getColorBag(MeshMaterial* material) const;
 
-  DynPipTextureBag* getTextureBag(MeshMaterial* material,
+  DynPipTextureBag* getTextureBag(Texture* texture,
                                   MeshMaterialFrame* materialFrameFrom,
                                   MeshMaterialFrame* materialFrameTo,
                                   const u32& startIndex);
