@@ -23,13 +23,16 @@ Player::Player(Engine* engine)
 
 Player::~Player() { delete pair; }
 
-void Player::update(const float& terrainHeight) {
-  handlePlayerPosition(terrainHeight);
+void Player::update(const Heightmap& heightmap) {
+  float terrainHeight = heightmap.getHeightOffset(getPosition());
+
+  handlePlayerPosition(heightmap, terrainHeight);
   camera.update(position, terrainHeight);
   weapon.update();
 }
 
-void Player::handlePlayerPosition(const float& terrainHeight) {
+void Player::handlePlayerPosition(const Heightmap& heightmap,
+                                  const float& terrainHeight) {
   const auto& leftJoy = pad->getLeftJoyPad();
 
   auto normalizedCamera = Vec4(camera.unitCircle);
@@ -37,7 +40,7 @@ void Player::handlePlayerPosition(const float& terrainHeight) {
   normalizedCamera *= speed;
 
   Vec4 nextPosition(position);
-  nextPosition.y = terrainHeight - 60.0F;
+  nextPosition.y = terrainHeight + 50.0F;
 
   if (leftJoy.v <= 100) {
     nextPosition.x += normalizedCamera.x;
@@ -54,7 +57,7 @@ void Player::handlePlayerPosition(const float& terrainHeight) {
     nextPosition.z += normalizedCamera.x;
   }
 
-  position = nextPosition;
+  if (!heightmap.isOutside(nextPosition)) position = nextPosition;
 
   camera.position = position;
 }

@@ -69,8 +69,8 @@ void GameState::update() {
   engine->renderer.beginFrame(cameraInfo);
 
   dbgObj->setPosition(*cameraInfo.looksAt);
-  float terrainHeight = terrain->getHeightOffset(player->getPosition());
-  player->update(terrainHeight);
+
+  player->update(terrain->heightmap);
   enemy->update(terrain->heightmap, player->getPosition());
 
   renderer.clear();
@@ -78,7 +78,7 @@ void GameState::update() {
     renderer.add(skybox->pair);
     renderer.add(player->pair);
     renderer.add(enemy->pair);
-    // renderer.add(terrain->pair);
+    renderer.add(terrain->pair);
     renderer.add(dbgObj->pair);
   }
   renderer.render();

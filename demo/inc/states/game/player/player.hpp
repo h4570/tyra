@@ -12,6 +12,7 @@
 
 #include "states/game/renderer/renderer_dynamic_pair.hpp"
 #include "states/game/renderer/renderer_static_pair.hpp"
+#include "states/game/terrain/heightmap.hpp"
 #include "./weapon.hpp"
 #include "./camera.hpp"
 #include <engine.hpp>
@@ -32,10 +33,10 @@ class Player {
 
   RendererStaticPair* pair;
 
-  void update(const float& terrainHeight);
+  void update(const Heightmap& heightmap);
 
  private:
-  void handlePlayerPosition(const float& terrainHeight);
+  void handlePlayerPosition(const Heightmap& heightmap,const float& terrainHeight);
 
   float speed;
   Pad* pad;

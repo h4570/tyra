@@ -23,12 +23,12 @@ Enemy::Enemy(TextureRepository* repo) {
   ObjLoader loader;
 
   ObjLoaderOptions objOptions;
-  objOptions.animation.count = 4;
+  objOptions.animation.count = 6;
   objOptions.flipUVs = true;
-  objOptions.scale = 60.0F;
+  objOptions.scale = 250.0F;
 
-  auto* data = loader.load(
-      FileUtils::fromCwd("game/models/soldier/soldier.obj"), objOptions);
+  auto* data = loader.load(FileUtils::fromCwd("game/models/zombie/zombie.obj"),
+                           objOptions);
   data->normalsEnabled = false;
   mesh = new DynamicMesh(*data);
 
@@ -37,7 +37,7 @@ Enemy::Enemy(TextureRepository* repo) {
   mesh->playAnimation(0, mesh->frames.size() - 1);
   mesh->setAnimSpeed(0.1F);
 
-  repo->addByMesh(mesh, FileUtils::fromCwd("game/models/soldier/"), "png");
+  repo->addByMesh(mesh, FileUtils::fromCwd("game/models/zombie/"), "png");
 
   mesh->translation.translateY(-5.0F);
 
@@ -58,11 +58,11 @@ void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition) {
   auto diff = *enemyPosition - playerPosition;
   auto ang = Math::atan2(diff.x, diff.z);
 
-  if (diff.length() > 120.0F) {
+  if (diff.length() > 30.0F) {
     diff.normalize();
     const float speed = 1.5F;
     auto nextPos = *enemyPosition - diff * speed;
-    nextPos.y = heightmap.getHeightOffset(nextPos) - 150.0F;
+    nextPos.y = heightmap.getHeightOffset(nextPos) - 60.0F;
 
     mesh->translation.identity();
     mesh->translation.translate(nextPos);

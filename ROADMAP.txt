@@ -1,8 +1,8 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
+- [Demo] Animation table
 - [Demo] Crosshair
 - [Demo] 2D Health bar
-- [Demo] Change enemy to monster
 - [Demo] More monsters!
 - [Demo] Add ship and other reality stuff
 - [Demo] Game fadein
