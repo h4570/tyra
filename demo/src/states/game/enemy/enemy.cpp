@@ -13,6 +13,7 @@
 #include <file/file_utils.hpp>
 
 using Tyra::FileUtils;
+using Tyra::Math;
 using Tyra::ObjLoader;
 using Tyra::ObjLoaderOptions;
 
@@ -43,8 +44,6 @@ Enemy::Enemy(TextureRepository* repo) {
   allocateOptions();
 
   pair = new RendererDynamicPair{mesh, options};
-
-  direction = Vec4(1.0F, 0.0F, 1.0F, 0.0F);
 }
 
 Enemy::~Enemy() {
@@ -54,18 +53,25 @@ Enemy::~Enemy() {
 }
 
 void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition) {
-  auto* pos = mesh->getPosition();
-  auto nextPos = *pos + direction;
+  auto* enemyPosition = mesh->getPosition();
 
-  if (heightmap.isOutside(nextPos)) {
-    direction.x = -direction.x;
-    direction.z = -direction.z;
+  auto diff = *enemyPosition - playerPosition;
+  auto ang = Math::atan2(diff.x, diff.z);
+
+  if (diff.length() > 120.0F) {
+    diff.normalize();
+    const float speed = 1.5F;
+    auto nextPos = *enemyPosition - diff * speed;
+    nextPos.y = heightmap.getHeightOffset(nextPos) - 150.0F;
+
+    mesh->translation.identity();
+    mesh->translation.translate(nextPos);
   }
 
-  nextPos = *pos + direction;
-  nextPos.y = heightmap.getHeightOffset(nextPos) - 150.0F;
-  mesh->translation.identity();
-  mesh->translation.translate(nextPos);
+  const float naturalRotation = 3.1F;
+  mesh->rotation.identity();
+  ang += naturalRotation;
+  mesh->rotation.rotateByAngle(ang, Vec4(0.0F, 1.0F, 0.0F, 0.0F));
 
   mesh->animate();
 }

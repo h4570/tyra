@@ -1,6 +1,5 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [Demo] Enemy running and rotating to player
 - [Demo] Crosshair
 - [Demo] 2D Health bar
 - [Demo] Change enemy to monster

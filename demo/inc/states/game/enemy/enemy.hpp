@@ -36,7 +36,6 @@ class Enemy {
   void update(const Heightmap& heightmap, const Vec4& playerPosition);
 
  private:
-  Vec4 direction;
   void allocateOptions();
 };
 

@@ -78,7 +78,7 @@ void GameState::update() {
     renderer.add(skybox->pair);
     renderer.add(player->pair);
     renderer.add(enemy->pair);
-    renderer.add(terrain->pair);
+    // renderer.add(terrain->pair);
     renderer.add(dbgObj->pair);
   }
   renderer.render();

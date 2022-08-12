@@ -338,9 +338,9 @@ void M4x4::rotationZ(const float& v) {
 void M4x4::rotationByAngle(const float& angle, const Vec4& axis) {
   Vec4 localAxis = Vec4(axis);
   localAxis.normalize();
-  float x = localAxis.x;
-  float y = localAxis.y;
-  float z = localAxis.z;
+  const float& x = localAxis.x;
+  const float& y = localAxis.y;
+  const float& z = localAxis.z;
 
   float c = Math::cos(angle);
   float s = Math::sin(angle);
