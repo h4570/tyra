@@ -31,6 +31,12 @@ void Player::update(const Heightmap& heightmap) {
   weapon.update();
 }
 
+PlayerShootAction Player::getShootAction() const {
+  PlayerShootAction action;
+
+  return action;
+}
+
 void Player::handlePlayerPosition(const Heightmap& heightmap,
                                   const float& terrainHeight) {
   const auto& leftJoy = pad->getLeftJoyPad();

@@ -10,8 +10,7 @@
 
 #pragma once
 
-#include "renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
-#include "renderer/3d/mesh/dynamic/dynamic_mesh.hpp"
+#include <tyra>
 
 using Tyra::DynamicMesh;
 using Tyra::DynPipOptions;

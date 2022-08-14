@@ -10,10 +10,10 @@
 
 #pragma once
 
-#include "states/game/terrain/heightmap.hpp"
-#include "./enemy.hpp"
 #include <tyra>
 #include <vector>
+#include "states/game/terrain/heightmap.hpp"
+#include "./enemy.hpp"
 
 using Tyra::DynamicMesh;
 using Tyra::Engine;

@@ -12,8 +12,7 @@
 
 #include "state/state.hpp"
 #include "../intro_state_type.hpp"
-#include "renderer/core/2d/sprite/sprite.hpp"
-#include "time/timer.hpp"
+#include <tyra>
 
 using Tyra::Sprite;
 using Tyra::Texture;

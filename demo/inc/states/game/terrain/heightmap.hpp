@@ -10,8 +10,7 @@
 
 #pragma once
 
-#include "math/vec4.hpp"
-#include "loaders/texture/png_loader.hpp"
+#include <tyra>
 
 using Tyra::Vec4;
 

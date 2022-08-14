@@ -9,7 +9,6 @@
 */
 
 #include "states/game/renderer/game_renderer.hpp"
-#include "thread/threading.hpp"
 
 using Tyra::Threading;
 

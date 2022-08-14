@@ -10,13 +10,7 @@
 
 #pragma once
 
-#include <renderer/3d/mesh/static/static_mesh.hpp>
-#include <renderer/3d/pipeline/static/stapip_options.hpp>
-#include <renderer/renderer.hpp>
-#include <engine.hpp>
-#include <pad/pad.hpp>
-#include <audio/audio.hpp>
-#include <time/timer.hpp>
+#include <tyra>
 
 using Tyra::Audio;
 using Tyra::Engine;

@@ -9,8 +9,6 @@
 */
 
 #include "states/game/terrain/terrain.hpp"
-#include <loaders/3d/obj_loader/obj_loader.hpp>
-#include <file/file_utils.hpp>
 
 using Tyra::FileUtils;
 using Tyra::ObjLoader;

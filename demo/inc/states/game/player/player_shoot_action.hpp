@@ -11,15 +11,15 @@
 #pragma once
 
 #include <tyra>
+#include <optional>
 
-using Tyra::StaPipOptions;
-using Tyra::StaticMesh;
+using Tyra::Ray;
 
 namespace Demo {
 
-struct RendererStaticPair {
-  StaticMesh* mesh;
-  StaPipOptions* options;
+struct PlayerShootAction {
+  bool isShooting = false;
+  std::optional<Ray> ray;
 };
 
 }  // namespace Demo

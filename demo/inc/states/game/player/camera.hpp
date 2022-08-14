@@ -10,9 +10,7 @@
 
 #pragma once
 
-#include "math/vec4.hpp"
-#include "renderer/core/3d/camera_info_3d.hpp"
-#include "pad/pad.hpp"
+#include <tyra>
 
 using Tyra::CameraInfo3D;
 using Tyra::Pad;

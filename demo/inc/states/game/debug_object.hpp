@@ -10,9 +10,7 @@
 
 #pragma once
 
-#include <renderer/3d/mesh/static/static_mesh.hpp>
-#include <renderer/3d/pipeline/static/stapip_options.hpp>
-#include <renderer/renderer.hpp>
+#include <tyra>
 #include "states/game/renderer/renderer_static_pair.hpp"
 
 using Tyra::Renderer;

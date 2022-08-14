@@ -9,10 +9,6 @@
 */
 
 #include "states/intro/states/intro_ps2dev_state.hpp"
-#include "loaders/texture/png_loader.hpp"
-#include "file/file_utils.hpp"
-#include "debug/debug.hpp"
-#include "thread/threading.hpp"
 
 using Tyra::FileUtils;
 using Tyra::PngLoader;

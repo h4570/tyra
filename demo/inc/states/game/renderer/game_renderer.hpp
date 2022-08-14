@@ -10,11 +10,9 @@
 
 #pragma once
 
-#include "renderer/renderer.hpp"
-#include "renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
-#include "renderer/3d/pipeline/static/static_pipeline.hpp"
-#include "./renderer_dynamic_pair.hpp"
+#include <tyra>
 #include "./renderer_static_pair.hpp"
+#include "./renderer_dynamic_pair.hpp"
 
 using Tyra::DynamicPipeline;
 using Tyra::Renderer;

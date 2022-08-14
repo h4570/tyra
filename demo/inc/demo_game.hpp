@@ -10,8 +10,7 @@
 
 #pragma once
 
-#include <engine.hpp>
-#include <game.hpp>
+#include <tyra>
 #include "state/state_manager.hpp"
 
 using Tyra::Engine;

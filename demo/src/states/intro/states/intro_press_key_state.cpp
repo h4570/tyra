@@ -9,12 +9,7 @@
 */
 
 #include "states/intro/states/intro_press_key_state.hpp"
-#include "loaders/texture/png_loader.hpp"
-#include "file/file_utils.hpp"
-#include "debug/debug.hpp"
 #include <string>
-#include "thread/threading.hpp"
-#include "math/math.hpp"
 
 using Tyra::FileUtils;
 using Tyra::Math;

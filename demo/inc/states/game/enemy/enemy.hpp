@@ -10,13 +10,9 @@
 
 #pragma once
 
-#include <renderer/3d/mesh/dynamic/dynamic_mesh.hpp>
-#include <renderer/3d/pipeline/dynamic/dynpip_options.hpp>
-#include <renderer/3d/mesh/dynamic/animation_sequence_callback.hpp>
+#include <tyra>
 #include "states/game/renderer/renderer_dynamic_pair.hpp"
 #include "states/game/terrain/heightmap.hpp"
-#include <renderer/renderer.hpp>
-#include <engine.hpp>
 #include "./enemy_info.hpp"
 
 using Tyra::AnimationSequenceCallback;

@@ -9,8 +9,6 @@
 */
 
 #include "states/game/terrain/heightmap.hpp"
-#include "file/file_utils.hpp"
-#include "debug/debug.hpp"
 
 using Tyra::FileUtils;
 using Tyra::PngLoader;

@@ -9,10 +9,7 @@
 */
 
 #include "states/game/enemy/enemy_manager.hpp"
-#include "loaders/3d/obj_loader/obj_loader.hpp"
-#include <file/file_utils.hpp>
 #include <functional>
-#include "debug/debug.hpp"
 
 using Tyra::FileUtils;
 using Tyra::Math;

@@ -10,7 +10,6 @@
 
 #include "states/game/enemy/enemy.hpp"
 #include <functional>
-#include "debug/debug.hpp"
 
 using Tyra::Math;
 
@@ -49,7 +48,7 @@ Enemy::Enemy(Engine* engine, const EnemyInfo& t_info) {
   mesh->translation.translateY(-5.0F);
 
   audio = &engine->audio;
-  audio->adpcm.setVolume(50, info.adpcmChannel);
+  audio->adpcm.setVolume(30, info.adpcmChannel);
 
   allocateOptions();
 

@@ -9,8 +9,6 @@
 */
 
 #include "states/game/game_state.hpp"
-#include "debug/debug.hpp"
-#include "file/file_utils.hpp"
 
 using Tyra::FileUtils;
 

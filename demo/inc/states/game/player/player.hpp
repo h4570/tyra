@@ -15,7 +15,8 @@
 #include "states/game/terrain/heightmap.hpp"
 #include "./weapon.hpp"
 #include "./camera.hpp"
-#include <engine.hpp>
+#include "./player_shoot_action.hpp"
+#include <tyra>
 
 using Tyra::Engine;
 using Tyra::Pad;
@@ -35,8 +36,11 @@ class Player {
 
   void update(const Heightmap& heightmap);
 
+  PlayerShootAction getShootAction() const;
+
  private:
-  void handlePlayerPosition(const Heightmap& heightmap,const float& terrainHeight);
+  void handlePlayerPosition(const Heightmap& heightmap,
+                            const float& terrainHeight);
 
   float speed;
   Pad* pad;

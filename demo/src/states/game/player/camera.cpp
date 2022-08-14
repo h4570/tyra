@@ -9,7 +9,6 @@
 */
 
 #include "states/game/player/camera.hpp"
-#include "debug/debug.hpp"
 
 namespace Demo {
 
