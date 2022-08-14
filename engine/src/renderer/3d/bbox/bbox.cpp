@@ -37,7 +37,7 @@ BBox::BBox(const BBox& t_bbox, const M4x4& t_matrix) {
 
 BBox::BBox(Vec4* t_vertices) : CoreBBox(t_vertices) { setData(); }
 
-BBox BBox::getTransformed(const M4x4& t_matrix) {
+BBox BBox::getTransformed(const M4x4& t_matrix) const {
   return BBox(*this, t_matrix);
 }
 
@@ -64,7 +64,7 @@ void BBox::setData() {
   _bottomFace = BBoxFace(vertices[0], vertices[5], vertices[0].y);
 }
 
-Vec4 BBox::min() {
+Vec4 BBox::min() const {
   Vec4 temp, _min;
   u8 isInitialized = 0;
 
@@ -83,7 +83,7 @@ Vec4 BBox::min() {
   return _min;
 }
 
-Vec4 BBox::max() {
+Vec4 BBox::max() const {
   Vec4 temp, _max;
   u8 isInitialized = 0;
 
@@ -102,7 +102,7 @@ Vec4 BBox::max() {
   return _max;
 }
 
-void BBox::getMinMax(Vec4* res_min, Vec4* res_max) {
+void BBox::getMinMax(Vec4* res_min, Vec4* res_max) const {
   Vec4 temp = Vec4();
 
   u8 isInitialized = 0;

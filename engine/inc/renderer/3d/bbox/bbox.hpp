@@ -25,37 +25,46 @@ class BBox : public CoreBBox {
   explicit BBox(const BBox& t_bbox, const M4x4& t_matrix);
   explicit BBox(const BBox& t_bbox);
   explicit BBox(Vec4* t_vertices);
-  const float& getHeight() { return _height; }
-  const float& getDepth() { return _depth; }
-  const float& getWidth() { return _width; }
+
+  const float& getHeight() const { return _height; }
+  const float& getDepth() const { return _depth; }
+  const float& getWidth() const { return _width; }
+
   /** @returns the vector directly in middle of the bounding box. */
-  const Vec4& getCenter() { return _centerVector; }
+  const Vec4& getCenter() const { return _centerVector; }
+
   /** @returns the front face (further on z-axis) */
-  const BBoxFace& getFrontFace() { return _frontFace; }
+  const BBoxFace& getFrontFace() const { return _frontFace; }
+
   /** @returns the back face (nearer on z-axis) */
-  const BBoxFace& getBackFace() { return _backFace; }
+  const BBoxFace& getBackFace() const { return _backFace; }
+
   /** @returns the left face (further on x-axis) */
-  const BBoxFace& getLeftFace() { return _leftFace; }
+  const BBoxFace& getLeftFace() const { return _leftFace; }
+
   /** @returns the right face (nearer on x-axis) */
-  const BBoxFace& getRightFace() { return _rightFace; }
+  const BBoxFace& getRightFace() const { return _rightFace; }
+
   /** @returns the top face (further on y-axis) */
-  const BBoxFace& getTopFace() { return _topFace; }
+  const BBoxFace& getTopFace() const { return _topFace; }
+
   /** @returns the bottom face (nearer on y-axis) */
-  const BBoxFace& getBottomFace() { return _bottomFace; }
+  const BBoxFace& getBottomFace() const { return _bottomFace; }
 
   /** @returns the lower (x, y, z) boundary of the box. */
-  Vec4 min();
+  Vec4 min() const;
   /** @returns the upper (x, y, z) boundary of the box. */
-  Vec4 max();
+  Vec4 max() const;
+
   /**
    * @param res_min Vec4 to store the min result
    * @param res_max Vec4 to store the min result
    * @brief Calc and stores the min and max points of box at a single loop
    * */
-  void getMinMax(Vec4* res_min, Vec4* res_max);
+  void getMinMax(Vec4* res_min, Vec4* res_max) const;
 
   /** Get new transformed BBox by model matrix */
-  BBox getTransformed(const M4x4& t_matrix);
+  BBox getTransformed(const M4x4& t_matrix) const;
 
  protected:
   float _height, _depth, _width;

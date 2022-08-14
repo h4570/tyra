@@ -32,15 +32,22 @@ class CoreBBox {
 
   Vec4 vertices[8];
 
-  const Vec4& operator[](const u8& i) { return vertices[i]; }
+  const Vec4& operator[](const u8& i) const { return vertices[i]; }
 
-  const u8 getVertexCount() { return 8; }
+  const u8 getVertexCount() const { return 8; }
 
   void print() const;
   void print(const char* name) const;
   void print(const std::string& name) const { print(name.c_str()); }
   std::string getPrint(const char* name = nullptr) const;
 
+/**
+ * @brief Check if bbox is in view frustum
+ * 
+ * @param frustumPlanes Available in engine.renderer.core.renderer3D.frustumPlanes
+ * @param model Model matrix
+ * @param margins Optional margins
+ */
   CoreBBoxFrustum isInFrustum(const Plane* frustumPlanes, const M4x4& model,
                               const float* margins = nullptr) const;
 };
