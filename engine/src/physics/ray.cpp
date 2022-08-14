@@ -32,7 +32,7 @@ float Ray::distanceToPoint(const Vec4& point) const {
 }
 
 bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
-                       const float& distance) const {
+                       float* outputDistance) const {
   auto inv = invDir();
   inv.normalize();
 
@@ -42,8 +42,7 @@ bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
   float tymax = (maxCorner.y - this->origin.y) * inv.y;
 
   if ((tmin > tymax) || (tymin > tmax)) {
-    distance = -1.0f;
-    return 0;
+    return false;
   }
 
   if (tymin > tmin) tmin = tymin;
@@ -54,8 +53,7 @@ bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
   float tzmax = (maxCorner.z - this->origin.z) * inv.z;
 
   if ((tmin > tzmax) || (tzmin > tmax)) {
-    distance = -1.0f;
-    return 0;
+    return false;
   }
 
   if (tzmin > tmin) tmin = tzmin;
@@ -63,12 +61,14 @@ bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
   if (tzmax < tmax) tmax = tzmax;
 
   if (tmax < 0) {
-    distance = -1.0f;
-    return 0;
+    return false;
   }
 
-  distance = tmin >= 0 ? tmin : tmax;
-  return 1;
+  if (outputDistance != nullptr) {
+    *outputDistance = tmin >= 0 ? tmin : tmax;
+  }
+
+  return true;
 }
 
 Vec4 Ray::invDir() const {

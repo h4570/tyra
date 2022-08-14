@@ -45,11 +45,11 @@ class Ray {
   /**
    * @param minCorner - pointer to min corner position. (bottom left)
    * @param maxCorner - pointer to max corner position. (top right)
-   * @param distance - the box to intersect with.
+   * @param outputDistance - optional - distance the box to intersect with.
    * @return Vec4 point of intersection
    */
   bool intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
-                    const float& distance) const;
+                    float* outputDistance = nullptr) const;
 
   /** Returns inverse direction */
   Vec4 invDir() const;
