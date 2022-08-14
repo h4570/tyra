@@ -53,7 +53,7 @@ void Skybox::allocateOptions() {
   options = new StaPipOptions();
   options->frustumCulling = Tyra::PipelineFrustumCulling_None;
   options->shadingType = Tyra::TyraShadingGouraud;
-  options->zTestType = Tyra::StaPipZTest_AllPass;
+  options->zTestType = Tyra::PipelineZTest_AllPass;
   options->textureMappingType = Tyra::TyraNearest;
   options->blendingEnabled = true;
   options->antiAliasingEnabled = false;

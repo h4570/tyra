@@ -56,7 +56,7 @@ StaPipQBufferRenderer::StaPipQBufferRenderer() {
 
 void StaPipQBufferRenderer::allocateOnUse() {
   staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-  objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  objectDataPacket = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
   packets = new packet2_t*[2];
   for (u16 i = 0; i < 2; i++)
@@ -149,6 +149,19 @@ void StaPipQBufferRenderer::sendObjectData(
 
     packet2_utils_gs_add_lod(objectDataPacket, lod);
 
+    if (bag->info->zTestType == PipelineZTest_AllPass) {
+      packet2_add_2x_s64(objectDataPacket,
+                         GS_SET_TEST(0, 0, 0, 0, 0, 0, 0, ZTEST_METHOD_ALLPASS),
+                         GS_REG_TEST);
+    } else {
+      packet2_add_2x_s64(
+          objectDataPacket,
+          GS_SET_TEST(DRAW_ENABLE, ATEST_METHOD_NOTEQUAL, 0x00,
+                      ATEST_KEEP_FRAMEBUFFER, DRAW_DISABLE, DRAW_DISABLE,
+                      DRAW_ENABLE, rendererCore->gs.zBuffer.method),
+          GS_REG_TEST);
+    }
+
     if (texBuffers != nullptr) {
       rendererCore->texture.updateClutBuffer(texBuffers->clut);
 
@@ -209,7 +222,7 @@ void StaPipQBufferRenderer::uploadPrograms() {
 }
 
 void StaPipQBufferRenderer::setDoubleBuffer() {
-  u16 startingAddr = VU1_LAST_ITEM_ADDR + 1;
+  u16 startingAddr = VU1_STAPIP_LAST_ITEM_ADDR + 1;
   const u16 bufferMaxSize = 1000;
   bufferSize = (bufferMaxSize - startingAddr) / 2;
 
@@ -347,11 +360,12 @@ void StaPipQBufferRenderer::addBuffersDataToPacket(const u32& from,
 
 void StaPipQBufferRenderer::sendPacket() {
   auto* currentPacket = packets[context];
-  dma_channel_wait(DMA_CHANNEL_VIF1, 0);
-  dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
 
   TYRA_ASSERT(packet2_get_qw_count(currentPacket) <= qbuffersPacketSize,
               "Packet is too big. Internal error");
+
+  dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+  dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
 
   // Switch packet, so we can proceed during DMA transfer
   context = !context;

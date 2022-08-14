@@ -12,9 +12,9 @@
 
 namespace Tyra {
 
-enum StaPipZTest {
-  StaPipZTest_Standard = 0,
-  StaPipZTest_AllPass = 1,
+enum PipelineZTest {
+  PipelineZTest_Standard = 0,
+  PipelineZTest_AllPass = 1,
 };
 
 }  // namespace Tyra

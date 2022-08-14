@@ -30,7 +30,7 @@ std::string StaPipAsIsCVU1Program::getStringName() const {
 
 void StaPipAsIsCVU1Program::addProgramQBufferDataToPacket(
     packet2_t* packet, StaPipQBuffer* qbuffer) const {
-  u32 addr = VU1_VERT_DATA_ADDR;
+  u32 addr = VU1_STAPIP_VERT_DATA_ADDR;
 
   // Add vertices
   packet2_utils_vu_add_unpack_data(packet, addr, qbuffer->vertices,

@@ -83,6 +83,11 @@
             "type": "shell",
             "label": "Stop docker container",
             "command": "docker compose down"
+        },
+        {
+            "type": "shell",
+            "label": "[Debug] Copy obj directory to host",
+            "command": "docker exec -t tyra-compiler sh -c 'rsync -zac --include=\"*/\" --include=\"obj/**\" --exclude=\"*\" /src/ /host/'"
         }
     ],
     "inputs": [

@@ -16,6 +16,7 @@
 #include "../pipeline_shading_type.hpp"
 #include "../pipeline_texture_mapping_type.hpp"
 #include "../pipeline_transformation_type.hpp"
+#include "../pipeline_z_test.hpp"
 #include "./pipeline_info_bag_frustum_culling.hpp"
 
 namespace Tyra {
@@ -30,6 +31,7 @@ class PipelineInfoBag {
     antiAliasingEnabled = false;
     model = nullptr;
     frustumCulling = PipelineInfoBagFrustumCulling_None;
+    zTestType = PipelineZTest_Standard;
   }
   ~PipelineInfoBag() {}
 
@@ -50,6 +52,9 @@ class PipelineInfoBag {
 
   /** Anti-aliasing */
   bool antiAliasingEnabled;
+
+  /** Type of z buffer testing. */
+  PipelineZTest zTestType;
 
   /** Type of frustum culling */
   PipelineInfoBagFrustumCulling frustumCulling;

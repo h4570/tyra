@@ -17,12 +17,12 @@ RendererCore::RendererCore() { isFrameLimitOn = true; }
 RendererCore::~RendererCore() {}
 
 void RendererCore::init() {
+  path3.init(&settings);
+  sync.init(&path3, &path1);
   gs.init(&settings);
   texture.init(&gs, &path3);
-  path3.init(&settings);
   renderer3D.init(&settings, &path1);
   renderer2D.init(&settings, &texture.clut);
-  sync.init(&path3, &path1);
 }
 
 void RendererCore::setClearScreenColor(const Color& color) { bgColor = color; }

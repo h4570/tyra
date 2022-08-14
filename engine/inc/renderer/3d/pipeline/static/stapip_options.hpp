@@ -11,20 +11,13 @@
 #pragma once
 
 #include "renderer/3d/pipeline/shared/pipeline_options.hpp"
-#include "./stapip_ztest.hpp"
 
 namespace Tyra {
 
 class StaPipOptions : public PipelineOptions {
  public:
-  StaPipOptions() {
-    fullClipChecks = false;
-    zTestType = StaPipZTest_Standard;
-  }
+  StaPipOptions() { fullClipChecks = false; }
   ~StaPipOptions() {}
-
-  /** @brief Type of z buffer testing. */
-  StaPipZTest zTestType;
 
   /**
    * @brief Experimental! True -> enables "clip against each plane" algorithm.

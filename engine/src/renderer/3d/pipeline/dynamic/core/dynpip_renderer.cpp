@@ -28,7 +28,7 @@ DynPipRenderer::~DynPipRenderer() {
 
 void DynPipRenderer::allocateOnUse(const u32& t_packetSize) {
   staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
-  objectDataPacket = packet2_create(16, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
+  objectDataPacket = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
   packetSize = t_packetSize;
 
@@ -129,6 +129,19 @@ void DynPipRenderer::sendObjectData(
 
     packet2_utils_gs_add_lod(objectDataPacket, lod);
 
+    if (bag->info->zTestType == PipelineZTest_AllPass) {
+      packet2_add_2x_s64(objectDataPacket,
+                         GS_SET_TEST(0, 0, 0, 0, 0, 0, 0, ZTEST_METHOD_ALLPASS),
+                         GS_REG_TEST);
+    } else {
+      packet2_add_2x_s64(
+          objectDataPacket,
+          GS_SET_TEST(DRAW_ENABLE, ATEST_METHOD_NOTEQUAL, 0x00,
+                      ATEST_KEEP_FRAMEBUFFER, DRAW_DISABLE, DRAW_DISABLE,
+                      DRAW_ENABLE, rendererCore->gs.zBuffer.method),
+          GS_REG_TEST);
+    }
+
     if (texBuffers != nullptr) {
       rendererCore->texture.updateClutBuffer(texBuffers->clut);
 
@@ -195,7 +208,7 @@ void DynPipRenderer::uploadPrograms() {
 }
 
 void DynPipRenderer::setDoubleBuffer() {
-  u16 startingAddr = VU1_LAST_ITEM_ADDR + 1;
+  u16 startingAddr = VU1_DYNPIP_LAST_ITEM_ADDR + 1;
   const u16 bufferMaxSize = 1000;
   bufferSize = (bufferMaxSize - startingAddr) / 2;
 

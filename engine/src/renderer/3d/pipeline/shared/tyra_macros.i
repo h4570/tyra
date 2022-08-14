@@ -34,11 +34,23 @@
 ;//---------------------------------------------------------
 ;// LoadTyraTags - Load lod, texture buffer and clut
 ;// 1 - GIF tag - texture LOD
-;// 2 - GIF tag - texture buffer & CLUT
+;// 2 - GIF tag - Z buffer tests method
+;// 3 - GIF tag - texture buffer & CLUT
 ;//---------------------------------------------------------
-#macro LoadTyraTags: t_lodGifTag, t_texBufferClutGifTag, t_lodAddr, t_ClutAddr
-   lq      t_lodGifTag,              t_lodAddr(vi00)
-   lq      t_texBufferClutGifTag,    t_ClutAddr(vi00)
+#macro LoadTyraTagsTexture: t_lodGifTag, t_testsGifTag, t_texBufferClutGifTag, t_lodAddr, t_testsAddr, t_ClutAddr
+   lq      t_lodGifTag,             t_lodAddr(vi00)
+   lq      t_testsGifTag,           t_testsAddr(vi00)
+   lq      t_texBufferClutGifTag,   t_ClutAddr(vi00)
+#endmacro
+
+;//---------------------------------------------------------
+;// LoadTyraTags - Load lod, texture buffer and clut
+;// 1 - GIF tag - texture LOD
+;// 2 - GIF tag - Z buffer tests method
+;//---------------------------------------------------------
+#macro LoadTyraTags: t_lodGifTag, t_testsGifTag, t_lodAddr, t_testsAddr
+   lq      t_lodGifTag,             t_lodAddr(vi00)
+   lq      t_testsGifTag,           t_testsAddr(vi00)
 #endmacro
 
 ;//---------------------------------------------------------
@@ -78,16 +90,32 @@
 #endmacro
 
 ;//---------------------------------------------------------
+;// StoreTyraGifTagsTexture - Store gif tags. 
+;// Not using sqi instruction, because VCL cannot optimize it.
+;// Primtag contains information about how many polys we will send
+;//---------------------------------------------------------
+#macro StoreTyraGifTagsTexture: t_gifSetTag, t_lodGifTag, t_texBufferClutGifTag, t_primTag, t_testsTag, t_destAddress
+   sq t_gifSetTag,            0(t_destAddress)
+   sq t_testsTag,             1(t_destAddress)
+   sq t_gifSetTag,            2(t_destAddress)
+   sq t_lodGifTag,            3(t_destAddress)
+   sq t_gifSetTag,            4(t_destAddress)
+   sq t_texBufferClutGifTag,  5(t_destAddress)
+   sq t_primTag,              6(t_destAddress)
+   iaddiu                     t_destAddress,    t_destAddress,    7
+#endmacro
+
+;//---------------------------------------------------------
 ;// StoreTyraGifTags - Store gif tags. 
 ;// Not using sqi instruction, because VCL cannot optimize it.
 ;// Primtag contains information about how many polys we will send
 ;//---------------------------------------------------------
-#macro StoreTyraGifTags: t_gifSetTag, t_lodGifTag, t_texBufferClutGifTag, t_primTag, t_destAddress
+#macro StoreTyraGifTags: t_gifSetTag, t_lodGifTag, t_primTag, t_testsTag, t_destAddress
    sq t_gifSetTag,            0(t_destAddress)
-   sq t_lodGifTag,            1(t_destAddress)
+   sq t_testsTag,             1(t_destAddress)
    sq t_gifSetTag,            2(t_destAddress)
-   sq t_texBufferClutGifTag,  3(t_destAddress)
-   sq t_primTag,              4(t_destAddress)
+   sq t_lodGifTag,            3(t_destAddress)
+   sq t_primTag,              6(t_destAddress)
    iaddiu                     t_destAddress,    t_destAddress,    5
 #endmacro
 

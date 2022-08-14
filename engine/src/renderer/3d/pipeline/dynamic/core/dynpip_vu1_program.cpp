@@ -61,7 +61,7 @@ void DynPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
 }
 
 u16 DynPipVU1Program::getMaxVertCount(const u16& bufferSize) const {
-  u16 res = bufferSize - 4;
+  u16 res = bufferSize - 7;  // 7 because of -> StoreTyraGifTags{}
   res /= (elementsPerVertex + reglistCount);
 
   // Buffer size = VU1 double buffer size (xtop)

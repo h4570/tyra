@@ -11,16 +11,12 @@
 #pragma once
 
 #include "renderer/3d/pipeline/shared/bag/pipeline_info_bag.hpp"
-#include "renderer/3d/pipeline/static/stapip_ztest.hpp"
 
 namespace Tyra {
 
 class StaPipInfoBag : public PipelineInfoBag {
  public:
-  StaPipInfoBag() {
-    fullClipChecks = false;
-    zTestType = StaPipZTest_Standard;
-  }
+  StaPipInfoBag() { fullClipChecks = false; }
   ~StaPipInfoBag() {}
 
   /**
@@ -33,9 +29,6 @@ class StaPipInfoBag : public PipelineInfoBag {
    * Force enabled in dynamic pipe, because of efficiency.
    */
   bool fullClipChecks;
-
-  /** @brief Type of z buffer testing. */
-  StaPipZTest zTestType;
 };
 
 }  // namespace Tyra

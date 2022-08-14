@@ -218,6 +218,7 @@ DynPipInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
   result->shadingType = options->shadingType;
   result->textureMappingType = options->textureMappingType;
   result->transformationType = options->transformationType;
+  result->zTestType = options->zTestType;
   result->frustumCulling =
       options->frustumCulling == PipelineFrustumCulling_Precise
           ? PipelineInfoBagFrustumCulling_Precise

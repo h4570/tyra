@@ -13,13 +13,20 @@
 
 namespace Tyra {
 
+timespec Threading::tv = {0, 0};
+
 void Threading::sleep(const u32& ms) {
-  struct timespec tv = {0};
   tv.tv_sec = ms / 1000;
   tv.tv_nsec = (ms % 1000) * 1000000;
   nanosleep(&tv, nullptr);
 }
 
-void Threading::switchThread() { sleep(1); }
+void Threading::sleep(const timespec& t_tv) { nanosleep(&t_tv, nullptr); }
+
+void Threading::switchThread() {
+  tv.tv_sec = 0;
+  tv.tv_nsec = 500000;  // 1/2ms
+  nanosleep(&tv, nullptr);
+}
 
 }  // Namespace Tyra

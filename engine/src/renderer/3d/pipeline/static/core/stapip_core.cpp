@@ -130,10 +130,6 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
     }
   }
 
-  if (bag->info->zTestType == StaPipZTest_AllPass) {
-    rendererCore->gs.setAllPassZTest();
-  }
-
   packager.setRenderBBox(renderBbox);
 
   M4x4 mvp;
@@ -210,10 +206,6 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   if (texBuffers) delete texBuffers;
 
   qbufferRenderer.flushBuffers();
-
-  if (bag->info->zTestType == StaPipZTest_AllPass) {
-    rendererCore->gs.setStandardZTest();
-  }
 
   Verbose("Render finished");
 }

@@ -63,9 +63,9 @@ void StaPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
 
 u16 StaPipVU1Program::getMaxVertCount(const bool& singleColorEnabled,
                                       const u16& bufferSize) const {
-  u16 res = bufferSize - 4;
+  u16 res = bufferSize - 7;  // 7 because of -> StoreTyraGifTags{}
   u8 colorElementsPerVertex =
-      singleColorEnabled ? (elementsPerVertex - 1) : elementsPerVertex;
+      singleColorEnabled ? elementsPerVertex - 1 : elementsPerVertex;
   res /= (colorElementsPerVertex + reglistCount);
 
   // Buffer size = VU1 double buffer size (xtop)

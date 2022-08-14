@@ -50,7 +50,7 @@
             "dependsOn": [
                 "1. Copy source code to docker volume"
             ],
-            "command": "docker exec -t tyra-compiler sh -c 'adpenc ${input:wav2adpcmSource} ${input:wav2adpcmTarget} && rsync -zac /src/${input:wav2adpcmTarget} /host/${input:wav2adpcmTarget}'"
+            "command": "docker exec -t tyra-game-compiler sh -c 'adpenc ${input:wav2adpcmSource} ${input:wav2adpcmTarget} && rsync -zac /src/${input:wav2adpcmTarget} /host/${input:wav2adpcmTarget}'"
         },
         {
             "type": "shell",
@@ -88,6 +88,11 @@
             "type": "shell",
             "label": "Stop docker container",
             "command": "docker compose down"
+        },
+        {
+            "type": "shell",
+            "label": "[Debug] Copy obj directory to host",
+            "command": "docker exec -t tyra-game-compiler sh -c 'rsync -zac --include=\"*/\" --include=\"obj/**\" --exclude=\"*\" /src/ /host/'"
         }
     ],
     "inputs": [

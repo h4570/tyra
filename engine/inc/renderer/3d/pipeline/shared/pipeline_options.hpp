@@ -14,6 +14,7 @@
 #include "../shared/pipeline_lighting_options.hpp"
 #include "../shared/pipeline_texture_mapping_type.hpp"
 #include "../shared/pipeline_transformation_type.hpp"
+#include "../shared/pipeline_z_test.hpp"
 #include "./pipeline_frustum_culling.hpp"
 
 namespace Tyra {
@@ -27,6 +28,7 @@ class PipelineOptions {
     shadingType = TyraShadingFlat;
     textureMappingType = TyraLinear;
     transformationType = TyraMVP;
+    zTestType = PipelineZTest_Standard;
   }
   ~PipelineOptions() {}
 
@@ -44,6 +46,9 @@ class PipelineOptions {
 
   /** Anti-aliasing */
   bool antiAliasingEnabled;
+
+  /** Type of z-buffer testing. */
+  PipelineZTest zTestType;
 
   /** Multiply by model matrix by view-projection or projection matrix */
   PipelineTransformationType transformationType;

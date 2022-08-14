@@ -29,7 +29,7 @@ std::string DynPipCVU1Program::getStringName() const {
 
 void DynPipCVU1Program::addProgramQBufferDataToPacket(packet2_t* packet,
                                                       DynPipBag* bag) const {
-  u32 addr = VU1_VERT_DATA_ADDR;
+  u32 addr = VU1_DYNPIP_VERT_DATA_ADDR;
 
   // Add vertices
   packet2_utils_vu_add_unpack_data(packet, addr, bag->verticesFrom, bag->count,

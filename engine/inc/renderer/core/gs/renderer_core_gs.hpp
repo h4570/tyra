@@ -12,6 +12,7 @@
 
 #include "renderer/renderer_settings.hpp"
 #include "./renderer_core_gs_vram.hpp"
+#include "../renderer_core_sync.hpp"
 
 namespace Tyra {
 
@@ -26,10 +27,6 @@ class RendererCoreGS {
   void init(RendererSettings* settings);
 
   void flipBuffers();
-
-  void setStandardZTest();
-
-  void setAllPassZTest();
 
  private:
   constexpr static float gsCenter = 4096.0F;
@@ -48,7 +45,6 @@ class RendererCoreGS {
   void updateCurrentField();
   qword_t* setXYOffset(qword_t* q, const int& drawContext, const float& x,
                        const float& y);
-  qword_t* addAllPassZTest(qword_t* q, int context, zbuffer_t* z);
 };
 
 }  // namespace Tyra

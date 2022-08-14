@@ -29,6 +29,7 @@
             "defines": [
                 "_EE",
                 "_IOP",
+                "__SPU__",
                 "INTELLISENSE"
             ],
             "cppStandard": "c++20",

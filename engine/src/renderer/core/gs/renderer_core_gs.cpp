@@ -14,10 +14,7 @@
 #include <graph.h>
 #include <gs_privileged.h>
 #include <gs_psm.h>
-#include <packet2.h>
 #include <packet2_utils.h>
-#include <packet2_chain.h>
-#include <packet2_types.h>
 #include "debug/debug.hpp"
 #include "renderer/core/gs/renderer_core_gs.hpp"
 
@@ -42,7 +39,7 @@ void RendererCoreGS::init(RendererSettings* t_settings) {
 
   initChannels();
   flipPacket = packet2_create(4, P2_TYPE_UNCACHED_ACCL, P2_MODE_NORMAL, 0);
-  zTestPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
+  zTestPacket = packet2_create(8, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
   allocateBuffers();
   initDrawingEnvironment();
 
@@ -51,21 +48,6 @@ void RendererCoreGS::init(RendererSettings* t_settings) {
 
 void RendererCoreGS::initChannels() {
   dma_channel_initialize(DMA_CHANNEL_GIF, NULL, 0);
-}
-
-void RendererCoreGS::setStandardZTest() {
-  packet2_reset(zTestPacket, false);
-  packet2_update(zTestPacket,
-                 draw_enable_tests(zTestPacket->base, 0, &zBuffer));
-  dma_channel_wait(DMA_CHANNEL_GIF, 0);
-  dma_channel_send_packet2(zTestPacket, DMA_CHANNEL_GIF, true);
-}
-
-void RendererCoreGS::setAllPassZTest() {
-  packet2_reset(zTestPacket, false);
-  packet2_update(zTestPacket, addAllPassZTest(zTestPacket->base, 0, &zBuffer));
-  dma_channel_wait(DMA_CHANNEL_GIF, 0);
-  dma_channel_send_packet2(zTestPacket, DMA_CHANNEL_GIF, true);
 }
 
 void RendererCoreGS::allocateBuffers() {
@@ -133,20 +115,6 @@ qword_t* RendererCoreGS::setXYOffset(qword_t* q, const int& drawContext,
               GS_SET_XYOFFSET(static_cast<int>(x * 16.0F),
                               static_cast<int>((y * 16.0F + yOffset))),
               GS_REG_XYOFFSET + drawContext);
-  q++;
-
-  return q;
-}
-
-qword_t* RendererCoreGS::addAllPassZTest(qword_t* q, int context,
-                                         zbuffer_t* z) {
-  (void)z;
-
-  PACK_GIFTAG(q, GIF_SET_TAG(1, 0, 0, 0, GIF_FLG_PACKED, 1), GIF_REG_AD);
-  q++;
-
-  PACK_GIFTAG(q, GS_SET_TEST(0, 0, 0, 0, 0, 0, 0, ZTEST_METHOD_ALLPASS),
-              GS_REG_TEST + context);
   q++;
 
   return q;

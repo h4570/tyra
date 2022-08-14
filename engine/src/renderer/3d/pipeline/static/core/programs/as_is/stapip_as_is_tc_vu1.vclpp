@@ -33,13 +33,13 @@
 
     LoadTyraStaticData{ gifSetTag }
     LoadTyraSingleColor{ singleColor, singleColorEnabled, VU1_SINGLE_COLOR_ADDR, VU1_OPTIONS_ADDR }
-    LoadTyraTags{ lodGifTag, texBufferClutGifTag, VU1_LOD_ADDR, VU1_CLUT_ADDR }
+    LoadTyraTagsTexture{ lodGifTag, testsTag, texBufferClutGifTag, VU1_LOD_ADDR, VU1_Z_TESTS_ADDR, VU1_CLUT_ADDR }
 
 begin:
     xtop buffer
     LoadTyraBufferTags{ scale, primTag, buffer }
 
-    iaddiu  vertexData,         buffer,         VU1_VERT_DATA_ADDR
+    iaddiu  vertexData,         buffer,         VU1_STAPIP_VERT_DATA_ADDR
     ilw.w   vertexCount,        0(buffer)
     iadd    stqData,            vertexData,     vertexCount
     iadd    colorData,          stqData,        vertexCount
@@ -51,7 +51,7 @@ setDestAddrMultiColor:
 setDestAddr:
     iaddiu  destAddress,        kickAddress,    0
 
-    StoreTyraGifTags{ gifSetTag, lodGifTag, texBufferClutGifTag, primTag, destAddress }
+    StoreTyraGifTagsTexture{ gifSetTag, lodGifTag, texBufferClutGifTag, primTag, testsTag, destAddress }
 
     ;--- Loop
     iadd vertexCounter, buffer, vertexCount

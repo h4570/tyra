@@ -17,6 +17,9 @@ BlockizerProgramsManager::BlockizerProgramsManager() {
   context = 0;
   vu1BlockData = BlockNotUploaded;
 
+  dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
+  dma_channel_fast_waits(DMA_CHANNEL_VIF1);
+
   setProgramsCache();
 }
 

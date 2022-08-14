@@ -35,7 +35,7 @@
     LoadTyraStaticData{ gifSetTag }
     MatrixLoad{ mvp, VU1_MVP_MATRIX_ADDR, vi00 }
     LoadTyraSingleColor{ singleColor, singleColorEnabled, VU1_SINGLE_COLOR_ADDR, VU1_OPTIONS_ADDR }
-    LoadTyraTags{ lodGifTag, texBufferClutGifTag, VU1_LOD_ADDR, VU1_CLUT_ADDR }
+    LoadTyraTags{ lodGifTag, testsTag, VU1_LOD_ADDR, VU1_Z_TESTS_ADDR }
     FixColor{ singleColor }
 
 begin:
@@ -43,13 +43,13 @@ begin:
     LoadTyraPrimTag{ primTag, buffer }
 
     ilw.w   vertexCount,        0(buffer)
-    iaddiu  vertexDataFrom,     buffer,         VU1_VERT_DATA_ADDR
+    iaddiu  vertexDataFrom,     buffer,         VU1_DYNPIP_VERT_DATA_ADDR
 
     iadd    kickAddress,        vertexDataFrom, vertexCount
     iadd    destAddress,        kickAddress,    vertexCount
     iadd    kickAddress,        kickAddress,    vertexCount
 
-    StoreTyraGifTags{ gifSetTag, lodGifTag, texBufferClutGifTag, primTag, destAddress }
+    StoreTyraGifTags{ gifSetTag, lodGifTag, primTag, testsTag, destAddress }
     LoadTyraLerpValue{ interp, VU1_OPTIONS_ADDR }
     LoadTyraScaleValue{ scale, buffer }
 
