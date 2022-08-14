@@ -56,6 +56,7 @@ class Vec4 {
   Vec4 operator*(const Vec4& v) const;
   Vec4 operator*(const float& v) const;
   Vec4 operator/(const float& v) const;
+  Vec4 operator/(const Vec4& v) const;
   Vec4 operator-(void) const;
   void operator=(const Vec4& v);
   void operator+=(const Vec4& v);

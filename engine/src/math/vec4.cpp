@@ -77,6 +77,10 @@ Vec4 Vec4::operator/(const float& v) const {
   return Vec4(x / v, y / v, z / v, w);
 }
 
+Vec4 Vec4::operator/(const Vec4& v) const {
+  return Vec4(x / v.x, y / v.y, z / v.z, w);
+}
+
 void Vec4::operator+=(const Vec4& v) {
   asm volatile(
       "lqc2      $vf4, 0x0(%0)    \n\t"

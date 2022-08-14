@@ -33,41 +33,42 @@ float Ray::distanceToPoint(const Vec4& point) const {
 
 bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
                        float* outputDistance) const {
-  auto inv = invDir();
-  inv.normalize();
+  Vec4 _min = (minCorner - this->origin) / this->invDir();
+  Vec4 _max = (minCorner - this->origin) / this->invDir();
 
-  float tmin = (minCorner.x - this->origin.x) * inv.x;
-  float tmax = (maxCorner.x - this->origin.x) * inv.x;
-  float tymin = (minCorner.y - this->origin.y) * inv.y;
-  float tymax = (maxCorner.y - this->origin.y) * inv.y;
+  float tmin =
+      std::max(std::max(std::min(_min.x, _max.x), std::min(_min.y, _max.y)),
+               std::min(_min.z, _max.z));
+  float tmax =
+      std::min(std::min(std::max(_min.x, _max.x), std::max(_min.y, _max.y)),
+               std::max(_min.z, _max.z));
 
-  if ((tmin > tymax) || (tymin > tmax)) {
-    return false;
-  }
-
-  if (tymin > tmin) tmin = tymin;
-
-  if (tymax < tmax) tmax = tymax;
-
-  float tzmin = (minCorner.z - this->origin.z) * inv.z;
-  float tzmax = (maxCorner.z - this->origin.z) * inv.z;
-
-  if ((tmin > tzmax) || (tzmin > tmax)) {
-    return false;
-  }
-
-  if (tzmin > tmin) tmin = tzmin;
-
-  if (tzmax < tmax) tmax = tzmax;
-
+  // if tmax < 0, ray (line) is intersecting AABB, but whole AABB is behing us
   if (tmax < 0) {
+    if (outputDistance != nullptr) {
+      *outputDistance = -1.0f;
+    }
     return false;
+  }
+
+  // if tmin > tmax, ray doesn't intersect AABB
+  if (tmin > tmax) {
+    if (outputDistance != nullptr) {
+      *outputDistance = -1.0f;
+    }
+    return false;
+  }
+
+  if (tmin < 0) {
+    if (outputDistance != nullptr) {
+      *outputDistance = tmax;
+    }
+    return true;
   }
 
   if (outputDistance != nullptr) {
-    *outputDistance = tmin >= 0 ? tmin : tmax;
+    *outputDistance = tmin;
   }
-
   return true;
 }
 
