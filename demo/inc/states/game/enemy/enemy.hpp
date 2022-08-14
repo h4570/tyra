@@ -22,6 +22,7 @@ using Tyra::DynamicMesh;
 using Tyra::DynPipOptions;
 using Tyra::Engine;
 using Tyra::Renderer;
+using Tyra::Renderer3DUtility;
 using Tyra::TextureRepository;
 using Tyra::Vec4;
 
@@ -53,6 +54,7 @@ class Enemy {
   bool isFighting = false;
   Vec4 spawnPoint;
 
+  Renderer3DUtility* utility;
   Audio* audio;
   EnemyInfo info;
 };

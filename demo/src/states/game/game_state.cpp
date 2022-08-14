@@ -65,8 +65,8 @@ void GameState::update() {
     fpsChecker = 0;
   }
 
-  skybox->update(player->getPosition());
   player->update(terrain->heightmap);
+  skybox->update(player->getPosition());
   auto shootAction = player->getShootAction();
   enemyManager->update(terrain->heightmap, player->getPosition(), shootAction);
 

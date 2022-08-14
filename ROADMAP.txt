@@ -1,9 +1,6 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
 - [Renderer] utility functions
-- [Renderer] drawLine()
-- [Renderer] drawBBox()
-- [Renderer] drawPoint()
 - [Demo] Red screen on hit
 - [Demo] Count of killed zombies
 - [Demo] Crosshair

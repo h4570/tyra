@@ -17,6 +17,7 @@ namespace Demo {
 
 Enemy::Enemy(Engine* engine, const EnemyInfo& t_info) {
   info = t_info;
+  utility = &engine->renderer.renderer3D.utility;
 
   mesh = new DynamicMesh(*info.motherMesh);
 
@@ -95,6 +96,10 @@ void Enemy::handlePlayerShoot(const PlayerShootAction& shootAction) {
       mesh->getCurrentBoundingBox().getTransformed(mesh->getModelMatrix());
 
   auto isOnEnemy = ray.intersectBox(bbox.min(), bbox.max());
+
+  utility->drawBBox(bbox);
+  utility->drawLine(ray.origin, ray.direction);
+  utility->drawPoint(*mesh->getPosition());
 
   if (isOnEnemy) {
     mesh->setPosition(spawnPoint);

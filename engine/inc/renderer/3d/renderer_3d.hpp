@@ -11,6 +11,7 @@
 #pragma once
 
 #include "./pipeline/renderer_3d_pipeline.hpp"
+#include "./renderer_3d_utility.hpp"
 
 namespace Tyra {
 
@@ -18,6 +19,8 @@ class Renderer3D {
  public:
   Renderer3D();
   ~Renderer3D();
+
+  Renderer3DUtility utility;
 
   /** Deinitialize previous pipeline and initialize new pipeline */
   void usePipeline(Renderer3DPipeline* pipeline);
