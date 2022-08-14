@@ -115,7 +115,7 @@
    sq t_testsTag,             1(t_destAddress)
    sq t_gifSetTag,            2(t_destAddress)
    sq t_lodGifTag,            3(t_destAddress)
-   sq t_primTag,              6(t_destAddress)
+   sq t_primTag,              4(t_destAddress)
    iaddiu                     t_destAddress,    t_destAddress,    5
 #endmacro
 
