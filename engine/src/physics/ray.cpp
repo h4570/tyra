@@ -15,9 +15,6 @@
 #include <sstream>
 #include <iomanip>
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-
 namespace Tyra {
 
 Ray::Ray() {}
@@ -38,9 +35,13 @@ bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
                        float* outputDistance) const {
   Vec4 _min = (minCorner - this->origin) / this->invDir();
   Vec4 _max = (minCorner - this->origin) / this->invDir();
-                        
-  float tmin = MAX(MAX(MIN(_min.x, _max.x), MIN(_min.y, _max.y)), MIN(_min.z, _max.z));
-  float tmax = MIN(MIN(MAX(_min.x, _max.x), MAX(_min.y, _max.y)), MAX(_min.z, _max.z));
+
+  float tmin =
+      std::max(std::max(std::min(_min.x, _max.x), std::min(_min.y, _max.y)),
+               std::min(_min.z, _max.z));
+  float tmax =
+      std::min(std::min(std::max(_min.x, _max.x), std::max(_min.y, _max.y)),
+               std::max(_min.z, _max.z));
 
   // if tmax < 0, ray (line) is intersecting AABB, but whole AABB is behing us
   if (tmax < 0) {
