@@ -94,7 +94,8 @@ void Renderer3DUtility::drawLine(const Vec4& from, const Vec4& to,
 
   packet2_chain_close_tag(packet);
 
-  TYRA_ASSERT(packet2_get_qw_count(packet) < packetSize);
+  TYRA_ASSERT(packet2_get_qw_count(packet) < packetSize,
+              "To small packet size!");
 
   dma_channel_wait(DMA_CHANNEL_GIF, 0);
   dma_channel_send_packet2(packet, DMA_CHANNEL_GIF, true);
