@@ -87,6 +87,8 @@ class Vec4 {
   /** Normalize vector */
   void normalize();
 
+  Vec4 getNormalized() const;
+
   /** Returns distance between two vectors */
   float distanceTo(const Vec4& v) const;
 

@@ -228,6 +228,12 @@ void Vec4::normalize() {
       : "r"(this->xyzw));
 }
 
+Vec4 Vec4::getNormalized() const {
+  Vec4 result(*this);
+  result.normalize();
+  return result;
+}
+
 float Vec4::distanceTo(const Vec4& v) const {
   float result;
   asm volatile(
