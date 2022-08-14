@@ -43,7 +43,7 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
   auto* sample = engine->audio.adpcm.load(
       FileUtils::fromCwd("game/models/zombie/punch.adpcm"));
 
-  const int enemyCount = 10;
+  const int enemyCount = 2;
   for (int i = 0; i < enemyCount; i++) {
     EnemyInfo info;
     info.adpcmChannel = 9 + i;
@@ -80,9 +80,10 @@ std::vector<RendererDynamicPair*> EnemyManager::getPairs() const {
 }
 
 void EnemyManager::update(const Heightmap& heightmap,
-                          const Vec4& playerPosition) {
+                          const Vec4& playerPosition,
+                          const PlayerShootAction& shootAction) {
   for (auto* enemy : enemies) {
-    enemy->update(heightmap, playerPosition);
+    enemy->update(heightmap, playerPosition, shootAction);
   }
 }
 

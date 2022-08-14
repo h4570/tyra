@@ -67,12 +67,8 @@ void GameState::update() {
 
   skybox->update(player->getPosition());
   player->update(terrain->heightmap);
-  enemyManager->update(terrain->heightmap, player->getPosition());
-
   auto shootAction = player->getShootAction();
-  if (shootAction.isShooting) {
-    shootAction.ray.value().print();
-  }
+  enemyManager->update(terrain->heightmap, player->getPosition(), shootAction);
 
   auto cameraInfo = player->getCameraInfo();
   dbgObj->setPosition(*cameraInfo.looksAt);

@@ -39,6 +39,7 @@ Enemy::Enemy(Engine* engine, const EnemyInfo& t_info) {
   walkSequence = {0, 1, 2};
   fightSequence = {3, 4, 5};
 
+  spawnPoint = info.spawnPoint;
   mesh->setPosition(info.spawnPoint);
 
   mesh->animation.setSequence(walkSequence);
@@ -61,8 +62,11 @@ Enemy::~Enemy() {
   delete pair;
 }
 
-void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition) {
+void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition,
+                   const PlayerShootAction& shootAction) {
   auto* enemyPosition = mesh->getPosition();
+
+  handlePlayerShoot(shootAction);
 
   auto diff = *enemyPosition - playerPosition;
   auto ang = Math::atan2(diff.x, diff.z);
@@ -79,6 +83,23 @@ void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition) {
   mesh->rotation.rotateByAngle(ang, Vec4(0.0F, 1.0F, 0.0F, 0.0F));
 
   mesh->update();
+}
+
+void Enemy::handlePlayerShoot(const PlayerShootAction& shootAction) {
+  if (!shootAction.isShooting) {
+    return;
+  }
+
+  const auto& ray = shootAction.ray.value();
+  auto bbox =
+      mesh->getCurrentBoundingBox().getTransformed(mesh->getModelMatrix());
+
+  auto isOnEnemy = ray.intersectBox(bbox.min(), bbox.max());
+
+  if (isOnEnemy) {
+    mesh->setPosition(spawnPoint);
+    TYRA_LOG("Enemy hit!");
+  }
 }
 
 void Enemy::walk(const Heightmap& heightmap, const Vec4& positionDiff) {

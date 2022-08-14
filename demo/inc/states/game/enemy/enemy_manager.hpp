@@ -13,6 +13,7 @@
 #include <tyra>
 #include <vector>
 #include "states/game/terrain/heightmap.hpp"
+#include "states/game/player/player_shoot_action.hpp"
 #include "./enemy.hpp"
 
 using Tyra::DynamicMesh;
@@ -28,7 +29,8 @@ class EnemyManager {
   EnemyManager(Engine* engine, const Heightmap& heightmap);
   ~EnemyManager();
 
-  void update(const Heightmap& heightmap, const Vec4& playerPosition);
+  void update(const Heightmap& heightmap, const Vec4& playerPosition,
+              const PlayerShootAction& shootAction);
 
   std::vector<RendererDynamicPair*> getPairs() const;
 

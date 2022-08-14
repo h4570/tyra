@@ -13,6 +13,7 @@
 #include <tyra>
 #include "states/game/renderer/renderer_dynamic_pair.hpp"
 #include "states/game/terrain/heightmap.hpp"
+#include "states/game/player/player_shoot_action.hpp"
 #include "./enemy_info.hpp"
 
 using Tyra::AnimationSequenceCallback;
@@ -35,7 +36,8 @@ class Enemy {
   DynPipOptions* options;
   RendererDynamicPair* pair;
 
-  void update(const Heightmap& heightmap, const Vec4& playerPosition);
+  void update(const Heightmap& heightmap, const Vec4& playerPosition,
+              const PlayerShootAction& shootAction);
 
  private:
   std::vector<u32> walkSequence;
@@ -45,9 +47,11 @@ class Enemy {
   void walk(const Heightmap& heightmap, const Vec4& positionDiff);
   void animationCallback(const AnimationSequenceCallback& callback);
   void fight();
+  void handlePlayerShoot(const PlayerShootAction& shootAction);
 
   bool isWalking = true;
   bool isFighting = false;
+  Vec4 spawnPoint;
 
   Audio* audio;
   EnemyInfo info;
