@@ -9,6 +9,7 @@
 */
 
 #include "math/vec4.hpp"
+#include <string>
 
 #pragma once
 
@@ -52,6 +53,11 @@ class Ray {
 
   /** Returns inverse direction */
   Vec4 invDir() const;
+
+  void print() const;
+  void print(const char* name) const;
+  void print(const std::string& name) const { print(name.c_str()); }
+  std::string getPrint(const char* name = nullptr) const;
 };
 
 }  // namespace Tyra

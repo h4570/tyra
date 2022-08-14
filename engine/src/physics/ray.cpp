@@ -12,6 +12,8 @@
 #include <tamtypes.h>
 #include <math.h>
 #include <algorithm>
+#include <sstream>
+#include <iomanip>
 
 namespace Tyra {
 
@@ -72,6 +74,29 @@ bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
 Vec4 Ray::invDir() const {
   return Vec4(1 / this->direction.x, 1 / this->direction.y,
               1 / this->direction.z, 1);
+}
+
+void Ray::print() const {
+  auto text = getPrint(nullptr);
+  printf("%s\n", text.c_str());
+}
+
+void Ray::print(const char* name) const {
+  auto text = getPrint(name);
+  printf("%s\n", text.c_str());
+}
+
+std::string Ray::getPrint(const char* name) const {
+  std::stringstream res;
+  if (name) {
+    res << name << "(";
+  } else {
+    res << "Ray(";
+  }
+  res << std::fixed << std::setprecision(4);
+  res << origin.getPrint("origin") << ", " << direction.getPrint("direction")
+      << ")";
+  return res.str();
 }
 
 }  // Namespace Tyra
