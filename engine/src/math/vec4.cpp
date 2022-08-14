@@ -23,6 +23,10 @@ void Vec4::set(const float& t_x, const float& t_y, const float& t_z,
   w = t_w;
 }
 
+void Vec4::operator=(const Vec4& v) { copy(this, v); }
+
+Vec4 Vec4::operator-(void) const { return Vec4(-x, -y, -z, w); }
+
 Vec4 Vec4::operator+(const Vec4& v) const {
   Vec4 res;
   asm volatile(
@@ -33,6 +37,16 @@ Vec4 Vec4::operator+(const Vec4& v) const {
       :
       : "r"(res.xyzw), "r"(this->xyzw), "r"(v.xyzw));
   return res;
+}
+
+void Vec4::operator+=(const Vec4& v) {
+  asm volatile(
+      "lqc2      $vf4, 0x0(%0)    \n\t"
+      "lqc2      $vf5, 0x0(%1)    \n\t"
+      "vadd.xyz  $vf4, $vf4, $vf5 \n\t"
+      "sqc2      $vf4, 0x0(%0)    \n\t"
+      :
+      : "r"(this->xyzw), "r"(v.xyzw));
 }
 
 Vec4 Vec4::operator-(const Vec4& v) const {
@@ -47,6 +61,16 @@ Vec4 Vec4::operator-(const Vec4& v) const {
   return res;
 }
 
+void Vec4::operator-=(const Vec4& v) {
+  asm volatile(
+      "lqc2      $vf4, 0x0(%0)    \n\t"
+      "lqc2      $vf5, 0x0(%1)    \n\t"
+      "vsub.xyz  $vf4, $vf4, $vf5 \n\t"
+      "sqc2      $vf4, 0x0(%0)    \n\t"
+      :
+      : "r"(this->xyzw), "r"(v.xyzw));
+}
+
 Vec4 Vec4::operator*(const Vec4& v) const {
   Vec4 res;
   asm volatile(
@@ -59,38 +83,6 @@ Vec4 Vec4::operator*(const Vec4& v) const {
   return res;
 }
 
-Vec4 Vec4::operator*(const float& v) const {
-  Vec4 res;
-  asm volatile(
-      "lqc2       $vf4,   0x0(%1)         \n\t"
-      "mfc1       $8,     %2              \n\t"
-      "qmtc2      $8,     $vf5            \n\t"
-      "vmulx.xyz  $vf6,   $vf4,   $vf5    \n\t"
-      "sqc2       $vf6,   0x0(%0)         \n\t"
-      :
-      : "r"(res.xyzw), "r"(this->xyzw), "f"(v));
-  res.w = w;
-  return res;
-}
-
-Vec4 Vec4::operator/(const float& v) const {
-  return Vec4(x / v, y / v, z / v, w);
-}
-
-Vec4 Vec4::operator/(const Vec4& v) const {
-  return Vec4(x / v.x, y / v.y, z / v.z, w);
-}
-
-void Vec4::operator+=(const Vec4& v) {
-  asm volatile(
-      "lqc2      $vf4, 0x0(%0)    \n\t"
-      "lqc2      $vf5, 0x0(%1)    \n\t"
-      "vadd.xyz  $vf4, $vf4, $vf5 \n\t"
-      "sqc2      $vf4, 0x0(%0)    \n\t"
-      :
-      : "r"(this->xyzw), "r"(v.xyzw));
-}
-
 void Vec4::operator*=(const Vec4& v) {
   asm volatile(
       "lqc2           $vf4,   0x0(%0)         \n\t"
@@ -101,21 +93,44 @@ void Vec4::operator*=(const Vec4& v) {
       : "r"(this->xyzw), "r"(v.xyzw));
 }
 
-void Vec4::operator*=(const float& v) {
-  // Hmm... we don't want to modify W in most of the cases
-  // It should be touched only during rendering process
-  auto tempW = w;
+Vec4 Vec4::operator/(const Vec4& v) const {
+  return Vec4(x / v.x, y / v.y, z / v.z, w / v.w);
+}
 
+void Vec4::operator/=(const Vec4& v) {
+  x /= v.x;
+  y /= v.y;
+  z /= v.z;
+  w /= v.w;
+}
+
+Vec4 Vec4::operator*(const float& v) const {
+  Vec4 res;
   asm volatile(
-      "lqc2       $vf4, 0x0(%0)  \n\t"
-      "mfc1       $8,  %1       \n\t"
-      "qmtc2      $8,  $vf5      \n\t"
-      "vmulx.xyz  $vf4, $vf4, $vf5 \n\t"
-      "sqc2       $vf4, 0x0(%0)  \n\t"
+      "lqc2       $vf4,   0x0(%1)         \n\t"
+      "mfc1       $8,     %2              \n\t"
+      "qmtc2      $8,     $vf5            \n\t"
+      "vmulx.xyz  $vf6,   $vf4,   $vf5    \n\t"
+      "vmove.w    $vf6,   $vf4            \n\t"
+      "sqc2       $vf6,   0x0(%0)         \n\t"
+      :
+      : "r"(res.xyzw), "r"(this->xyzw), "f"(v));
+  return res;
+}
+
+void Vec4::operator*=(const float& v) {
+  asm volatile(
+      "lqc2       $vf4, 0x0(%0)     \n\t"
+      "mfc1       $8,   %1          \n\t"
+      "qmtc2      $8,   $vf5        \n\t"
+      "vmulx.xyz  $vf4, $vf4, $vf5  \n\t"
+      "sqc2       $vf4, 0x0(%0)     \n\t"
       :
       : "r"(this->xyzw), "f"(v));
+}
 
-  w = tempW;
+Vec4 Vec4::operator/(const float& v) const {
+  return Vec4(x / v, y / v, z / v, w);
 }
 
 void Vec4::operator/=(const float& v) {
@@ -123,10 +138,6 @@ void Vec4::operator/=(const float& v) {
   y /= v;
   z /= v;
 }
-
-void Vec4::operator=(const Vec4& v) { copy(this, v); }
-
-Vec4 Vec4::operator-(void) const { return Vec4(-x, -y, -z); }
 
 void Vec4::unit() {
   asm volatile("sqc2		$vf0, 0x00(%0)	\n" : : "r"(this->xyzw));

@@ -50,18 +50,34 @@ class Vec4 {
   /** Initialize Vec4 with float[4] values */
   explicit Vec4(const float* v) { copy(this, v); }
 
-  Vec4 operator+(const Vec4& v) const;
-  Vec4 operator-(const Vec4& v) const;
-  /** Cross product */
-  Vec4 operator*(const Vec4& v) const;
-  Vec4 operator*(const float& v) const;
-  Vec4 operator/(const float& v) const;
-  Vec4 operator/(const Vec4& v) const;
-  Vec4 operator-(void) const;
+  /** copy */
   void operator=(const Vec4& v);
+
+  /** negate xyz */
+  Vec4 operator-(void) const;
+
+  /** xyz + xyz */
+  Vec4 operator+(const Vec4& v) const;
   void operator+=(const Vec4& v);
-  void operator*=(const float& v);
+
+  /** xyz - xyz */
+  Vec4 operator-(const Vec4& v) const;
+  void operator-=(const Vec4& v);
+
+  /** xyzw * xyzw */
+  Vec4 operator*(const Vec4& v) const;
   void operator*=(const Vec4& v);
+
+  /** xyzw / xyzw */
+  Vec4 operator/(const Vec4& v) const;
+  void operator/=(const Vec4& v);
+
+  /** xyz * v */
+  Vec4 operator*(const float& v) const;
+  void operator*=(const float& v);
+
+  /** xyz / v */
+  Vec4 operator/(const float& v) const;
   void operator/=(const float& v);
 
   /** (0,0,0,1) */
