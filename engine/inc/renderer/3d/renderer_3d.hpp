@@ -12,6 +12,7 @@
 
 #include "./pipeline/renderer_3d_pipeline.hpp"
 #include "./renderer_3d_utility.hpp"
+#include "../core/renderer_core.hpp"
 
 namespace Tyra {
 
@@ -21,6 +22,8 @@ class Renderer3D {
   ~Renderer3D();
 
   Renderer3DUtility utility;
+
+  void init(RendererCore* core);
 
   /** Deinitialize previous pipeline and initialize new pipeline */
   void usePipeline(Renderer3DPipeline* pipeline);

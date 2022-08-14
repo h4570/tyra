@@ -18,6 +18,7 @@ Renderer::~Renderer() {}
 void Renderer::init() {
   core.init();
   renderer2D.init(&core);
+  renderer3D.init(&core);
 }
 
 void Renderer::beginFrame() { core.beginFrame(); }
