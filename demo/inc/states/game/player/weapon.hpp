@@ -31,6 +31,7 @@ class Weapon {
 
   StaticMesh* mesh;
   StaPipOptions* options;
+  bool isShooting = false;
 
   void update();
 
@@ -45,6 +46,7 @@ class Weapon {
 
   audsrv_adpcm_t* shootAdpcm;
 
+  void shoot();
   void allocateOptions();
   u8 getShootChannel();
 };

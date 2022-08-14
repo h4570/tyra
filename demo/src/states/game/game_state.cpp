@@ -66,26 +66,31 @@ void GameState::update() {
   }
 
   skybox->update(player->getPosition());
-  auto cameraInfo = player->getCameraInfo();
-  engine->renderer.beginFrame(cameraInfo);
-
-  dbgObj->setPosition(*cameraInfo.looksAt);
-
   player->update(terrain->heightmap);
   enemyManager->update(terrain->heightmap, player->getPosition());
 
-  renderer.clear();
-  {
-    renderer.add(skybox->pair);  // First, because of ALLPASS
-    renderer.add(ship->pair);
-    renderer.add(dbgObj->pair);
-
-    renderer.add(player->pair);
-    renderer.add(enemyManager->getPairs());
-    renderer.add(terrain->pair);
+  auto shootAction = player->getShootAction();
+  if (shootAction.isShooting) {
+    shootAction.ray.value().print();
   }
-  renderer.render();
 
+  auto cameraInfo = player->getCameraInfo();
+  dbgObj->setPosition(*cameraInfo.looksAt);
+
+  engine->renderer.beginFrame(cameraInfo);
+  {
+    renderer.clear();
+    {
+      renderer.add(skybox->pair);  // First, because of ALLPASS
+      renderer.add(ship->pair);
+      renderer.add(dbgObj->pair);
+
+      renderer.add(player->pair);
+      renderer.add(enemyManager->getPairs());
+      renderer.add(terrain->pair);
+    }
+    renderer.render();
+  }
   engine->renderer.endFrame();
 }
 

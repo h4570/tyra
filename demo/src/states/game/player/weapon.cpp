@@ -77,10 +77,10 @@ u8 Weapon::getShootChannel() {
 }
 
 void Weapon::update() {
+  isShooting = false;
+
   if (!isShootAnimation1 && !isShootAnimation2 && pad->getPressed().Cross) {
-    shootTimer.prime();
-    audio->adpcm.tryPlay(shootAdpcm, getShootChannel());
-    isShootAnimation1 = true;
+    shoot();
   }
 
   auto* position = mesh->getPosition();
@@ -105,12 +105,17 @@ void Weapon::update() {
       isShootAnimation2 = false;
       *position = initialPosition;
       if (pad->getPressed().Cross) {
-        shootTimer.prime();
-        audio->adpcm.tryPlay(shootAdpcm, getShootChannel());
-        isShootAnimation1 = true;
+        shoot();
       }
     }
   }
+}
+
+void Weapon::shoot() {
+  isShooting = true;
+  shootTimer.prime();
+  audio->adpcm.tryPlay(shootAdpcm, getShootChannel());
+  isShootAnimation1 = true;
 }
 
 void Weapon::allocateOptions() {
