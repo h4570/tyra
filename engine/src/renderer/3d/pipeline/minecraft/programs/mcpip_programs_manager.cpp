@@ -18,7 +18,6 @@ BlockizerProgramsManager::BlockizerProgramsManager() {
   vu1BlockData = BlockNotUploaded;
 
   dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
-  dma_channel_fast_waits(DMA_CHANNEL_VIF1);
 
   setProgramsCache();
 }
@@ -169,6 +168,8 @@ void BlockizerProgramsManager::sendPacket(McpipProgram* program) {
   packet2_utils_vu_add_end_tag(currentPacket);
 
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+  // dma_wait_fast(); // This have no impact on performance
+
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
   context = !context;
 }

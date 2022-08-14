@@ -56,7 +56,6 @@ void DynPipRenderer::init(RendererCore* t_core,
   programsRepo = t_programRepo;
 
   dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
-  dma_channel_fast_waits(DMA_CHANNEL_VIF1);
 
   setProgramsCache();
 
@@ -188,6 +187,7 @@ void DynPipRenderer::addBufferDataToPacket(DynPipVU1Program* program,
 
 void DynPipRenderer::sendPacket() {
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+  // dma_wait_fast(); // This have no impact on performance
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
 
   TYRA_ASSERT(packet2_get_qw_count(currentPacket) <= packetSize,

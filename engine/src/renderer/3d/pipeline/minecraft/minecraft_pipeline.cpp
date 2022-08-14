@@ -58,6 +58,8 @@ void MinecraftPipeline::setLod() {
 }
 
 void MinecraftPipeline::onUse() {
+  dma_channel_fast_waits(DMA_CHANNEL_VIF1);
+
   spamBuffers = new McpipBlock**[spamBuffersCount];
   spamCounts = new u32[spamBuffersCount];
 

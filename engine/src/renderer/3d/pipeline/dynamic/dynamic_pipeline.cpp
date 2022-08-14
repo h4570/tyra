@@ -29,6 +29,8 @@ void DynamicPipeline::setRenderer(RendererCore* t_core) {
 }
 
 void DynamicPipeline::onUse() {
+  dma_channel_fast_waits(DMA_CHANNEL_VIF1);
+
   colorsCache = new Vec4[4];
 
   buffers = new DynPipBag[buffersCount];

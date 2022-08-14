@@ -42,7 +42,7 @@ namespace Tyra {
  *
  */
 
-const u16 StaPipQBufferRenderer::buffersCount = 16;
+const u16 StaPipQBufferRenderer::buffersCount = 32;
 
 StaPipQBufferRenderer::StaPipQBufferRenderer() {
   currentBufferIndex = 0;
@@ -99,7 +99,6 @@ void StaPipQBufferRenderer::init(RendererCore* t_core, prim_t* t_prim,
   lod = t_lod;
 
   dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
-  dma_channel_fast_waits(DMA_CHANNEL_VIF1);
 
   setProgramsCache();
 
@@ -365,6 +364,8 @@ void StaPipQBufferRenderer::sendPacket() {
               "Packet is too big. Internal error");
 
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+  // dma_wait_fast(); // This have no impact on performance
+
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
 
   // Switch packet, so we can proceed during DMA transfer

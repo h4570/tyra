@@ -26,6 +26,8 @@ void StaticPipeline::setRenderer(RendererCore* t_core) {
 }
 
 void StaticPipeline::onUse() {
+  dma_channel_fast_waits(DMA_CHANNEL_VIF1);
+
   colorsCache = new Vec4[4];
   core.allocateOnUse();
   core.reinitVU1Programs();
