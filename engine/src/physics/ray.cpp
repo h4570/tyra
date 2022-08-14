@@ -32,7 +32,7 @@ float Ray::distanceToPoint(const Vec4& point) const {
 }
 
 bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
-                       float& distance) const {
+                       const float& distance) const {
   auto inv = invDir();
   inv.normalize();
 

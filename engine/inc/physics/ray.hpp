@@ -49,7 +49,7 @@ class Ray {
    * @return Vec4 point of intersection
    */
   bool intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
-                    float& distance) const;
+                    const float& distance) const;
 
   /** Returns inverse direction */
   Vec4 invDir() const;
