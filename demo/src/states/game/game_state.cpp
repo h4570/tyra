@@ -39,6 +39,7 @@ void GameState::onStart() {
   player = new Player(engine);
   terrain = new Terrain(repository);
   enemyManager = new EnemyManager(engine, terrain->heightmap);
+  ship = new Ship(repository);
   skybox = new Skybox(repository);
   dbgObj = new DebugObject(repository);
 
@@ -51,6 +52,7 @@ GlobalStateType GameState::onFinish() {
   delete player;
   delete enemyManager;
   delete terrain;
+  delete ship;
   delete skybox;
   delete dbgObj;
   initialized = false;
@@ -60,7 +62,8 @@ GlobalStateType GameState::onFinish() {
 
 void GameState::update() {
   if (fpsChecker++ > 50) {
-    TYRA_LOG("FPS: ", engine->info.getFps());
+    TYRA_LOG("FPS: ", engine->info.getFps(),
+             " RAM: ", engine->info.getAvailableRAM());
     fpsChecker = 0;
   }
 
@@ -75,11 +78,13 @@ void GameState::update() {
 
   renderer.clear();
   {
-    renderer.add(skybox->pair);
+    renderer.add(skybox->pair);  // First, because of ALLPASS
+    renderer.add(ship->pair);
+    renderer.add(dbgObj->pair);
+
     renderer.add(player->pair);
     renderer.add(enemyManager->getPairs());
     renderer.add(terrain->pair);
-    renderer.add(dbgObj->pair);
   }
   renderer.render();
 

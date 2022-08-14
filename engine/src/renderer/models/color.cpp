@@ -19,6 +19,18 @@ void Color::copy(Color* out, const float* in) {
 }
 
 void Color::operator=(const Color& v) { copy(this, v); }
+void Color::operator*=(const float& v) {
+  r *= v;
+  g *= v;
+  b *= v;
+  a *= v;
+}
+void Color::operator/=(const float& v) {
+  r /= v;
+  g /= v;
+  b /= v;
+  a /= v;
+}
 
 void Color::set(const float& t_r, const float& t_g, const float& t_b,
                 const float& t_a) {

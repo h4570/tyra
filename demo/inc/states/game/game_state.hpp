@@ -16,6 +16,7 @@
 #include "./renderer/game_renderer.hpp"
 #include "./terrain/terrain.hpp"
 #include "./skybox/skybox.hpp"
+#include "./ship/ship.hpp"
 #include "./debug_object.hpp"
 #include "./enemy/enemy_manager.hpp"
 
@@ -48,6 +49,7 @@ class GameState : public State<GlobalStateType> {
   EnemyManager* enemyManager;
   Terrain* terrain;
   Skybox* skybox;
+  Ship* ship;
   DebugObject* dbgObj;
 };
 
