@@ -29,34 +29,17 @@ class Ray {
   Ray(const Vec4& origin, const Vec4& direction);
   ~Ray();
 
-  // Methods
-
-  /**
-   * @param origin Vec4 starting point of the ray;
-   * @param direction Vec4 normalized vector pointing to direction;
-   */
-  void set(const Vec4& origin, const Vec4& direction);
-
-  /**
-   * @brief Set origin of the ray;
-   * @param origin Vec4 starting point of the ray;
-   */
-  void setOrigin(const Vec4& origin);
-
-  /**
-   * @brief Set direction of the ray;
-   * @param direction Vec4 normalized vector pointing to direction;
-   */
-  void setDirection(const Vec4& direction);
+  Vec4 origin;
+  Vec4 direction;
 
   /**
    * @return Vec4 that is a given distance along this Ray
    * @param t - the distance along the Ray to retrieve a position for.
    */
-  Vec4 at(const float& t);
+  Vec4 at(const float& t) const;
 
   /** @return Distance from the Vec4 point to the origin */
-  float distanceToPoint(const Vec4& point);
+  float distanceToPoint(const Vec4& point) const;
 
   /**
    * @param minCorner - pointer to min corner position. (bottom left)
@@ -64,15 +47,11 @@ class Ray {
    * @param distance - the box to intersect with.
    * @return Vec4 point of intersection
    */
-  u8 intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
-                  float& distance);
+  bool intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
+                    float& distance) const;
 
   /** Returns inverse direction */
-  const Vec4 invDir();
-
- private:
-  Vec4 _origin;
-  Vec4 _direction;
+  Vec4 invDir() const;
 };
 
 }  // namespace Tyra
