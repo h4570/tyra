@@ -60,6 +60,9 @@ void MinecraftPipeline::setLod() {
 void MinecraftPipeline::onUse() {
   spamBuffers = new McpipBlock**[spamBuffersCount];
   spamCounts = new u32[spamBuffersCount];
+
+  rendererCore->gs.enableZTests();
+
   manager.allocateOnUse();
 
   manager.uploadVU1Programs();

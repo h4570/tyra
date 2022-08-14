@@ -28,6 +28,8 @@ class RendererCoreGS {
 
   void flipBuffers();
 
+  void enableZTests();
+
  private:
   constexpr static float gsCenter = 4096.0F;
   constexpr static float screenCenter = gsCenter / 2.0F;

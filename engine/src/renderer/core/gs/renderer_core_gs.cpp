@@ -89,6 +89,15 @@ void RendererCoreGS::allocateBuffers() {
   TYRA_LOG("Framebuffers, zBuffer set and allocated!");
 }
 
+void RendererCoreGS::enableZTests() {
+  packet2_reset(zTestPacket, false);
+  packet2_update(zTestPacket,
+                 draw_enable_tests(zTestPacket->base, 0, &zBuffer));
+  packet2_update(zTestPacket, draw_finish(zTestPacket->next));
+  dma_channel_wait(DMA_CHANNEL_GIF, 0);
+  dma_channel_send_packet2(zTestPacket, DMA_CHANNEL_GIF, true);
+}
+
 void RendererCoreGS::initDrawingEnvironment() {
   packet2_t* packet2 = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_NORMAL, 0);
   packet2_update(packet2, draw_setup_environment(packet2->base, 0, frameBuffers,
