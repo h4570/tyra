@@ -64,19 +64,22 @@ void Renderer3DUtility::drawLine(const Vec4& from, const Vec4& to,
   auto* packet = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_CHAIN, false);
 
   auto mvp = core->renderer3D.getViewProj();
-  auto* inputVerts = new Vec4[2];
-  auto* inputColors = new color_f_t[2];
+  std::array<Vec4, 2> inputVerts;
+  std::array<color_f_t, 2> inputColors;
   inputVerts[0] = mvp * from;
   inputVerts[1] = mvp * to;
   inputColors[0] = {color.r, color.g, color.b, color.a};
   inputColors[1] = {color.r, color.g, color.b, color.a};
 
-  auto* outputVerts = new xyz_t[2];
-  auto* outputColors = new color_t[2];
-  draw_convert_xyz(outputVerts, 2048, 2048, static_cast<int>(0xFFFFFF / 32.0F),
-                   2, reinterpret_cast<vertex_f_t*>(inputVerts));
-  draw_convert_rgbq(outputColors, 2, reinterpret_cast<vertex_f_t*>(inputVerts),
-                    inputColors, 0x80);
+  std::array<xyz_t, 2> outputVerts;
+  std::array<color_t, 2> outputColors;
+
+  draw_convert_xyz(outputVerts.data(), 2048, 2048,
+                   static_cast<int>(0xFFFFFF / 32.0F), 2,
+                   reinterpret_cast<vertex_f_t*>(inputVerts.data()));
+  draw_convert_rgbq(outputColors.data(), 2,
+                    reinterpret_cast<vertex_f_t*>(inputVerts.data()),
+                    inputColors.data(), 0x80);
 
   packet2_chain_open_end(packet, 0, 0);
 
@@ -101,10 +104,7 @@ void Renderer3DUtility::drawLine(const Vec4& from, const Vec4& to,
   dma_channel_send_packet2(packet, DMA_CHANNEL_GIF, true);
   dma_channel_wait(DMA_CHANNEL_GIF, 0);
 
-  delete[] inputVerts;
-  delete[] inputColors;
-  delete[] outputVerts;
-  delete[] outputColors;
+  packet2_free(packet);
 }
 
 void Renderer3DUtility::drawBBox(const CoreBBox& v, const Color& color) {
