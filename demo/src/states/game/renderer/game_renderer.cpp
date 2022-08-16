@@ -46,6 +46,11 @@ void GameRenderer::clear() {
   dynamicPairs.clear();
 }
 
+void GameRenderer::renderSkybox(const RendererStaticPair& pair) {
+  renderer->renderer3D.usePipeline(&stpip);
+  stpip.render(pair.mesh, pair.options);
+}
+
 void GameRenderer::render() {
   if (staticPairs.size()) {
     renderer->renderer3D.usePipeline(&stpip);

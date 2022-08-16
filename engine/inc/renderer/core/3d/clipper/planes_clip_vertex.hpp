@@ -14,11 +14,11 @@
 
 namespace Tyra {
 
-struct EEClipVertex {
+struct PlanesClipVertex {
   Vec4 position, normal, st, color;
 };
 
-struct EEClipVertexPtrs {
+struct PlanesClipVertexPtrs {
   Vec4 *position, *normal, *st, *color;
 };
 

@@ -32,7 +32,7 @@ RendererCore2D::~RendererCore2D() {
   delete rects[1];
 }
 
-const float RendererCore2D::GS_CENTER = 4096.0F;
+const float RendererCore2D::GS_DRAW_AREA = 4096.0F;
 const float RendererCore2D::SCREEN_CENTER = 4096.0F / 2.0F;
 
 void RendererCore2D::setPrim() {

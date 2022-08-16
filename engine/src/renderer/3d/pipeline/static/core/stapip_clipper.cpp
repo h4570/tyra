@@ -31,7 +31,7 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
                                           buffer->bag->texture != nullptr,
                                           buffer->bag->color->many != nullptr};
 
-  std::vector<EEClipVertex> clippedVertices;
+  std::vector<PlanesClipVertex> clippedVertices;
 
   for (u32 i = 0; i < buffer->size / 3; i++) {
     for (u8 j = 0; j < 3; j++) {
@@ -63,14 +63,14 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
   moveDataToBuffer(clippedVertices, buffer);
 }
 
-void StaPipClipper::perspectiveDivide(std::vector<EEClipVertex>* vertices) {
+void StaPipClipper::perspectiveDivide(std::vector<PlanesClipVertex>* vertices) {
   for (u32 i = 0; i < vertices->size(); i++) {
     (*vertices)[i].position /= (*vertices)[i].position.w;
   }
 }
 
-void StaPipClipper::moveDataToBuffer(const std::vector<EEClipVertex>& vertices,
-                                     StaPipQBuffer* buffer) {
+void StaPipClipper::moveDataToBuffer(
+    const std::vector<PlanesClipVertex>& vertices, StaPipQBuffer* buffer) {
   buffer->reallocateManually(vertices.size());
 
   for (u32 i = 0; i < vertices.size(); i++) {

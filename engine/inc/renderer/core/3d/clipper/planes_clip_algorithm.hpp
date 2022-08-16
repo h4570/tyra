@@ -11,7 +11,7 @@
 #pragma once
 
 #include <vector>
-#include "./ee_clip_vertex.hpp"
+#include "./planes_clip_vertex.hpp"
 #include "debug/debug.hpp"
 #include "renderer/renderer_settings.hpp"
 
@@ -21,30 +21,30 @@ struct EEClipAlgorithmSettings {
   bool lerpNormals, lerpTexCoords, lerpColors;
 };
 
-class EEClipAlgorithm {
+class PlanesClipAlgorithm {
  public:
-  EEClipAlgorithm();
-  ~EEClipAlgorithm();
+  PlanesClipAlgorithm();
+  ~PlanesClipAlgorithm();
 
   void init(const RendererSettings& settings);
 
-  u8 clip(EEClipVertex* o_vertices, EEClipVertexPtrs* i_vertices,
+  u8 clip(PlanesClipVertex* o_vertices, PlanesClipVertexPtrs* i_vertices,
           const EEClipAlgorithmSettings& settings);
 
   static float clipMargin;
 
  private:
   float halfWidth, halfHeight, near, far;
-  EEClipVertex* tempVertices;
+  PlanesClipVertex* tempVertices;
 
-  float getValueByPlane(const EEClipVertex& v, const int& plane);
+  float getValueByPlane(const PlanesClipVertex& v, const int& plane);
 
   bool isInside(const int& plane, const float& v, const float& w,
                 const float& planeLimitValue);
 
   /** @return clipped size */
-  u8 clipAgainstPlane(EEClipVertex* original, const u8& originalSize,
-                      EEClipVertex* clipped, const int& plane,
+  u8 clipAgainstPlane(PlanesClipVertex* original, const u8& originalSize,
+                      PlanesClipVertex* clipped, const int& plane,
                       const float& planeLimitValue,
                       const EEClipAlgorithmSettings& settings);
 };

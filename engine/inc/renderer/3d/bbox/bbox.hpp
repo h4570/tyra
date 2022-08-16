@@ -19,12 +19,16 @@ namespace Tyra {
 /** Bounding box with more features */
 class BBox : public CoreBBox {
  public:
+  BBox(const BBox& t_bbox);
   explicit BBox(CoreBBox** t_bboxes, const u32& count);
   explicit BBox(Vec4* t_vertices, u32* faces, u32 t_count);
   explicit BBox(Vec4* t_vertices, u32 t_count);
   explicit BBox(const BBox& t_bbox, const M4x4& t_matrix);
-  explicit BBox(const BBox& t_bbox);
   explicit BBox(Vec4* t_vertices);
+
+  static BBox create(const Vec4& center, const float& size);
+
+  void operator=(const BBox& v);
 
   const float& getHeight() const { return _height; }
   const float& getDepth() const { return _depth; }

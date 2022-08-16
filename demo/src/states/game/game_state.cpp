@@ -39,7 +39,6 @@ void GameState::onStart() {
   enemyManager = new EnemyManager(engine, terrain->heightmap);
   ship = new Ship(repository);
   skybox = new Skybox(repository);
-  dbgObj = new DebugObject(repository);
 
   initialized = true;
 }
@@ -52,41 +51,41 @@ GlobalStateType GameState::onFinish() {
   delete terrain;
   delete ship;
   delete skybox;
-  delete dbgObj;
   initialized = false;
 
   return STATE_EXIT;
 }
 
 void GameState::update() {
+  // Begin frame
+  player->update(terrain->heightmap);
+  auto cameraInfo = player->getCameraInfo();
+  engine->renderer.beginFrame(cameraInfo);
+
+  // Clear screen and render skybox
+  renderer.clear();
+  skybox->update(player->getPosition());
+  renderer.renderSkybox(*skybox->pair);  // First, because of ALLPASS
+
+  // Check fps
   if (fpsChecker++ > 50) {
     TYRA_LOG("FPS: ", engine->info.getFps(),
              " RAM: ", engine->info.getAvailableRAM());
     fpsChecker = 0;
   }
 
-  player->update(terrain->heightmap);
-  skybox->update(player->getPosition());
+  // Game logic
   auto shootAction = player->getShootAction();
   enemyManager->update(terrain->heightmap, player->getPosition(), shootAction);
 
-  auto cameraInfo = player->getCameraInfo();
-  dbgObj->setPosition(*cameraInfo.looksAt);
+  // Render other stuff
+  renderer.add(ship->pair);
+  renderer.add(player->pair);
+  renderer.add(enemyManager->getPairs());
+  renderer.add(terrain->pair);
+  renderer.render();
 
-  engine->renderer.beginFrame(cameraInfo);
-  {
-    renderer.clear();
-    {
-      renderer.add(skybox->pair);  // First, because of ALLPASS
-      renderer.add(ship->pair);
-      renderer.add(dbgObj->pair);
-
-      renderer.add(player->pair);
-      renderer.add(enemyManager->getPairs());
-      renderer.add(terrain->pair);
-    }
-    renderer.render();
-  }
+  // End frame
   engine->renderer.endFrame();
 }
 

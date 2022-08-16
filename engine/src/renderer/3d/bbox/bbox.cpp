@@ -102,6 +102,16 @@ Vec4 BBox::max() const {
   return _max;
 }
 
+BBox BBox::create(const Vec4& center, const float& size) {
+  auto core = CoreBBox::create(center, size);
+  return BBox(core.vertices);
+}
+
+void BBox::operator=(const BBox& v) {
+  for (auto i = 0; i < 8; i++) Vec4::copy(&vertices[i], v.vertices[i].xyzw);
+  setData();
+}
+
 void BBox::getMinMax(Vec4* res_min, Vec4* res_max) const {
   Vec4 temp = Vec4();
 

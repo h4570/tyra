@@ -92,14 +92,11 @@ void Enemy::handlePlayerShoot(const PlayerShootAction& shootAction) {
   }
 
   const auto& ray = shootAction.ray.value();
+
   auto bbox =
       mesh->getCurrentBoundingBox().getTransformed(mesh->getModelMatrix());
 
   auto isOnEnemy = ray.intersectBox(bbox.min(), bbox.max());
-
-  utility->drawBBox(bbox);
-  utility->drawLine(ray.origin, ray.direction);
-  utility->drawPoint(*mesh->getPosition());
 
   if (isOnEnemy) {
     mesh->setPosition(spawnPoint);

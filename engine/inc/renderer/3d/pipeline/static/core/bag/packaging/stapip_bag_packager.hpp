@@ -12,7 +12,7 @@
 
 #include "renderer/core/3d/bbox/core_bbox.hpp"
 #include "renderer/core/3d/renderer_3d_frustum_planes.hpp"
-#include "renderer/core/3d/clipper/ee_clip_algorithm.hpp"
+#include "renderer/core/3d/clipper/planes_clip_algorithm.hpp"
 #include "./stapip_bag_packages_bbox.hpp"
 #include "./stapip_bag_package.hpp"
 #include "../stapip_bag.hpp"

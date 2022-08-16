@@ -17,7 +17,6 @@
 #include "./terrain/terrain.hpp"
 #include "./skybox/skybox.hpp"
 #include "./ship/ship.hpp"
-#include "./debug_object.hpp"
 #include "./enemy/enemy_manager.hpp"
 
 namespace Demo {
@@ -50,7 +49,6 @@ class GameState : public State<GlobalStateType> {
   Terrain* terrain;
   Skybox* skybox;
   Ship* ship;
-  DebugObject* dbgObj;
 };
 
 }  // namespace Demo

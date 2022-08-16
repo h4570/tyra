@@ -1,10 +1,9 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [Renderer] utility functions
 - [Demo] Red screen on hit
-- [Demo] Count of killed zombies
-- [Demo] Crosshair
-- [Demo] 2D Health bar
+- [HUD] Count of killed zombies
+- [HUD] Crosshair
+- [HUD] 2D Health bar
 - [Demo] Game over screen
 - [Demo] Game fadein with audio information about island
 - [General] USB test
@@ -36,6 +35,7 @@ because Mesh rendering uses only core.render()
 ------------ Github issues for Tyra v2 ------------
 - [renderer] fog
 - [renderer] bbox parts optimization
+- [General] smart pointers and std::array instead of raw pointers
 - [md2] refactor
 - [2D] Fixed font support
 - [File] Async file loading

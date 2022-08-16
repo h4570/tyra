@@ -14,7 +14,7 @@
 #include "debug/debug.hpp"
 #include "./stapip_qbuffer.hpp"
 #include "renderer/renderer_settings.hpp"
-#include "renderer/core/3d/clipper/ee_clip_algorithm.hpp"
+#include "renderer/core/3d/clipper/planes_clip_algorithm.hpp"
 
 namespace Tyra {
 
@@ -36,15 +36,15 @@ class StaPipClipper {
 
  private:
   u32 maxVertCount;
-  EEClipAlgorithm algorithm;
+  PlanesClipAlgorithm algorithm;
   M4x4* mvp;
 
   Vec4 inputVerts[3];
-  EEClipVertexPtrs inputTriangle[3];
-  EEClipVertex clippedTriangle[9];
+  PlanesClipVertexPtrs inputTriangle[3];
+  PlanesClipVertex clippedTriangle[9];
 
-  void perspectiveDivide(std::vector<EEClipVertex>* vertices);
-  void moveDataToBuffer(const std::vector<EEClipVertex>& vertices,
+  void perspectiveDivide(std::vector<PlanesClipVertex>* vertices);
+  void moveDataToBuffer(const std::vector<PlanesClipVertex>& vertices,
                         StaPipQBuffer* buffer);
 };
 

@@ -143,6 +143,10 @@ CoreBBox::CoreBBox(const CoreBBox& t_bbox) {
     Vec4::copy(&vertices[i], t_bbox.vertices[i].xyzw);
 }
 
+void CoreBBox::operator=(const CoreBBox& v) {
+  for (auto i = 0; i < 8; i++) Vec4::copy(&vertices[i], v.vertices[i].xyzw);
+}
+
 CoreBBox::CoreBBox(Vec4* t_vertices) {
   for (auto i = 0; i < 8; i++) Vec4::copy(&vertices[i], t_vertices[i].xyzw);
 }
@@ -176,6 +180,30 @@ std::string CoreBBox::getPrint(const char* name) const {
       res << ")";
   }
   return res.str();
+}
+
+CoreBBox CoreBBox::create(const Vec4& center, const float& size) {
+  CoreBBox bbox;
+
+  float lowX = center.x - size;
+  float lowY = center.y - size;
+  float lowZ = center.z - size;
+
+  float hiX = center.x + size;
+  float hiY = center.y + size;
+  float hiZ = center.z + size;
+
+  bbox.vertices[0].set(lowX, lowY, lowZ);
+  bbox.vertices[1].set(lowX, lowY, hiZ);
+  bbox.vertices[2].set(lowX, hiY, lowZ);
+  bbox.vertices[3].set(lowX, hiY, hiZ);
+
+  bbox.vertices[4].set(hiX, lowY, lowZ);
+  bbox.vertices[5].set(hiX, lowY, hiZ);
+  bbox.vertices[6].set(hiX, hiY, lowZ);
+  bbox.vertices[7].set(hiX, hiY, hiZ);
+
+  return bbox;
 }
 
 CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,

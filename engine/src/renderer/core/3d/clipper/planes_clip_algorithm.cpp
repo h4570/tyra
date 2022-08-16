@@ -8,25 +8,28 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/core/3d/clipper/ee_clip_algorithm.hpp"
+#include "renderer/core/3d/clipper/planes_clip_algorithm.hpp"
 
 namespace Tyra {
 
-EEClipAlgorithm::EEClipAlgorithm() { tempVertices = new EEClipVertex[9]; }
+PlanesClipAlgorithm::PlanesClipAlgorithm() {
+  tempVertices = new PlanesClipVertex[9];
+}
 
-EEClipAlgorithm::~EEClipAlgorithm() { delete[] tempVertices; }
+PlanesClipAlgorithm::~PlanesClipAlgorithm() { delete[] tempVertices; }
 
-float EEClipAlgorithm::clipMargin = -10.0F;
+float PlanesClipAlgorithm::clipMargin = -10.0F;
 
-void EEClipAlgorithm::init(const RendererSettings& settings) {
+void PlanesClipAlgorithm::init(const RendererSettings& settings) {
   halfWidth = 0.5F;
   halfHeight = 0.5F;
   near = settings.getNear() - (-clipMargin);
   far = -settings.getFar();
 }
 
-u8 EEClipAlgorithm::clip(EEClipVertex* o_vertices, EEClipVertexPtrs* i_vertices,
-                         const EEClipAlgorithmSettings& settings) {
+u8 PlanesClipAlgorithm::clip(PlanesClipVertex* o_vertices,
+                             PlanesClipVertexPtrs* i_vertices,
+                             const EEClipAlgorithmSettings& settings) {
   for (int i = 0; i < 3; i++) {
     o_vertices[i].position = *i_vertices[i].position;
     if (settings.lerpColors) o_vertices[i].color = *i_vertices[i].color;
@@ -58,8 +61,8 @@ u8 EEClipAlgorithm::clip(EEClipVertex* o_vertices, EEClipVertexPtrs* i_vertices,
   return outputSize;
 }
 
-float EEClipAlgorithm::getValueByPlane(const EEClipVertex& v,
-                                       const int& plane) {
+float PlanesClipAlgorithm::getValueByPlane(const PlanesClipVertex& v,
+                                           const int& plane) {
   switch (plane) {
     case 1:
       return v.position.x;  // x plane
@@ -73,8 +76,9 @@ float EEClipAlgorithm::getValueByPlane(const EEClipVertex& v,
   }
 }
 
-bool EEClipAlgorithm::isInside(const int& plane, const float& v, const float& w,
-                               const float& planeLimitValue) {
+bool PlanesClipAlgorithm::isInside(const int& plane, const float& v,
+                                   const float& w,
+                                   const float& planeLimitValue) {
   switch (plane) {
     case 3:
       return v <= planeLimitValue;  // near z plane
@@ -86,11 +90,10 @@ bool EEClipAlgorithm::isInside(const int& plane, const float& v, const float& w,
   }
 }
 
-u8 EEClipAlgorithm::clipAgainstPlane(EEClipVertex* original,
-                                     const u8& originalSize,
-                                     EEClipVertex* clipped, const int& plane,
-                                     const float& planeLimitValue,
-                                     const EEClipAlgorithmSettings& settings) {
+u8 PlanesClipAlgorithm::clipAgainstPlane(
+    PlanesClipVertex* original, const u8& originalSize,
+    PlanesClipVertex* clipped, const int& plane, const float& planeLimitValue,
+    const EEClipAlgorithmSettings& settings) {
   int clippedSize = 0;
 
   for (u32 i = 0; i < originalSize; i++) {

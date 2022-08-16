@@ -32,6 +32,7 @@ class GameRenderer {
 
   void clear();
 
+  void renderSkybox(const RendererStaticPair& pair);
   void render();
 
  private:

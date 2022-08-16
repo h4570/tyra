@@ -20,6 +20,7 @@
 
 using Tyra::Engine;
 using Tyra::Pad;
+using Tyra::Renderer3DUtility;
 using Tyra::Vec4;
 
 namespace Demo {
@@ -41,6 +42,7 @@ class Player {
  private:
   void handlePlayerPosition(const Heightmap& heightmap,
                             const float& terrainHeight);
+  Renderer3DUtility* utility;
 
   float speed;
   Pad* pad;

@@ -37,7 +37,7 @@ class RendererCore2D {
   prim_t prim;
   lod_t lod;
 
-  static const float GS_CENTER;
+  static const float GS_DRAW_AREA;
   static const float SCREEN_CENTER;
 
   u8 context;
