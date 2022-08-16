@@ -19,8 +19,6 @@ Player::Player(Engine* engine)
   position = Vec4(3.0F, 50.0F, 0.0F);
   camera.lookAt = Vec4(0.0F, 0.0F, -30.0F);
   speed = 5.0F;
-
-  utility = &engine->renderer.renderer3D.utility;
 }
 
 Player::~Player() { delete pair; }
@@ -37,14 +35,9 @@ PlayerShootAction Player::getShootAction() const {
   PlayerShootAction action;
   action.isShooting = weapon.isShooting;
 
-  if (action.isShooting) {
-    action.ray = Ray(camera.position, camera.lookAt.getNormalized());
-  }
-
-  utility->drawBox(camera.lookAt, 1.0F);
-
-  // utility->drawLine(ray.origin, ray.direction);
-  utility->drawLine(camera.position + Vec4(0.0F, 1.0F, 0.0F), camera.lookAt);
+  // if (action.isShooting) {
+  action.ray = Ray(camera.position, camera.lookAt.getNormalized());
+  // }
 
   return action;
 }

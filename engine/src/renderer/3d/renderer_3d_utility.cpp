@@ -65,7 +65,6 @@ void Renderer3DUtility::drawLine(const Vec4& from, const Vec4& to,
   const u8 vertCount = 2;
   const s8 thickness = 2;
   s16 packetSize = 8 * thickness;
-  prim.type = PRIM_LINE;
   auto gsColor = getGSColor(color);
 
   auto* packet =
@@ -114,7 +113,6 @@ void Renderer3DUtility::drawBBox(const CoreBBox& v, const Color& color) {
   const u8 vertCount = 4;
   const s8 thickness = 2;
   s16 packetSize = 150 * thickness;
-  prim.type = PRIM_LINE;
   auto gsColor = getGSColor(color);
 
   auto* packet =
@@ -284,13 +282,19 @@ bool Renderer3DUtility::calcLineVertices(xyz_t* outputArray, const Vec4& a,
   s32 centerY = ftoi4(2048 + displayOffset);
   const u32 maxZ = ftoi4(((float)0xFFFFFF) / 32.0F);
 
-  outputArray[0].x = (clippedVerts[0].position.x + 1.0F) * centerX;
-  outputArray[0].y = (clippedVerts[0].position.y + 1.0F) * centerY;
-  outputArray[0].z = (clippedVerts[0].position.z + 1.0F) * maxZ;
+  outputArray[0].x =
+      static_cast<u16>((clippedVerts[0].position.x + 1.0F) * centerX);
+  outputArray[0].y =
+      static_cast<u16>((clippedVerts[0].position.y + 1.0F) * centerY);
+  outputArray[0].z =
+      static_cast<u32>((clippedVerts[0].position.z + 1.0F) * maxZ);
 
-  outputArray[1].x = (clippedVerts[1].position.x + 1.0F) * centerX;
-  outputArray[1].y = (clippedVerts[1].position.y + 1.0F) * centerY;
-  outputArray[1].z = (clippedVerts[1].position.z + 1.0F) * maxZ;
+  outputArray[1].x =
+      static_cast<u16>((clippedVerts[1].position.x + 1.0F) * centerX);
+  outputArray[1].y =
+      static_cast<u16>((clippedVerts[1].position.y + 1.0F) * centerY);
+  outputArray[1].z =
+      static_cast<u32>((clippedVerts[1].position.z + 1.0F) * maxZ);
 
   return true;
 }

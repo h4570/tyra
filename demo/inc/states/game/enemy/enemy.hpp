@@ -54,7 +54,6 @@ class Enemy {
   bool isFighting = false;
   Vec4 spawnPoint;
 
-  Renderer3DUtility* utility;
   Audio* audio;
   EnemyInfo info;
 };

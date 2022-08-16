@@ -11,13 +11,13 @@
 #include "states/game/enemy/enemy.hpp"
 #include <functional>
 
+using Tyra::Color;
 using Tyra::Math;
 
 namespace Demo {
 
 Enemy::Enemy(Engine* engine, const EnemyInfo& t_info) {
   info = t_info;
-  utility = &engine->renderer.renderer3D.utility;
 
   mesh = new DynamicMesh(*info.motherMesh);
 
@@ -87,20 +87,23 @@ void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition,
 }
 
 void Enemy::handlePlayerShoot(const PlayerShootAction& shootAction) {
-  if (!shootAction.isShooting) {
-    return;
-  }
+  // if (!shootAction.isShooting) {
+  //   return;
+  // }
 
   const auto& ray = shootAction.ray.value();
 
   auto bbox =
       mesh->getCurrentBoundingBox().getTransformed(mesh->getModelMatrix());
 
-  auto isOnEnemy = ray.intersectBox(bbox.min(), bbox.max());
+  float length = -1.0F;
+  auto isOnEnemy = ray.intersectBox(bbox.min(), bbox.max(), &length);
 
   if (isOnEnemy) {
     mesh->setPosition(spawnPoint);
     TYRA_LOG("Enemy hit!");
+  } else {
+    if (length != -1.0F) TYRA_LOG("Distance: ", length);
   }
 }
 

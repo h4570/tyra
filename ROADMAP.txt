@@ -37,6 +37,8 @@ because Mesh rendering uses only core.render()
 - [renderer] bbox parts optimization
 - [General] smart pointers and std::array instead of raw pointers
 - [md2] refactor
+- [2D] Add zbuffer support (z-index)
+- [3DUtility] Add zbuffer support (z-index)
 - [2D] Fixed font support
 - [File] Async file loading
 - [obj] Add multicolor support to obj

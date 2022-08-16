@@ -42,7 +42,6 @@ class Player {
  private:
   void handlePlayerPosition(const Heightmap& heightmap,
                             const float& terrainHeight);
-  Renderer3DUtility* utility;
 
   float speed;
   Pad* pad;

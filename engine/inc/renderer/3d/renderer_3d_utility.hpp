@@ -19,10 +19,10 @@
 namespace Tyra {
 
 /**
- * Debug functions, with bad performance.
+ * Debug functions, without z buffer, with bad performance.
  *
- * Remember that you need to use them AFTER ALLPASS rendering.
- * (for example after skybox), otherwise colors will not work.
+ * Remember to use these functions AFTER all 3D rendering,
+ * otherwise lines will be overwritten!
  */
 class Renderer3DUtility {
  public:
