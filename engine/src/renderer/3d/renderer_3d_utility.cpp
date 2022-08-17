@@ -274,6 +274,8 @@ Vec4 Renderer3DUtility::convertVertices(const Vec4& v, const Vec4& scale) {
   return output;
 }
 
+int counter = 0;  // TODO: Remove
+
 bool Renderer3DUtility::calcLineVertices(xyz_t* outputArray, const Vec4& a,
                                          const Vec4& b,
                                          const u8& displayOffset) {
@@ -293,11 +295,19 @@ bool Renderer3DUtility::calcLineVertices(xyz_t* outputArray, const Vec4& a,
   }
 
   // To screen space
-  const Vec4 scale(2048.0F + displayOffset, 2048.0F + displayOffset,
-                   static_cast<float>(0xFFFFFF) / 32.0F, 1.0F);
+  Vec4 scale(2048.0F + displayOffset, 2048.0F + displayOffset,
+             static_cast<float>(0xFFFFFF) / 32.0F, 1.0F);
 
   auto converted1 = convertVertices(clippedVerts[0].position, scale);
   auto converted2 = convertVertices(clippedVerts[1].position, scale);
+
+  // TODO1: Czemu jak to usune to nie dziala?
+  // TODO2: Z index tutaj i w 2D!
+  if (counter++ > 50) {
+    counter = 0;
+    converted1.print("Test1");
+    converted2.print("Test2");
+  }
 
   outputArray[0].x = static_cast<u16>(ftoi4(converted1.x));
   outputArray[0].y = static_cast<u16>(ftoi4(converted1.y));
