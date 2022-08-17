@@ -1,5 +1,7 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
+- [Demo] porzadek z konstruktorami bbox
+- [General] isInFrustum(const Plane* frustumPlanes)
 - [Demo] Red screen on hit
 - [HUD] Count of killed zombies
 - [HUD] Crosshair
