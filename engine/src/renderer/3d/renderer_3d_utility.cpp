@@ -255,6 +255,25 @@ color_t Renderer3DUtility::getGSColor(const Color& color) {
   return gsColor;
 }
 
+Vec4 Renderer3DUtility::convertVertices(const Vec4& v, const Vec4& scale) {
+  Vec4 output;
+
+  /** Perspective divide + add screen scale */
+  asm volatile(
+      "lqc2       $vf4, 0x0(%1)         \n\t"
+      "lqc2       $vf5, 0x0(%2)         \n\t"
+      "vdiv       $Q,   $vf0w,  $vf4w   \n\t"
+      "vwaitq                           \n\t"
+      "vmulq.xyz  $vf4, $vf4,   $Q      \n\t"
+      "vmulaw.xyz $ACC, $vf5,   $vf0w   \n\t"
+      "vmadd.xyz  $vf4, $vf4,   $vf5    \n\t"
+      "sqc2       $vf4, 0x0(%0)         \n\t"
+      :
+      : "r"(output.xyzw), "r"(v.xyzw), "r"(scale.xyzw));
+
+  return output;
+}
+
 bool Renderer3DUtility::calcLineVertices(xyz_t* outputArray, const Vec4& a,
                                          const Vec4& b,
                                          const u8& displayOffset) {
@@ -273,28 +292,20 @@ bool Renderer3DUtility::calcLineVertices(xyz_t* outputArray, const Vec4& a,
     return false;
   }
 
-  // Perspective divide
-  clippedVerts[0].position /= clippedVerts[0].position.w;
-  clippedVerts[1].position /= clippedVerts[1].position.w;
-
   // To screen space
-  s32 centerX = ftoi4(2048 + displayOffset);
-  s32 centerY = ftoi4(2048 + displayOffset);
-  const u32 maxZ = ftoi4(((float)0xFFFFFF) / 32.0F);
+  const Vec4 scale(2048.0F + displayOffset, 2048.0F + displayOffset,
+                   static_cast<float>(0xFFFFFF) / 32.0F, 1.0F);
 
-  outputArray[0].x =
-      static_cast<u16>((clippedVerts[0].position.x + 1.0F) * centerX);
-  outputArray[0].y =
-      static_cast<u16>((clippedVerts[0].position.y + 1.0F) * centerY);
-  outputArray[0].z =
-      static_cast<u32>((clippedVerts[0].position.z + 1.0F) * maxZ);
+  auto converted1 = convertVertices(clippedVerts[0].position, scale);
+  auto converted2 = convertVertices(clippedVerts[1].position, scale);
 
-  outputArray[1].x =
-      static_cast<u16>((clippedVerts[1].position.x + 1.0F) * centerX);
-  outputArray[1].y =
-      static_cast<u16>((clippedVerts[1].position.y + 1.0F) * centerY);
-  outputArray[1].z =
-      static_cast<u32>((clippedVerts[1].position.z + 1.0F) * maxZ);
+  outputArray[0].x = static_cast<u16>(ftoi4(converted1.x));
+  outputArray[0].y = static_cast<u16>(ftoi4(converted1.y));
+  outputArray[0].z = static_cast<u32>(ftoi4(converted1.z));
+
+  outputArray[1].x = static_cast<u16>(ftoi4(converted2.x));
+  outputArray[1].y = static_cast<u16>(ftoi4(converted2.y));
+  outputArray[1].z = static_cast<u32>(ftoi4(converted2.z));
 
   return true;
 }

@@ -23,6 +23,8 @@ void Vec4::set(const float& t_x, const float& t_y, const float& t_z,
   w = t_w;
 }
 
+const Vec4 Vec4::Identity = Vec4(0.0F, 0.0F, 0.0F, 1.0F);
+
 void Vec4::operator=(const Vec4& v) { copy(this, v); }
 
 Vec4 Vec4::operator-(void) const { return Vec4(-x, -y, -z, w); }
@@ -130,13 +132,33 @@ void Vec4::operator*=(const float& v) {
 }
 
 Vec4 Vec4::operator/(const float& v) const {
-  return Vec4(x / v, y / v, z / v, w);
+  Vec4 res;
+  asm volatile(
+      "mfc1		$8, %2            \n\t"
+      "qmtc2  $8, $vf5          \n\t"
+      "vdiv		$Q, $vf0w, $vf5x  \n\t"
+      "lqc2		$vf4, 0x00(%1)    \n\t"
+      "vwaitq                   \n\t"
+      "vmulq.xyz	$vf4, $vf4, $Q\n\t"
+      "sqc2		$vf4, 0x00(%0)    \n\t"
+      :
+      : "r"(res.xyzw), "r"(this->xyzw), "f"(v)
+      : "$8");
+  return res;
 }
 
 void Vec4::operator/=(const float& v) {
-  x /= v;
-  y /= v;
-  z /= v;
+  asm volatile(
+      "mfc1		$8, %1            \n\t"
+      "qmtc2  $8, $vf5          \n\t"
+      "vdiv		$Q, $vf0w, $vf5x  \n\t"
+      "lqc2		$vf4, 0x00(%0)    \n\t"
+      "vwaitq                   \n\t"
+      "vmulq.xyz	$vf4, $vf4, $Q\n\t"
+      "sqc2		$vf4, 0x00(%0)    \n\t"
+      :
+      : "r"(this->xyzw), "f"(v)
+      : "$8");
 }
 
 void Vec4::unit() {

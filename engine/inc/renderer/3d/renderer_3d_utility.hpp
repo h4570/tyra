@@ -48,6 +48,8 @@ class Renderer3DUtility {
 
   prim_t prim;
 
+  Vec4 convertVertices(const Vec4& v, const Vec4& scale);
+
   void fillBBoxVertices(std::array<std::array<Vec4, 4>, 6>& v,
                         const CoreBBox& bbox);
 

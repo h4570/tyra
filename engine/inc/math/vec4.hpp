@@ -36,6 +36,8 @@ class Vec4 {
   static void copy(Vec4* out, const float* in);
   static inline void copy(Vec4* out, const Vec4& in) { copy(out, in.xyzw); }
 
+  static const Vec4 Identity;
+
   /** Initialize Vec4 without setting default values */
   Vec4() {}
 
