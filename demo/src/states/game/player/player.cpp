@@ -35,9 +35,9 @@ PlayerShootAction Player::getShootAction() const {
   PlayerShootAction action;
   action.isShooting = weapon.isShooting;
 
-  // if (action.isShooting) {
-  action.ray = Ray(camera.position, camera.lookAt.getNormalized());
-  // }
+  if (action.isShooting) {
+    action.ray = Ray(camera.position, camera.lookAt.getNormalized());
+  }
 
   return action;
 }

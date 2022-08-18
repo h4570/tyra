@@ -50,7 +50,8 @@ Enemy::Enemy(Engine* engine, const EnemyInfo& t_info) {
   mesh->translation.translateY(-5.0F);
 
   audio = &engine->audio;
-  audio->adpcm.setVolume(30, info.adpcmChannel);
+  audio->adpcm.setVolume(5, info.adpcmChannel);
+  // audio->adpcm.setVolume(30, info.adpcmChannel); // TEMP
 
   allocateOptions();
 
@@ -87,9 +88,9 @@ void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition,
 }
 
 void Enemy::handlePlayerShoot(const PlayerShootAction& shootAction) {
-  // if (!shootAction.isShooting) {
-  //   return;
-  // }
+  if (!shootAction.isShooting) {
+    return;
+  }
 
   const auto& ray = shootAction.ray.value();
 

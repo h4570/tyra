@@ -43,7 +43,7 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
   auto* sample = engine->audio.adpcm.load(
       FileUtils::fromCwd("game/models/zombie/punch.adpcm"));
 
-  const int enemyCount = 1;
+  const int enemyCount = 5;
   for (int i = 0; i < enemyCount; i++) {
     EnemyInfo info;
     info.adpcmChannel = 9 + i;

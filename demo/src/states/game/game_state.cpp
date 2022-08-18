@@ -86,12 +86,12 @@ void GameState::update() {
   renderer.render();
 
   // Debug
-  auto& utility = engine->renderer.renderer3D.utility;
-  utility.drawBox(*player->getCameraInfo().looksAt, 0.3F);
+  // auto& utility = engine->renderer.renderer3D.utility;
+  // utility.drawBox(*player->getCameraInfo().looksAt, 0.3F);
 
-  auto* firstEnemy = enemyManager->getPairs().front()->mesh;
-  utility.drawBBox(firstEnemy->getCurrentBoundingBox().getTransformed(
-      firstEnemy->getModelMatrix()));
+  // auto* firstEnemy = enemyManager->getPairs().front()->mesh;
+  // utility.drawBBox(firstEnemy->getCurrentBoundingBox().getTransformed(
+  //     firstEnemy->getModelMatrix()));
 
   // End frame
   engine->renderer.endFrame();
