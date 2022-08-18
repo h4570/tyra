@@ -22,7 +22,7 @@ namespace Tyra {
  * Debug functions, without z buffer, with bad performance.
  *
  * Remember to use these functions AFTER all 3D rendering,
- * otherwise lines will be overwritten!
+ * otherwise lines will be overwritten! There is Github issue about that.
  */
 class Renderer3DUtility {
  public:
