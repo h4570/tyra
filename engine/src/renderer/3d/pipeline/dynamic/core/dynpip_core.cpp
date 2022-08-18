@@ -126,8 +126,8 @@ void DynPipCore::render(DynPipBag** bags, const u32& count) {
     auto* bag = bags[i];
 
     CoreBBox bbox(bag->verticesTo, bag->count);
-    if (bbox.isInFrustum(rendererCore->renderer3D.frustumPlanes.getAll(),
-                         *bag->info->model) ==
+    if (bbox.frustumCheck(rendererCore->renderer3D.frustumPlanes.getAll(),
+                          *bag->info->model) ==
         CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
       continue;
     }

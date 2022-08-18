@@ -15,6 +15,8 @@
 
 namespace Tyra {
 
+std::array<Vec4, 8> CoreBBox::frustumCheckVertices;
+
 CoreBBox::CoreBBox() {
   for (u32 i = 0; i < 8; i++) {
     vertices[i] = Vec4(0.0F, 0.0F, 0.0F, 1.0F);
@@ -138,9 +140,19 @@ CoreBBox::CoreBBox(Vec4* t_vertices, u32 count) {
   vertices[7].set(hiX, hiY, hiZ);
 }
 
+CoreBBox::CoreBBox(const CoreBBox& t_bbox, const M4x4& t_matrix) {
+  for (u32 i = 0; i < 8; i++) {
+    vertices[i] = t_matrix * t_bbox.vertices[i];
+  }
+}
+
 CoreBBox::CoreBBox(const CoreBBox& t_bbox) {
   for (auto i = 0; i < 8; i++)
     Vec4::copy(&vertices[i], t_bbox.vertices[i].xyzw);
+}
+
+CoreBBox CoreBBox::getTransformed(const M4x4& t_matrix) const {
+  return CoreBBox(*this, t_matrix);
 }
 
 void CoreBBox::operator=(const CoreBBox& v) {
@@ -206,12 +218,12 @@ CoreBBox CoreBBox::create(const Vec4& center, const float& size) {
   return bbox;
 }
 
-CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,
-                                      const M4x4& model,
-                                      const float* margins) const {
+CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
+                                       const M4x4& model,
+                                       const float* margins) const {
   CoreBBoxFrustum result = IN_FRUSTUM;
-  Vec4 boxCalcTemp;
   u8 boxIn = 0, boxOut = 0;
+  s8 calculatedBboxVertexIndex = -1;
 
   for (u8 i = 0; i < 6; i++) {
     const auto margin = margins == nullptr ? 0.0F : margins[i];
@@ -221,10 +233,14 @@ CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,
     // for each corner of the box do ...
     // get out of the cycle as soon as a box as corners
     // both inside and out of the frustum
-    for (u8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
-      boxCalcTemp = model * vertices[y];
+    for (s8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
+      if (y > calculatedBboxVertexIndex) {
+        frustumCheckVertices[y] = model * vertices[y];
+        calculatedBboxVertexIndex = y;
+      }
 
-      auto isOut = frustumPlanes[i].distanceTo(boxCalcTemp) <= margin;
+      auto isOut =
+          frustumPlanes[i].distanceTo(frustumCheckVertices[y]) <= margin;
 
       if (isOut)
         boxOut++;
@@ -239,6 +255,63 @@ CoreBBoxFrustum CoreBBox::isInFrustum(const Plane* frustumPlanes,
       result = PARTIALLY_IN_FRUSTUM;
   }
   return result;
+}
+
+CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
+                                       const float* margins) const {
+  CoreBBoxFrustum result = IN_FRUSTUM;
+  u8 boxIn = 0, boxOut = 0;
+
+  for (u8 i = 0; i < 6; i++) {
+    const auto margin = margins == nullptr ? 0.0F : margins[i];
+    boxOut = 0;
+    boxIn = 0;
+
+    for (s8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
+      auto isOut = frustumPlanes[i].distanceTo(vertices[y]) <= margin;
+
+      if (isOut)
+        boxOut++;
+      else
+        boxIn++;
+    }
+
+    // if all corners are out
+    if (!boxIn)
+      return OUTSIDE_FRUSTUM;
+    else if (boxOut)
+      result = PARTIALLY_IN_FRUSTUM;
+  }
+  return result;
+}
+
+bool CoreBBox::isInFrustum(const Plane* frustumPlanes,
+                           const M4x4& model) const {
+  s8 calculatedBboxVertexIndex = -1;
+
+  for (u8 i = 0; i < 6; i++) {
+    for (s8 y = 0; y < 8; y++) {
+      if (y > calculatedBboxVertexIndex) {
+        frustumCheckVertices[y] = model * vertices[y];
+        calculatedBboxVertexIndex = y;
+      }
+
+      auto isIn = frustumPlanes[i].distanceTo(frustumCheckVertices[y]) > 0.0F;
+      if (isIn) return true;
+    }
+  }
+  return false;
+}
+
+bool CoreBBox::isInFrustum(const Plane* frustumPlanes) const {
+  for (u8 i = 0; i < 6; i++) {
+    for (s8 y = 0; y < 8; y++) {
+      auto isIn = frustumPlanes[i].distanceTo(vertices[y]) > 0.0F;
+      if (isIn) return true;
+    }
+  }
+
+  return false;
 }
 
 }  // namespace Tyra

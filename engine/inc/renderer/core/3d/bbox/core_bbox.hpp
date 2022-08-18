@@ -15,6 +15,7 @@
 #include "./core_bbox_frustum.hpp"
 #include "math/m4x4.hpp"
 #include "math/plane.hpp"
+#include <array>
 
 namespace Tyra {
 
@@ -29,6 +30,7 @@ class CoreBBox {
   explicit CoreBBox(CoreBBox** t_bboxes, const u32& count);
   explicit CoreBBox(const std::vector<CoreBBox>& t_bboxes,
                     const u32& startIndex, const u32& stopIndex);
+  explicit CoreBBox(const CoreBBox& t_bbox, const M4x4& t_matrix);
 
   static CoreBBox create(const Vec4& center, const float& size);
 
@@ -55,16 +57,34 @@ class CoreBBox {
   void print(const std::string& name) const { print(name.c_str()); }
   std::string getPrint(const char* name = nullptr) const;
 
+  /** Get new transformed BBox by model matrix */
+  CoreBBox getTransformed(const M4x4& t_matrix) const;
+
+  /**
+   * @brief Check if bbox is in/partially/outside view frustum
+   *
+   * @param frustumPlanes Available in
+   * engine.renderer.core.renderer3D.frustumPlanes
+   * @param model Model matrix if you want to fix bbox by model matrix
+   * @param margins Optional margins
+   */
+  CoreBBoxFrustum frustumCheck(const Plane* frustumPlanes, const M4x4& model,
+                               const float* margins = nullptr) const;
+  CoreBBoxFrustum frustumCheck(const Plane* frustumPlanes,
+                               const float* margins = nullptr) const;
+
   /**
    * @brief Check if bbox is in view frustum
    *
    * @param frustumPlanes Available in
    * engine.renderer.core.renderer3D.frustumPlanes
-   * @param model Model matrix
-   * @param margins Optional margins
+   * @param model Model matrix if you want to fix bbox by model matrix
    */
-  CoreBBoxFrustum isInFrustum(const Plane* frustumPlanes, const M4x4& model,
-                              const float* margins = nullptr) const;
+  bool isInFrustum(const Plane* frustumPlanes, const M4x4& model) const;
+  bool isInFrustum(const Plane* frustumPlanes) const;
+
+ private:
+  static std::array<Vec4, 8> frustumCheckVertices;
 };
 
 }  // namespace Tyra

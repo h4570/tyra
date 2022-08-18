@@ -62,7 +62,7 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
 
   if (options->frustumCulling == PipelineFrustumCulling_Simple) {
     auto* frame = mesh->frame;
-    if (frame->bbox->isInFrustum(
+    if (frame->bbox->frustumCheck(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
         CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
       return;

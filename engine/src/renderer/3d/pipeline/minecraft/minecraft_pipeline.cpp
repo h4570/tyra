@@ -117,7 +117,7 @@ void MinecraftPipeline::render(std::vector<McpipBlock*> blocks, Texture* t_tex,
 
 CoreBBoxFrustum MinecraftPipeline::isInFrustum(const McpipBlock& block) const {
   const auto* frustumPlanes = rendererCore->renderer3D.frustumPlanes.getAll();
-  return bbox->clipIsInFrustum(frustumPlanes, *block.model);
+  return bbox->clipFrustumCheck(frustumPlanes, *block.model);
 }
 
 void MinecraftPipeline::cull(std::vector<McpipBlock*> blocks,

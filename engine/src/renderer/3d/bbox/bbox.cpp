@@ -27,11 +27,8 @@ BBox::BBox(Vec4* t_vertices, u32* faces, u32 count)
 
 BBox::BBox(const BBox& t_bbox) : CoreBBox(t_bbox) { setData(); }
 
-BBox::BBox(const BBox& t_bbox, const M4x4& t_matrix) {
-  for (u32 i = 0; i < 8; i++) {
-    vertices[i] = t_matrix * t_bbox.vertices[i];
-  }
-
+BBox::BBox(const BBox& t_bbox, const M4x4& t_matrix)
+    : CoreBBox(t_bbox, t_matrix) {
   setData();
 }
 

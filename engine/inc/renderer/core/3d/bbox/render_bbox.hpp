@@ -24,9 +24,13 @@ class RenderBBox : public CoreBBox {
   explicit RenderBBox(CoreBBox** t_bboxes, const u32& count);
   explicit RenderBBox(const std::vector<CoreBBox>& t_bboxes,
                       const u32& startIndex, const u32& stopIndex);
+  explicit RenderBBox(const RenderBBox& t_bbox, const M4x4& t_matrix);
 
-  CoreBBoxFrustum clipIsInFrustum(const Plane* frustumPlanes,
-                                  const M4x4& model) const;
+  CoreBBoxFrustum clipFrustumCheck(const Plane* frustumPlanes,
+                                   const M4x4& model) const;
+
+  /** Get new transformed BBox by model matrix */
+  RenderBBox getTransformed(const M4x4& t_matrix) const;
 };
 
 }  // namespace Tyra

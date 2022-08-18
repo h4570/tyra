@@ -65,7 +65,7 @@ void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
 
   if (options->frustumCulling == PipelineFrustumCulling_Simple) {
     auto* frameTo = mesh->frames[mesh->animation.getState().nextFrame];
-    if (frameTo->bbox->isInFrustum(
+    if (frameTo->bbox->frustumCheck(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
         CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
       return;

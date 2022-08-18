@@ -119,7 +119,7 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
     else
       renderBbox = bbox;
 
-    frustumCheck = renderBbox->getMainBBox()->clipIsInFrustum(
+    frustumCheck = renderBbox->getMainBBox()->clipFrustumCheck(
         rendererCore->renderer3D.frustumPlanes.getAll(), *bag->info->model);
 
     if (frustumCheck == OUTSIDE_FRUSTUM) {

@@ -29,6 +29,13 @@ RenderBBox::RenderBBox(Vec4* t_vertices, u32 count)
 
 RenderBBox::RenderBBox(Vec4* t_vertices) : CoreBBox(t_vertices) {}
 
+RenderBBox::RenderBBox(const RenderBBox& t_bbox, const M4x4& t_matrix)
+    : CoreBBox(t_bbox, t_matrix) {}
+
+RenderBBox RenderBBox::getTransformed(const M4x4& t_matrix) const {
+  return RenderBBox(*this, t_matrix);
+}
+
 /**
  * @brief Frustum checker for renderer.
  * Background: We want to really put as low as possible polys to clipper.
@@ -36,9 +43,9 @@ RenderBBox::RenderBBox(Vec4* t_vertices) : CoreBBox(t_vertices) {}
  * we are adding some margins, and checking again if it really needs clipping,
  * because "Cull" renderer can handle easy clip cases and its faster.
  */
-CoreBBoxFrustum RenderBBox::clipIsInFrustum(const Plane* frustumPlanes,
-                                            const M4x4& model) const {
-  auto result = isInFrustum(frustumPlanes, model);
+CoreBBoxFrustum RenderBBox::clipFrustumCheck(const Plane* frustumPlanes,
+                                             const M4x4& model) const {
+  auto result = frustumCheck(frustumPlanes, model);
 
   if (result != PARTIALLY_IN_FRUSTUM) {
     return result;
@@ -56,7 +63,7 @@ CoreBBoxFrustum RenderBBox::clipIsInFrustum(const Plane* frustumPlanes,
   guardBand[4] = -10.0F;  // NEAR
   guardBand[5] = -10.0F;  // FAR
 
-  return isInFrustum(frustumPlanes, model, guardBand);  // Let's check it again
+  return frustumCheck(frustumPlanes, model, guardBand);  // Let's check it again
 }  // namespace Tyra
 
 }  // namespace Tyra

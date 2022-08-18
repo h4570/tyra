@@ -39,12 +39,12 @@ Sprite* get2DPicture(Renderer* renderer);
 
 void Tutorial01 ::init() {
   // Song
-  engine->audio.load(FileUtils::fromCwd("mafikizolo-loot.wav"));
-  engine->audio.setSongLoop(true);
-  engine->audio.setVolume(30);
+  engine->audio.song.load(FileUtils::fromCwd("mafikizolo-loot.wav"));
+  engine->audio.song.inLoop = true;
+  engine->audio.song.setVolume(30);
 
-  adpcmSample = engine->audio.load(FileUtils::fromCwd("walk.adpcm"));
-  engine->audio.setVolume(80, 1);
+  adpcmSample = engine->audio.adpcm.load(FileUtils::fromCwd("walk.adpcm"));
+  engine->audio.adpcm.setVolume(80, 1);
 
   engine->renderer.setClearScreenColor(Color(64.0F, 64.0F, 64.0F));
 
@@ -66,10 +66,7 @@ void Tutorial01 ::init() {
     warriors[i]->translation.translateZ(-10.0F);
     warriors[i]->translation.rotateX(-1.5F);
     warriorTex->addLink(warriors[i]->materials[0]->id);
-    warriors[i]->playAnimation(0, warriors[i]->frames.size() - 1);
-    warriors[i]->animState.currentFrame =
-        getRandomInt(0, warriors[i]->frames.size() - 1);
-    warriors[i]->setAnimSpeed(getRandomFloat(0.1F, 0.9F));
+    warriors[i]->animation.speed = getRandomFloat(0.1F, 0.9F);
   }
 
   staOptions = getStaPipOptions();
@@ -147,8 +144,8 @@ void Tutorial01 ::loop() {
     counter = 0;
   }
 
-  for (u8 i = 0; i < warriorsCount; i++) warriors[i]->animate();
-  cube->animate();
+  for (u8 i = 0; i < warriorsCount; i++) warriors[i]->update();
+  cube->update();
 
   skybox->rotation.rotateY(0.02F);
 
@@ -176,7 +173,7 @@ void Tutorial01 ::loop() {
 
     engine->renderer.renderer3D.usePipeline(&dynpip);
     {
-      dynpip.render(cube);
+      // dynpip.render(cube);
       Threading::switchThread();
       for (u8 i = 0; i < warriorsCount; i++) {
         dynpip.render(warriors[i], dynOptions);
@@ -236,8 +233,7 @@ DynamicMesh* getWarrior(Renderer* renderer) {
   renderer->core.texture.repository.addByMesh(result, FileUtils::getCwd(),
                                               "png");
 
-  result->playAnimation(0, result->frames.size() - 1);
-  result->setAnimSpeed(0.15F);
+  result->animation.speed = 0.15F;
 
   return result;
 }
@@ -248,13 +244,13 @@ DynamicMesh* getCube(Renderer* renderer) {
   options.animation.count = 2;
   options.scale = 3.0F;
   auto* data = loader.load(FileUtils::fromCwd("untitled.obj"), options);
-
+  data->normalsEnabled = false;
+  data->textureCoordsEnabled = false;
   auto* result = new DynamicMesh(*data);
   result->translation.translateZ(-30.0F);
   delete data;
 
-  result->playAnimation(0, result->frames.size() - 1);
-  result->setAnimSpeed(0.15F);
+  result->animation.speed = 0.15F;
 
   return result;
 }
