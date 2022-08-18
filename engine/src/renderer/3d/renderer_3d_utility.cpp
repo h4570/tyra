@@ -80,8 +80,11 @@ void Renderer3DUtility::drawLine(const Vec4& from, const Vec4& to,
   packet2_update(packet, draw_prim_start(packet->next, 0, &prim, &gsColor));
 
   for (s8 i = 0; i < thickness; i++) {
-    auto draw =
-        calcLineVertices(outputVerts.data(), inputVerts[0], inputVerts[1], i);
+    Vec4 scale(2048.0F + i, 2048.0F + i, static_cast<float>(0xFFFFFF) / 32.0F,
+               1.0F);
+
+    auto draw = calcLineVertices(outputVerts.data(), inputVerts[0],
+                                 inputVerts[1], scale);
 
     if (!draw) {
       packet2_free(packet);
@@ -126,6 +129,9 @@ void Renderer3DUtility::drawBBox(const CoreBBox& v, const Color& color) {
   bool drawedSomething = false;
 
   for (s8 i = 0; i < thickness; i++) {
+    Vec4 scale(2048.0F + i, 2048.0F + i, static_cast<float>(0xFFFFFF) / 32.0F,
+               1.0F);
+
     for (s8 j = 0; j < stripsCount; j++) {
       for (s8 k = 0; k < vertCount; k++) {
         auto index1 = k;
@@ -133,7 +139,7 @@ void Renderer3DUtility::drawBBox(const CoreBBox& v, const Color& color) {
 
         std::array<xyz_t, 2> outputVerts;
         auto draw = calcLineVertices(outputVerts.data(), inputVerts[j][index1],
-                                     inputVerts[j][index2], i);
+                                     inputVerts[j][index2], scale);
 
         if (!draw) {
           continue;
@@ -274,11 +280,8 @@ Vec4 Renderer3DUtility::convertVertices(const Vec4& v, const Vec4& scale) {
   return output;
 }
 
-int counter = 0;  // TODO: Remove
-
 bool Renderer3DUtility::calcLineVertices(xyz_t* outputArray, const Vec4& a,
-                                         const Vec4& b,
-                                         const u8& displayOffset) {
+                                         const Vec4& b, const Vec4& scale) {
   const auto& mvp = core->renderer3D.getViewProj();
   Vec4 tmpA = mvp * a;
   Vec4 tmpB = mvp * b;
@@ -295,19 +298,8 @@ bool Renderer3DUtility::calcLineVertices(xyz_t* outputArray, const Vec4& a,
   }
 
   // To screen space
-  Vec4 scale(2048.0F + displayOffset, 2048.0F + displayOffset,
-             static_cast<float>(0xFFFFFF) / 32.0F, 1.0F);
-
   auto converted1 = convertVertices(clippedVerts[0].position, scale);
   auto converted2 = convertVertices(clippedVerts[1].position, scale);
-
-  // TODO1: Czemu jak to usune to nie dziala?
-  // TODO2: Z index tutaj i w 2D!
-  if (counter++ > 50) {
-    counter = 0;
-    converted1.print("Test1");
-    converted2.print("Test2");
-  }
 
   outputArray[0].x = static_cast<u16>(ftoi4(converted1.x));
   outputArray[0].y = static_cast<u16>(ftoi4(converted1.y));

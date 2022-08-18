@@ -48,11 +48,10 @@ void DynPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
 
   packet2_utils_vu_open_unpack(packet, 0, true);
   {
-    packet2_add_float(packet, 2048.0F);  // scale
-    packet2_add_float(packet, 2048.0F);  // scale
-    packet2_add_float(packet,
-                      static_cast<float>(0xFFFFFF) / 32.0F);  // scale
-    packet2_add_u32(packet, bag->count);                      // vertex count
+    packet2_add_float(packet, 2048.0F);                               // scale
+    packet2_add_float(packet, 2048.0F);                               // scale
+    packet2_add_float(packet, static_cast<float>(0xFFFFFF) / 32.0F);  // scale
+    packet2_add_u32(packet, bag->count);  // vertex count
 
     packet2_utils_gs_add_prim_giftag(packet, prim, bag->count, reglist,
                                      reglistCount, 0);

@@ -45,7 +45,6 @@ class Renderer3DUtility {
   std::array<PlanesClipVertexPtrs, 3> clipInput;
 
   RendererCore* core;
-
   prim_t prim;
 
   Vec4 convertVertices(const Vec4& v, const Vec4& scale);
@@ -60,7 +59,7 @@ class Renderer3DUtility {
    * @return false - To skip (outside view frustum)
    */
   bool calcLineVertices(xyz_t* outputArray, const Vec4& a, const Vec4& b,
-                        const u8& displayOffset);
+                        const Vec4& scale);
 
   PlanesClipAlgorithm planesClipAlgorithm;
 };
