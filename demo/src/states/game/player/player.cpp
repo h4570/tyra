@@ -18,7 +18,7 @@ Player::Player(Engine* engine)
   pad = &engine->pad;
   position = Vec4(3.0F, 50.0F, 0.0F);
   camera.lookAt = Vec4(0.0F, 0.0F, -30.0F);
-  speed = 5.0F;
+  speed = 6.0F;
 }
 
 Player::~Player() { delete pair; }
@@ -36,7 +36,8 @@ PlayerShootAction Player::getShootAction() const {
   action.isShooting = weapon.isShooting;
 
   if (action.isShooting) {
-    action.ray = Ray(camera.position, camera.lookAt.getNormalized());
+    action.ray =
+        Ray(camera.position, (camera.lookAt - camera.position).getNormalized());
   }
 
   return action;

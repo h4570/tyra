@@ -12,6 +12,6 @@
 
 namespace Demo {
 
-enum GlobalStateType { STATE_INTRO, STATE_GAME, STATE_EXIT };
+enum GlobalStateType { STATE_INTRO, STATE_LOADING, STATE_GAME, STATE_EXIT };
 
 }  // namespace Demo

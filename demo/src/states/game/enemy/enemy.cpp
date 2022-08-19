@@ -40,8 +40,10 @@ Enemy::Enemy(Engine* engine, const EnemyInfo& t_info) {
   walkSequence = {0, 1, 2};
   fightSequence = {3, 4, 5};
 
-  spawnPoint = info.spawnPoint;
-  mesh->setPosition(info.spawnPoint);
+  terrainLeftUp = info.terrainLeftUp;
+  terrainRightDown = info.terrainRightDown;
+
+  setMeshToSpawn();
 
   mesh->animation.setSequence(walkSequence);
   mesh->animation.loop = true;
@@ -50,8 +52,7 @@ Enemy::Enemy(Engine* engine, const EnemyInfo& t_info) {
   mesh->translation.translateY(-5.0F);
 
   audio = &engine->audio;
-  audio->adpcm.setVolume(5, info.adpcmChannel);
-  // audio->adpcm.setVolume(30, info.adpcmChannel); // TEMP
+  audio->adpcm.setVolume(30, info.adpcmChannel);
 
   allocateOptions();
 
@@ -64,6 +65,14 @@ Enemy::~Enemy() {
   delete pair;
 }
 
+void Enemy::setMeshToSpawn() {
+  auto spawnPoint =
+      Vec4(Math::randomf(terrainLeftUp.x, terrainRightDown.x), 0.0F,
+           Math::randomf(terrainLeftUp.z, terrainRightDown.z), 1.0F);
+
+  mesh->setPosition(spawnPoint);
+}
+
 void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition,
                    const PlayerShootAction& shootAction) {
   auto* enemyPosition = mesh->getPosition();
@@ -73,7 +82,7 @@ void Enemy::update(const Heightmap& heightmap, const Vec4& playerPosition,
   auto diff = *enemyPosition - playerPosition;
   auto ang = Math::atan2(diff.x, diff.z);
 
-  if (diff.length() > 110.0F) {
+  if (diff.length() > 150.0F) {
     walk(heightmap, diff);
   } else {
     fight();
@@ -97,14 +106,10 @@ void Enemy::handlePlayerShoot(const PlayerShootAction& shootAction) {
   auto bbox =
       mesh->getCurrentBoundingBox().getTransformed(mesh->getModelMatrix());
 
-  float length = -1.0F;
-  auto isOnEnemy = ray.intersectBox(bbox.min(), bbox.max(), &length);
+  auto isOnEnemy = ray.intersectBox(bbox.min(), bbox.max());
 
   if (isOnEnemy) {
-    mesh->setPosition(spawnPoint);
-    TYRA_LOG("Enemy hit!");
-  } else {
-    if (length != -1.0F) TYRA_LOG("Distance: ", length);
+    setMeshToSpawn();
   }
 }
 
@@ -144,6 +149,10 @@ void Enemy::animationCallback(const AnimationSequenceCallback& callback) {
   }
 }
 
-void Enemy::allocateOptions() { options = new DynPipOptions(); }
+void Enemy::allocateOptions() {
+  options = new DynPipOptions();
+  options->frustumCulling =
+      Tyra::PipelineFrustumCulling::PipelineFrustumCulling_None;
+}
 
 }  // namespace Demo

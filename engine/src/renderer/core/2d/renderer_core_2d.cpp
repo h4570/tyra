@@ -68,7 +68,7 @@ void RendererCore2D::render(Sprite* sprite,
   auto* rect = rects[context];
   float sizeX, sizeY;
 
-  if (sprite->getMode() == MODE_REPEAT) {
+  if (sprite->mode == MODE_REPEAT) {
     sizeX = sprite->size.x;
     sizeY = sprite->size.y;
   } else {
@@ -84,10 +84,10 @@ void RendererCore2D::render(Sprite* sprite,
   else if (sizeY > sizeX)
     texS = texMax / (sizeY / sizeX);
 
-  rect->t0.s = sprite->isFlippedHorizontally() ? texS : 0.0F;
-  rect->t0.t = sprite->isFlippedVertically() ? texT : 0.0F;
-  rect->t1.s = sprite->isFlippedHorizontally() ? 0.0F : texS;
-  rect->t1.t = sprite->isFlippedVertically() ? 0.0F : texT;
+  rect->t0.s = sprite->flipHorizontal ? texS : 0.0F;
+  rect->t0.t = sprite->flipVertical ? texT : 0.0F;
+  rect->t1.s = sprite->flipHorizontal ? 0.0F : texS;
+  rect->t1.t = sprite->flipVertical ? 0.0F : texT;
 
   rect->color.r = sprite->color.r;
   rect->color.g = sprite->color.g;

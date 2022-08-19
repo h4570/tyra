@@ -11,22 +11,25 @@
 #pragma once
 
 #include <tyra>
-#include <audsrv.h>
+#include <memory>
 
-using Tyra::DynamicMesh;
+using std::unique_ptr;
+using Tyra::Sprite;
 using Tyra::Texture;
-using Tyra::Vec4;
+using Tyra::TextureRepository;
 
 namespace Demo {
 
-struct EnemyInfo {
-  u8 adpcmChannel;
-  audsrv_adpcm_t* adpcmSample;
-  DynamicMesh* motherMesh;
-  Texture* bodyTexture;
-  Texture* clothTexture;
-  Vec4 terrainLeftUp;
-  Vec4 terrainRightDown;
+class Hud {
+ public:
+  Hud(TextureRepository* repo);
+  ~Hud();
+
+  TextureRepository* repo;
+  Texture* hpTexture;
+  unique_ptr<Sprite> hpSprite;
+  Texture* crosshairTexture;
+  unique_ptr<Sprite> crosshairSprite;
 };
 
 }  // namespace Demo

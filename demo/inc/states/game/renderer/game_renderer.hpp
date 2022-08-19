@@ -14,8 +14,10 @@
 #include "./renderer_static_pair.hpp"
 #include "./renderer_dynamic_pair.hpp"
 
+using Tyra::CoreBBox;
 using Tyra::DynamicPipeline;
 using Tyra::Renderer;
+using Tyra::Sprite;
 using Tyra::StaticPipeline;
 
 namespace Demo {
@@ -29,10 +31,10 @@ class GameRenderer {
   void add(std::vector<RendererDynamicPair*> dynamicPairs);
   void add(RendererStaticPair* staticPair);
   void add(RendererDynamicPair* dynamicPair);
+  void add(Sprite* sprite);
+  void add(const CoreBBox& bbox);
 
   void clear();
-
-  void renderSkybox(const RendererStaticPair& pair);
   void render();
 
  private:
@@ -43,6 +45,8 @@ class GameRenderer {
 
   std::vector<RendererStaticPair*> staticPairs;
   std::vector<RendererDynamicPair*> dynamicPairs;
+  std::vector<Sprite*> sprites;
+  std::vector<CoreBBox> bboxes;
 };
 
 }  // namespace Demo

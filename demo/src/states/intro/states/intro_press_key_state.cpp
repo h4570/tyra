@@ -41,7 +41,7 @@ void IntroPressKeyState::onStart() {
     for (u8 j = 0; j < mapCols; j++) {
       mapSprites[i][j] = new Sprite;
       mapSprites[i][j]->color.a = 0.0F;
-      mapSprites[i][j]->setMode(SpriteMode::MODE_STRETCH);
+      mapSprites[i][j]->mode = SpriteMode::MODE_STRETCH;
       mapSprites[i][j]->size.set(textureWidthHeight, textureWidthHeight);
       mapSprites[i][j]->position.set(i * textureWidthHeight,
                                      j * textureWidthHeight);

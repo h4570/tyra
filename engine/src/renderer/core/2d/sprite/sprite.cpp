@@ -14,8 +14,8 @@ namespace Tyra {
 
 Sprite::Sprite() {
   id = rand() % 1000000;
-  _flipH = false;
-  _flipV = false;
+  flipHorizontal = false;
+  flipVertical = false;
   size.set(32.0F, 32.0F);
   position.set(100.0F, 100.0F);
   scale = 1.0F;

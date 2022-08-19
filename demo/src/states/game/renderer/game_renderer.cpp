@@ -33,6 +33,10 @@ void GameRenderer::add(std::vector<RendererDynamicPair*> t_dynamicPairs) {
                       t_dynamicPairs.end());
 }
 
+void GameRenderer::add(Sprite* sprite) { sprites.push_back(sprite); }
+
+void GameRenderer::add(const CoreBBox& bbox) { bboxes.push_back(bbox); }
+
 void GameRenderer::add(RendererStaticPair* staticPair) {
   staticPairs.push_back(staticPair);
 }
@@ -44,14 +48,12 @@ void GameRenderer::add(RendererDynamicPair* dynamicPair) {
 void GameRenderer::clear() {
   staticPairs.clear();
   dynamicPairs.clear();
-}
-
-void GameRenderer::renderSkybox(const RendererStaticPair& pair) {
-  renderer->renderer3D.usePipeline(&stpip);
-  stpip.render(pair.mesh, pair.options);
+  sprites.clear();
+  bboxes.clear();
 }
 
 void GameRenderer::render() {
+  // Render static stuff
   if (staticPairs.size()) {
     renderer->renderer3D.usePipeline(&stpip);
 
@@ -60,14 +62,27 @@ void GameRenderer::render() {
     }
   }
 
-  Threading::switchThread();
+  Threading::switchThread();  // give some time for audio thread
 
+  // Render animated stuff
   if (dynamicPairs.size()) {
     renderer->renderer3D.usePipeline(&dypip);
 
     for (auto& pair : dynamicPairs) {
       dypip.render(pair->mesh, pair->options);
     }
+  }
+
+  Threading::switchThread();
+
+  // Render debug stuff after stapip/dynpip, otherwise it will not be visible
+  for (auto& bbox : bboxes) {
+    renderer->renderer3D.utility.drawBBox(bbox);
+  }
+
+  // Render 2D
+  for (auto& sprite : sprites) {
+    renderer->renderer2D.render(sprite);
   }
 }
 

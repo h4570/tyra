@@ -1,11 +1,5 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [Demo] Red screen on hit
-- [HUD] Count of killed zombies
-- [HUD] Crosshair
-- [HUD] 2D Health bar
-- [Demo] Game over screen
-- [Demo] Game fadein with audio information about island
 - [General] USB test
 - [General] CI in Github via docker image
 

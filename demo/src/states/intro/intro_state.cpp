@@ -43,12 +43,12 @@ void IntroState::onStart() {
 }
 
 GlobalStateType IntroState::onFinish() {
-  if (!initialized) return STATE_GAME;
+  if (!initialized) return STATE_LOADING;
 
   stateManager.freeAll();
 
   initialized = false;
-  return STATE_GAME;
+  return STATE_LOADING;
 }
 
 void IntroState::update() {

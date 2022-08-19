@@ -43,7 +43,7 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
   auto* sample = engine->audio.adpcm.load(
       FileUtils::fromCwd("game/models/zombie/punch.adpcm"));
 
-  const int enemyCount = 5;
+  const int enemyCount = 10;
   for (int i = 0; i < enemyCount; i++) {
     EnemyInfo info;
     info.adpcmChannel = 9 + i;
@@ -51,9 +51,8 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
     info.motherMesh = motherMesh;
     info.clothTexture = clothTexture;
     info.bodyTexture = bodyTexture;
-    info.spawnPoint =
-        Vec4(Math::randomf(heightmap.leftUp.x, heightmap.rightDown.x), 0.0F,
-             Math::randomf(heightmap.leftUp.z, heightmap.rightDown.z), 1.0F);
+    info.terrainLeftUp = heightmap.leftUp;
+    info.terrainRightDown = heightmap.rightDown;
     enemies.push_back(new Enemy(engine, info));
   }
 }

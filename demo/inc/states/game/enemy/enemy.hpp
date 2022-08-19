@@ -49,10 +49,12 @@ class Enemy {
   void animationCallback(const AnimationSequenceCallback& callback);
   void fight();
   void handlePlayerShoot(const PlayerShootAction& shootAction);
+  void setMeshToSpawn();
 
   bool isWalking = true;
   bool isFighting = false;
-  Vec4 spawnPoint;
+  Vec4 terrainLeftUp;
+  Vec4 terrainRightDown;
 
   Audio* audio;
   EnemyInfo info;

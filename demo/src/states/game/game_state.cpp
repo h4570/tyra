@@ -10,6 +10,7 @@
 
 #include "states/game/game_state.hpp"
 
+using std::make_unique;
 using Tyra::FileUtils;
 
 namespace Demo {
@@ -28,17 +29,20 @@ void GameState::onStart() {
   TYRA_LOG("Game. RAM: ", engine->info.getAvailableRAM(), "MB");
 
   engine->audio.song.stop();
-  engine->audio.song.load(FileUtils::fromCwd("game/ambiance.wav"));
   engine->audio.song.inLoop = true;
-  engine->audio.song.setVolume(100);
+  engine->audio.song.load(FileUtils::fromCwd("game/game-audio.wav"));
+  engine->audio.song.setVolume(0);
   engine->audio.song.play();
 
   auto* repository = &engine->renderer.core.texture.repository;
-  player = new Player(engine);
-  terrain = new Terrain(repository);
-  enemyManager = new EnemyManager(engine, terrain->heightmap);
-  ship = new Ship(repository);
-  skybox = new Skybox(repository);
+  player = make_unique<Player>(engine);
+  terrain = make_unique<Terrain>(repository);
+  enemyManager = make_unique<EnemyManager>(engine, terrain->heightmap);
+  ship = make_unique<Ship>(repository);
+  skybox = make_unique<Skybox>(repository);
+  hud = make_unique<Hud>(repository);
+
+  engine->audio.song.setVolume(85);
 
   initialized = true;
 }
@@ -46,27 +50,12 @@ void GameState::onStart() {
 GlobalStateType GameState::onFinish() {
   if (!initialized) return STATE_EXIT;
 
-  delete player;
-  delete enemyManager;
-  delete terrain;
-  delete ship;
-  delete skybox;
   initialized = false;
 
   return STATE_EXIT;
 }
 
 void GameState::update() {
-  // Begin frame
-  player->update(terrain->heightmap);
-  auto cameraInfo = player->getCameraInfo();
-  engine->renderer.beginFrame(cameraInfo);
-
-  // Clear screen and render skybox
-  renderer.clear();
-  skybox->update(player->getPosition());
-  renderer.renderSkybox(*skybox->pair);  // First, because of ALLPASS
-
   // Check fps
   if (fpsChecker++ > 50) {
     TYRA_LOG("FPS: ", engine->info.getFps(),
@@ -75,25 +64,29 @@ void GameState::update() {
   }
 
   // Game logic
+  player->update(terrain->heightmap);
+  skybox->update(player->getPosition());
   auto shootAction = player->getShootAction();
   enemyManager->update(terrain->heightmap, player->getPosition(), shootAction);
+  auto* firstEnemyMesh = enemyManager->getPairs().front()->mesh;
 
-  // Render other stuff
-  renderer.add(ship->pair);
-  renderer.add(player->pair);
-  renderer.add(enemyManager->getPairs());
-  renderer.add(terrain->pair);
-  renderer.render();
-
-  // Debug
-  // auto& utility = engine->renderer.renderer3D.utility;
-  // utility.drawBox(*player->getCameraInfo().looksAt, 0.3F);
-
-  // auto* firstEnemy = enemyManager->getPairs().front()->mesh;
-  // utility.drawBBox(firstEnemy->getCurrentBoundingBox().getTransformed(
-  //     firstEnemy->getModelMatrix()));
-
-  // End frame
+  // Render
+  engine->renderer.beginFrame(player->getCameraInfo());
+  {
+    renderer.clear();
+    {
+      renderer.add(skybox->pair);  // First, because of ALLPASS
+      renderer.add(ship->pair);
+      renderer.add(player->pair);
+      renderer.add(enemyManager->getPairs());
+      renderer.add(terrain->pair);
+      renderer.add(firstEnemyMesh->getCurrentBoundingBox().getTransformed(
+          firstEnemyMesh->getModelMatrix()));
+      renderer.add(hud->crosshairSprite.get());
+      renderer.add(hud->hpSprite.get());
+    }
+    renderer.render();
+  }
   engine->renderer.endFrame();
 }
 
