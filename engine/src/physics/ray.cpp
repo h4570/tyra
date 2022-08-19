@@ -33,15 +33,15 @@ float Ray::distanceToPoint(const Vec4& point) const {
 
 bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
                        float* outputDistance) const {
-  Vec4 _min = (minCorner - this->origin) / this->invDir();
-  Vec4 _max = (minCorner - this->origin) / this->invDir();
+  auto min = (minCorner - origin) / direction;
+  auto max = (maxCorner - origin) / direction;
 
   float tmin =
-      std::max(std::max(std::min(_min.x, _max.x), std::min(_min.y, _max.y)),
-               std::min(_min.z, _max.z));
+      std::max(std::max(std::min(min.x, max.x), std::min(min.y, max.y)),
+               std::min(min.z, max.z));
   float tmax =
-      std::min(std::min(std::max(_min.x, _max.x), std::max(_min.y, _max.y)),
-               std::max(_min.z, _max.z));
+      std::min(std::min(std::max(min.x, max.x), std::max(min.y, max.y)),
+               std::max(min.z, max.z));
 
   // if tmax < 0, ray (line) is intersecting AABB, but whole AABB is behing us
   if (tmax < 0) {
@@ -69,6 +69,7 @@ bool Ray::intersectBox(const Vec4& minCorner, const Vec4& maxCorner,
   if (outputDistance != nullptr) {
     *outputDistance = tmin;
   }
+
   return true;
 }
 
