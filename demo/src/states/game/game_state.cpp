@@ -84,6 +84,7 @@ void GameState::update() {
           firstEnemyMesh->getModelMatrix()));
       renderer.add(hud->crosshairSprite.get());
       renderer.add(hud->hpSprite.get());
+      renderer.add(hud->soldierSprite.get());
     }
     renderer.render();
   }

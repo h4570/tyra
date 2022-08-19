@@ -17,10 +17,18 @@ namespace Demo {
 Hud::Hud(TextureRepository* t_repo) {
   repo = t_repo;
 
+  soldierSprite = std::make_unique<Sprite>();
+  soldierSprite->mode = Tyra::MODE_STRETCH;
+  soldierSprite->size.set(64.0F, 64.0F);
+  soldierSprite->position.set(5.0F, 448.0F - 64.0F - 5.0F);
+
+  soldierTexture = repo->add(FileUtils::fromCwd("game/soldier.png"));
+  soldierTexture->addLink(soldierSprite->id);
+
   hpSprite = std::make_unique<Sprite>();
   hpSprite->mode = Tyra::MODE_STRETCH;
   hpSprite->size.set(128.0F, 64.0F);
-  hpSprite->position.set(0, 448.0F - 64.0F - 5.0F);
+  hpSprite->position.set(70.0F, 448.0F - 64.0F - 5.0F);
 
   hpTexture = repo->add(FileUtils::fromCwd("game/health_bar.png"));
   hpTexture->addLink(hpSprite->id);

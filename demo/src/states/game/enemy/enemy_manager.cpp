@@ -40,14 +40,18 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
   clothTexture = textureRepo->add(
       FileUtils::fromCwd("game/models/zombie/ClothMaterial.png"));
 
-  auto* sample = engine->audio.adpcm.load(
+  auto* punch = engine->audio.adpcm.load(
       FileUtils::fromCwd("game/models/zombie/punch.adpcm"));
+
+  auto* death = engine->audio.adpcm.load(
+      FileUtils::fromCwd("game/models/zombie/death.adpcm"));
 
   const int enemyCount = 10;
   for (int i = 0; i < enemyCount; i++) {
     EnemyInfo info;
     info.adpcmChannel = 9 + i;
-    info.adpcmSample = sample;
+    info.adpcmPunch = punch;
+    info.adpcmDeath = death;
     info.motherMesh = motherMesh;
     info.clothTexture = clothTexture;
     info.bodyTexture = bodyTexture;

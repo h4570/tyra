@@ -21,7 +21,8 @@ namespace Demo {
 
 struct EnemyInfo {
   u8 adpcmChannel;
-  audsrv_adpcm_t* adpcmSample;
+  audsrv_adpcm_t* adpcmPunch;
+  audsrv_adpcm_t* adpcmDeath;
   DynamicMesh* motherMesh;
   Texture* bodyTexture;
   Texture* clothTexture;

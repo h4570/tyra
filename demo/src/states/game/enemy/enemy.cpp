@@ -110,6 +110,7 @@ void Enemy::handlePlayerShoot(const PlayerShootAction& shootAction) {
 
   if (isOnEnemy) {
     setMeshToSpawn();
+    audio->adpcm.tryPlay(info.adpcmDeath, info.adpcmChannel);
   }
 }
 
@@ -144,7 +145,7 @@ void Enemy::fight() {
 void Enemy::animationCallback(const AnimationSequenceCallback& callback) {
   if (callback == AnimationSequenceCallback::AnimationSequenceCallback_Loop) {
     if (isFighting) {
-      audio->adpcm.tryPlay(info.adpcmSample, info.adpcmChannel);
+      audio->adpcm.tryPlay(info.adpcmPunch, info.adpcmChannel);
     }
   }
 }

@@ -26,10 +26,14 @@ class Hud {
   ~Hud();
 
   TextureRepository* repo;
-  Texture* hpTexture;
+
   unique_ptr<Sprite> hpSprite;
-  Texture* crosshairTexture;
   unique_ptr<Sprite> crosshairSprite;
+  unique_ptr<Sprite> soldierSprite;
+
+  Texture* hpTexture;
+  Texture* crosshairTexture;
+  Texture* soldierTexture;
 };
 
 }  // namespace Demo
