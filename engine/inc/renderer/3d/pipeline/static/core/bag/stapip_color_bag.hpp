@@ -23,10 +23,10 @@ class StaPipColorBag {
   ~StaPipColorBag();
 
   /** Optional. Single color for all vertices. */
-  Color* single;
+  const Color* single;
 
   /** Optional. Color per vertex. */
-  Color* many;
+  const Color* many;
 };
 
 }  // namespace Tyra

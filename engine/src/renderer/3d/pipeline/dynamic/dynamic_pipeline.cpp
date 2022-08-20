@@ -51,7 +51,13 @@ void DynamicPipeline::onUseEnd() {
   core.deallocateOnUse();
 }
 
-void DynamicPipeline::render(DynamicMesh* mesh, const DynPipOptions* options) {
+void DynamicPipeline::render(const DynamicMesh& mesh,
+                             const DynPipOptions* options) {
+  render(&mesh, options);
+}
+
+void DynamicPipeline::render(const DynamicMesh* mesh,
+                             const DynPipOptions* options) {
   bool optionsManuallyAllocated = false;
 
   if (!options) {
@@ -185,7 +191,7 @@ void DynamicPipeline::sendRestOfBuffers(DynPipBag* buffers, u16* bufferIndex) {
 }
 
 void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
-                                            DynamicMesh* mesh,
+                                            const DynamicMesh* mesh,
                                             DynPipInfoBag* infoBag) {
   for (u32 i = 0; i < buffersCount; i++) {
     buffers[i].info = infoBag;
@@ -210,7 +216,7 @@ void DynamicPipeline::freeBuffer(DynPipBag* bag) {
   }
 }
 
-DynPipInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
+DynPipInfoBag* DynamicPipeline::getInfoBag(const DynamicMesh* mesh,
                                            const DynPipOptions* options,
                                            M4x4* model) const {
   auto* result = new DynPipInfoBag();
@@ -230,22 +236,23 @@ DynPipInfoBag* DynamicPipeline::getInfoBag(DynamicMesh* mesh,
   return result;
 }
 
-void DynamicPipeline::addVertices(MeshMaterialFrame* materialFrameFrom,
-                                  MeshMaterialFrame* materialFrameTo,
+void DynamicPipeline::addVertices(const MeshMaterialFrame* materialFrameFrom,
+                                  const MeshMaterialFrame* materialFrameTo,
                                   DynPipBag* bag, const u32& startIndex) const {
   bag->verticesFrom = &materialFrameFrom->vertices[startIndex];
   bag->verticesTo = &materialFrameTo->vertices[startIndex];
 }
 
-DynPipColorBag* DynamicPipeline::getColorBag(MeshMaterial* material) const {
+DynPipColorBag* DynamicPipeline::getColorBag(
+    const MeshMaterial* material) const {
   auto* result = new DynPipColorBag();
   result->single = &material->ambient;
   return result;
 }
 
 DynPipTextureBag* DynamicPipeline::getTextureBag(
-    Texture* texture, MeshMaterialFrame* materialFrameFrom,
-    MeshMaterialFrame* materialFrameTo, const u32& startIndex) {
+    Texture* texture, const MeshMaterialFrame* materialFrameFrom,
+    const MeshMaterialFrame* materialFrameTo, const u32& startIndex) {
   if (!materialFrameFrom->textureCoords) return nullptr;
 
   auto* result = new DynPipTextureBag();
@@ -259,9 +266,10 @@ DynPipTextureBag* DynamicPipeline::getTextureBag(
 }
 
 DynPipLightingBag* DynamicPipeline::getLightingBag(
-    MeshMaterialFrame* materialFrameFrom, MeshMaterialFrame* materialFrameTo,
-    M4x4* model, const DynPipOptions* options,
-    PipelineDirLightsBag* dirLightsBag, const u32& startIndex) const {
+    const MeshMaterialFrame* materialFrameFrom,
+    const MeshMaterialFrame* materialFrameTo, M4x4* model,
+    const DynPipOptions* options, PipelineDirLightsBag* dirLightsBag,
+    const u32& startIndex) const {
   if (!materialFrameFrom->normals || options == nullptr ||
       options->lighting == nullptr)
     return nullptr;

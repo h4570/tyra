@@ -37,10 +37,12 @@ void StaPipQBuffer::fillByPointer(const StaPipBagPackage& pkg) {
 
   deallocateDynamicData();
 
-  vertices = pkg.vertices;
-  sts = pkg.sts;
-  colors = pkg.colors;
-  normals = pkg.normals;
+  // Too bad, but in reality const is not violated.
+  // This class needs refactor
+  vertices = const_cast<Vec4*>(pkg.vertices);
+  sts = const_cast<Vec4*>(pkg.sts);
+  colors = const_cast<Vec4*>(pkg.colors);
+  normals = const_cast<Vec4*>(pkg.normals);
   size = pkg.size;
   bag = pkg.bag;
 }

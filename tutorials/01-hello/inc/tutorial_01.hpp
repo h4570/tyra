@@ -10,54 +10,30 @@
 
 #pragma once
 
-#include <engine.hpp>
-#include <game.hpp>
-#include "renderer/3d/pipeline/minecraft/minecraft_pipeline.hpp"
-#include "renderer/3d/pipeline/static/static_pipeline.hpp"
-#include "renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
-#include "renderer/3d/mesh/static/static_mesh.hpp"
+/** We can include all of Tyra classes via this single line: */
+#include <tyra>
 
 namespace Tyra {
 
+/** Tutorial01 is a name of our game class */
 class Tutorial01 : public Game {
  public:
   Tutorial01(Engine* engine);
   ~Tutorial01();
 
+  /**
+   * This function will be called once,
+   * immediatly after initializing Tyra features
+   */
   void init();
+
+  /**
+   * This function will be called every frame
+   */
   void loop();
 
  private:
   Engine* engine;
-
-  StaticMesh* skybox;
-  DynamicMesh* cube;
-  StaticMesh* staticMesh;
-  DynamicMesh* warrior;
-  u8 warriorsCount;
-  DynamicMesh** warriors;
-  u32 picturesCount;
-  Sprite** pictures;
-  audsrv_adpcm_t* adpcmSample;
-  Timer adpcmTimer;
-
-  Vec4 cameraPosition, cameraLookAt;
-
-  MinecraftPipeline mcPip;
-  DynamicPipeline dynpip;
-  StaticPipeline stapip;
-  StaPipOptions* skyboxOptions;
-  StaPipOptions* staOptions;
-  DynPipOptions* dynOptions;
-  Texture* warriorTex;
-  Texture* blocksTex;
-  Texture* blocksTex2;
-
-  u32 blocksCount;
-  std::vector<McpipBlock*> blocks;
-  M4x4* translations;
-  M4x4* rotations;
-  M4x4* scales;
 };
 
 }  // namespace Tyra

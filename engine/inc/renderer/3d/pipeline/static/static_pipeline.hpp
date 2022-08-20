@@ -45,28 +45,30 @@ class StaticPipeline : public Renderer3DPipeline {
    * Render static model
    * This render() method is a bridge to core.render() method.
    */
-  void render(StaticMesh* mesh, const StaPipOptions* options = nullptr);
+  void render(const StaticMesh& mesh, const StaPipOptions* options = nullptr);
+  void render(const StaticMesh* mesh, const StaPipOptions* options = nullptr);
 
  private:
   RendererCore* rendererCore;
   Vec4* colorsCache;
 
-  void addVertices(MeshMaterialFrame* materialFrame, StaPipBag* bag) const;
+  void addVertices(const MeshMaterialFrame* materialFrame,
+                   StaPipBag* bag) const;
 
-  StaPipInfoBag* getInfoBag(StaticMesh* mesh, const StaPipOptions* options,
-                            M4x4* model) const;
+  StaPipInfoBag* getInfoBag(const StaticMesh* mesh,
+                            const StaPipOptions* options, M4x4* model) const;
 
-  StaPipColorBag* getColorBag(MeshMaterial* material,
-                              MeshMaterialFrame* materialFrame) const;
+  StaPipColorBag* getColorBag(const MeshMaterial* material,
+                              const MeshMaterialFrame* materialFrame) const;
 
-  StaPipTextureBag* getTextureBag(MeshMaterial* material,
-                                  MeshMaterialFrame* materialFrame);
+  StaPipTextureBag* getTextureBag(const MeshMaterial* material,
+                                  const MeshMaterialFrame* materialFrame);
 
-  StaPipLightingBag* getLightingBag(MeshMaterialFrame* materialFrame,
+  StaPipLightingBag* getLightingBag(const MeshMaterialFrame* materialFrame,
                                     M4x4* model,
                                     const StaPipOptions* options) const;
 
-  void deallocDrawBags(StaPipBag* bag, MeshMaterial* material) const;
+  void deallocDrawBags(StaPipBag* bag, const MeshMaterial* material) const;
 
   void setLightingColorsCache(PipelineLightingOptions* lightingOptions);
 };

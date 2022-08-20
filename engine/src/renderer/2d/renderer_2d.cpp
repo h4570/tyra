@@ -17,11 +17,13 @@ Renderer2D::~Renderer2D() {}
 
 void Renderer2D::init(RendererCore* t_rendererCore) { core = t_rendererCore; }
 
-void Renderer2D::render(Sprite* sprite) {
-  auto* texture = core->texture.repository.getBySpriteOrMesh(sprite->id);
+void Renderer2D::render(const Sprite* sprite) { render(*sprite); }
+
+void Renderer2D::render(const Sprite& sprite) {
+  auto* texture = core->texture.repository.getBySpriteOrMesh(sprite.id);
 
   TYRA_ASSERT(
-      texture, "Texture for sprite with id: ", sprite->id,
+      texture, "Texture for sprite with id: ", sprite.id,
       "Was not found in texture repository! Did you forget to add texture?");
 
   auto texBuffers = core->texture.useTexture(texture);

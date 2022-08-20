@@ -43,7 +43,8 @@ StaPipBagPackage* StaPipBagPackager::create(u16* o_size, StaPipBag* data,
     if (data->texture) result[i].sts = &data->texture->coordinates[i * size];
 
     if (data->color->many)
-      result[i].colors = reinterpret_cast<Vec4*>(&data->color->many[i * size]);
+      result[i].colors =
+          reinterpret_cast<const Vec4*>(&data->color->many[i * size]);
 
     if (data->lighting) result[i].normals = &data->lighting->normals[i * size];
 

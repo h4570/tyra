@@ -8,300 +8,52 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
+#include <tyra>
 #include "tutorial_01.hpp"
-#include "file/file_utils.hpp"
-#include "loaders/3d/md2_loader/md2_loader.hpp"
-#include "loaders/3d/obj_loader/obj_loader.hpp"
-#include "thread/threading.hpp"
 
 namespace Tyra {
 
-float getRandomFloat(float a, float b) {
-  float random = ((float)rand()) / (float)RAND_MAX;
-  float diff = b - a;
-  float r = random * diff;
-  return a + r;
+/** Lets save pointer to engine class */
+Tutorial01::Tutorial01(Engine* t_engine) : engine(t_engine) {}
+
+Tutorial01::~Tutorial01() {}
+
+void Tutorial01::init() {
+  /**
+   * There are 5 debug functions in Tyra engine.
+   *
+   * TYRA_LOG() -> Prints log message
+   *
+   * TYRA_WARN() -> Prints warning message
+   *
+   * TYRA_ERROR() -> Prints error message
+   *
+   * TYRA_ASSERT() -> Checks if condition is true, otherwise prints error
+   * message
+   *
+   * TYRA_BREAKPOINT() -> Freeze program in current place
+   *
+   * Every function has infinite number of various-typed arguments.
+   */
+
+  short positiveNumber = -1;  // Change it to -1 and see what happen!
+
+  TYRA_LOG("Hello world!");
+
+  TYRA_WARN("Something weird happened! ",
+            "Number should be positive, but is: ", -1);
+
+  TYRA_ERROR("Something really bad happened!");
+
+  /** First argument is our check argument */
+  TYRA_ASSERT(positiveNumber > 0, "Number should be positive!",
+              "Please check the code!", "Current value:", (int)positiveNumber);
 }
 
-int getRandomInt(int a, int b) { return (rand() % (b - a + 1)) + a; }
+void Tutorial01::loop() {
+  /** Uncomment following line, to check the game loop! */
 
-Tutorial01 ::Tutorial01(Engine* t_engine) { engine = t_engine; }
-Tutorial01 ::~Tutorial01() {}
-
-StaticMesh* getStaticMesh(Renderer* renderer);
-DynamicMesh* getWarrior(Renderer* renderer);
-StaticMesh* getSkybox(Renderer* renderer);
-DynamicMesh* getCube(Renderer* renderer);
-StaPipOptions* getStaPipOptions();
-DynPipOptions* getDynPipOptions();
-void setPipelineOptions(PipelineOptions* options);
-Sprite* get2DPicture(Renderer* renderer);
-
-void Tutorial01 ::init() {
-  // Song
-  engine->audio.song.load(FileUtils::fromCwd("mafikizolo-loot.wav"));
-  engine->audio.song.inLoop = true;
-  engine->audio.song.setVolume(30);
-
-  adpcmSample = engine->audio.adpcm.load(FileUtils::fromCwd("walk.adpcm"));
-  engine->audio.adpcm.setVolume(80, 1);
-
-  engine->renderer.setClearScreenColor(Color(64.0F, 64.0F, 64.0F));
-
-  staticMesh = getStaticMesh(&engine->renderer);
-  skybox = getSkybox(&engine->renderer);
-
-  cube = getCube(&engine->renderer);
-
-  warrior = getWarrior(&engine->renderer);
-  warriorTex = engine->renderer.core.texture.repository.getBySpriteOrMesh(
-      warrior->materials[0]->id);
-
-  warriorsCount = 22;
-  warriors = new DynamicMesh*[warriorsCount];
-  for (u8 i = 0; i < warriorsCount; i++) {
-    warriors[i] = new DynamicMesh(*warrior);
-    warriors[i]->translation.translateX(-40.0F + static_cast<float>(i) * 4);
-    warriors[i]->translation.translateY(30.0F);
-    warriors[i]->translation.translateZ(-10.0F);
-    warriors[i]->translation.rotateX(-1.5F);
-    warriorTex->addLink(warriors[i]->materials[0]->id);
-    warriors[i]->animation.speed = getRandomFloat(0.1F, 0.9F);
-  }
-
-  staOptions = getStaPipOptions();
-
-  skyboxOptions = new StaPipOptions();
-  skyboxOptions->fullClipChecks = true;
-  skyboxOptions->frustumCulling = PipelineFrustumCulling_Precise;
-
-  dynOptions = getDynPipOptions();
-
-  cameraPosition = Vec4(0.0F, 0.0F, 20.0F);
-  cameraLookAt = *warrior->getPosition();
-
-  blocksTex = engine->renderer.core.texture.repository.add(
-      FileUtils::fromCwd("blocks.png"));
-  blocksTex2 = engine->renderer.core.texture.repository.add(
-      FileUtils::fromCwd("texture_atlas.png"));
-
-  mcPip.setRenderer(&engine->renderer.core);
-  dynpip.setRenderer(&engine->renderer.core);
-  stapip.setRenderer(&engine->renderer.core);
-
-  picturesCount = 3;
-  pictures = new Sprite*[picturesCount];
-  for (u32 i = 0; i < picturesCount; i++)
-    pictures[i] = get2DPicture(&engine->renderer);
-
-  u32 rows = 4;     // 64
-  u32 columns = 4;  // 64
-  blocksCount = rows * columns;
-
-  float offset = 4.0F;
-  translations = new M4x4[blocksCount];
-  rotations = new M4x4[blocksCount];
-  scales = new M4x4[blocksCount];
-  float center = (rows / 2.0F) * offset;
-  auto* color = new Color(128.0F, 128.0F, 128.0F, 128.0F);
-
-  for (u32 i = 0; i < blocksCount; i++) {
-    u32 column = i % columns;
-    u32 row = i / rows;
-
-    translations[i].identity();
-    rotations[i].identity();
-    scales[i].identity();
-
-    translations[i].translateX(row * offset - center);
-    translations[i].translateY(column * offset - center);
-    translations[i].translateZ(-10.0F);
-
-    // u32 randRow = rand() % (rows + 1);
-    // u32 randColumn = rand() % (columns + 1);
-    u32 randRow = 0;
-    u32 randColumn = 0;
-
-    McpipBlock* block = new McpipBlock();
-    block->textureOffset =
-        new Vec4(mcPip.getTextureOffset() * randRow,
-                 mcPip.getTextureOffset() * randColumn, 0.0F, 1.0F);
-
-    block->color = color;
-    blocks.push_back(block);
-  }
-
-  // engine->audio.play();
-  // engine->renderer.setFrameLimit(false);
-}
-
-u32 counter = 0;
-
-void Tutorial01 ::loop() {
-  if (counter++ > 100) {
-    TYRA_LOG("Free RAM: ", engine->info.getAvailableRAM(), " MB");
-    TYRA_LOG("FPS: ", engine->info.getFps());
-    counter = 0;
-  }
-
-  for (u8 i = 0; i < warriorsCount; i++) warriors[i]->update();
-  cube->update();
-
-  skybox->rotation.rotateY(0.02F);
-
-  engine->renderer.beginFrame(CameraInfo3D(&cameraPosition, &cameraLookAt));
-  {
-    for (u32 i = 0; i < blocksCount; i++) {
-      // rotations[i].rotateX(0.04F);
-      rotations[i].rotateY(0.04F);
-      // rotations[i].rotateZ(0.01F);
-
-      if (blocks[i]->model) {
-        delete blocks[i]->model;
-      }
-      blocks[i]->model = new M4x4(translations[i] * rotations[i] * scales[i]);
-    }
-
-    for (u32 i = 0; i < picturesCount; i++)
-      engine->renderer.renderer2D.render(pictures[i]);
-
-    engine->renderer.renderer3D.usePipeline(&stapip);
-    {
-      stapip.render(staticMesh, staOptions);
-      stapip.render(skybox, skyboxOptions);
-    }
-
-    engine->renderer.renderer3D.usePipeline(&dynpip);
-    {
-      // dynpip.render(cube);
-      Threading::switchThread();
-      for (u8 i = 0; i < warriorsCount; i++) {
-        dynpip.render(warriors[i], dynOptions);
-        if (i == 5) Threading::switchThread();
-        if (i == 10) Threading::switchThread();
-        if (i == 15) Threading::switchThread();
-      }
-    }
-
-    engine->renderer.renderer3D.usePipeline(&mcPip);
-    { mcPip.render(blocks, blocksTex2, true); }
-  }
-  engine->renderer.endFrame();
-}
-
-StaticMesh* getStaticMesh(Renderer* renderer) {
-  MD2Loader loader;
-  MD2LoaderOptions options;
-  options.scale = .08F;
-
-  auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), options);
-  auto* result = new StaticMesh(*data);
-  // result->translation.translateZ(-30.0F);
-  delete data;
-
-  renderer->core.texture.repository.addByMesh(result, FileUtils::getCwd(),
-                                              "png");
-
-  return result;
-}
-
-StaticMesh* getSkybox(Renderer* renderer) {
-  ObjLoader loader;
-  ObjLoaderOptions options;
-  options.flipUVs = true;
-  options.scale = 200.0F;
-  auto* data = loader.load(FileUtils::fromCwd("skybox/skybox.obj"), options);
-  auto* result = new StaticMesh(*data);
-  // result->translation.translateZ(-30.0F);
-  delete data;
-
-  renderer->core.texture.repository.addByMesh(
-      result, FileUtils::fromCwd("skybox/"), "png");
-
-  return result;
-}
-
-DynamicMesh* getWarrior(Renderer* renderer) {
-  MD2Loader loader;
-  MD2LoaderOptions options;
-  options.scale = .08F;
-  auto* data = loader.load(FileUtils::fromCwd("warrior.md2"), options);
-  auto* result = new DynamicMesh(*data);
-  // result->translation.translateZ(-30.0F);
-  delete data;
-
-  renderer->core.texture.repository.addByMesh(result, FileUtils::getCwd(),
-                                              "png");
-
-  result->animation.speed = 0.15F;
-
-  return result;
-}
-
-DynamicMesh* getCube(Renderer* renderer) {
-  ObjLoader loader;
-  ObjLoaderOptions options;
-  options.animation.count = 2;
-  options.scale = 3.0F;
-  auto* data = loader.load(FileUtils::fromCwd("untitled.obj"), options);
-  data->normalsEnabled = false;
-  data->textureCoordsEnabled = false;
-  auto* result = new DynamicMesh(*data);
-  result->translation.translateZ(-30.0F);
-  delete data;
-
-  result->animation.speed = 0.15F;
-
-  return result;
-}
-
-Sprite* get2DPicture(Renderer* renderer) {
-  auto* sprite = new Sprite;
-
-  sprite->size.set(128.0F, 128.0F);
-  sprite->position.set(300.0F, 280.0F);
-
-  renderer->core.texture.repository.add(FileUtils::fromCwd("reward.png"))
-      ->addLink(sprite->id);
-
-  return sprite;
-}
-
-StaPipOptions* getStaPipOptions() {
-  auto* options = new StaPipOptions();
-  setPipelineOptions(options);
-  return options;
-}
-
-DynPipOptions* getDynPipOptions() {
-  auto* options = new DynPipOptions();
-  setPipelineOptions(options);
-  return options;
-}
-
-void setPipelineOptions(PipelineOptions* options) {
-  auto* ambientColor = new Color(32.0F, 32.0F, 32.0F, 32.0F);
-  auto* directionalColors = new Color[3];
-  for (int i = 0; i < 3; i++) directionalColors[i].set(0.0F, 0.0F, 0.0F, 1.0F);
-  auto* directionalDirections = new Vec4[3];
-  for (int i = 0; i < 3; i++)
-    directionalDirections[i].set(1.0F, 1.0F, 1.0F, 1.0F);
-
-  auto* lightingOptions = new PipelineLightingOptions();  // Memory leak!
-  lightingOptions->ambientColor = ambientColor;
-  lightingOptions->directionalColors = directionalColors;
-  lightingOptions->directionalDirections = directionalDirections;
-
-  options->shadingType = Tyra::TyraShadingGouraud;
-  options->blendingEnabled = true;
-  options->antiAliasingEnabled = false;
-  options->lighting = lightingOptions;
-
-  directionalDirections[0].set(-1.0F, 0.0F, 0.0F);
-  directionalColors[0].set(0.0F, 96.0F, 0.0F);
-
-  directionalDirections[1].set(1.0F, 0.0F, 0.0F);
-  directionalColors[1].set(96.0F, 0.0F, 0.0F);
+  // TYRA_LOG("Loop!");
 }
 
 }  // namespace Tyra

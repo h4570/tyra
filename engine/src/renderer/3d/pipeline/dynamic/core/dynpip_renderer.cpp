@@ -11,6 +11,8 @@
 #include "renderer/3d/pipeline/dynamic/core/dynpip_renderer.hpp"
 #include "renderer/3d/pipeline/dynamic/core/programs/dynpip_vu1_shared_defines.h"
 #include <dma.h>
+#include <utility>
+#include "packet2/packet2_tyra_utils.hpp"
 
 namespace Tyra {
 
@@ -114,8 +116,8 @@ void DynPipRenderer::sendObjectData(
 
   if (singleColorEnabled)  // Color is placed in 4th slot of
                            // VU1_LIGHTS_MATRIX_ADDR
-    packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_SINGLE_COLOR_ADDR,
-                                     bag->color->single->rgba, 1, false);
+    Packet2TyraUtils::addUnpackData(objectDataPacket, VU1_SINGLE_COLOR_ADDR,
+                                    bag->color->single->rgba, 1, false);
 
   packet2_utils_vu_open_unpack(objectDataPacket, VU1_OPTIONS_ADDR, false);
   {

@@ -23,7 +23,7 @@ class DynPipColorBag {
   ~DynPipColorBag();
 
   /** Mandatory */
-  Color* single;
+  const Color* single;
 };
 
 }  // namespace Tyra

@@ -27,8 +27,8 @@ class RendererCore2D {
 
   void init(RendererSettings* settings, clutbuffer_t* clutBuffer);
 
-  void render(Sprite* sprite, const RendererCoreTextureBuffers& texBuffers,
-              Texture* texture);
+  void render(const Sprite& sprite,
+              const RendererCoreTextureBuffers& texBuffers, Texture* texture);
 
  private:
   void setPrim();

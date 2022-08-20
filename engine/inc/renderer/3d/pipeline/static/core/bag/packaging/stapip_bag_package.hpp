@@ -22,10 +22,10 @@ class StaPipBagPackage {
 
   StaPipBag* bag;
 
-  Vec4* vertices;
-  Vec4* sts;
-  Vec4* normals;
-  Vec4* colors;
+  const Vec4* vertices;
+  const Vec4* sts;
+  const Vec4* normals;
+  const Vec4* colors;
   /** maxVertCount is max value, because we decided to put max maxVertCount
    * verts to single quad buffer in VU1 */
   u16 size;

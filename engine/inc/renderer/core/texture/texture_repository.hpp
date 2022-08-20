@@ -108,6 +108,8 @@ class TextureRepository {
    * Texture IS destructed.
    */
   void free(const u32& t_texId);
+  void free(const Texture* t_tex);
+  void free(const Texture& t_tex);
 
  private:
   std::vector<Texture*> textures;

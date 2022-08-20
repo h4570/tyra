@@ -1,9 +1,5 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [General] CI in Github via docker image
-
-- [Tutorials] 1. Hello world! - explain init(), loop() and what should be inside them (every tutorial should be well commented!)
-
 - [Tutorials] 2. 2D - explain beginFrame(), endFrame()
 
 - [Tutorials] 3. Minecraft cube - explain this pipeline, and explain that there are many 3D pipelines
@@ -15,11 +11,14 @@ abstract 3D object class, and what it have (animation etc)
 explain that this is lower-level abstract rendering, it have the all the features as Mesh rendering, 
 because Mesh rendering uses only core.render()
 
-- [Tutorials] 6. Animation in Mesh rendering rendering, explain the API
+- [Tutorials] 6. Animation in Mesh rendering, explain the API
 
 - [Tutorials] 7. Directional lights in Mesh rendering
 
 - [Tutorials] 8. Render skybox, and show that stdPipOptions.noClipChecks must be set to false, to turn on clip algorithms (prevent glitches)
+
+- own game
+- usb
 
 - [General] Check all left TODOs -> Github issues
 
@@ -28,6 +27,7 @@ because Mesh rendering uses only core.render()
 ------------ Github issues for Tyra v2 ------------
 - [Demo] porzadek z konstruktorami bbox
 - [renderer] fog
+- [General] CI in Github via docker image
 - [renderer] bbox parts optimization
 - [General] smart pointers and std::array instead of raw pointers
 - [md2] refactor

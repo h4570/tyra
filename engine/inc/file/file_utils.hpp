@@ -19,7 +19,16 @@ class FileUtils {
   FileUtils();
   ~FileUtils();
 
+  /**
+   * Get current working directory.
+   * Example: "host:" or "mass:"
+   */
   static std::string getCwd();
+
+  /**
+   * Add current working directory prefix to path
+   * Example: "host:..." or "mass:..."
+   */
   static std::string fromCwd(const std::string& relativePath);
   static std::string fromCwd(const char* relativePath);
 

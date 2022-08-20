@@ -56,6 +56,10 @@ void TextureRepository::removeById(const u32& t_texId) {
   removeByIndex(index);
 }
 
+void TextureRepository::free(const Texture* t_tex) { free(t_tex->id); }
+
+void TextureRepository::free(const Texture& t_tex) { free(t_tex.id); }
+
 void TextureRepository::free(const u32& t_texId) {
   s32 index = getIndexOf(t_texId);
   auto* tex = textures[index];

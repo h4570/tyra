@@ -10,6 +10,7 @@
 
 #include "renderer/3d/pipeline/static/core/stapip_qbuffer_renderer.hpp"
 #include "renderer/3d/pipeline/static/core/programs/stapip_vu1_shared_defines.h"
+#include "packet2/packet2_tyra_utils.hpp"
 
 // #define TYRA_QBUFF_RENDERER_VERBOSE_LOG 1
 
@@ -135,8 +136,8 @@ void StaPipQBufferRenderer::sendObjectData(
 
   if (singleColorEnabled)  // Color is placed in 4th slot of
                            // VU1_LIGHTS_MATRIX_ADDR
-    packet2_utils_vu_add_unpack_data(objectDataPacket, VU1_SINGLE_COLOR_ADDR,
-                                     bag->color->single->rgba, 1, false);
+    Packet2TyraUtils::addUnpackData(objectDataPacket, VU1_SINGLE_COLOR_ADDR,
+                                    bag->color->single->rgba, 1, false);
 
   packet2_utils_vu_open_unpack(objectDataPacket, VU1_OPTIONS_ADDR, false);
   {

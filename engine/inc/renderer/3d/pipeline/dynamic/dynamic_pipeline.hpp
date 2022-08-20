@@ -45,7 +45,8 @@ class DynamicPipeline : public Renderer3DPipeline {
    * Render dynamic model.
    * This render() method is a bridge to core.render() method.
    */
-  void render(DynamicMesh* mesh, const DynPipOptions* options = nullptr);
+  void render(const DynamicMesh& mesh, const DynPipOptions* options = nullptr);
+  void render(const DynamicMesh* mesh, const DynPipOptions* options = nullptr);
 
  private:
   RendererCore* rendererCore;
@@ -57,29 +58,29 @@ class DynamicPipeline : public Renderer3DPipeline {
 
   void sendRestOfBuffers(DynPipBag* buffers, u16* bufferIndex);
 
-  void addVertices(MeshMaterialFrame* materialFrameFrom,
-                   MeshMaterialFrame* materialFrameTo, DynPipBag* bag,
+  void addVertices(const MeshMaterialFrame* materialFrameFrom,
+                   const MeshMaterialFrame* materialFrameTo, DynPipBag* bag,
                    const u32& startIndex) const;
 
-  DynPipInfoBag* getInfoBag(DynamicMesh* mesh, const DynPipOptions* options,
-                            M4x4* model) const;
+  DynPipInfoBag* getInfoBag(const DynamicMesh* mesh,
+                            const DynPipOptions* options, M4x4* model) const;
 
-  DynPipColorBag* getColorBag(MeshMaterial* material) const;
+  DynPipColorBag* getColorBag(const MeshMaterial* material) const;
 
   DynPipTextureBag* getTextureBag(Texture* texture,
-                                  MeshMaterialFrame* materialFrameFrom,
-                                  MeshMaterialFrame* materialFrameTo,
+                                  const MeshMaterialFrame* materialFrameFrom,
+                                  const MeshMaterialFrame* materialFrameTo,
                                   const u32& startIndex);
 
-  DynPipLightingBag* getLightingBag(MeshMaterialFrame* materialFrameFrom,
-                                    MeshMaterialFrame* materialFrameTo,
+  DynPipLightingBag* getLightingBag(const MeshMaterialFrame* materialFrameFrom,
+                                    const MeshMaterialFrame* materialFrameTo,
                                     M4x4* model, const DynPipOptions* options,
                                     PipelineDirLightsBag* dirLightsBag,
                                     const u32& startIndex) const;
 
   void setLightingColorsCache(PipelineLightingOptions* lightingOptions);
   void freeBuffer(DynPipBag* bag);
-  void setBuffersDefaultVars(DynPipBag* buffers, DynamicMesh* mesh,
+  void setBuffersDefaultVars(DynPipBag* buffers, const DynamicMesh* mesh,
                              DynPipInfoBag* infoBag);
   void setBuffersColorBag(DynPipBag* buffers, DynPipColorBag* colorBag);
 };

@@ -39,7 +39,13 @@ void StaticPipeline::onUseEnd() {
   core.deallocateOnUse();
 }
 
-void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
+void StaticPipeline::render(const StaticMesh& mesh,
+                            const StaPipOptions* options) {
+  render(&mesh, options);
+}
+
+void StaticPipeline::render(const StaticMesh* mesh,
+                            const StaPipOptions* options) {
   bool optionsManuallyAllocated = false;
 
   if (!options) {
@@ -89,13 +95,13 @@ void StaticPipeline::render(StaticMesh* mesh, const StaPipOptions* options) {
   if (optionsManuallyAllocated) delete options;
 }
 
-void StaticPipeline::addVertices(MeshMaterialFrame* materialFrame,
+void StaticPipeline::addVertices(const MeshMaterialFrame* materialFrame,
                                  StaPipBag* bag) const {
   bag->count = materialFrame->count;
   bag->vertices = materialFrame->vertices;
 }
 
-StaPipInfoBag* StaticPipeline::getInfoBag(StaticMesh* mesh,
+StaPipInfoBag* StaticPipeline::getInfoBag(const StaticMesh* mesh,
                                           const StaPipOptions* options,
                                           M4x4* model) const {
   auto* result = new StaPipInfoBag();
@@ -117,7 +123,8 @@ StaPipInfoBag* StaticPipeline::getInfoBag(StaticMesh* mesh,
 }
 
 StaPipColorBag* StaticPipeline::getColorBag(
-    MeshMaterial* material, MeshMaterialFrame* materialFrame) const {
+    const MeshMaterial* material,
+    const MeshMaterialFrame* materialFrame) const {
   auto* result = new StaPipColorBag();
 
   if (material->lightmapFlag) {
@@ -130,7 +137,7 @@ StaPipColorBag* StaticPipeline::getColorBag(
 }
 
 StaPipTextureBag* StaticPipeline::getTextureBag(
-    MeshMaterial* material, MeshMaterialFrame* materialFrame) {
+    const MeshMaterial* material, const MeshMaterialFrame* materialFrame) {
   if (!materialFrame->textureCoords) return nullptr;
 
   auto* result = new StaPipTextureBag();
@@ -149,7 +156,7 @@ StaPipTextureBag* StaticPipeline::getTextureBag(
 }
 
 StaPipLightingBag* StaticPipeline::getLightingBag(
-    MeshMaterialFrame* materialFrame, M4x4* model,
+    const MeshMaterialFrame* materialFrame, M4x4* model,
     const StaPipOptions* options) const {
   if (!materialFrame->normals || options == nullptr ||
       options->lighting == nullptr)
@@ -181,7 +188,7 @@ void StaticPipeline::setLightingColorsCache(
 }
 
 void StaticPipeline::deallocDrawBags(StaPipBag* bag,
-                                     MeshMaterial* material) const {
+                                     const MeshMaterial* material) const {
   if (bag->texture) {
     delete bag->texture;
   }

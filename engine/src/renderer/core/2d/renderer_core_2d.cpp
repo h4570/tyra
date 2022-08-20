@@ -62,15 +62,15 @@ void RendererCore2D::init(RendererSettings* t_settings,
   clutBuffer = t_clutBuffer;
 }
 
-void RendererCore2D::render(Sprite* sprite,
+void RendererCore2D::render(const Sprite& sprite,
                             const RendererCoreTextureBuffers& texBuffers,
                             Texture* texture) {
   auto* rect = rects[context];
   float sizeX, sizeY;
 
-  if (sprite->mode == MODE_REPEAT) {
-    sizeX = sprite->size.x;
-    sizeY = sprite->size.y;
+  if (sprite.mode == MODE_REPEAT) {
+    sizeX = sprite.size.x;
+    sizeY = sprite.size.y;
   } else {
     sizeX = static_cast<float>(texture->getWidth());
     sizeY = static_cast<float>(texture->getHeight());
@@ -84,24 +84,24 @@ void RendererCore2D::render(Sprite* sprite,
   else if (sizeY > sizeX)
     texS = texMax / (sizeY / sizeX);
 
-  rect->t0.s = sprite->flipHorizontal ? texS : 0.0F;
-  rect->t0.t = sprite->flipVertical ? texT : 0.0F;
-  rect->t1.s = sprite->flipHorizontal ? 0.0F : texS;
-  rect->t1.t = sprite->flipVertical ? 0.0F : texT;
+  rect->t0.s = sprite.flipHorizontal ? texS : 0.0F;
+  rect->t0.t = sprite.flipVertical ? texT : 0.0F;
+  rect->t1.s = sprite.flipHorizontal ? 0.0F : texS;
+  rect->t1.t = sprite.flipVertical ? 0.0F : texT;
 
-  rect->color.r = sprite->color.r;
-  rect->color.g = sprite->color.g;
-  rect->color.b = sprite->color.b;
-  rect->color.a = sprite->color.a;
+  rect->color.r = sprite.color.r;
+  rect->color.g = sprite.color.g;
+  rect->color.b = sprite.color.b;
+  rect->color.a = sprite.color.a;
   rect->color.q = 0;
 
-  rect->v0.x = sprite->position.x;
-  rect->v0.y = sprite->position.y;
+  rect->v0.x = sprite.position.x;
+  rect->v0.y = sprite.position.y;
   // rect->v0.y /= 2.0F;  // interlacing
   rect->v0.z = (u32)-1;
 
-  rect->v1.x = (sprite->size.x * sprite->scale) + sprite->position.x;
-  rect->v1.y = (sprite->size.y * sprite->scale) + sprite->position.y;
+  rect->v1.x = (sprite.size.x * sprite.scale) + sprite.position.x;
+  rect->v1.y = (sprite.size.y * sprite.scale) + sprite.position.y;
   // rect->v1.y /= 2.0F;  // interlacing
   rect->v1.z = (u32)-1;
 

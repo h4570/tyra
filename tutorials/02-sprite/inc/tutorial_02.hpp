@@ -10,22 +10,27 @@
 
 #pragma once
 
-#include "renderer/core/2d/sprite/sprite.hpp"
-#include "renderer/core/renderer_core.hpp"
+#include <tyra>
+#include <memory.h>
 
 namespace Tyra {
 
-class Renderer2D {
+class Tutorial02 : public Game {
  public:
-  Renderer2D();
-  ~Renderer2D();
+  Tutorial02(Engine* engine);
+  ~Tutorial02();
 
-  void init(RendererCore* rendererCore);
-  void render(const Sprite* sprite);
-  void render(const Sprite& sprite);
+  void init();
+  void loop();
 
  private:
-  RendererCore* core;
+  void loadTexture();
+  void loadSprite();
+
+  Engine* engine;
+
+  Sprite sprite;
+  Texture* texture;
 };
 
 }  // namespace Tyra
