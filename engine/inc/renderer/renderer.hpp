@@ -35,6 +35,8 @@ class Renderer {
     core.setClearScreenColor(color);
   }
 
+  TextureRepository& getTextureRepository() { return core.texture.repository; }
+
   void setFrameLimit(const bool& onoff) { core.setFrameLimit(onoff); }
 
   /** Update view frustum for frustum culling. 3D support - off */
