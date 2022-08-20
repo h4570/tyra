@@ -64,6 +64,8 @@ void IntroTyraState::onStart() {
       FileUtils::fromCwd("intro/tyra_bg.png"));
   bgTexture->addLink(bgSprite->id);
 
+  Threading::switchThread();
+
   bg2Texture = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("intro/tyra_bg2.png"));
   bg2Texture->addLink(bg2Sprite->id);
@@ -146,7 +148,6 @@ void IntroTyraState::update() {
   engine->renderer.renderer2D.render(bg2Sprite);
   engine->renderer.renderer2D.render(tyraSprite);
 
-  Threading::switchThread();
   renderFillers();
 
   engine->renderer.endFrame();

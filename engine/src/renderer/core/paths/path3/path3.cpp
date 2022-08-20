@@ -31,7 +31,7 @@ Path3::~Path3() {
 void Path3::init(RendererSettings* t_settings) {
   settings = t_settings;
 
-  dma_channel_initialize(DMA_CHANNEL_GIF, NULL, 0);
+  dma_channel_initialize(DMA_CHANNEL_GIF, nullptr, 0);
 
   TYRA_LOG("Path3 initialized");
 }

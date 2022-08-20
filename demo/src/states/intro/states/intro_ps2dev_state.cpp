@@ -41,6 +41,8 @@ void IntroPs2DevState::onStart() {
                        settings.getHeight() / 2 - sprite->size.y / 2);
   sprite->color.a = 0;
 
+  Threading::switchThread();
+
   texture = engine->renderer.core.texture.repository.add(
       FileUtils::fromCwd("intro/ps2dev.png"));
   texture->addLink(sprite->id);

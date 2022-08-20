@@ -14,7 +14,7 @@
 // #define TYRA_QBUFF_RENDERER_VERBOSE_LOG 1
 
 #ifdef TYRA_QBUFF_RENDERER_VERBOSE_LOG
-#define Verbose(...) Debug::writeLines("VRB: ", ##__VA_ARGS__, "\n")
+#define Verbose(...) TyraDebug::writeLines("VRB: ", ##__VA_ARGS__, "\n")
 #else
 #define Verbose(...) ((void)0)
 #endif
@@ -98,7 +98,7 @@ void StaPipQBufferRenderer::init(RendererCore* t_core, prim_t* t_prim,
   prim = t_prim;
   lod = t_lod;
 
-  dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
+  dma_channel_initialize(DMA_CHANNEL_VIF1, nullptr, 0);
 
   setProgramsCache();
 

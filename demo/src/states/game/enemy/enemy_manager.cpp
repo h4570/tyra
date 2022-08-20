@@ -10,6 +10,7 @@
 
 #include "states/game/enemy/enemy_manager.hpp"
 #include <functional>
+#include "game_settings.hpp"
 
 using Tyra::FileUtils;
 using Tyra::Math;
@@ -46,7 +47,7 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
   auto* death = engine->audio.adpcm.load(
       FileUtils::fromCwd("game/models/zombie/death.adpcm"));
 
-  const int enemyCount = 10;
+  const int enemyCount = IS_REAL_PS2 ? 8 : 12;
   for (int i = 0; i < enemyCount; i++) {
     EnemyInfo info;
     info.adpcmChannel = 9 + i;

@@ -95,7 +95,7 @@ MeshBuilderData* MD2Loader::load(const char* fullpath,
   auto filename = getFilenameFromPath(path);
 
   FILE* file = fopen(fullpath, "rb");
-  TYRA_ASSERT(file != NULL, "Failed to load: ", filename);
+  TYRA_ASSERT(file != nullptr, "Failed to load: ", filename);
   md2_t header;
 
   fread(reinterpret_cast<char*>(&header), sizeof(md2_t), 1, file);

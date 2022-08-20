@@ -49,6 +49,8 @@ class Color {
   explicit Color(const float* v) { copy(this, v); }
 
   void operator=(const Color& v);
+  void operator+=(const float& v);
+  void operator-=(const float& v);
   void operator*=(const float& v);
   void operator/=(const float& v);
 

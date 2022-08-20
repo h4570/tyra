@@ -15,7 +15,7 @@
 // #define TYRA_RENDERER_VERBOSE_LOG 1
 
 #ifdef TYRA_RENDERER_VERBOSE_LOG
-#define Verbose(...) Debug::writeLines("VRB: ", ##__VA_ARGS__, "\n")
+#define Verbose(...) TyraDebug::writeLines("VRB: ", ##__VA_ARGS__, "\n")
 #else
 #define Verbose(...) ((void)0)
 #endif

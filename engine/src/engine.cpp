@@ -12,13 +12,11 @@
 
 namespace Tyra {
 
-Engine::Engine() {
-  srand(time(nullptr));
-  renderer.init();
-  banner.show(&renderer);
-  irx.loadDefaultDrivers();
-  audio.init();
-  pad.init();
+Engine::Engine() { initAll(false); }
+
+Engine::Engine(const EngineOptions& options) {
+  info.writeLogsToFile = options.writeLogsToFile;
+  initAll(options.loadUsbDriver);
 }
 
 Engine::~Engine() {}
@@ -35,6 +33,15 @@ void Engine::realLoop() {
   pad.update();
   game->loop();
   info.update();
+}
+
+void Engine::initAll(const bool& loadUsbDriver) {
+  srand(time(nullptr));
+  irx.loadAll(loadUsbDriver, info.writeLogsToFile);
+  renderer.init();
+  banner.show(&renderer);
+  audio.init();
+  pad.init();
 }
 
 }  // namespace Tyra

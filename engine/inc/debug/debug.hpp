@@ -22,17 +22,22 @@
 #include <stdio.h>
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <utility>
+#include <memory>
 
-#define TYRA_LOG(...) Debug::writeLines("LOG: ", ##__VA_ARGS__, "\n")
-#define TYRA_WARN(...) Debug::writeLines("==WARN: ", ##__VA_ARGS__, "\n")
-#define TYRA_ERROR(...) Debug::writeLines("====ERR: ", ##__VA_ARGS__, "\n")
-#define TYRA_TRAP(...) Debug::trap(__FILE__, __LINE__, ##__VA_ARGS__)
-#define TYRA_BREAKPOINT() Debug::trap(__FILE__, __LINE__, "Breakpoint")
+#include "file/file_utils.hpp"
+#include "info/info.hpp"
+
+#define TYRA_LOG(...) TyraDebug::writeLines("LOG: ", ##__VA_ARGS__, "\n")
+#define TYRA_WARN(...) TyraDebug::writeLines("==WARN: ", ##__VA_ARGS__, "\n")
+#define TYRA_ERROR(...) TyraDebug::writeLines("====ERR: ", ##__VA_ARGS__, "\n")
+#define TYRA_TRAP(...) TyraDebug::trap(__FILE__, __LINE__, ##__VA_ARGS__)
+#define TYRA_BREAKPOINT() TyraDebug::trap(__FILE__, __LINE__, "Breakpoint")
 #define TYRA_ASSERT(condition, ...) \
-  if (!(condition)) Debug::trap(__FILE__, __LINE__, ##__VA_ARGS__)
+  if (!(condition)) TyraDebug::trap(__FILE__, __LINE__, ##__VA_ARGS__)
 
-class Debug {
+class TyraDebug {
  public:
   template <typename Arg, typename... Args>
   static void writeLines(Arg&& arg, Args&&... args) {
@@ -42,24 +47,54 @@ class Debug {
     using expander = int[];
     (void)expander{0, (void(ss << std::forward<Args>(args)), 0)...};
 
-    printf("%s", ss.str().c_str());
+    if (Tyra::Info::writeLogsToFile) {
+      auto* logFile = getLogFile();
+      *logFile << ss.str();
+      logFile->flush();
+    } else {
+      printf("%s", ss.str().c_str());
+    }
   }
 
   template <typename... Args>
   static void trap(const char* file, int line, Args... args) {
-    printf("\n");
-    printf("==============  TYRA  ==============\n");
-    printf("| Assertion failed!\n");
-    printf("|\n");
+    std::stringstream ss1;
+    ss1 << "\n";
+    ss1 << "==============  TYRA  ==============\n";
+    ss1 << "| Assertion failed!\n";
+    ss1 << "|\n";
+
+    if (Tyra::Info::writeLogsToFile) {
+      auto* logFile = getLogFile();
+      *logFile << ss1.str();
+      logFile->flush();
+    } else {
+      printf("%s", ss1.str().c_str());
+    }
+
     writeAssertLines(args...);
-    printf("|\n");
-    printf("| File : %s:%d\n", file, line);
-    printf("====================================\n\n");
+
+    std::stringstream ss2;
+    ss2 << "|\n";
+    ss2 << "| File : " << file << ":" << line << "\n";
+    ss2 << "====================================\n\n";
+
+    if (Tyra::Info::writeLogsToFile) {
+      auto* logFile = getLogFile();
+      *logFile << ss2.str();
+      logFile->flush();
+    } else {
+      printf("%s", ss2.str().c_str());
+    }
+
     for (;;) {
     }
   }
 
  private:
+  static std::unique_ptr<std::ofstream> logFile;
+  static std::ofstream* getLogFile();
+
   template <typename Arg, typename... Args>
   static void writeAssertLines(Arg&& arg, Args&&... args) {
     std::stringstream ss;
@@ -69,7 +104,13 @@ class Debug {
     (void)expander{
         0, (void(ss << "| " << std::forward<Args>(args) << "\n"), 0)...};
 
-    printf("%s", ss.str().c_str());
+    if (Tyra::Info::writeLogsToFile) {
+      auto* logfile = getLogFile();
+      *logfile << ss.str();
+      logFile->flush();
+    } else {
+      printf("%s", ss.str().c_str());
+    }
   }
 };
 

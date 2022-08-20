@@ -38,7 +38,8 @@ VCL_SOURCES  := $(shell find $(SRCDIR) -type f -name *.$(VCLPPEXT))
 VCL_OBJECTS  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(VCL_SOURCES:.$(VCLPPEXT)=.$(OBJEXT)))
 
 #Default Make
-all: resources irxcopy $(TARGET)
+all: resources $(TARGET)
+#all: resources irxcopy $(TARGET)
 
 release:
 	$(MAKE) CFLAGS="-DNDEBUG $(CFLAGS)"
@@ -64,8 +65,8 @@ cleaner: clean
 	@$(RM) -rf $(TARGETDIR)
 	@$(RM) -rf $(BUILDDIR)
 
-irxcopy:
-	@cp $(PS2SDK)/iop/irx/audsrv.irx $(TARGETDIR)/audsrv.irx
+#irxcopy:
+#	@cp $(PS2SDK)/iop/irx/audsrv.irx $(TARGETDIR)/audsrv.irx
 
 #Pull in dependency info for *existing* .o files
 -include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))

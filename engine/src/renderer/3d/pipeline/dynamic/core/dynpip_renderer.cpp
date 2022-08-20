@@ -55,7 +55,7 @@ void DynPipRenderer::init(RendererCore* t_core,
   rendererCore = t_core;
   programsRepo = t_programRepo;
 
-  dma_channel_initialize(DMA_CHANNEL_VIF1, NULL, 0);
+  dma_channel_initialize(DMA_CHANNEL_VIF1, nullptr, 0);
 
   setProgramsCache();
 

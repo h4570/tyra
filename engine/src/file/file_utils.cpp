@@ -34,11 +34,11 @@ void FileUtils::setPathInfo(const char* path) {
   strcpy(this->elfPath, path);
 
   ptr = strrchr(this->elfPath, '/');
-  if (ptr == NULL) {
+  if (ptr == nullptr) {
     ptr = strrchr(this->elfPath, '\\');
-    if (ptr == NULL) {
+    if (ptr == nullptr) {
       ptr = strrchr(this->elfPath, ':');
-      if (ptr == NULL) {
+      if (ptr == nullptr) {
         TYRA_TRAP("Did not find path! PATH: ", path);
       }
     }

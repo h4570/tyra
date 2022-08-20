@@ -28,9 +28,9 @@ class FileUtils {
 
  private:
   // Argv name+path & just path
-  char cwd[NAME_MAX];
-  char elfName[NAME_MAX];
-  char elfPath[NAME_MAX - 14];
+  char cwd[255];
+  char elfName[255];
+  char elfPath[255 - 14];
 
   void setPathInfo(const char* path);
 };

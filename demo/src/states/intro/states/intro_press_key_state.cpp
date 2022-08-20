@@ -155,6 +155,7 @@ void IntroPressKeyState::update() {
   }
 
   updateMap();
+
   Threading::switchThread();
 
   for (u8 i = 0; i < mapRows; i++)

@@ -19,16 +19,18 @@ class IrxLoader {
   IrxLoader();
   ~IrxLoader();
 
-  /** Load's audio and pad driver */
-  void loadDefaultDrivers();
-
-  void loadUSBDriver();
+  void loadAll(const bool& withUsb, const bool& isLoggingToFile);
 
  private:
+  static bool isLoaded;
+
+  void loadSio2man(const bool& verbose);
+  void loadPadman(const bool& verbose);
+  void loadLibsd(const bool& verbose);
+  void loadUsbModules(const bool& verbose);
+  void loadAudsrv(const bool& verbose);
+
   int applyRpcPatches();
-  int loadAudio();
-  int loadPad();
-  int loadUsb();
   void waitUntilUsbDeviceIsReady();
   void delay(int count);
 };

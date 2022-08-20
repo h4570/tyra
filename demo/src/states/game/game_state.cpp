@@ -9,6 +9,7 @@
 */
 
 #include "states/game/game_state.hpp"
+#include "game_settings.hpp"
 
 using std::make_unique;
 using Tyra::FileUtils;
@@ -43,6 +44,8 @@ void GameState::onStart() {
   hud = make_unique<Hud>(repository);
 
   engine->audio.song.setVolume(85);
+
+  if (IS_REAL_PS2) engine->renderer.setFrameLimit(false);
 
   initialized = true;
 }

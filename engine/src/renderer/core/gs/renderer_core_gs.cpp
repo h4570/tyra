@@ -47,7 +47,7 @@ void RendererCoreGS::init(RendererSettings* t_settings) {
 }
 
 void RendererCoreGS::initChannels() {
-  dma_channel_initialize(DMA_CHANNEL_GIF, NULL, 0);
+  dma_channel_initialize(DMA_CHANNEL_GIF, nullptr, 0);
 }
 
 void RendererCoreGS::allocateBuffers() {

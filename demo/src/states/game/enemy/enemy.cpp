@@ -30,9 +30,9 @@ Enemy::Enemy(Engine* engine, const EnemyInfo& t_info) {
   info.bodyTexture->addLink(bodyMaterial->id);
   info.clothTexture->addLink(clothMaterial->id);
 
-  float r = Math::randomf(64.0F, 128.0F);
-  float g = Math::randomf(64.0F, 128.0F);
-  float b = Math::randomf(64.0F, 128.0F);
+  float r = Math::randomf(75.0F, 128.0F);
+  float g = Math::randomf(75.0F, 128.0F);
+  float b = Math::randomf(75.0F, 128.0F);
 
   bodyMaterial->ambient.set(r, g, b);
   clothMaterial->ambient.set(r, g, b);

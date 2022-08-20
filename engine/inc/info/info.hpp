@@ -24,6 +24,8 @@ class Info {
 
   Version version;
 
+  static bool writeLogsToFile;
+
   /** Called by engine */
   void update();
 

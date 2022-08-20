@@ -48,7 +48,7 @@ void AudioSong::init() {
 void AudioSong::load(const char* t_path) {
   if (songLoaded) unloadSong();
   wav = fopen(t_path, "rb");
-  TYRA_ASSERT(wav != NULL, "Failed to open wav file!");
+  TYRA_ASSERT(wav != nullptr, "Failed to open wav file!");
   rewindSongToStart();
   songLoaded = true;
 }
@@ -109,7 +109,7 @@ void AudioSong::unloadSong() {
 
 /** Fseek on wav. */
 void AudioSong::rewindSongToStart() {
-  if (wav != NULL) fseek(wav, 0x30, SEEK_SET);
+  if (wav != nullptr) fseek(wav, 0x30, SEEK_SET);
   chunkReadStatus = 0;
   songFinished = false;
 }

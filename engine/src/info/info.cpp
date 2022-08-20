@@ -14,6 +14,8 @@
 
 namespace Tyra {
 
+bool Info::writeLogsToFile = false;
+
 Info::Info() {
   fps = 0;
   fpsDelayer = 0;
@@ -48,21 +50,21 @@ void* Info::allocateLargestFreeRAMBlock(size_t* Size) {
 
   s0 = ~(size_t)0 ^ (~(size_t)0 >> 1);
 
-  while (s0 && (p = malloc(s0)) == NULL) s0 >>= 1;
+  while (s0 && (p = malloc(s0)) == nullptr) s0 >>= 1;
 
   if (p) free(p);
 
   s1 = s0 >> 1;
 
   while (s1) {
-    if ((p = malloc(s0 + s1)) != NULL) {
+    if ((p = malloc(s0 + s1)) != nullptr) {
       s0 += s1;
       free(p);
     }
     s1 >>= 1;
   }
 
-  while (s0 && (p = malloc(s0)) == NULL) s0 ^= s0 & -s0;
+  while (s0 && (p = malloc(s0)) == nullptr) s0 ^= s0 & -s0;
 
   *Size = s0;
   return p;
@@ -70,30 +72,30 @@ void* Info::allocateLargestFreeRAMBlock(size_t* Size) {
 
 size_t Info::getFreeRAMSize() {
   size_t total = 0;
-  void* pFirst = NULL;
-  void* pLast = NULL;
+  void* pFirst = nullptr;
+  void* pLast = nullptr;
 
   for (;;) {
     size_t largest;
     void* p = allocateLargestFreeRAMBlock(&largest);
 
     if (largest < sizeof(void*)) {
-      if (p != NULL) free(p);
+      if (p != nullptr) free(p);
       break;
     }
 
-    *(void**)p = NULL;
+    *(void**)p = nullptr;
 
     total += largest;
 
-    if (pFirst == NULL) pFirst = p;
+    if (pFirst == nullptr) pFirst = p;
 
-    if (pLast != NULL) *(void**)pLast = p;
+    if (pLast != nullptr) *(void**)pLast = p;
 
     pLast = p;
   }
 
-  while (pFirst != NULL) {
+  while (pFirst != nullptr) {
     void* p = *(void**)pFirst;
     free(pFirst);
     pFirst = p;
