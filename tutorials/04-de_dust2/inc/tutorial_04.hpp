@@ -11,24 +11,25 @@
 #pragma once
 
 #include <tyra>
+#include <memory.h>
 
 namespace Tyra {
 
-class Tutorial02 : public Game {
+class Tutorial04 : public Game {
  public:
-  Tutorial02(Engine* engine);
-  ~Tutorial02();
+  Tutorial04(Engine* engine);
+  ~Tutorial04();
 
   void init();
   void loop();
 
  private:
-  void loadTexture();
-  void loadSprite();
+  void loadMesh();
 
   Engine* engine;
 
-  Sprite sprite;
+  std::unique_ptr<StaticMesh> mesh;
+  StaPipOptions renderOptions;
 };
 
 }  // namespace Tyra

@@ -15,15 +15,15 @@
 
 namespace Tyra {
 
-DynamicMesh::DynamicMesh(const MeshBuilderData& data) : Mesh(data) {
-  if (data.materials[0]->frames.size() == 1) {
+DynamicMesh::DynamicMesh(const MeshBuilderData* data) : Mesh(data) {
+  if (data->materials[0]->frames.size() == 1) {
     TYRA_WARN(
         "Frames count should be greater than 1 for DynamicMesh! Maybe you "
         "should use StaticMesh?");
   }
 
-  for (u32 i = 0; i < data.materials[0]->frames.size(); i++) {
-    frames.push_back(new MeshFrame(data, i));
+  for (u32 i = 0; i < data->materials[0]->frames.size(); i++) {
+    frames.push_back(new MeshFrame(*data, i));
   }
 
   animation.resetAll(frames);

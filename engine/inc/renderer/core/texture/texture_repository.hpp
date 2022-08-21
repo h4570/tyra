@@ -15,6 +15,7 @@
 #include <vector>
 #include "./models/texture.hpp"
 #include "renderer/3d/mesh/mesh.hpp"
+#include "renderer/core/2d/sprite/sprite.hpp"
 #include "loaders/texture/base/texture_loader_selector.hpp"
 #include <string>
 
@@ -32,11 +33,14 @@ class TextureRepository {
   /**
    * Returns single texture.
    * nullptr if not found.
-   * @param t_id
-   * For 3D: MeshMaterial id.
-   * For 2D: Sprite id.
    */
-  Texture* getBySpriteOrMesh(const u32& t_id) const;
+  Texture* getBySpriteId(const u32& t_id) const;
+
+  /**
+   * Returns single texture.
+   * nullptr if not found.
+   */
+  Texture* getByMeshMaterialId(const u32& t_id) const;
 
   /**
    * Returns single texture.
@@ -49,14 +53,6 @@ class TextureRepository {
    * -1 if not found.
    */
   const s32 getIndexOf(const u32& t_texId) const;
-
-  // ----
-  //  Setters
-  // ----
-
-  // ----
-  //  Other
-  // ----
 
   /**
    * Add unlinked texture.
@@ -81,37 +77,38 @@ class TextureRepository {
   /**
    * Add linked textures in given path for mesh material names.
    */
-  void addByMesh(Mesh* mesh, const char* directory, const char* extension);
+  void addByMesh(const Mesh* mesh, const char* directory,
+                 const char* extension);
 
   /**
    * Add linked textures in given path for mesh material names.
    */
-  inline void addByMesh(Mesh* mesh, const std::string& directory,
+  inline void addByMesh(const Mesh* mesh, const std::string& directory,
                         const char* extension) {
     addByMesh(mesh, directory.c_str(), extension);
   }
 
   /**
    * Remove texture from repository.
-   * Texture is NOT destructed.
+   * Texture IS destructed.
    */
-  void removeByIndex(const u32& t_index);
+  void free(const u32& texId);
+  void free(const Texture* tex);
+  void free(const Texture& tex);
+  void freeBySprite(const Sprite& sprite);
+  void freeByMesh(const Mesh& mesh);
+  void freeByMesh(const Mesh* mesh);
 
   /**
    * Remove texture from repository.
    * Texture is NOT destructed.
+   * Not recommended.
    */
   void removeById(const u32& t_texId);
 
-  /**
-   * Remove texture from repository.
-   * Texture IS destructed.
-   */
-  void free(const u32& t_texId);
-  void free(const Texture* t_tex);
-  void free(const Texture& t_tex);
-
  private:
+  void removeByIndex(const u32& t_index);
+
   std::vector<Texture*> textures;
   TextureLoaderSelector texLoaderSelector;
 };

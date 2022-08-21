@@ -14,12 +14,13 @@
 namespace Tyra {
 
 Tutorial03::Tutorial03(Engine* t_engine) : engine(t_engine) {
+  /** Lets set default value, to prevent nullptr bugs */
   textureAtlas = nullptr;
 }
 
 Tutorial03::~Tutorial03() {
   if (textureAtlas != nullptr) {
-    engine->renderer.core.texture.repository.free(textureAtlas);
+    engine->renderer.getTextureRepository().free(textureAtlas);
   }
 }
 

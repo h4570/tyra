@@ -13,12 +13,12 @@
 
 namespace Tyra {
 
-StaticMesh::StaticMesh(const MeshBuilderData& data) : Mesh(data) {
-  if (data.materials[0]->frames.size() > 1)
+StaticMesh::StaticMesh(const MeshBuilderData* data) : Mesh(data) {
+  if (data->materials[0]->frames.size() > 1)
     TYRA_WARN("Static meshes should have only one frame, but ",
-              data.materials[0]->frames.size(), " frames were found");
+              data->materials[0]->frames.size(), " frames were found");
 
-  frame = new MeshFrame(data, 0);
+  frame = new MeshFrame(*data, 0);
 }
 
 StaticMesh::StaticMesh(const StaticMesh& mesh) : Mesh(mesh) {

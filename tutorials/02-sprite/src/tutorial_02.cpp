@@ -13,20 +13,10 @@
 
 namespace Tyra {
 
-Tutorial02::Tutorial02(Engine* t_engine) : engine(t_engine) {
-  /** Lets set default value, to prevent nullptr bugs */
-  texture = nullptr;
-}
+Tutorial02::Tutorial02(Engine* t_engine) : engine(t_engine) {}
 
 Tutorial02::~Tutorial02() {
-  if (texture != nullptr) {
-    /**
-     * free() function in texture repository is
-     * removing texture from repository and calling
-     * texture destructor
-     */
-    engine->renderer.core.texture.repository.free(texture);
-  }
+  engine->renderer.getTextureRepository().freeBySprite(sprite);
 }
 
 void Tutorial02::init() {
@@ -111,7 +101,7 @@ void Tutorial02::loadTexture() {
    * 8bpp and 4bpp are the fastest.
    * All of these formats can be easily exported via GIMP.
    */
-  texture = textureRepository.add(filepath);
+  auto* texture = textureRepository.add(filepath);
 
   /** Let's assign this texture to sprite. */
   texture->addLink(sprite.id);

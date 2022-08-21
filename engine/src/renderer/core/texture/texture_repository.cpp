@@ -22,7 +22,14 @@ TextureRepository::~TextureRepository() {
   }
 }
 
-Texture* TextureRepository::getBySpriteOrMesh(const u32& t_id) const {
+Texture* TextureRepository::getBySpriteId(const u32& t_id) const {
+  for (u32 i = 0; i < textures.size(); i++) {
+    if (textures[i]->isLinkedWith(t_id)) return textures[i];
+  }
+  return nullptr;
+}
+
+Texture* TextureRepository::getByMeshMaterialId(const u32& t_id) const {
   for (u32 i = 0; i < textures.size(); i++) {
     if (textures[i]->isLinkedWith(t_id)) return textures[i];
   }
@@ -56,6 +63,26 @@ void TextureRepository::removeById(const u32& t_texId) {
   removeByIndex(index);
 }
 
+void TextureRepository::freeByMesh(const Mesh& mesh) {
+  for (auto* material : mesh.materials) {
+    auto* texture = getByMeshMaterialId(material->id);
+
+    if (texture != nullptr) {
+      free(texture);
+    }
+  }
+}
+
+void TextureRepository::freeByMesh(const Mesh* mesh) { freeByMesh(*mesh); }
+
+void TextureRepository::freeBySprite(const Sprite& sprite) {
+  auto* texture = getBySpriteId(sprite.id);
+
+  if (texture != nullptr) {
+    free(texture);
+  }
+}
+
 void TextureRepository::free(const Texture* t_tex) { free(t_tex->id); }
 
 void TextureRepository::free(const Texture& t_tex) { free(t_tex.id); }
@@ -81,7 +108,7 @@ Texture* TextureRepository::add(const char* fullpath) {
   return texture;
 }
 
-void TextureRepository::addByMesh(Mesh* mesh, const char* directory,
+void TextureRepository::addByMesh(const Mesh* mesh, const char* directory,
                                   const char* extension) {
   auto& loader = texLoaderSelector.getLoaderByExtension(extension);
 

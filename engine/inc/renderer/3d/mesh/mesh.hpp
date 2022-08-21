@@ -19,8 +19,8 @@ namespace Tyra {
 
 class Mesh {
  public:
-  explicit Mesh(const MeshBuilderData& data);
-  explicit Mesh(const Mesh& mesh);
+  explicit Mesh(const MeshBuilderData* data);
+  Mesh(const Mesh& mesh);
   ~Mesh();
 
   u8 isMother;

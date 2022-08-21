@@ -106,7 +106,7 @@ void DynamicPipeline::render(const DynamicMesh* mesh,
     u8 isPartInitialized = false;
 
     auto* texture =
-        rendererCore->texture.repository.getBySpriteOrMesh(material->id);
+        rendererCore->texture.repository.getByMeshMaterialId(material->id);
 
     TYRA_ASSERT(
         texture, "Texture for material: ", material->name, "Id: ", material->id,

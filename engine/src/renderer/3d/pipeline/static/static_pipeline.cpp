@@ -143,7 +143,7 @@ StaPipTextureBag* StaticPipeline::getTextureBag(
   auto* result = new StaPipTextureBag();
 
   result->texture =
-      rendererCore->texture.repository.getBySpriteOrMesh(material->id);
+      rendererCore->texture.repository.getByMeshMaterialId(material->id);
 
   TYRA_ASSERT(
       result->texture, "Texture for material: ", material->name,

@@ -20,7 +20,7 @@ void Renderer2D::init(RendererCore* t_rendererCore) { core = t_rendererCore; }
 void Renderer2D::render(const Sprite* sprite) { render(*sprite); }
 
 void Renderer2D::render(const Sprite& sprite) {
-  auto* texture = core->texture.repository.getBySpriteOrMesh(sprite.id);
+  auto* texture = core->texture.repository.getBySpriteId(sprite.id);
 
   TYRA_ASSERT(
       texture, "Texture for sprite with id: ", sprite.id,

@@ -18,8 +18,8 @@ namespace Tyra {
 
 class DynamicMesh : public Mesh {
  public:
-  explicit DynamicMesh(const MeshBuilderData& data);
-  explicit DynamicMesh(const DynamicMesh& mesh);
+  explicit DynamicMesh(const MeshBuilderData* data);
+  DynamicMesh(const DynamicMesh& mesh);
   ~DynamicMesh();
 
   std::vector<MeshFrame*> frames;

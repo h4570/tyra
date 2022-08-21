@@ -15,6 +15,7 @@
 #include <string>
 #include "renderer/models/color.hpp"
 #include "loaders/3d/obj_loader/tiny_obj_loader.hpp"
+#include <memory.h>
 
 namespace Tyra {
 
@@ -40,11 +41,12 @@ class ObjLoader : public Loader {
   ObjLoader();
   ~ObjLoader();
 
-  MeshBuilderData* load(const char* fullpath);
-  MeshBuilderData* load(const char* fullpath, const ObjLoaderOptions& options);
-  MeshBuilderData* load(const std::string& fullpath);
-  MeshBuilderData* load(const std::string& fullpath,
-                        const ObjLoaderOptions& options);
+  std::unique_ptr<MeshBuilderData> load(const char* fullpath);
+  std::unique_ptr<MeshBuilderData> load(const char* fullpath,
+                                        const ObjLoaderOptions& options);
+  std::unique_ptr<MeshBuilderData> load(const std::string& fullpath);
+  std::unique_ptr<MeshBuilderData> load(const std::string& fullpath,
+                                        const ObjLoaderOptions& options);
 
  private:
   void addOutputMaterialsAndFrames(

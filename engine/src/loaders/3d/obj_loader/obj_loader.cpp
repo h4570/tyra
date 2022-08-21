@@ -28,21 +28,21 @@ ObjLoader::ObjLoader() {}
 
 ObjLoader::~ObjLoader() {}
 
-MeshBuilderData* ObjLoader::load(const char* fullpath) {
+std::unique_ptr<MeshBuilderData> ObjLoader::load(const char* fullpath) {
   return load(fullpath, ObjLoaderOptions());
 }
 
-MeshBuilderData* ObjLoader::load(const std::string& fullpath) {
+std::unique_ptr<MeshBuilderData> ObjLoader::load(const std::string& fullpath) {
   return load(fullpath.c_str(), ObjLoaderOptions());
 }
 
-MeshBuilderData* ObjLoader::load(const std::string& fullpath,
-                                 const ObjLoaderOptions& options) {
+std::unique_ptr<MeshBuilderData> ObjLoader::load(
+    const std::string& fullpath, const ObjLoaderOptions& options) {
   return load(fullpath.c_str(), options);
 }
 
-MeshBuilderData* ObjLoader::load(const char* fullpath,
-                                 const ObjLoaderOptions& options) {
+std::unique_ptr<MeshBuilderData> ObjLoader::load(
+    const char* fullpath, const ObjLoaderOptions& options) {
   std::string path = fullpath;
   std::string basePath = getPathFromFilename(path);
 
@@ -50,8 +50,7 @@ MeshBuilderData* ObjLoader::load(const char* fullpath,
 
   auto rawFilename = getFilenameWithoutExtension(path);
   auto extension = getExtensionOfFilename(path);
-
-  auto* result = new MeshBuilderData();
+  auto result = std::make_unique<MeshBuilderData>();
 
   tinyobj::ObjReaderConfig readerConfig;
   readerConfig.triangulate = options.animation.count == 1;
@@ -93,11 +92,11 @@ MeshBuilderData* ObjLoader::load(const char* fullpath,
 
     if (i == 1) {
       auto scanResult = scan(shapes, materials);
-      addOutputMaterialsAndFrames(result, attrib, shapes, materials,
+      addOutputMaterialsAndFrames(result.get(), attrib, shapes, materials,
                                   options.animation.count, scanResult);
     }
 
-    importFrame(result, attrib, shapes, materials, i - 1, options.scale,
+    importFrame(result.get(), attrib, shapes, materials, i - 1, options.scale,
                 options.flipUVs, options.animation.count);
   }
 

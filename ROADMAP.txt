@@ -22,10 +22,10 @@ because Mesh rendering uses only core.render()
 
 ------------ Github issues for Tyra v2 ------------
 - [Demo] porzadek z konstruktorami bbox
+- [General] smart pointers and std::array instead of raw pointers
 - [renderer] fog
 - [General] CI in Github via docker image
 - [renderer] bbox parts optimization
-- [General] smart pointers and std::array instead of raw pointers
 - [md2] refactor
 - [2D] Add zbuffer support (z-index)
 - [3DUtility] Add zbuffer support (z-index)
