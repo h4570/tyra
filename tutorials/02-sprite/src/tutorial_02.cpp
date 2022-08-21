@@ -32,7 +32,10 @@ Tutorial02::~Tutorial02() {
 void Tutorial02::init() {
   engine->renderer.setClearScreenColor(Color(32.0F, 32.0F, 32.0F));
 
+  /** Sprite contains rectangle information. */
   loadSprite();
+
+  /** Texture contains png image. */
   loadTexture();
 }
 

@@ -14,8 +14,9 @@ namespace Tyra {
 
 Vec4 CameraInfo3D::defaultCameraUp = Vec4(0.0F, 1.0F, 0.0F);
 
-CameraInfo3D::CameraInfo3D(Vec4* t_cameraPosition, Vec4* t_cameraLooksAt,
-                           Vec4* t_cameraUp) {
+CameraInfo3D::CameraInfo3D(const Vec4* t_cameraPosition,
+                           const Vec4* t_cameraLooksAt,
+                           const Vec4* t_cameraUp) {
   position = t_cameraPosition;
   looksAt = t_cameraLooksAt;
 
@@ -25,6 +26,7 @@ CameraInfo3D::CameraInfo3D(Vec4* t_cameraPosition, Vec4* t_cameraLooksAt,
     up = t_cameraUp;
   }
 }
+
 CameraInfo3D::~CameraInfo3D() {}
 
 }  // namespace Tyra

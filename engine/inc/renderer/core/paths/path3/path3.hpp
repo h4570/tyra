@@ -29,7 +29,7 @@ class Path3 {
 
   void sendDrawFinishTag();
   void clearScreen(zbuffer_t* z, const Color& color);
-  void sendTexture(Texture* texture,
+  void sendTexture(const Texture* texture,
                    const RendererCoreTextureBuffers& texBuffers);
 
  private:

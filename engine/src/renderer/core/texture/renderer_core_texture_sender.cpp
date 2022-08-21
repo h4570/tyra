@@ -23,7 +23,7 @@ void RendererCoreTextureSender::init(Path3* t_path3, RendererCoreGS* t_gs) {
 }
 
 RendererCoreTextureBuffers RendererCoreTextureSender::allocate(
-    Texture* t_texture) {
+    const Texture* t_texture) {
   texbuffer_t* core = allocateTextureCore(t_texture);
   texbuffer_t* clut = nullptr;
 
@@ -54,7 +54,7 @@ void RendererCoreTextureSender::deallocate(
 }
 
 texbuffer_t* RendererCoreTextureSender::allocateTextureCore(
-    Texture* t_texture) {
+    const Texture* t_texture) {
   auto* result = new texbuffer_t;
   const auto* core = t_texture->core;
 
@@ -73,7 +73,7 @@ texbuffer_t* RendererCoreTextureSender::allocateTextureCore(
 }
 
 texbuffer_t* RendererCoreTextureSender::allocateTextureClut(
-    Texture* t_texture) {
+    const Texture* t_texture) {
   auto* result = new texbuffer_t;
   const auto* clut = t_texture->clut;
 

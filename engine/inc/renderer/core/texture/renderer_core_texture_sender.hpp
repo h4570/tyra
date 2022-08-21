@@ -27,7 +27,7 @@ class RendererCoreTextureSender {
 
   void init(Path3* path3, RendererCoreGS* gs);
 
-  RendererCoreTextureBuffers allocate(Texture* t_texture);
+  RendererCoreTextureBuffers allocate(const Texture* t_texture);
 
   void deallocate(const RendererCoreTextureBuffers& texBuffers);
 
@@ -37,8 +37,8 @@ class RendererCoreTextureSender {
   RendererCoreGS* gs;
   Path3* path3;
   TextureBpp getBppByPsm(const u32& psm);
-  texbuffer_t* allocateTextureCore(Texture* t_texture);
-  texbuffer_t* allocateTextureClut(Texture* t_texture);
+  texbuffer_t* allocateTextureCore(const Texture* t_texture);
+  texbuffer_t* allocateTextureClut(const Texture* t_texture);
 };
 
 }  // namespace Tyra

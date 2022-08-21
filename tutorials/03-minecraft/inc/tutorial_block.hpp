@@ -14,22 +14,29 @@
 
 namespace Tyra {
 
-class Tutorial02 : public Game {
+class TutorialBlock {
  public:
-  Tutorial02(Engine* engine);
-  ~Tutorial02();
+  TutorialBlock();
+  TutorialBlock(const TutorialBlock& v);
+  ~TutorialBlock();
 
-  void init();
-  void loop();
+  void updateModelMatrix();
+
+  M4x4 translation, rotation, scale;
+
+  /** Result matrix with translation, rotation and scale  */
+  M4x4 model;
+
+  /** Color */
+  Color color;
+
+  /** Texture atlas offset */
+  Vec4 atlasOffset;
+
+  McpipBlock renderData;
 
  private:
-  void loadTexture();
-  void loadSprite();
-
-  Engine* engine;
-
-  Sprite sprite;
-  Texture* texture;
+  void setRenderData();
 };
 
 }  // namespace Tyra

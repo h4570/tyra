@@ -27,6 +27,7 @@ class Renderer3D {
 
   /** Deinitialize previous pipeline and initialize new pipeline */
   void usePipeline(Renderer3DPipeline* pipeline);
+  void usePipeline(Renderer3DPipeline& pipeline);
 
  private:
   Renderer3DPipeline* currentPipeline;

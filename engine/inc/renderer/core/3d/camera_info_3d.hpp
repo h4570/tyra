@@ -16,11 +16,11 @@ namespace Tyra {
 
 class CameraInfo3D {
  public:
-  CameraInfo3D(Vec4* cameraPosition, Vec4* cameraLooksAt,
-               Vec4* cameraUp = nullptr);
+  CameraInfo3D(const Vec4* cameraPosition, const Vec4* cameraLooksAt,
+               const Vec4* cameraUp = nullptr);
   ~CameraInfo3D();
 
-  Vec4 *position, *looksAt, *up;
+  const Vec4 *position, *looksAt, *up;
 
  private:
   static Vec4 defaultCameraUp;

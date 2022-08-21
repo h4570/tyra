@@ -61,7 +61,7 @@ void Path3::clearScreen(zbuffer_t* z, const Color& color) {
   dma_channel_send_packet2(clearScreenPacket, DMA_CHANNEL_GIF, true);
 }
 
-void Path3::sendTexture(Texture* texture,
+void Path3::sendTexture(const Texture* texture,
                         const RendererCoreTextureBuffers& texBuffers) {
   packet2_reset(texturePacket, false);
 
@@ -83,8 +83,9 @@ void Path3::sendTexture(Texture* texture,
 
   packet2_chain_open_cnt(texturePacket, 0, 0, 0);
   packet2_update(texturePacket,
-                 draw_texture_wrapping(texturePacket->next, 0,
-                                       texture->getWrapSettings()));
+                 draw_texture_wrapping(
+                     texturePacket->next, 0,
+                     const_cast<texwrap_t*>(texture->getWrapSettings())));
   packet2_chain_close_tag(texturePacket);
 
   packet2_update(texturePacket, draw_texture_flush(texturePacket->next));

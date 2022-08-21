@@ -83,8 +83,8 @@ void MinecraftPipeline::initBBox() {
   bbox = new RenderBBox(block.vertices, block.count);
 }
 
-void MinecraftPipeline::render(std::vector<McpipBlock*> blocks, Texture* t_tex,
-                               const bool& isMulti,
+void MinecraftPipeline::render(std::vector<McpipBlock*> blocks,
+                               const Texture* t_tex, const bool& isMulti,
                                const bool& fullClipChecks) {
   auto texBuffers = rendererCore->texture.useTexture(t_tex);
 

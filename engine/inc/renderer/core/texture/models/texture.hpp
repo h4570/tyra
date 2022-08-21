@@ -45,7 +45,7 @@ class Texture {
 
   float getSizeInMB() const;
 
-  inline texwrap_t* getWrapSettings() { return &wrap; }
+  inline const texwrap_t* getWrapSettings() const { return &wrap; }
 
   inline const std::vector<TextureLink>& getTextureLinks() const {
     return links;

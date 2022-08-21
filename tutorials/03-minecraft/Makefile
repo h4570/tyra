@@ -1,4 +1,4 @@
-TARGET      := tutorial_02.elf
+TARGET      := tutorial_03.elf
 ENGINEDIR	:= ../../engine
 
 #The Directories, Source, Includes, Objects, Binary and Resources

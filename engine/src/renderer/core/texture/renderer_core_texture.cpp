@@ -35,7 +35,8 @@ void RendererCoreTexture::updateClutBuffer(texbuffer_t* clutBuffer) {
   }
 }
 
-RendererCoreTextureBuffers RendererCoreTexture::useTexture(Texture* t_tex) {
+RendererCoreTextureBuffers RendererCoreTexture::useTexture(
+    const Texture* t_tex) {
   TYRA_ASSERT(t_tex != nullptr, "Provided nullptr texture!");
 
   auto allocated = getAllocatedBuffersByTextureId(t_tex->id);

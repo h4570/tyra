@@ -43,7 +43,7 @@ class MinecraftPipeline : public Renderer3DPipeline {
    * @param fullClipChecks false = faster, simple PS2 clipping. True = slower,
    * experimental "against each plane" clipping.
    */
-  void render(std::vector<McpipBlock*> blocks, Texture* t_tex,
+  void render(std::vector<McpipBlock*> blocks, const Texture* t_tex,
               const bool& isMulti = false, const bool& fullClipChecks = false);
 
   inline const float& getTextureOffset() const {

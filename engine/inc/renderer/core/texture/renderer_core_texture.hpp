@@ -27,7 +27,7 @@ class RendererCoreTexture {
   clutbuffer_t clut;
   TextureRepository repository;
 
-  RendererCoreTextureBuffers useTexture(Texture* t_tex);
+  RendererCoreTextureBuffers useTexture(const Texture* t_tex);
 
   /** Called by renderer during initialization */
   void init(RendererCoreGS* gs, Path3* path3);
