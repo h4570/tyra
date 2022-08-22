@@ -17,6 +17,7 @@
 #include "renderer/3d/mesh/static/static_mesh.hpp"
 #include "./core/stapip_core.hpp"
 #include "./stapip_options.hpp"
+#include "./stapip_bag_bboxes_cacher.hpp"
 
 namespace Tyra {
 
@@ -38,17 +39,19 @@ class StaticPipeline : public Renderer3DPipeline {
   void setRenderer(RendererCore* core);
 
   void onUse();
-
   void onUseEnd();
+  void onFrameEnd();
 
   /**
    * Render static model
    * This render() method is a bridge to core.render() method.
    */
-  void render(const StaticMesh& mesh, const StaPipOptions* options = nullptr);
+  void render(const StaticMesh* mesh);
+  void render(const StaticMesh* mesh, const StaPipOptions& options);
   void render(const StaticMesh* mesh, const StaPipOptions* options = nullptr);
 
  private:
+  StapipBagBBoxesCacher cacher;
   RendererCore* rendererCore;
   Vec4* colorsCache;
 
@@ -65,6 +68,7 @@ class StaticPipeline : public Renderer3DPipeline {
                                   const MeshMaterialFrame* materialFrame);
 
   StaPipLightingBag* getLightingBag(const MeshMaterialFrame* materialFrame,
+                                    PipelineDirLightsBag* dirLightsBag,
                                     M4x4* model,
                                     const StaPipOptions* options) const;
 

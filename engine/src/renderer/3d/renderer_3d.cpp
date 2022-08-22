@@ -19,6 +19,12 @@ Renderer3D::~Renderer3D() {}
 
 void Renderer3D::init(RendererCore* core) { utility.init(core); }
 
+void Renderer3D::onFrameEnd() {
+  if (currentPipeline != nullptr) {
+    currentPipeline->onFrameEnd();
+  }
+}
+
 void Renderer3D::usePipeline(Renderer3DPipeline& pipeline) {
   usePipeline(&pipeline);
 }

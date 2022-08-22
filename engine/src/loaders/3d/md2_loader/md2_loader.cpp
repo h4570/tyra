@@ -70,25 +70,21 @@ typedef struct {
   s16 t;
 } texCoord_t;
 
-MD2Loader::MD2Loader() {}
-
-MD2Loader::~MD2Loader() {}
-
-MeshBuilderData* MD2Loader::load(const char* fullpath) {
+std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath) {
   return load(fullpath, MD2LoaderOptions());
 }
 
-MeshBuilderData* MD2Loader::load(const std::string& fullpath) {
+std::unique_ptr<MeshBuilderData> MD2Loader::load(const std::string& fullpath) {
   return load(fullpath.c_str(), MD2LoaderOptions());
 }
 
-MeshBuilderData* MD2Loader::load(const std::string& fullpath,
-                                 MD2LoaderOptions options) {
+std::unique_ptr<MeshBuilderData> MD2Loader::load(const std::string& fullpath,
+                                                 MD2LoaderOptions options) {
   return load(fullpath.c_str(), options);
 }
 
-MeshBuilderData* MD2Loader::load(const char* fullpath,
-                                 MD2LoaderOptions options) {
+std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
+                                                 MD2LoaderOptions options) {
   std::string path = fullpath;
   TYRA_ASSERT(!path.empty(), "Provided path is empty!");
 
@@ -123,7 +119,7 @@ MeshBuilderData* MD2Loader::load(const char* fullpath,
 
   fclose(file);
 
-  auto result = new MeshBuilderData();
+  auto result = std::make_unique<MeshBuilderData>();
 
   auto* material = new MeshBuilderMaterialData();
   material->name = getFilenameWithoutExtension(filename);

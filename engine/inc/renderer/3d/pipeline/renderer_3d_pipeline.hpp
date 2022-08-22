@@ -21,6 +21,7 @@ class Renderer3DPipeline {
 
   virtual void setRenderer(RendererCore* core) = 0;
   virtual void onUse() = 0;
+  virtual void onFrameEnd() = 0;
   virtual void onUseEnd() = 0;
   std::function<void(Renderer3DPipeline*)> onDestroy;
 };

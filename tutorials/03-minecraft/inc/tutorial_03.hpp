@@ -44,6 +44,8 @@ class Tutorial03 : public Game {
    * - Minecraft (this one)
    * - Static (for static 3D objects)
    * - Dynamic (for dynamic 3D objects)
+   *
+   * You can create your own VU1 programs and create your custom pipelines!
    */
   MinecraftPipeline mcpip;
 

@@ -38,32 +38,30 @@ struct MaterialVertexCount {
 /** Class responsible for loading & parsing obj files */
 class ObjLoader : public Loader {
  public:
-  ObjLoader();
-  ~ObjLoader();
-
-  std::unique_ptr<MeshBuilderData> load(const char* fullpath);
-  std::unique_ptr<MeshBuilderData> load(const char* fullpath,
-                                        const ObjLoaderOptions& options);
-  std::unique_ptr<MeshBuilderData> load(const std::string& fullpath);
-  std::unique_ptr<MeshBuilderData> load(const std::string& fullpath,
-                                        const ObjLoaderOptions& options);
+  static std::unique_ptr<MeshBuilderData> load(const char* fullpath);
+  static std::unique_ptr<MeshBuilderData> load(const char* fullpath,
+                                               const ObjLoaderOptions& options);
+  static std::unique_ptr<MeshBuilderData> load(const std::string& fullpath);
+  static std::unique_ptr<MeshBuilderData> load(const std::string& fullpath,
+                                               const ObjLoaderOptions& options);
 
  private:
-  void addOutputMaterialsAndFrames(
+  static void addOutputMaterialsAndFrames(
       MeshBuilderData* output, const tinyobj::attrib_t& attrib,
       const std::vector<tinyobj::shape_t>& shapes,
       const std::vector<tinyobj::material_t>& materials, const u16& framesCount,
       std::vector<MaterialVertexCount>& materialVertexCounts);
 
-  std::vector<MaterialVertexCount> scan(
+  static std::vector<MaterialVertexCount> scan(
       const std::vector<tinyobj::shape_t>& shapes,
       const std::vector<tinyobj::material_t>& materials);
 
-  void importFrame(MeshBuilderData* output, const tinyobj::attrib_t& attrib,
-                   const std::vector<tinyobj::shape_t>& shapes,
-                   const std::vector<tinyobj::material_t>& materials,
-                   const u16& frameIndex, const float& scale,
-                   const bool& invertY, const u16& count);
+  static void importFrame(MeshBuilderData* output,
+                          const tinyobj::attrib_t& attrib,
+                          const std::vector<tinyobj::shape_t>& shapes,
+                          const std::vector<tinyobj::material_t>& materials,
+                          const u16& frameIndex, const float& scale,
+                          const bool& invertY, const u16& count);
 };
 
 }  // namespace Tyra

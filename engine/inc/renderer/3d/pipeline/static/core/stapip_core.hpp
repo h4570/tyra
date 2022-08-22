@@ -28,7 +28,8 @@ class StaPipCore {
   void init(RendererCore* t_core);
 
   /** Render 3D via "bags" */
-  void render(StaPipBag* bag, StaPipBagPackagesBBox* bbox = nullptr);
+  void render(StaPipBag* bag, StaPipBagPackagesBBox* bbox,
+              const u32& maxVertCount);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
   u32 getMaxVertCountByParams(const bool& isSingleColor,

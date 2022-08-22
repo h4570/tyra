@@ -11,7 +11,7 @@
 #include "renderer/3d/pipeline/static/static_pipeline.hpp"
 #include "debug/debug.hpp"
 #include "renderer/3d/pipeline/static/core/bag/stapip_info_bag.hpp"
-
+#include <memory>
 namespace Tyra {
 
 StaticPipeline::StaticPipeline() {}
@@ -39,9 +39,13 @@ void StaticPipeline::onUseEnd() {
   core.deallocateOnUse();
 }
 
-void StaticPipeline::render(const StaticMesh& mesh,
-                            const StaPipOptions* options) {
-  render(&mesh, options);
+void StaticPipeline::onFrameEnd() { cacher.onFrameEnd(); }
+
+void StaticPipeline::render(const StaticMesh* mesh) { render(mesh, nullptr); }
+
+void StaticPipeline::render(const StaticMesh* mesh,
+                            const StaPipOptions& options) {
+  render(mesh, &options);
 }
 
 void StaticPipeline::render(const StaticMesh* mesh,
@@ -55,6 +59,7 @@ void StaticPipeline::render(const StaticMesh* mesh,
 
   auto model = mesh->getModelMatrix();
   auto* infoBag = getInfoBag(mesh, options, &model);
+  auto dirLightsBag = std::make_unique<PipelineDirLightsBag>(true);
 
   TYRA_ASSERT(
       !(options->frustumCulling != PipelineFrustumCulling_Precise &&
@@ -85,11 +90,21 @@ void StaticPipeline::render(const StaticMesh* mesh,
     bag.info = infoBag;
     bag.color = getColorBag(material, materialFrame);
     bag.texture = getTextureBag(material, materialFrame);
-    bag.lighting = getLightingBag(materialFrame, &model, options);
-    core.render(&bag);
+    bag.lighting =
+        getLightingBag(materialFrame, dirLightsBag.get(), &model, options);
+
+    u32 maxVertCount = core.getMaxVertCountByBag(&bag);
+
+    StaPipBagPackagesBBox* bbox = nullptr;
+    if (bag.info->frustumCulling == PipelineFrustumCulling_Precise) {
+      bbox = cacher.getBBoxesByMesh(materialFrame, maxVertCount);
+    }
+
+    core.render(&bag, bbox, maxVertCount);
 
     deallocDrawBags(&bag, material);
   }
+
   delete infoBag;
 
   if (optionsManuallyAllocated) delete options;
@@ -156,18 +171,15 @@ StaPipTextureBag* StaticPipeline::getTextureBag(
 }
 
 StaPipLightingBag* StaticPipeline::getLightingBag(
-    const MeshMaterialFrame* materialFrame, M4x4* model,
-    const StaPipOptions* options) const {
+    const MeshMaterialFrame* materialFrame, PipelineDirLightsBag* dirLightsBag,
+    M4x4* model, const StaPipOptions* options) const {
   if (!materialFrame->normals || options == nullptr ||
       options->lighting == nullptr)
     return nullptr;
 
   auto* result = new StaPipLightingBag();
 
-  // TODO: Make it once per rendering, very redundant
-  auto* dirLightsBag = new PipelineDirLightsBag(true);
   result->dirLights = dirLightsBag;
-
   result->lightMatrix = model;
 
   result->dirLights->setLightsManually(
@@ -194,7 +206,6 @@ void StaticPipeline::deallocDrawBags(StaPipBag* bag,
   }
 
   if (bag->lighting) {
-    delete bag->lighting->dirLights;  // TODO
     delete bag->lighting;
   }
 

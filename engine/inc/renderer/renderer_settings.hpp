@@ -22,8 +22,8 @@ class RendererSettings {
         height(448.0F),
         interlacedHeightF(height / 2),
         near(0.1F),
-        far(4096.0F),
-        projectionScale(4096.0F),
+        far(8192.0F),
+        projectionScale(8192.0F),
         aspectRatio(width / height),
         interlacedHeightUI(static_cast<unsigned int>(interlacedHeightF)) {}
   ~RendererSettings();

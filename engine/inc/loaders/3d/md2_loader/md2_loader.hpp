@@ -13,6 +13,7 @@
 #include "../../loader.hpp"
 #include "../builder/mesh_builder_data.hpp"
 #include <string>
+#include <memory>
 
 namespace Tyra {
 
@@ -24,13 +25,12 @@ struct MD2LoaderOptions {
 /** Class responsible for loading & parsing Quake's II ".md2" 3D files */
 class MD2Loader : public Loader {
  public:
-  MD2Loader();
-  ~MD2Loader();
-
-  MeshBuilderData* load(const char* fullpath);
-  MeshBuilderData* load(const char* fullpath, MD2LoaderOptions options);
-  MeshBuilderData* load(const std::string& fullpath);
-  MeshBuilderData* load(const std::string& fullpath, MD2LoaderOptions options);
+  static std::unique_ptr<MeshBuilderData> load(const char* fullpath);
+  static std::unique_ptr<MeshBuilderData> load(const char* fullpath,
+                                               MD2LoaderOptions options);
+  static std::unique_ptr<MeshBuilderData> load(const std::string& fullpath);
+  static std::unique_ptr<MeshBuilderData> load(const std::string& fullpath,
+                                               MD2LoaderOptions options);
 };
 
 }  // namespace Tyra

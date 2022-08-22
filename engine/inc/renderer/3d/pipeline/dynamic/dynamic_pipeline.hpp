@@ -39,13 +39,16 @@ class DynamicPipeline : public Renderer3DPipeline {
 
   void onUse();
 
+  void onFrameEnd();
+
   void onUseEnd();
 
   /**
    * Render dynamic model.
    * This render() method is a bridge to core.render() method.
    */
-  void render(const DynamicMesh& mesh, const DynPipOptions* options = nullptr);
+  void render(const DynamicMesh* mesh);
+  void render(const DynamicMesh* mesh, const DynPipOptions& options);
   void render(const DynamicMesh* mesh, const DynPipOptions* options = nullptr);
 
  private:

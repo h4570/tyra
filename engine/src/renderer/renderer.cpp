@@ -27,6 +27,9 @@ void Renderer::beginFrame(const CameraInfo3D& cameraInfo) {
   core.beginFrame(cameraInfo);
 }
 
-void Renderer::endFrame() { core.endFrame(); }
+void Renderer::endFrame() {
+  core.endFrame();
+  renderer3D.onFrameEnd();
+}
 
 }  // namespace Tyra

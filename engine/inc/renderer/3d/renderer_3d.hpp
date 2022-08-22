@@ -23,11 +23,15 @@ class Renderer3D {
 
   Renderer3DUtility utility;
 
-  void init(RendererCore* core);
-
   /** Deinitialize previous pipeline and initialize new pipeline */
   void usePipeline(Renderer3DPipeline* pipeline);
   void usePipeline(Renderer3DPipeline& pipeline);
+
+  /** Called by engine */
+  void init(RendererCore* core);
+
+  /** Called by engine */
+  void onFrameEnd();
 
  private:
   Renderer3DPipeline* currentPipeline;

@@ -33,6 +33,7 @@ class MinecraftPipeline : public Renderer3DPipeline {
 
   void onUse();
   void onUseEnd();
+  void onFrameEnd();
 
   /**
    * @brief Render voxels

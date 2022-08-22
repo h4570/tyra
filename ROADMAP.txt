@@ -1,7 +1,5 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [Tutorials] 4. Mesh rendering - explain staticPipeline, render .obj file via Mesh class, explain that this is high-level 
-abstract 3D object class, and what it have (animation etc)
 
 - [Tutorials] 5. Manual rendering via staticPipeline - via Render3DBag (core.render()), render simple poly,
 explain that this is lower-level abstract rendering, it have the all the features as Mesh rendering, 
@@ -13,7 +11,9 @@ because Mesh rendering uses only core.render()
 
 - [Tutorials] 8. Render skybox, and show that stdPipOptions.noClipChecks must be set to false, to turn on clip algorithms (prevent glitches)
 
+- audio
 - own game
+- how to cook audio,textures,obj
 - usb
 
 - [General] Check all left TODOs -> Github issues
@@ -25,14 +25,12 @@ because Mesh rendering uses only core.render()
 - [General] smart pointers and std::array instead of raw pointers
 - [renderer] fog
 - [General] CI in Github via docker image
-- [renderer] bbox parts optimization
 - [md2] refactor
 - [2D] Add zbuffer support (z-index)
 - [3DUtility] Add zbuffer support (z-index)
 - [2D] Fixed font support
 - [File] Async file loading
 - [obj] Add multicolor support to obj
-- [Obj] Improve obj importing for multiple usemtl with same names
 - [tyrdat] Custom 3D data file with precalculated bboxes with support of async loading
 - [Renderer] Interlacing, a potem resolution 640x448
 - [General] Add cpp lint checker in GitHub

@@ -24,10 +24,6 @@
 
 namespace Tyra {
 
-ObjLoader::ObjLoader() {}
-
-ObjLoader::~ObjLoader() {}
-
 std::unique_ptr<MeshBuilderData> ObjLoader::load(const char* fullpath) {
   return load(fullpath, ObjLoaderOptions());
 }

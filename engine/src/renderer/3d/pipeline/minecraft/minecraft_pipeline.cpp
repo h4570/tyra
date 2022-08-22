@@ -78,6 +78,8 @@ void MinecraftPipeline::onUseEnd() {
   manager.deallocateOnUse();
 }
 
+void MinecraftPipeline::onFrameEnd() {}
+
 void MinecraftPipeline::initBBox() {
   const auto& block = manager.getBlockData();
   bbox = new RenderBBox(block.vertices, block.count);

@@ -12,6 +12,7 @@
 
 #include <tyra>
 #include <memory.h>
+#include "./camera.hpp"
 
 namespace Tyra {
 
@@ -28,8 +29,16 @@ class Tutorial04 : public Game {
 
   Engine* engine;
 
-  std::unique_ptr<StaticMesh> mesh;
+  Camera camera;
+
+  /** 3D pipeline used for rendering static meshes */
+  StaticPipeline stapip;
+
+  /** Options for static pipeline */
   StaPipOptions renderOptions;
+
+  /** Mesh with de_dust2 */
+  std::unique_ptr<StaticMesh> mesh;
 };
 
 }  // namespace Tyra

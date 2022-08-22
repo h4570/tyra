@@ -72,7 +72,8 @@ u32 StaPipCore::getMaxVertCountByParams(const bool& isSingleColor,
       ->getMaxVertCount(isSingleColor, qbufferRenderer.getBufferSize());
 }
 
-void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
+void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox,
+                        const u32& maxVertCount) {
   if (bag->count <= 0) return;
 
   bool frustumCull =
@@ -105,32 +106,20 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
   TYRA_ASSERT(!(!frustumCull && bag->info->fullClipChecks == true),
               "Full clip checks are not supported with frustum culling = off!");
 
-  u32 maxVertCount = getMaxVertCountByBag(bag);
   setMaxVertCount(maxVertCount);
-
-  StaPipBagPackagesBBox* renderBbox = nullptr;
 
   CoreBBoxFrustum frustumCheck = OUTSIDE_FRUSTUM;
 
   if (frustumCull) {
-    if (!bbox)
-      renderBbox =
-          new StaPipBagPackagesBBox(bag->vertices, bag->count, maxVertCount);
-    else
-      renderBbox = bbox;
-
-    frustumCheck = renderBbox->getMainBBox()->clipFrustumCheck(
+    frustumCheck = bbox->getMainBBox()->clipFrustumCheck(
         rendererCore->renderer3D.frustumPlanes.getAll(), *bag->info->model);
 
     if (frustumCheck == OUTSIDE_FRUSTUM) {
-      if (!bbox) {
-        delete renderBbox;
-      }
       return;
     }
   }
 
-  packager.setRenderBBox(renderBbox);
+  packager.setRenderBBox(bbox);
 
   M4x4 mvp;
 
@@ -197,10 +186,6 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox) {
       renderSubpkgs(subpkgs, packagesCount);
       delete[] subpkgs;
     }
-  }
-
-  if (frustumCull && !bbox) {
-    delete renderBbox;
   }
 
   if (texBuffers) delete texBuffers;

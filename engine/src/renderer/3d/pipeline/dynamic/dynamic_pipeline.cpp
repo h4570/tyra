@@ -51,9 +51,13 @@ void DynamicPipeline::onUseEnd() {
   core.deallocateOnUse();
 }
 
-void DynamicPipeline::render(const DynamicMesh& mesh,
-                             const DynPipOptions* options) {
-  render(&mesh, options);
+void DynamicPipeline::onFrameEnd() {}
+
+void DynamicPipeline::render(const DynamicMesh* mesh) { render(mesh, nullptr); }
+
+void DynamicPipeline::render(const DynamicMesh* mesh,
+                             const DynPipOptions& options) {
+  render(mesh, &options);
 }
 
 void DynamicPipeline::render(const DynamicMesh* mesh,
