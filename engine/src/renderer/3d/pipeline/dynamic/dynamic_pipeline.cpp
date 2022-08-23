@@ -112,9 +112,10 @@ void DynamicPipeline::render(const DynamicMesh* mesh,
     auto* texture =
         rendererCore->texture.repository.getByMeshMaterialId(material->id);
 
-    TYRA_ASSERT(
-        texture, "Texture for material: ", material->name, "Id: ", material->id,
-        "Was not found in texture repository! Did you forget to add texture?");
+    TYRA_ASSERT(texture, "Texture for material: ", material->name,
+                "Id: ", material->id,
+                "Was not found in texture repository! Did you forget to add "
+                "texture or disable texture coords loading in mesh?");
 
     for (u32 k = 0; k < partsCount; k++) {
       auto& buffer = buffers[bufferIndex];

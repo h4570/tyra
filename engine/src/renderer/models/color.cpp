@@ -47,6 +47,30 @@ void Color::operator/=(const float& v) {
   a /= v;
 }
 
+Color Color::operator+(const float& v) const {
+  Color result = *this;
+  result += v;
+  return result;
+}
+
+Color Color::operator-(const float& v) const {
+  Color result = *this;
+  result -= v;
+  return result;
+}
+
+Color Color::operator*(const float& v) const {
+  Color result = *this;
+  result *= v;
+  return result;
+}
+
+Color Color::operator/(const float& v) const {
+  Color result = *this;
+  result /= v;
+  return result;
+}
+
 void Color::set(const float& t_r, const float& t_g, const float& t_b,
                 const float& t_a) {
   r = t_r;

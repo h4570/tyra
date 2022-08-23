@@ -23,7 +23,25 @@ class Tutorial07 : public Game {
   void loop();
 
  private:
+  void loadMeshWithLightmap();
+  void setDirectionalLightsOptions();
+  void setLightmap(MeshBuilderData* data);
+  void switchBetweenLightmapAndDirectional();
+
+  int counter, switcher;
+
   Engine* engine;
+
+  Vec4 cameraPosition, cameraLookAt;
+
+  StaticPipeline stapip;
+  StaPipOptions renderOptions;
+  std::unique_ptr<StaticMesh> mesh;
+
+  PipelineLightingOptions renderLightingOptions;
+  Color directionalAmbientColor;
+  std::array<Color, 3> directionalColors;
+  std::array<Vec4, 3> directionalDirections;
 };
 
 }  // namespace Tyra

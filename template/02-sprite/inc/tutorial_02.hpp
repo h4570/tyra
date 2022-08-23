@@ -14,18 +14,21 @@
 
 namespace Tyra {
 
-class Tutorial06 : public Game {
+class Tutorial02 : public Game {
  public:
-  Tutorial06(Engine* engine);
-  ~Tutorial06();
+  Tutorial02(Engine* engine);
+  ~Tutorial02();
 
   void init();
   void loop();
 
  private:
+  void loadTexture();
+  void loadSprite();
+
   Engine* engine;
 
-  audsrv_adpcm_t* sample;
+  Sprite sprite;
 };
 
 }  // namespace Tyra

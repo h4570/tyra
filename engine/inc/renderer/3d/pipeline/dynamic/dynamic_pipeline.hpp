@@ -49,7 +49,7 @@ class DynamicPipeline : public Renderer3DPipeline {
    */
   void render(const DynamicMesh* mesh);
   void render(const DynamicMesh* mesh, const DynPipOptions& options);
-  void render(const DynamicMesh* mesh, const DynPipOptions* options = nullptr);
+  void render(const DynamicMesh* mesh, const DynPipOptions* options);
 
  private:
   RendererCore* rendererCore;

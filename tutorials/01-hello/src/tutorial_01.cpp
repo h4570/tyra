@@ -36,7 +36,7 @@ void Tutorial01::init() {
    * Every function has infinite number of various-typed arguments.
    */
 
-  short positiveNumber = -1;  // Change it to -1 and see what happen!
+  short positiveNumber = 1;  // Change it to -1 and see what happen!
 
   TYRA_LOG("Hello world!");
 

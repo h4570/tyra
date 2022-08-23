@@ -48,7 +48,7 @@ class StaticPipeline : public Renderer3DPipeline {
    */
   void render(const StaticMesh* mesh);
   void render(const StaticMesh* mesh, const StaPipOptions& options);
-  void render(const StaticMesh* mesh, const StaPipOptions* options = nullptr);
+  void render(const StaticMesh* mesh, const StaPipOptions* options);
 
  private:
   StapipBagBBoxesCacher cacher;

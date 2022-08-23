@@ -96,7 +96,7 @@ void StaticPipeline::render(const StaticMesh* mesh,
     u32 maxVertCount = core.getMaxVertCountByBag(&bag);
 
     StaPipBagPackagesBBox* bbox = nullptr;
-    if (bag.info->frustumCulling == PipelineFrustumCulling_Precise) {
+    if (bag.info->frustumCulling == PipelineInfoBagFrustumCulling_Precise) {
       bbox = cacher.getBBoxesByMesh(materialFrame, maxVertCount);
     }
 
@@ -143,9 +143,9 @@ StaPipColorBag* StaticPipeline::getColorBag(
   auto* result = new StaPipColorBag();
 
   if (material->lightmapFlag) {
-    result->single = &material->ambient;
-  } else {
     result->many = materialFrame->colors;
+  } else {
+    result->single = &material->ambient;
   }
 
   return result;
@@ -160,10 +160,10 @@ StaPipTextureBag* StaticPipeline::getTextureBag(
   result->texture =
       rendererCore->texture.repository.getByMeshMaterialId(material->id);
 
-  TYRA_ASSERT(
-      result->texture, "Texture for material: ", material->name,
-      "Id: ", material->id,
-      "Was not found in texture repository! Did you forget to add texture?");
+  TYRA_ASSERT(result->texture, "Texture for material: ", material->name,
+              "Id: ", material->id,
+              "Was not found in texture repository! Did you forget to add "
+              "texture or disable texture coords loading in mesh?");
 
   result->coordinates = materialFrame->textureCoords;
 

@@ -22,7 +22,7 @@ class MeshMaterial {
   explicit MeshMaterial(const MeshMaterial& material);
   ~MeshMaterial();
 
-  u8 isMother, lightmapFlag;
+  bool isMother, lightmapFlag;
 
   u32 id;
 

@@ -30,11 +30,11 @@ MeshMaterial::MeshMaterial(const MeshBuilderData& data,
   id = rand() % 1000000;
 
   if (data.lightMapEnabled) {
-    lightmapFlag = false;
+    lightmapFlag = true;
     TYRA_ASSERT(material->frames[0]->colors != nullptr,
                 "Colors faces are required");
   } else {
-    lightmapFlag = true;
+    lightmapFlag = false;
   }
 
   ambient.set(material->ambient);

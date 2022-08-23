@@ -53,6 +53,10 @@ class Color {
   void operator-=(const float& v);
   void operator*=(const float& v);
   void operator/=(const float& v);
+  Color operator+(const float& v) const;
+  Color operator-(const float& v) const;
+  Color operator*(const float& v) const;
+  Color operator/(const float& v) const;
 
   inline void set(const Color& v) { copy(this, v.rgba); }
   inline void set(const float* v) { copy(this, v); }

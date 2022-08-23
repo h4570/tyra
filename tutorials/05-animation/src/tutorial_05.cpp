@@ -35,7 +35,7 @@ void Tutorial05::loop() {
   {
     engine->renderer.renderer3D.usePipeline(dynpip);
 
-    dynpip.render(zombieMesh.get(), renderOptions);
+    dynpip.render(zombieMesh.get());
     dynpip.render(warriorMesh.get(), renderOptions);
   }
   engine->renderer.endFrame();

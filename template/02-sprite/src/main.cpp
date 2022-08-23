@@ -9,18 +9,18 @@
 */
 
 #include "engine.hpp"
-#include "tutorial_08.hpp"
+#include "tutorial_02.hpp"
 
 /**
- * In this tutorial we will learn:
- * - How to render skybox and what is "ALLPASS" rendering method
- * - How to render debug lines and bboxes
- * - How to get available RAM and FPS count
+ * In this tutorial we will learn how to:
+ * - Load png file and create texture from it
+ * - Create sprite class
+ * - Clear screen and render sprite
  */
 
 int main() {
   Tyra::Engine engine;
-  Tyra::Tutorial08 game(&engine);
+  Tyra::Tutorial02 game(&engine);
   engine.run(&game);
   return 0;
 }
