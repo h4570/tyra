@@ -86,7 +86,7 @@ CoreBBox::CoreBBox(const std::vector<CoreBBox>& t_bboxes, const u32& startIndex,
   vertices[7].set(hiX, hiY, hiZ);
 }
 
-CoreBBox::CoreBBox(Vec4* t_vertices, u32* faces, u32 count) {
+CoreBBox::CoreBBox(const Vec4* t_vertices, const u32* faces, const u32& count) {
   float lowX, lowY, lowZ, hiX, hiY, hiZ;
   lowX = hiX = t_vertices[faces[0]].x;
   lowY = hiY = t_vertices[faces[0]].y;
@@ -113,7 +113,7 @@ CoreBBox::CoreBBox(Vec4* t_vertices, u32* faces, u32 count) {
   vertices[7].set(hiX, hiY, hiZ);
 }
 
-CoreBBox::CoreBBox(Vec4* t_vertices, u32 count) {
+CoreBBox::CoreBBox(const Vec4* t_vertices, const u32& count) {
   float lowX, lowY, lowZ, hiX, hiY, hiZ;
   lowX = hiX = t_vertices[0].x;
   lowY = hiY = t_vertices[0].y;
@@ -159,7 +159,7 @@ void CoreBBox::operator=(const CoreBBox& v) {
   for (auto i = 0; i < 8; i++) Vec4::copy(&vertices[i], v.vertices[i].xyzw);
 }
 
-CoreBBox::CoreBBox(Vec4* t_vertices) {
+CoreBBox::CoreBBox(const Vec4* t_vertices) {
   for (auto i = 0; i < 8; i++) Vec4::copy(&vertices[i], t_vertices[i].xyzw);
 }
 

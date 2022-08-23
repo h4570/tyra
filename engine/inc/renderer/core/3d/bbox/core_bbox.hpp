@@ -24,9 +24,10 @@ class CoreBBox {
  public:
   CoreBBox();
   CoreBBox(const CoreBBox& t_bbox);
-  explicit CoreBBox(Vec4* t_vertices, u32* faces, u32 t_count);
-  explicit CoreBBox(Vec4* t_vertices, u32 t_count);
-  explicit CoreBBox(Vec4* t_vertices);
+  explicit CoreBBox(const Vec4* t_vertices, const u32* faces,
+                    const u32& t_count);
+  explicit CoreBBox(const Vec4* t_vertices, const u32& t_count);
+  explicit CoreBBox(const Vec4* t_vertices);
   explicit CoreBBox(CoreBBox** t_bboxes, const u32& count);
   explicit CoreBBox(const std::vector<CoreBBox>& t_bboxes,
                     const u32& startIndex, const u32& stopIndex);

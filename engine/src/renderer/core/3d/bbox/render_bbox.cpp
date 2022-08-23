@@ -21,13 +21,14 @@ RenderBBox::RenderBBox(const std::vector<CoreBBox>& t_bboxes,
                        const u32& startIndex, const u32& stopIndex)
     : CoreBBox(t_bboxes, startIndex, stopIndex) {}
 
-RenderBBox::RenderBBox(Vec4* t_vertices, u32* faces, u32 count)
+RenderBBox::RenderBBox(const Vec4* t_vertices, const u32* faces,
+                       const u32& count)
     : CoreBBox(t_vertices, faces, count) {}
 
-RenderBBox::RenderBBox(Vec4* t_vertices, u32 count)
+RenderBBox::RenderBBox(const Vec4* t_vertices, const u32& count)
     : CoreBBox(t_vertices, count) {}
 
-RenderBBox::RenderBBox(Vec4* t_vertices) : CoreBBox(t_vertices) {}
+RenderBBox::RenderBBox(const Vec4* t_vertices) : CoreBBox(t_vertices) {}
 
 RenderBBox::RenderBBox(const RenderBBox& t_bbox, const M4x4& t_matrix)
     : CoreBBox(t_bbox, t_matrix) {}
@@ -64,6 +65,6 @@ CoreBBoxFrustum RenderBBox::clipFrustumCheck(const Plane* frustumPlanes,
   guardBand[5] = -10.0F;  // FAR
 
   return frustumCheck(frustumPlanes, model, guardBand);  // Let's check it again
-}  // namespace Tyra
+}
 
 }  // namespace Tyra

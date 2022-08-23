@@ -1,10 +1,9 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [Tutorials] 7
+- [Renderer] Add decimate to de_dust2
 - [Tutorials] 8
 - [Tutorials] 9.
 
-- [Renderer] Check ee clipping on de_dust2, add decimate to de_dust2?
 - [General] Check all left TODOs -> Github issues
 - [General] Readme Credits: clipping, obj loader
 - [Video] How to setup environment

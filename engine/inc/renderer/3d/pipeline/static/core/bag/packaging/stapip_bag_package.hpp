@@ -32,11 +32,11 @@ class StaPipBagPackage {
   CoreBBoxFrustum isInFrustum;
 
   /**
-   * We are creating StaPipBagPackagesBBox which checks CoreBBoxBBox for every
+   * We are creating StaPipBagPackagesBBox which checks CoreBBox for every
    * maxVertCount / 3. So this variable is index of starting
-   * StaPipBagPackagesBBox's CoreBBoxBBox. If package have <= maxVertCount / 3
+   * StaPipBagPackagesBBox's CoreBBox. If package have <= maxVertCount / 3
    * verts, we will need only single (starting) bbox. if package have
-   * maxVertCount verts, we will calculate CoreBBoxBBox from 3
+   * maxVertCount verts, we will calculate CoreBBox from 3
    * StaPipBagPackagesBBox's bboxes.
    */
   u32 indexOf1By3BBox;

@@ -16,11 +16,12 @@ BBox::BBox(CoreBBox** t_bboxes, const u32& count) : CoreBBox(t_bboxes, count) {
   setData();
 }
 
-BBox::BBox(Vec4* t_vertices, u32 count) : CoreBBox(t_vertices, count) {
+BBox::BBox(const Vec4* t_vertices, const u32& count)
+    : CoreBBox(t_vertices, count) {
   setData();
 }
 
-BBox::BBox(Vec4* t_vertices, u32* faces, u32 count)
+BBox::BBox(const Vec4* t_vertices, const u32* faces, const u32& count)
     : CoreBBox(t_vertices, faces, count) {
   setData();
 }
@@ -32,7 +33,7 @@ BBox::BBox(const BBox& t_bbox, const M4x4& t_matrix)
   setData();
 }
 
-BBox::BBox(Vec4* t_vertices) : CoreBBox(t_vertices) { setData(); }
+BBox::BBox(const Vec4* t_vertices) : CoreBBox(t_vertices) { setData(); }
 
 BBox BBox::getTransformed(const M4x4& t_matrix) const {
   return BBox(*this, t_matrix);
