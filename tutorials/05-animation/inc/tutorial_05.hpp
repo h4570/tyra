@@ -23,7 +23,18 @@ class Tutorial05 : public Game {
   void loop();
 
  private:
+  void loadZombieMesh();
+  void loadWarriorMesh();
+  void warriorAnimationCallback(const AnimationSequenceCallback& callback);
+
   Engine* engine;
+
+  Vec4 cameraPosition, cameraLookAt;
+
+  std::unique_ptr<DynamicMesh> warriorMesh;
+  std::unique_ptr<DynamicMesh> zombieMesh;
+  DynamicPipeline dynpip;
+  DynPipOptions renderOptions;
 };
 
 }  // namespace Tyra

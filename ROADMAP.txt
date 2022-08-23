@@ -5,7 +5,7 @@
 - [Tutorials] 7
 - [Tutorials] 8
 - [Tutorials] 9.
-- [Renderer] Check ee clipping on de_dust2, add decimate to de_dust2?
+
 - [General] Check all left TODOs -> Github issues
 - [General] Readme Credits: clipping, obj loader
 - [Video] How to setup environment
@@ -19,6 +19,7 @@
 - [Demo] BBox constructors
 - [General] Add cpp lint checker in GitHub / static code analysis
 - [General] Smart pointers and std::array instead of raw pointers
+- [Renderer] Check ee clipping on de_dust2, add decimate to de_dust2?
 - [General] Control generated id to avoid duplication. Maybe Just increment from 0? Add interface IIdentificable?
 - [renderer] fog
 - [General] CI in Github via docker image
