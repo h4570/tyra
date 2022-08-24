@@ -1,5 +1,4 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
-- [General] Check all left TODOs -> Github issues
 - [General] Readme Credits: clipping, obj loader
 - [Video] How to setup environment
 - [Video] How to work with Tyra
