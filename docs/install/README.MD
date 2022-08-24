@@ -11,7 +11,7 @@
 ---
 
 ## Steps:
-1. Download [intellisense package](http://apgcglz.cluster028.hosting.ovh.net/tyra/ps2dev-intellisense.rar) and unzip it somewhere in your computer.
+1. Download [intellisense package](https://github.com/h4570/tyra/releases) and unzip it somewhere in your computer.
 2. Open terminal in your favourite repositories directory and execute: 
 ```
 docker pull h4570/tyra
