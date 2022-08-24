@@ -26,11 +26,10 @@ Weapon::Weapon(Engine* engine) {
   pad = &engine->pad;
   audio = &engine->audio;
   auto* repo = &engine->renderer.core.texture.repository;
-  auto* data =
+  auto data =
       loader.load(FileUtils::fromCwd("game/models/ak47/ak47.obj"), objOptions);
   data->normalsEnabled = false;
-  mesh = new StaticMesh(*data);
-  delete data;
+  mesh = new StaticMesh(data.get());
 
   mesh->translation.translateX(2.85F);
   mesh->translation.translateY(-3.40F);

@@ -27,11 +27,11 @@ Terrain::Terrain(TextureRepository* repo)
   objOptions.flipUVs = true;
   objOptions.scale = 100.0F;
 
-  auto* data = loader.load(
-      FileUtils::fromCwd("game/models/terrain/terrain.obj"), objOptions);
+  auto data = loader.load(FileUtils::fromCwd("game/models/terrain/terrain.obj"),
+                          objOptions);
   data->normalsEnabled = false;
-  mesh = new StaticMesh(*data);
-  delete data;
+  mesh = new StaticMesh(data.get());
+
   repo->addByMesh(mesh, FileUtils::fromCwd("game/models/terrain/"), "png");
 
   allocateOptions();

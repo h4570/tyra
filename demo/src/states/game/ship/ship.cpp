@@ -23,10 +23,9 @@ Ship::Ship(TextureRepository* repo) {
   objOptions.flipUVs = true;
   objOptions.scale = 200.0F;
 
-  auto* data =
+  auto data =
       loader.load(FileUtils::fromCwd("game/models/ship/ship.obj"), objOptions);
-  mesh = new StaticMesh(*data);
-  delete data;
+  mesh = new StaticMesh(data.get());
 
   for (std::size_t i = 0; i < mesh->materials.size(); i++) {
     mesh->materials[i]->ambient /= 2.0F;

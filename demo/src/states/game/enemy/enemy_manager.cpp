@@ -28,12 +28,10 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
   objOptions.flipUVs = true;
   objOptions.scale = 250.0F;
 
-  auto* data = loader.load(FileUtils::fromCwd("game/models/zombie/zombie.obj"),
-                           objOptions);
+  auto data = loader.load(FileUtils::fromCwd("game/models/zombie/zombie.obj"),
+                          objOptions);
   data->normalsEnabled = false;
-  motherMesh = new DynamicMesh(*data);
-
-  delete data;
+  motherMesh = new DynamicMesh(data.get());
 
   bodyTexture = textureRepo->add(
       FileUtils::fromCwd("game/models/zombie/BodyMaterial.png"));

@@ -23,11 +23,10 @@ Skybox::Skybox(TextureRepository* repo) {
   objOptions.flipUVs = true;
   objOptions.scale = 100.0F;
 
-  auto* data = loader.load(FileUtils::fromCwd("game/models/skybox/skybox.obj"),
-                           objOptions);
+  auto data = loader.load(FileUtils::fromCwd("game/models/skybox/skybox.obj"),
+                          objOptions);
   data->normalsEnabled = false;
-  mesh = new StaticMesh(*data);
-  delete data;
+  mesh = new StaticMesh(data.get());
 
   repo->addByMesh(mesh, FileUtils::fromCwd("game/models/skybox/"), "png");
 
