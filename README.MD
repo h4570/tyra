@@ -132,6 +132,7 @@ Without these guys, Tyra would not happen:
 * Dr Henry Fortuna - for code sources, PS2 academy tutorials
 * Rick Gaiser, fjtrujy - for maintaining PS2DEV
 * Wellington Carvalho - for testing, contributing to Tyra and sharing cool ideas!
+* Leonardo Ono - for software renderer example (with clipping!)
 * Lukasz D.K. - for huge archive of PS2 stuff
 * Guilherme Lampert - for code sources
 * Jesper Svennevid, Daniel Collin - for openvcl's code samples
