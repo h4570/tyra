@@ -9,14 +9,13 @@
     <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/github-splash.png" alt="Logo" width="100%" height="auto">
   </a>
 
-  <h3 align="center">Tyra - alpha 1.36.3</h3>
+  <h3 align="center">Tyra - 2.0</h3>
 
   <p align="center">
     Open source game engine for PlayStation 2™
     <br />
-    <a href="https://github.com/h4570/tyra/tree/master/src/samples/dolphin"><strong>Dolphin sample »</strong></a>
+    <a href="https://youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH"><strong>YouTube tutorials »</strong></a>
     &nbsp;
-    <a href="https://github.com/h4570/tyra/tree/master/src/samples/floors"><strong>Floors sample »</strong></a>
     <br />
     <br />
     <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
@@ -29,15 +28,11 @@
 
 ## Table of Contents  
 
-* [About the Project](#about-the-project) 
-  * [Samples](#samples) 
+* [About the project](#about-the-project) 
   * [Description](#description) 
+  * [Tutorials](#tutorials) 
   * [Features](#features) 
   * [Branches](#branches) 
-* [Getting Started](#getting-started) 
-  * [Installation](#installation) 
-  * [Prerequisites](#prerequisites) 
-* [Roadmap](#roadmap) 
 * [Contributing](#contributing) 
 * [License](#license) 
 * [Built With](#built-with) 
@@ -47,83 +42,61 @@
 <br />
 
 ## About the Project  
+<p align="center">
+  <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/tyra_code.gif" alt="Sample code" width="500" height="auto">  
+  <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/showcase.gif " alt="Sample game" width="500" height="auto"> 
+</p> 
 
-<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/tyra.gif" alt="Sample code" width="600" height="auto">  
-<img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/dolphin.gif " alt="Sample game" width="500" height="auto">  
-
-### Samples
-* [Dolphin](https://github.com/h4570/tyra/tree/master/src/samples/dolphin) 
-* [Floors](https://github.com/h4570/tyra/tree/master/src/samples/floors) 
-* [Cube](https://github.com/h4570/tyra/tree/master/src/samples/cube) 
-  
+---
 ### Description
-Tyra is a project that aims to facilitate the development of PlayStation 2 games. The goal is simple API which will allow you to develop some nice small homebrew games in a short period of time. Finally, (thanks to PS2DEV team) Tyra supports C++20, so we are free from the 2003's GCC which only supported C++98.  
-**Project is on alpha stage, so keep in mind that there are many things to be done and to fix.**
-Unfortunately there are not many people, which want's to help with this project. **If you want to be a volunteer**, but don't have too much knowledge in this field, write to me on Discord, **I will be happy to help.**
- 
-When project will be on beta stage, we plan to create some YouTube tutorials :)  
-  
-**Why was this project created?** 
-PS2 development can be a big challenge.  
-PS2 it's pretty low-level and there are a lot of stuff that you must do from scratch.  
-For example, if you want to render something using only PS2DEV you must:
-- Create VU1 micro-program
-- Load micro-program and send it to VU1
-- Create parser for your 3D file
-- Create parser for texture file
-- Calculate lights, shadows, MVP matrices (3D->2D)..
-- Clip triangles ([sic!](https://github.com/h4570/tyra/issues/14))
-- Prepare DMA packets for coprocessors communication
-- Setup rasterizer (GS)
-- Send texture to GS
-- Send packets
-- Synchronize all  
+Tyra is a project that allows you to easily create games for the PlayStation 2 console.  
+When I tried to make a game for PS2 a few years ago, I realized how many things had to be done to tame this exotic console architecture.
+Decision was simple - I need to create an engine which will handle 3D file loading, 2D/3D rendering, animation, audio,  handling between PS2 CPUs, synchronization and it should be simple as possible - so people with no experience can create a simple game in a few hours.  
+**And that's what Tyra is all about.**  
 
-but with Tyra you can do it with methods like `loadObj()` and `draw()` 😁. 
+### Tutorials
+*  Setup environment - [Text tutorial](https://github.com/h4570/tyra/tree/master/docs/install) or [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
+* Cook game assets - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
+* Create game from template - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
+---
+* 01 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/01-hello), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Hello world
+* 02 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/02-sprite), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - 2D rendering
+* 03 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/03-minecraft), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - 3D minecraft blocks
+* 04 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/04-de_dust2), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - `de_dust2.obj` rendering
+* 05 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/05-animation), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - 3D animation
+* 06 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/06-audio), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Background music and sound effects
+* 07 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/07-lighting), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Static lightmap and dynamic directional lights
+* 08 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/08-skybox-debug), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Skybox and debug rendering
+* 09 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/09-manual-mode), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Manual rendering (a'la OpenGL)
+
+---
 
 ### Features
-* 3D support - VU1 "Path 1 rendering"  
-* 2D support - PNG & BMP
-* Frustum culling, backface culling  
-* OpenGL adaptions: Perspective projection, lookAt camera  
-* Texture support - .bmp and png  
-* Mesh loaders: ".obj", ".dff" (RenderWare, GTA:SA) and ".md2" (Quake II) 
-* Threading support 
-* Animation support for obj and md2
-* Audio support - .wav and .adpcm 
-* Pad support 
+* Docker image with Tyra, all tools and `PS2DEV` C++20 compiler
+* 3D rendering via `VU1` coprocessor:
+  * Static rendering  
+  * Morph animation rendering  
+  * Super optimized, custom minecraft block renderer  
+  * Debug rendering (lines, boxes, bboxes)
+  * Manual rendering (a'la `OpenGL`)
+* 2D rendering
+* Frustum culling:
+  * Simple - culling whole mesh
+  * Precise - culling only visible parts of mesh
+* Clipping:
+  * Standard "fake", but fast PS2 clipping done in `VU1`
+  * Software triangle done in `EE Core`
+* Optimized math functions via `VU0` coprocessor   
+* Background music and sound effects support 
+* Pad support
+* `.wav` Audio file support
+* `.obj` 3D file support
+* `.md2` 3D file support
+* `.png` Texture file support
 
 ### Branches
-* Master - monthly releases - tested on PS2 & PCSX2.
-* Develop - daily builds - can be unstable.
-
-<br />
-
-## Getting Started  
-
-### Installation 
-Step by step [tutorial here](https://github.com/h4570/tyra/tree/develop/docs)  
-If you need any support, feel free to ask questions on discord:  
-[![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)  
-
-### Prerequisites 
-
-* PS2 DEV environment - [PS2DEV](https://github.com/ps2dev/ps2dev)  
-* At least #58ffb33 PS2SDK (28.05.2021) - [PS2SDK](https://github.com/ps2dev/ps2sdk) 
-* PS2 Emulator. For example [PCSX2](https://pcsx2.net/) 
-
-<br />
-
-## Extra info 
-* If you want to use your own .obj file, please check "triangulate faces" in blender.  
-PS2 is supporting only triangle primitive type.  
-
-<br />
-
-## Roadmap  
-
-### Roadmap for next master release:  
-[Next release roadmap](https://github.com/h4570/tyra/projects/4)  
+* `master` - stable releases - tested on PS2 & PCSX2.
+* `develop` - daily builds.
 
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
 
@@ -150,11 +123,14 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 ## Built With  
 
 * [PS2DEV](https://github.com/ps2dev/ps2dev)  
+* [VCLPP](https://github.com/glampert/vclpp)  
+* Sony VCL
 
 <br />
 
 ## Acronyms 
 * EE (Emotion Engine) - whole set of processors and subsystems that make up the PlayStation 2 
+* EE Core - main PS2 CPU (c++ done here) 
 * GS (Graphic synthesizer) - configurable rasterizer and texture mapper. Has only 2MB~ memory for textures, but for the opposite have very high transfer rate, so you can switch textures in the blink 
 * VU0 - programmable (ASM) vector processor that is accessed by inline assembly code injected into C program.  
 * VU1 - programmable (ASM) vector processor, which is similar to vertex shader. Accessed via DMA.  
@@ -162,11 +138,12 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 
 <br />
 
-## Thanks  
+## Credits
 
-Without these guys, everything would be harder:
-* Dr Henry Fortuna - for code sources
-* Rick Gaiser, fjtrujy - for help and new GCC!
+Without these guys, Tyra would not happen:
+* Dr Henry Fortuna - for code sources, PS2 academy tutorials
+* Rick Gaiser, fjtrujy - for maintaining PS2DEV
+* Wellington Carvalho - for testing, contributing to Tyra and sharing cool ideas!
 * Lukasz D.K. - for huge archive of PS2 stuff
 * Guilherme Lampert - for code sources
 * Jesper Svennevid, Daniel Collin - for openvcl's code samples

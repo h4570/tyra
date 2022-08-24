@@ -1,0 +1,14 @@
+version: "3.9"
+volumes:
+  tyra-volume:
+services:
+  compiler:
+    environment:
+      TERM: xterm-256color
+    network_mode: host
+    image: "h4570/tyra"
+    tty: true
+    container_name: tyra-compiler
+    volumes:
+      - tyra-volume:/src
+      - ./:/host

@@ -1,0 +1,6 @@
+*.log
+
+# Configuration files
+/c_cpp_properties.json
+/tasks.json
+/settings.json
