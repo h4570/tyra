@@ -50,7 +50,7 @@
 ### Description
 Tyra is a project that allows you to easily create games for the PlayStation 2 console.  
 When I tried to make a game for PS2 a few years ago, I realized how many things had to be done to tame this exotic console architecture.
-Decision was simple - I need to create an engine which will handle 3D file loading, 2D/3D rendering, animation, audio,  handling between PS2 CPUs, synchronization and it should be simple as possible - so people with no experience can create a simple game in a few hours.  
+Decision was simple - I need to create an engine which will handle 3D file loading, 2D/3D rendering, animation, audio,  handling between PS2 CPUs, synchronization.. It should be simple as possible - so people with no experience can create a simple game in a few hours.  
 **And that's what Tyra is all about.**  
 
 ### Tutorials
