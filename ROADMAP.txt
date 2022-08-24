@@ -1,7 +1,5 @@
 ------------ Tyra's v2.0 roadmap to publish on GitHub ------------
 
-- [Renderer] Add decimate to de_dust2
-- [Tutorials] 8
 - [Tutorials] 9.
 
 - [General] Check all left TODOs -> Github issues
@@ -22,7 +20,7 @@
 - [General] CI in Github via docker image
 - [MD2] Refactor
 - [2D] Add zbuffer support (z-index)
-- [3DUtility] Add zbuffer support (z-index)
+- [3DUtility] Add zbuffer support (z-index), cupMesh->translation.translateZ(10.0F) - wylaczyc zeby widziec problem
 - [2D] Fixed font support
 - [File] Async file loading
 - [tyrdat] Custom 3D data file with precalculated bboxes with support of async loading

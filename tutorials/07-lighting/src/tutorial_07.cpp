@@ -65,6 +65,14 @@ void Tutorial07::loadMeshWithLightmap() {
   ObjLoaderOptions options;
   options.scale = 2.0F;
 
+  /**
+   * Material colors are automatically fetched from .mtl file
+   * (Kd field)
+   *
+   * If you want to change it manually, just try to change
+   * mesh.materials[].ambient
+   */
+
   auto data = ObjLoader::load(FileUtils::fromCwd("cup.obj"), options);
 
   /**

@@ -15,7 +15,10 @@ namespace Tyra {
 
 Tutorial05::Tutorial05(Engine* t_engine) : engine(t_engine) {}
 
-Tutorial05::~Tutorial05() {}
+Tutorial05::~Tutorial05() {
+  engine->renderer.getTextureRepository().freeByMesh(zombieMesh.get());
+  engine->renderer.getTextureRepository().freeByMesh(warriorMesh.get());
+}
 
 void Tutorial05::init() {
   dynpip.setRenderer(&engine->renderer.core);

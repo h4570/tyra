@@ -23,7 +23,20 @@ class Tutorial08 : public Game {
   void loop();
 
  private:
+  void loadCupMesh();
+  void loadSkyboxMesh();
+
+  Vec4 cameraPosition, cameraLookAt;
+
   Engine* engine;
+  
+  u8 fpsCounter;
+
+  StaticPipeline stapip;
+  StaPipOptions skyboxRenderOptions;
+  StaPipOptions cupRenderOptions;
+  std::unique_ptr<StaticMesh> skyboxMesh;
+  std::unique_ptr<StaticMesh> cupMesh;
 };
 
 }  // namespace Tyra
