@@ -57,6 +57,8 @@ void StaPipCore::setLod() {
   lod.k = 0.0F;
 }
 
+void StaPipCore::onFrameEnd() { cacher.onFrameEnd(); }
+
 void StaPipCore::reinitVU1Programs() { qbufferRenderer.reinitVU1(); }
 
 u32 StaPipCore::getMaxVertCountByBag(const StaPipBag* bag) {
@@ -72,8 +74,7 @@ u32 StaPipCore::getMaxVertCountByParams(const bool& isSingleColor,
       ->getMaxVertCount(isSingleColor, qbufferRenderer.getBufferSize());
 }
 
-void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox,
-                        const u32& maxVertCount) {
+void StaPipCore::render(StaPipBag* bag) {
   if (bag->count <= 0) return;
 
   bool frustumCull =
@@ -105,6 +106,14 @@ void StaPipCore::render(StaPipBag* bag, StaPipBagPackagesBBox* bbox,
               "matrix!");
   TYRA_ASSERT(!(!frustumCull && bag->info->fullClipChecks == true),
               "Full clip checks are not supported with frustum culling = off!");
+
+  u32 maxVertCount = getMaxVertCountByBag(bag);
+
+  StaPipBagPackagesBBox* bbox = nullptr;
+  if (bag->info->frustumCulling == PipelineInfoBagFrustumCulling_Precise) {
+    bbox = cacher.getBBoxes(bag->vertices, bag->count,
+                            reinterpret_cast<u32>(bag->vertices), maxVertCount);
+  }
 
   setMaxVertCount(maxVertCount);
 

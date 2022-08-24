@@ -20,9 +20,9 @@ namespace Tyra {
  */
 class StaPipBagPackagesBBox {
  public:
-  StaPipBagPackagesBBox(Vec4* t_vertices, u32* t_faces, const u32& t_facesCount,
-                        const u32& t_maxVertCount);
-  StaPipBagPackagesBBox(Vec4* t_vertices, const u32& t_counts,
+  StaPipBagPackagesBBox(const Vec4* t_vertices, u32* t_faces,
+                        const u32& t_facesCount, const u32& t_maxVertCount);
+  StaPipBagPackagesBBox(const Vec4* t_vertices, const u32& t_counts,
                         const u32& t_maxVertCount);
   ~StaPipBagPackagesBBox();
 

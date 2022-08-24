@@ -8,7 +8,7 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "renderer/3d/pipeline/static/stapip_bag_bboxes_cacher.hpp"
+#include "renderer/3d/pipeline/static/core/stapip_bag_bboxes_cacher.hpp"
 #include <algorithm>
 
 namespace Tyra {
@@ -31,29 +31,30 @@ void StapipBagBBoxesCacher::onFrameEnd() {
                 storage.end());
 }
 
-StaPipBagPackagesBBox* StapipBagBBoxesCacher::getBBoxesByMesh(
-    const MeshMaterialFrame* frame, const u32& maxVertCount) {
-  auto* cache = getCache(maxVertCount, frame->id);
+StaPipBagPackagesBBox* StapipBagBBoxesCacher::getBBoxes(
+    const Vec4* vertices, const u32& count, const u32& id,
+    const u32& maxVertCount) {
+  auto* cache = getCache(maxVertCount, id);
 
   if (cache) {
     cache->framesLeftToDestroy = cacheFramesCount * cacheSecondsCount;
     return cache->bboxes.get();
   }
 
-  auto bboxes = std::make_unique<StaPipBagPackagesBBox>(
-      frame->vertices, frame->count, maxVertCount);
+  auto bboxes =
+      std::make_unique<StaPipBagPackagesBBox>(vertices, count, maxVertCount);
 
   storage.push_back(
-      StapipBagBBoxesCacheItem{maxVertCount, frame->id, std::move(bboxes),
+      StapipBagBBoxesCacheItem{maxVertCount, id, std::move(bboxes),
                                cacheFramesCount * cacheSecondsCount});
 
   return storage.back().bboxes.get();
 }
 
 StapipBagBBoxesCacheItem* StapipBagBBoxesCacher::getCache(
-    const u32& maxVertCount, const u32& frameId) {
+    const u32& maxVertCount, const u32& id) {
   for (auto& item : storage) {
-    if (item.vu1MaxVertCount == maxVertCount && item.frameId == frameId) {
+    if (item.vu1MaxVertCount == maxVertCount && item.id == id) {
       return &item;
     }
   }

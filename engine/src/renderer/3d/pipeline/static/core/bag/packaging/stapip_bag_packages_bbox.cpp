@@ -18,7 +18,8 @@
 
 namespace Tyra {
 
-StaPipBagPackagesBBox::StaPipBagPackagesBBox(Vec4* t_vertices, u32* t_faces,
+StaPipBagPackagesBBox::StaPipBagPackagesBBox(const Vec4* t_vertices,
+                                             u32* t_faces,
                                              const u32& t_facesCount,
                                              const u32& t_maxVertCount) {
   u32 splitPartSize = t_maxVertCount / 3;
@@ -35,7 +36,7 @@ StaPipBagPackagesBBox::StaPipBagPackagesBBox(Vec4* t_vertices, u32* t_faces,
   mainBBox = new RenderBBox(*bboxParts, 0, partsCount);
 }
 
-StaPipBagPackagesBBox::StaPipBagPackagesBBox(Vec4* t_vertices,
+StaPipBagPackagesBBox::StaPipBagPackagesBBox(const Vec4* t_vertices,
                                              const u32& t_count,
                                              const u32& t_maxVertCount) {
   u32 splitPartSize = t_maxVertCount / 3;

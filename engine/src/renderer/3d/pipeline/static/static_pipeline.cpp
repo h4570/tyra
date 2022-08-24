@@ -39,7 +39,7 @@ void StaticPipeline::onUseEnd() {
   core.deallocateOnUse();
 }
 
-void StaticPipeline::onFrameEnd() { cacher.onFrameEnd(); }
+void StaticPipeline::onFrameEnd() { core.onFrameEnd(); }
 
 void StaticPipeline::render(const StaticMesh* mesh) { render(mesh, nullptr); }
 
@@ -93,14 +93,7 @@ void StaticPipeline::render(const StaticMesh* mesh,
     bag.lighting =
         getLightingBag(materialFrame, dirLightsBag.get(), &model, options);
 
-    u32 maxVertCount = core.getMaxVertCountByBag(&bag);
-
-    StaPipBagPackagesBBox* bbox = nullptr;
-    if (bag.info->frustumCulling == PipelineInfoBagFrustumCulling_Precise) {
-      bbox = cacher.getBBoxesByMesh(materialFrame, maxVertCount);
-    }
-
-    core.render(&bag, bbox, maxVertCount);
+    core.render(&bag);
 
     deallocDrawBags(&bag, material);
   }

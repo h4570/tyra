@@ -17,7 +17,6 @@
 #include "renderer/3d/mesh/static/static_mesh.hpp"
 #include "./core/stapip_core.hpp"
 #include "./stapip_options.hpp"
-#include "./stapip_bag_bboxes_cacher.hpp"
 
 namespace Tyra {
 
@@ -51,7 +50,6 @@ class StaticPipeline : public Renderer3DPipeline {
   void render(const StaticMesh* mesh, const StaPipOptions* options);
 
  private:
-  StapipBagBBoxesCacher cacher;
   RendererCore* rendererCore;
   Vec4* colorsCache;
 

@@ -11,7 +11,7 @@
 #pragma once
 
 #include <tamtypes.h>
-#include "core/bag/packaging/stapip_bag_packages_bbox.hpp"
+#include "./bag/packaging/stapip_bag_packages_bbox.hpp"
 #include "renderer/3d/mesh/mesh.hpp"
 #include <memory>
 #include <vector>
@@ -20,7 +20,7 @@ namespace Tyra {
 
 struct StapipBagBBoxesCacheItem {
   u32 vu1MaxVertCount;
-  u32 frameId;
+  u32 id;
   std::unique_ptr<StaPipBagPackagesBBox> bboxes;
   int framesLeftToDestroy;
 };
@@ -35,12 +35,11 @@ class StapipBagBBoxesCacher {
 
   void onFrameEnd();
 
-  StaPipBagPackagesBBox* getBBoxesByMesh(const MeshMaterialFrame* frame,
-                                         const u32& maxVertCount);
+  StaPipBagPackagesBBox* getBBoxes(const Vec4* vertices, const u32& count,
+                                   const u32& id, const u32& maxVertCount);
 
  private:
-  StapipBagBBoxesCacheItem* getCache(const u32& maxVertCount,
-                                     const u32& frameId);
+  StapipBagBBoxesCacheItem* getCache(const u32& maxVertCount, const u32& id);
 
   std::vector<StapipBagBBoxesCacheItem> storage;
 };

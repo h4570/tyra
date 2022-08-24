@@ -11,6 +11,7 @@
 #pragma once
 
 #include <tyra>
+#include <memory>
 
 namespace Tyra {
 
@@ -23,7 +24,22 @@ class Tutorial09 : public Game {
   void loop();
 
  private:
+  void setDrawData();
+  void loadBags();
+
   Engine* engine;
+
+  StaticPipeline stapip;
+
+  Vec4 cameraPosition, cameraLookAt;
+  M4x4 translation, rotation, scale, model;
+
+  std::array<Vec4, 3> vertices;
+  std::array<Color, 3> colors;
+
+  std::unique_ptr<StaPipBag> bag;
+  std::unique_ptr<StaPipInfoBag> infoBag;
+  std::unique_ptr<StaPipColorBag> colorBag;
 };
 
 }  // namespace Tyra
