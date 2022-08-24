@@ -34,6 +34,7 @@
   * [Features](#features) 
   * [Branches](#branches) 
 * [Contributing](#contributing) 
+* [Games](#games) 
 * [License](#license) 
 * [Built With](#built-with) 
 * [Acronyms](#acronyms) 
@@ -107,6 +108,13 @@ Contributions are what make the open source community such an amazing place to b
 3. Commit your Changes (`git commit -m 'Add some amazing-feature'`)  
 4. Push to the Branch (`git push origin feature/amazing-feature`)  
 5. Open a Pull Request  
+
+## Games
+
+List of games developed with Tyra.  
+If you created one, please contact me - I will add it to the list :)
+
+* [Tyracraft](https://github.com/Wellinator/tyracraft) 
 
 ## License  
 
