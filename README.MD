@@ -100,8 +100,6 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
 
-<br />
-
 ## Contributing 
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**. 
@@ -112,21 +110,15 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/amazing-feature`)  
 5. Open a Pull Request  
 
-<br />
-
 ## License  
 
 Distributed under the Apache License 2.0 License. See `LICENSE` for more information. 
-
-<br />
 
 ## Built With  
 
 * [PS2DEV](https://github.com/ps2dev/ps2dev)  
 * [VCLPP](https://github.com/glampert/vclpp)  
 * Sony VCL
-
-<br />
 
 ## Acronyms 
 * EE (Emotion Engine) - whole set of processors and subsystems that make up the PlayStation 2 
@@ -135,8 +127,6 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 * VU0 - programmable (ASM) vector processor that is accessed by inline assembly code injected into C program.  
 * VU1 - programmable (ASM) vector processor, which is similar to vertex shader. Accessed via DMA.  
 * IOP - I/O processor which enables access to peripheral devices, such the game controller  
-
-<br />
 
 ## Credits
 
