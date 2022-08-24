@@ -57,6 +57,7 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 *  Setup environment - [Text tutorial](https://github.com/h4570/tyra/tree/master/docs/install) or [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
 * Cook game assets - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
 * Create game from template - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
+* Run game from USB in PS2 - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
 ---
 * 01 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/01-hello), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Hello world
 * 02 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/02-sprite), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - 2D rendering
@@ -88,6 +89,8 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 * Optimized math functions via `VU0` coprocessor   
 * Background music and sound effects support 
 * Pad support
+* USB support
+* Memory card support
 * `.wav` Audio file support
 * `.obj` 3D file support
 * `.md2` 3D file support
