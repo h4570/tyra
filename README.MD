@@ -37,9 +37,7 @@
 * [License](#license) 
 * [Built With](#built-with) 
 * [Acronyms](#acronyms) 
-* [Thanks](#thanks) 
-
-<br />
+* [Credits](#credits) 
 
 ## About the Project  
 <p align="center">
