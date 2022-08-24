@@ -85,7 +85,7 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
   * Precise - culling only visible parts of mesh
 * Clipping:
   * Standard "fake", but fast PS2 clipping done in `VU1`
-  * Software triangle done in `EE Core`
+  * Software clipping done in `EE Core`
 * Optimized math functions via `VU0` coprocessor   
 * Background music and sound effects support 
 * Pad support
