@@ -68,7 +68,7 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 * 07 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/07-lighting), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Static lightmap and dynamic directional lights
 * 08 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/08-skybox-debug), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Skybox and debug rendering
 * 09 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/09-manual-mode), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Manual rendering (a'la OpenGL)
-
+* Demo game - [Code](https://github.com/h4570/tyra/tree/master/demo)
 ---
 
 ### Features
