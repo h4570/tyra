@@ -60,12 +60,12 @@
         {
             "type": "shell",
             "label": "Send to PS2",
-            "command": "docker exec -t tyra-compiler sh -c 'cd ${config:buildDirectory}/bin && killall -v ps2client || true && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} execee host:$(find . -maxdepth 1 -type f -name \"*.elf\")'"
+            "command": "docker exec -t tyra-compiler sh -c 'cd ${config:buildDirectory}/bin && killall -v ps2client || $true && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} execee host:$(find . -maxdepth 1 -type f -name \"*.elf\")'"
         },
         {
             "type": "shell",
             "label": "Open PS2 output logger",
-            "command": "docker stop ps2-logs || true && docker run -t --rm --name=ps2-logs -p ${input:local2Ip}:18194:18194/udp h4570/tyra sh -c 'ps2client -h ${input:ps2Ip} listen'",
+            "command": "docker stop ps2-logs || $true && docker run -t --rm --name=ps2-logs -p ${input:local2Ip}:18194:18194/udp h4570/tyra sh -c 'ps2client -h ${input:ps2Ip} listen'",
             "runOptions": {
                 "instanceLimit": 1
             },
