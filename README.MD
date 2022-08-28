@@ -54,20 +54,20 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 **And that's what Tyra is all about.**  
 
 ### Tutorials
-*  Setup environment - [Text tutorial](https://github.com/h4570/tyra/tree/master/docs/install) or [Video](https://www.youtube.com/watch?v=9IXOU1SPdzc)
-* Cook game assets - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
-* Create game from template - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
-* Run game from USB in PS2 - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
+* 01 - Setup environment - [Text tutorial](https://github.com/h4570/tyra/tree/master/docs/install) or [Video](https://www.youtube.com/watch?v=9IXOU1SPdzc)
+* 02 - Cooking game assets - [Video](https://www.youtube.com/watch?v=LjO71ovPFJs)
+* 03 - Create game from template - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
+* 04 - Run game from USB in PS2 - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
 ---
-* 01 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/01-hello), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Hello world
-* 02 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/02-sprite), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - 2D rendering
-* 03 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/03-minecraft), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - 3D minecraft blocks
-* 04 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/04-de_dust2), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - `de_dust2.obj` rendering
-* 05 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/05-animation), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - 3D animation
-* 06 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/06-audio), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Background music and sound effects
-* 07 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/07-lighting), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Static lightmap and dynamic directional lights
-* 08 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/08-skybox-debug), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Skybox and debug rendering
-* 09 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/09-manual-mode), [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH) - Manual rendering (a'la OpenGL)
+* 01 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/01-hello) - Hello world
+* 02 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/02-sprite) - 2D rendering
+* 03 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/03-minecraft) - 3D minecraft blocks
+* 04 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/04-de_dust2) - `de_dust2.obj` rendering
+* 05 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/05-animation) - 3D animation
+* 06 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/06-audio) - Background music and sound effects
+* 07 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/07-lighting) - Static lightmap and dynamic directional lights
+* 08 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/08-skybox-debug) - Skybox and debug rendering
+* 09 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/09-manual-mode) - Manual rendering (a'la OpenGL)
 * Demo game - [Code](https://github.com/h4570/tyra/tree/master/demo)
 ---
 
