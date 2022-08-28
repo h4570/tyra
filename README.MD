@@ -57,7 +57,7 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 * 01 - Setup environment - [Text tutorial](https://github.com/h4570/tyra/tree/master/docs/install) or [Video](https://www.youtube.com/watch?v=9IXOU1SPdzc)
 * 02 - Cooking game assets - [Video](https://www.youtube.com/watch?v=LjO71ovPFJs)
 * 03 - Create a game repository - [Video](https://www.youtube.com/watch?v=DKfIKar3GUM)
-* 04 - Run game from USB in PS2 - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
+* 04 - Run game from USB in PS2 - [Video](https://www.youtube.com/watch?v=ZX8fTQqiNho)
 ---
 * 01 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/01-hello) - Hello world
 * 02 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/02-sprite) - 2D rendering
