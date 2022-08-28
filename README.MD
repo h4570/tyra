@@ -54,7 +54,7 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 **And that's what Tyra is all about.**  
 
 ### Tutorials
-*  Setup environment - [Text tutorial](https://github.com/h4570/tyra/tree/master/docs/install) or [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
+*  Setup environment - [Text tutorial](https://github.com/h4570/tyra/tree/master/docs/install) or [Video](https://www.youtube.com/watch?v=9IXOU1SPdzc)
 * Cook game assets - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
 * Create game from template - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
 * Run game from USB in PS2 - [Video (soon)](https://www.youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH)
