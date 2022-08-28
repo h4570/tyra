@@ -12,6 +12,6 @@
 
 namespace Demo {
 
-const bool IS_REAL_PS2 = false;
+const bool IS_REAL_PS2_VIA_USB = false;
 
 }  // namespace Demo

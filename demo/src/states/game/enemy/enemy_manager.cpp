@@ -45,7 +45,7 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
   auto* death = engine->audio.adpcm.load(
       FileUtils::fromCwd("game/models/zombie/death.adpcm"));
 
-  const int enemyCount = IS_REAL_PS2 ? 8 : 12;
+  const int enemyCount = IS_REAL_PS2_VIA_USB ? 8 : 12;
   for (int i = 0; i < enemyCount; i++) {
     EnemyInfo info;
     info.adpcmChannel = 9 + i;

@@ -45,7 +45,7 @@ void GameState::onStart() {
 
   engine->audio.song.setVolume(85);
 
-  if (IS_REAL_PS2) engine->renderer.setFrameLimit(false);
+  if (IS_REAL_PS2_VIA_USB) engine->renderer.setFrameLimit(false);
 
   initialized = true;
 }
