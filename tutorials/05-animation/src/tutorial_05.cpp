@@ -55,7 +55,7 @@ void Tutorial05::loadZombieMesh() {
   /** Starting file suffix index. It means that 1 will start from _000001.obj */
   options.animation.startingIndex = 1;
 
-  /** If you want to know how to cook this file, please watch tutorial video */
+  /** If you want to know how to cook this file, please watch #02 YT tutorial */
   auto data = ObjLoader::load(FileUtils::fromCwd("zombie/zombie.obj"), options);
 
   zombieMesh = std::make_unique<DynamicMesh>(data.get());

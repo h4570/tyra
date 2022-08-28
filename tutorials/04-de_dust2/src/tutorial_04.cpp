@@ -37,9 +37,8 @@ void Tutorial04::loop() {
     /**
      * Render de_dust2.
      *
-     * As you see there are clipping issues (visual glitches).
-     * If you want to know how to fix it, please
-     * watch video tutorial.
+     * If you see clipping issues (visual glitches),
+     * You can check how to fix them in #02 YT tutorial.
      */
     stapip.render(mesh.get(), renderOptions);
   }
