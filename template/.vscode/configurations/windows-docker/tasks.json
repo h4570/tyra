@@ -65,7 +65,7 @@
         {
             "type": "shell",
             "label": "Send to PS2",
-            "command": "docker exec -t tyra-game-compiler sh -c 'cd ${config:buildDirectory}/bin && killall -v ps2client || true && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} execee host:$(find . -maxdepth 1 -type f -name \"*.elf\")'"
+            "command": "docker exec -t tyra-game-compiler sh -c 'cd ${config:buildDirectory}/bin && killall -v ps2client || $true && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} execee host:$(find . -maxdepth 1 -type f -name \"*.elf\")'"
         },
         {
             "type": "shell",
