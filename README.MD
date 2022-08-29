@@ -15,6 +15,8 @@
   <p align="center">
     Open source game engine for PlayStation 2™
     <br />
+    <a href="https://www.youtube.com/watch?v=DGR4vWDjkmc"><strong>Showcase video »</strong></a>
+    &nbsp;
     <a href="https://youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH"><strong>YouTube tutorials »</strong></a>
     &nbsp;
     <br />
