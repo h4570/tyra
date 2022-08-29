@@ -1,3 +1,4 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b81ab27f1c774f839729829c9f772b1a)](https://www.codacy.com/gh/h4570/tyra/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=h4570/tyra&amp;utm_campaign=Badge_Grade)
 [![Contributors][contributors-shield]][contributors-url]
 [![MIT License][license-shield]][license-url]
 [![Discord](https://img.shields.io/badge/discord-Tyra-brightgreen?logo=discord)](https://discord.gg/NhhTmg3Gm5)
