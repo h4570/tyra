@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include "renderer/3d/mesh/mesh_material.hpp"
+#include "file/file_utils.hpp"
 
 namespace Tyra {
 
@@ -29,7 +30,7 @@ MeshMaterial::MeshMaterial(const MeshBuilderData& data,
 
   id = rand() % 1000000;
 
-  if (data.lightMapEnabled) {
+  if (data.loadLightmap) {
     lightmapFlag = true;
     TYRA_ASSERT(material->frames[0]->colors != nullptr,
                 "Colors faces are required");
@@ -38,8 +39,15 @@ MeshMaterial::MeshMaterial(const MeshBuilderData& data,
   }
 
   ambient.set(material->ambient);
-
   name = material->name;
+
+  if (material->texturePath.has_value()) {
+    auto textureFilename =
+        FileUtils::getFilenameFromPath(material->texturePath.value());
+
+    textureName = FileUtils::getFilenameWithoutExtension(textureFilename);
+  }
+
   TYRA_ASSERT(name.length() > 0, "MeshMaterial name cannot be empty");
 
   u32 lastVertexCount = 0;
@@ -71,7 +79,7 @@ MeshMaterial::MeshMaterial(const MeshMaterial& mesh) {
 
   lightmapFlag = mesh.lightmapFlag;
   name = mesh.name;
-
+  textureName = mesh.textureName;
   ambient.set(128.0F, 128.0F, 128.0F, 128.0F);
 
   for (u32 i = 0; i < mesh.frames.size(); i++) {
@@ -112,9 +120,14 @@ std::string MeshMaterial::getPrint(const char* name) const {
   res << std::endl;
   res << std::fixed << std::setprecision(2);
   res << "Id: " << id << ", " << std::endl;
-  res << "Name: " << name << ", " << std::endl;
+  res << "Name: " << this->name << ", " << std::endl;
+
+  if (textureName.has_value()) {
+    res << "Texture path: " << textureName.value() << ", " << std::endl;
+  }
+
   res << "Frames count: " << frames.size() << ", " << std::endl;
-  res << "Single color?: " << static_cast<u32>(lightmapFlag) << std::endl;
+  res << "Lightmap?: " << static_cast<u32>(lightmapFlag) << std::endl;
   res << ")";
 
   return res.str();

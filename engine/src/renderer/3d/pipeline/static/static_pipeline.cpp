@@ -65,6 +65,7 @@ void StaticPipeline::render(const StaticMesh* mesh,
       !(options->frustumCulling != PipelineFrustumCulling_Precise &&
         infoBag->fullClipChecks == true),
       "Full clip checks are only supported with frustum culling == Precise!");
+
   TYRA_ASSERT(options->transformationType == TyraMVP ||
                   (!options->fullClipChecks &&
                    options->frustumCulling == PipelineFrustumCulling_None),
@@ -146,7 +147,8 @@ StaPipColorBag* StaticPipeline::getColorBag(
 
 StaPipTextureBag* StaticPipeline::getTextureBag(
     const MeshMaterial* material, const MeshMaterialFrame* materialFrame) {
-  if (!materialFrame->textureCoords) return nullptr;
+  if (!materialFrame->textureCoords || !material->textureName.has_value())
+    return nullptr;
 
   auto* result = new StaPipTextureBag();
 

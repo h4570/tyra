@@ -92,7 +92,6 @@ void Tutorial08::loadCupMesh() {
   options.scale = 3.0F;
 
   auto data = ObjLoader::load(FileUtils::fromCwd("cup/cup.obj"), options);
-  data->textureCoordsEnabled = false;
 
   cupMesh = std::make_unique<StaticMesh>(data.get());
 

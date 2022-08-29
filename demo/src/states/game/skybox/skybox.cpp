@@ -25,7 +25,7 @@ Skybox::Skybox(TextureRepository* repo) {
 
   auto data = loader.load(FileUtils::fromCwd("game/models/skybox/skybox.obj"),
                           objOptions);
-  data->normalsEnabled = false;
+  data->loadNormals = false;
   mesh = new StaticMesh(data.get());
 
   repo->addByMesh(mesh, FileUtils::fromCwd("game/models/skybox/"), "png");

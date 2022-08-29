@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include "../../loader.hpp"
 #include "../builder/mesh_builder_data.hpp"
 #include <string>
 #include "renderer/models/color.hpp"
 #include "loaders/3d/obj_loader/tiny_obj_loader.hpp"
 #include <memory.h>
+#include <optional>
 
 namespace Tyra {
 
@@ -36,7 +36,7 @@ struct MaterialVertexCount {
 };
 
 /** Class responsible for loading & parsing obj files */
-class ObjLoader : public Loader {
+class ObjLoader {
  public:
   static std::unique_ptr<MeshBuilderData> load(const char* fullpath);
   static std::unique_ptr<MeshBuilderData> load(const char* fullpath,

@@ -10,13 +10,13 @@
 
 #include <cstring>
 #include <stdio.h>
-#include <string>
 #include <vector>
 #include "math/vec2.hpp"
 #include "math/vec4.hpp"
 #include "renderer/models/color.hpp"
 #include "debug/debug.hpp"
 #include "loaders/3d/obj_loader/obj_loader.hpp"
+#include "file/file_utils.hpp"
 
 #define TINYOBJLOADER_USE_MAPBOX_EARCUT
 #define TINYOBJLOADER_IMPLEMENTATION
@@ -40,12 +40,12 @@ std::unique_ptr<MeshBuilderData> ObjLoader::load(
 std::unique_ptr<MeshBuilderData> ObjLoader::load(
     const char* fullpath, const ObjLoaderOptions& options) {
   std::string path = fullpath;
-  std::string basePath = getPathFromFilename(path);
+  std::string basePath = FileUtils::getPathFromFilename(path);
 
   TYRA_ASSERT(!path.empty(), "Provided path is empty!");
 
-  auto rawFilename = getFilenameWithoutExtension(path);
-  auto extension = getExtensionOfFilename(path);
+  auto rawFilename = FileUtils::getFilenameWithoutExtension(path);
+  auto extension = FileUtils::getExtensionOfFilename(path);
   auto result = std::make_unique<MeshBuilderData>();
 
   tinyobj::ObjReaderConfig readerConfig;
@@ -131,9 +131,7 @@ void ObjLoader::addOutputMaterialsAndFrames(
     const std::vector<tinyobj::shape_t>& shapes,
     const std::vector<tinyobj::material_t>& materials, const u16& framesCount,
     std::vector<MaterialVertexCount>& materialVertexCounts) {
-  if (attrib.texcoords.size()) output->textureCoordsEnabled = true;
-
-  if (attrib.normals.size()) output->normalsEnabled = true;
+  if (attrib.normals.size()) output->loadNormals = true;
 
   TYRA_ASSERT(materials.size() > 0,
               "No material data found! Please add .mtl "
@@ -144,6 +142,10 @@ void ObjLoader::addOutputMaterialsAndFrames(
     auto* material = new MeshBuilderMaterialData();
 
     material->name = materials[i].name;
+
+    if (!materials[i].diffuse_texname.empty()) {
+      material->texturePath = materials[i].diffuse_texname;
+    }
 
     material->ambient.set(materials[i].diffuse[0] * 128.0F,
                           materials[i].diffuse[1] * 128.0F,
@@ -157,10 +159,11 @@ void ObjLoader::addOutputMaterialsAndFrames(
       frame->count = counter.count;
       frame->vertices = new Vec4[counter.count];
 
-      if (output->textureCoordsEnabled)
+      if (material->texturePath.has_value()) {
         frame->textureCoords = new Vec4[counter.count];
+      }
 
-      if (output->normalsEnabled) frame->normals = new Vec4[counter.count];
+      if (output->loadNormals) frame->normals = new Vec4[counter.count];
 
       material->frames.push_back(frame);
     }
@@ -186,6 +189,8 @@ void ObjLoader::importFrame(MeshBuilderData* output,
     materialInsertControls.push_back(control);
   }
 
+  std::vector<u32> materialIdsWithTextureWarning;
+
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {
     const auto& mesh = shapes[s].mesh;
@@ -197,7 +202,8 @@ void ObjLoader::importFrame(MeshBuilderData* output,
       auto& materialInsertControl = materialInsertControls[materialId];
       size_t vertCountPerFace = size_t(mesh.num_face_vertices[f]);
 
-      auto* outFrame = output->materials[materialId]->frames[frameIndex];
+      auto* outMaterial = output->materials[materialId];
+      auto* outFrame = outMaterial->frames[frameIndex];
 
       TYRA_ASSERT(count == 1 || vertCountPerFace == 3,
                   "Please triangulate obj files if you are animating!",
@@ -232,14 +238,32 @@ void ObjLoader::importFrame(MeshBuilderData* output,
         // Check if `texcoord_index` is zero or positive. negative =
         // notexcoord data
         if (idx.texcoord_index >= 0) {
-          tinyobj::real_t tx =
-              attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
-          tinyobj::real_t ty =
-              attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
+          if (outMaterial->texturePath.has_value()) {
+            tinyobj::real_t tx =
+                attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
+            tinyobj::real_t ty =
+                attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
 
-          auto finalY = invertY ? 1.0F - ty : ty;
-          outFrame->textureCoords[materialInsertControl.inserted].set(
-              tx, finalY, 1.0F, 0.0F);
+            auto finalY = invertY ? 1.0F - ty : ty;
+            outFrame->textureCoords[materialInsertControl.inserted].set(
+                tx, finalY, 1.0F, 0.0F);
+          } else {
+            auto warningWasNotPrinted =
+                std::find(materialIdsWithTextureWarning.begin(),
+                          materialIdsWithTextureWarning.end(),
+                          materialId) == materialIdsWithTextureWarning.end();
+
+            if (frameIndex == 0 && warningWasNotPrinted) {
+              materialIdsWithTextureWarning.push_back(materialId);
+
+              TYRA_WARN(
+                  "Material \"", outMaterial->name,
+                  "\" has texture coordinates, but texture path was not found "
+                  "in .mtl file! ",
+                  "Please consider adding texture path to map_Kd field in .mtl "
+                  "file!");
+            }
+          }
         }
 
         materialInsertControl.inserted++;

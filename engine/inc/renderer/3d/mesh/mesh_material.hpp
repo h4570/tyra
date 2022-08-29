@@ -13,6 +13,7 @@
 #include "debug/debug.hpp"
 #include "./mesh_material_frame.hpp"
 #include "loaders/3d/builder/mesh_builder_data.hpp"
+#include <optional>
 
 namespace Tyra {
 
@@ -23,11 +24,9 @@ class MeshMaterial {
   ~MeshMaterial();
 
   bool isMother, lightmapFlag;
-
   u32 id;
-
   std::string name;
-
+  std::optional<std::string> textureName;
   Color ambient;
 
   std::vector<MeshMaterialFrame*> frames;

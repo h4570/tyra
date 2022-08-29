@@ -28,7 +28,7 @@ class MeshBuilderData {
 
   std::vector<MeshBuilderMaterialData*> materials;
 
-  bool textureCoordsEnabled, normalsEnabled, lightMapEnabled;
+  bool loadNormals, loadLightmap;
 };
 
 }  // namespace Tyra

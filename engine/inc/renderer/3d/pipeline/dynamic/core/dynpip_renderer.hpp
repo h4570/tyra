@@ -44,8 +44,7 @@ class DynPipRenderer {
   void uploadPrograms();
   void setDoubleBuffer();
 
-  void addBufferDataToPacket(DynPipVU1Program* program, DynPipBag** bags,
-                             const u32& count);
+  void addBufferDataToPacket(DynPipBag** bags, const u32& count);
   void sendPacket();
 
   prim_t* prim;
