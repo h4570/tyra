@@ -8,6 +8,7 @@ on:
       - '**.cpp'
       - '**.'
       - '**.h'
+      - './engine/inc/tyra'
       - '.github/workflows/check-format.yml'
       - '.clang-format'
   pull_request:
@@ -16,6 +17,7 @@ on:
       - '**.cpp'
       - '**.'
       - '**.h'
+      - './engine/inc/tyra'
       - '.github/workflows/check-format.yml'
       - '.clang-format'
 
