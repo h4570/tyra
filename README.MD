@@ -10,7 +10,7 @@
     <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/github-splash.png" alt="Logo" width="100%" height="auto">
   </a>
 
-  <h3 align="center">Tyra - 2.1.0</h3>
+  <h3 align="center">Tyra</h3>
 
   <p align="center">
     Open source game engine for PlayStation 2™
