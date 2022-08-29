@@ -26,10 +26,10 @@ class Tutorial08 : public Game {
   void loadCupMesh();
   void loadSkyboxMesh();
 
-  Vec4 cameraPosition, cameraLookAt;
+  Vec4 cameraPosition;
+  Vec4 cameraLookAt;
 
   Engine* engine;
-  
   u8 fpsCounter;
 
   StaticPipeline stapip;
