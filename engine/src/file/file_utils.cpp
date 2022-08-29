@@ -64,4 +64,32 @@ std::string FileUtils::fromCwd(const char* file) {
   auto cwd = getCwd();
   return cwd + file;
 }
+
+std::string FileUtils::getFilenameFromPath(const std::string& path) {
+  std::string filename = path.substr(path.find_last_of("/\\") + 1);
+  if (filename.size() == path.size()) {
+    filename = path.substr(path.find_last_of(":\\") + 1);
+  }
+  return filename;
+}
+
+std::string FileUtils::getPathFromFilename(const std::string& path) {
+  std::string basepath = path.substr(0, path.find_last_of("/\\"));
+  if (basepath.size() == path.size()) {
+    basepath = path.substr(0, path.find_last_of(":\\"));
+  }
+  return basepath;
+}
+
+std::string FileUtils::getFilenameWithoutExtension(
+    const std::string& filename) {
+  auto lastindex = filename.find_last_of(".");
+  return filename.substr(0, lastindex);
+}
+
+std::string FileUtils::getExtensionOfFilename(const std::string& filename) {
+  auto lastindex = filename.find_last_of(".");
+  return filename.substr(lastindex + 1);
+}
+
 }  // namespace Tyra

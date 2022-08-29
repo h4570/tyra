@@ -32,6 +32,11 @@ class FileUtils {
   static std::string fromCwd(const std::string& relativePath);
   static std::string fromCwd(const char* relativePath);
 
+  static std::string getFilenameFromPath(const std::string& path);
+  static std::string getPathFromFilename(const std::string& path);
+  static std::string getFilenameWithoutExtension(const std::string& filename);
+  static std::string getExtensionOfFilename(const std::string& filename);
+
   const char* getElfName() const { return elfName; };
   const char* getElfPath() const { return elfPath; };
 

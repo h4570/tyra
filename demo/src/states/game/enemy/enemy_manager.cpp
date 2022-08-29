@@ -30,7 +30,7 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
 
   auto data = loader.load(FileUtils::fromCwd("game/models/zombie/zombie.obj"),
                           objOptions);
-  data->normalsEnabled = false;
+  data->loadNormals = false;
   motherMesh = new DynamicMesh(data.get());
 
   bodyTexture = textureRepo->add(

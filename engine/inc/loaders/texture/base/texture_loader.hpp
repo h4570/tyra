@@ -10,13 +10,12 @@
 
 #pragma once
 
-#include "loaders/loader.hpp"
 #include "loaders/texture/builder/texture_builder_data.hpp"
 #include "renderer/core/texture/models/texture_bpp.hpp"
 #include <string>
 
 namespace Tyra {
-class TextureLoader : public Loader {
+class TextureLoader {
  public:
   /**
    * @brief Loads texture data from file.

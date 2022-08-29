@@ -13,6 +13,7 @@
 
 #include <vector>
 #include <string>
+#include <optional>
 #include "./mesh_builder_material_frame_data.hpp"
 #include "renderer/models/color.hpp"
 
@@ -25,6 +26,7 @@ class MeshBuilderMaterialData {
 
   std::vector<MeshBuilderMaterialFrameData*> frames;
   std::string name;
+  std::optional<std::string> texturePath;
   Color ambient;
 };
 

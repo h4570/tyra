@@ -16,6 +16,7 @@
 #include <string>
 #include <draw_buffers.h>
 #include "loaders/texture/png_loader.hpp"
+#include "file/file_utils.hpp"
 
 namespace Tyra {
 
@@ -32,7 +33,7 @@ TextureBuilderData* PngLoader::load(const char* fullPath) {
   std::string path = fullPath;
   TYRA_ASSERT(!path.empty(), "Provided path is empty!");
 
-  auto filename = getFilenameFromPath(path);
+  auto filename = FileUtils::getFilenameFromPath(path);
 
   FILE* file = fopen(fullPath, "rb");
   TYRA_ASSERT(file != nullptr, "Failed to load ", fullPath);

@@ -13,7 +13,7 @@
 #include <string>
 #include "debug/debug.hpp"
 #include "loaders/3d/md2_loader/anorms.hpp"
-#include "loaders/loader.hpp"
+#include "file/file_utils.hpp"
 
 namespace Tyra {
 
@@ -88,7 +88,7 @@ std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
   std::string path = fullpath;
   TYRA_ASSERT(!path.empty(), "Provided path is empty!");
 
-  auto filename = getFilenameFromPath(path);
+  auto filename = FileUtils::getFilenameFromPath(path);
 
   FILE* file = fopen(fullpath, "rb");
   TYRA_ASSERT(file != nullptr, "Failed to load: ", filename);
@@ -122,12 +122,13 @@ std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
   auto result = std::make_unique<MeshBuilderData>();
 
   auto* material = new MeshBuilderMaterialData();
-  material->name = getFilenameWithoutExtension(filename);
+  material->name = FileUtils::getFilenameWithoutExtension(filename);
+  material->texturePath = material->name;
+  material->texturePath.value().append(".png");
 
   result->materials.push_back(material);
-  result->normalsEnabled = true;
-  result->textureCoordsEnabled = true;
-  result->lightMapEnabled = false;
+  result->loadNormals = true;
+  result->loadLightmap = false;
 
   Vec4** tempVertices = new Vec4*[framesCount];
   Vec4** tempNormals = new Vec4*[framesCount];

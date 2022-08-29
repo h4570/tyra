@@ -14,9 +14,8 @@
 namespace Tyra {
 
 MeshBuilderData::MeshBuilderData() {
-  textureCoordsEnabled = false;
-  normalsEnabled = false;
-  lightMapEnabled = false;
+  loadNormals = false;
+  loadLightmap = false;
 }
 
 MeshBuilderData::~MeshBuilderData() {

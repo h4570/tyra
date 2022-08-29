@@ -116,8 +116,12 @@ void TextureRepository::addByMesh(const Mesh* mesh, const char* directory,
   if (dirFixed.back() != '/' && dirFixed.back() != ':') dirFixed += "/";
 
   for (u32 i = 0; i < mesh->materials.size(); i++) {
+        if (!mesh->materials[i]->textureName.has_value()) {
+      continue;
+    }
+
     std::string fullPath =
-        dirFixed + mesh->materials[i]->name + "." + extension;
+        dirFixed + mesh->materials[i]->textureName.value() + "." + extension;
 
     auto* data = loader.load(fullPath.c_str());
     Texture* texture = new Texture(data);

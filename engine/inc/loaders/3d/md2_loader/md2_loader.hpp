@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "../../loader.hpp"
 #include "../builder/mesh_builder_data.hpp"
 #include <string>
 #include <memory>
@@ -23,7 +22,7 @@ struct MD2LoaderOptions {
 };
 
 /** Class responsible for loading & parsing Quake's II ".md2" 3D files */
-class MD2Loader : public Loader {
+class MD2Loader {
  public:
   static std::unique_ptr<MeshBuilderData> load(const char* fullpath);
   static std::unique_ptr<MeshBuilderData> load(const char* fullpath,

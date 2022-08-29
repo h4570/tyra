@@ -76,12 +76,9 @@ void Tutorial07::loadMeshWithLightmap() {
   auto data = ObjLoader::load(FileUtils::fromCwd("cup.obj"), options);
 
   /**
-   * We don't want to load texture coordinates,
-   * because this obj file has no texture.
-   *
-   * Anyways you can use texture as well.
+   * This model has no texture (it was exported without UV data),
+   * but you can use lighting with textures as well.
    */
-  data->textureCoordsEnabled = false;
 
   /** Lets add lightmap manually */
   setLightmap(data.get());
@@ -120,7 +117,7 @@ void Tutorial07::setDirectionalLightsOptions() {
 
 void Tutorial07::setLightmap(MeshBuilderData* data) {
   /** Information for mesh, that data has lightmap */
-  data->lightMapEnabled = true;
+  data->loadLightmap = true;
 
   /** This object file has only 1 material */
   auto* material = data->materials[0];

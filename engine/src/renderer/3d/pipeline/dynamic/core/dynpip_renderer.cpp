@@ -160,18 +160,18 @@ void DynPipRenderer::sendObjectData(
 void DynPipRenderer::render(DynPipBag** bags, const u32& count) {
   if (count <= 0) return;
 
-  auto* program = programsRepo->getProgramByBag(bags[0]);
-  addBufferDataToPacket(program, bags, count);
+  addBufferDataToPacket(bags, count);
   sendPacket();
 }
 
-void DynPipRenderer::addBufferDataToPacket(DynPipVU1Program* program,
-                                           DynPipBag** bags, const u32& count) {
+void DynPipRenderer::addBufferDataToPacket(DynPipBag** bags, const u32& count) {
   currentPacket = packets[context];
   packet2_reset(currentPacket, false);
 
   for (u32 i = 0; i < count; i++) {
     if (bags[i]->count <= 0) continue;
+
+    auto* program = programsRepo->getProgramByBag(bags[i]);
 
     program->addBufferDataToPacket(currentPacket, bags[i], prim);
 

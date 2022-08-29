@@ -28,7 +28,7 @@ Weapon::Weapon(Engine* engine) {
   auto* repo = &engine->renderer.core.texture.repository;
   auto data =
       loader.load(FileUtils::fromCwd("game/models/ak47/ak47.obj"), objOptions);
-  data->normalsEnabled = false;
+  data->loadNormals = false;
   mesh = new StaticMesh(data.get());
 
   mesh->translation.translateX(2.85F);

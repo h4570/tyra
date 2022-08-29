@@ -36,11 +36,12 @@ MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
   TYRA_ASSERT(frame->count > 0, "Vertex count must be greater than 0",
               "Material name: ", material->name);
   TYRA_ASSERT(frame->vertices != nullptr, "Vertex array can't be null");
-  TYRA_ASSERT(!data.normalsEnabled || frame->normals != nullptr,
+  TYRA_ASSERT(!data.loadNormals || frame->normals != nullptr,
               "Normal array can't be null");
-  TYRA_ASSERT(!data.textureCoordsEnabled || frame->textureCoords != nullptr,
-              "Texture coordinate array can't be null");
-  TYRA_ASSERT(!data.lightMapEnabled || frame->colors != nullptr,
+  TYRA_ASSERT(
+      !material->texturePath.has_value() || frame->textureCoords != nullptr,
+      "Texture coordinate array can't be null");
+  TYRA_ASSERT(!data.loadLightmap || frame->colors != nullptr,
               "Color array can't be null");
 
   bbox = new BBox(frame->vertices, frame->count);
@@ -48,7 +49,7 @@ MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
   count = frame->count;
   vertices = frame->vertices;
 
-  if (data.normalsEnabled) {
+  if (data.loadNormals) {
     normals = frame->normals;
   } else {
     if (frame->normals != nullptr) delete[] frame->normals;
@@ -56,7 +57,7 @@ MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
     normals = nullptr;
   }
 
-  if (data.textureCoordsEnabled) {
+  if (material->texturePath.has_value()) {
     textureCoords = frame->textureCoords;
   } else {
     if (frame->textureCoords != nullptr) delete[] frame->textureCoords;
@@ -64,7 +65,7 @@ MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
     textureCoords = nullptr;
   }
 
-  if (data.lightMapEnabled) {
+  if (data.loadLightmap) {
     colors = frame->colors;
   } else {
     if (frame->colors != nullptr) delete[] frame->colors;

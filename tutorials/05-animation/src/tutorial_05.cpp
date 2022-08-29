@@ -21,6 +21,8 @@ Tutorial05::~Tutorial05() {
 }
 
 void Tutorial05::init() {
+  engine->renderer.setClearScreenColor(Color(32.0F, 32.0F, 32.0F));
+
   dynpip.setRenderer(&engine->renderer.core);
 
   cameraPosition = Vec4(0.0F, 0.0F, -10.0F);

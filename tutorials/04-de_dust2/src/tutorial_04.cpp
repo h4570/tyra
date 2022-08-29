@@ -51,7 +51,7 @@ void Tutorial04::loadMesh() {
 
   /**
    * Load mesh data
-   * Texture names are the material names "usemtl <material name>"
+   * Texture file names are loaded from .mtl file (map_Kd field).
    */
   auto data =
       ObjLoader::load(FileUtils::fromCwd("de_dust2/de_dust2.obj"), options);
@@ -67,8 +67,9 @@ void Tutorial04::loadMesh() {
   renderOptions.frustumCulling = Tyra::PipelineFrustumCulling_None;
 
   /**
-   * Function which load all textures into texture repository,
-   * based on material names.
+   * Function which load all textures into texture repository.
+   * It will automatically extract filename from path (map_Kd) and add
+   * proper extension.
    */
   engine->renderer.getTextureRepository().addByMesh(
       mesh.get(), FileUtils::fromCwd("de_dust2/"), "png");
