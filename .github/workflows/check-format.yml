@@ -1,0 +1,35 @@
+#This is a modified version of the clang format check used on Open-PS2-Loader 
+name: CI-cpp-check
+
+on:
+  push:
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+      - '**.'
+      - '**.h'
+      - './engine/inc/tyra'
+      - '.github/workflows/check-format.yml'
+      - '.clang-format'
+  pull_request:
+    paths:
+      - '**.hpp'
+      - '**.cpp'
+      - '**.'
+      - '**.h'
+      - './engine/inc/tyra'
+      - '.github/workflows/check-format.yml'
+      - '.clang-format'
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.12
+      with:
+        source: '.'
+        extensions: 'hpp, cpp, h'
+        clangFormatVersion: 12
+        inplace: False
