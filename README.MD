@@ -100,7 +100,7 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 * `.png` Texture file support
 
 ### Branches
-* `master` - stable releases - tested on PS2 & PCSX2.
+* `master` - stable releases - tested on PS2 & PCSX2.  
 * `develop` - daily builds.
 
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
@@ -144,14 +144,13 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 
 Without these guys, Tyra would not happen:
 * Dr Henry Fortuna - for code sources, PS2 academy tutorials
-* Rick Gaiser, fjtrujy - for maintaining PS2DEV
-* Wellington Carvalho - for testing, contributing to Tyra and sharing cool ideas!
-* Leonardo Ono - for software renderer example (with clipping!)
-* Lukasz D.K. - for huge archive of PS2 stuff
-* Guilherme Lampert - for code sources
-* Jesper Svennevid, Daniel Collin - for openvcl's code samples
-* Whole PS2DEV team
-* Manieq - for nice splash screens!
+* Whole [PS2DEV](https://github.com/ps2dev) team, and specially to [Rick Gaiser](https://github.com/rickgaiser), [fjtrujy](https://github.com/fjtrujy) - for maintaining PS2DEV
+* [Wellington Carvalho](https://github.com/Wellinator), [André Guilheme](https://github.com/wolfysdl) - for testing, contributing to Tyra and sharing cool ideas!
+* [Leonardo Ono](https://github.com/leonardo-ono) - for software renderer example (with clipping!)
+* [Lukasz D.K.](https://github.com/lukaszdk) - for huge archive of PS2 stuff
+* [Guilherme Lampert](https://github.com/glampert) - for code sources
+* [Jesper Svennevid](https://github.com/jsvennevid), Daniel Collin - for openvcl's code samples
+* [Manieq](https://www.facebook.com/mvnieq) - for nice splash screens!
 * And so many other guys. Thanks!
 
 Project Link: [https://github.com/h4570/tyra](https://github.com/h4570/tyra)  
