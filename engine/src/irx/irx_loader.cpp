@@ -75,7 +75,7 @@ IrxLoader::IrxLoader() {
 
 IrxLoader::~IrxLoader() {}
 
-void IrxLoader::loadAll(const bool& withUsb, const bool &withHdd,const bool& isLoggingToFile) {
+void IrxLoader::loadAll(const bool& withUsb, const bool &withHdd, const bool& isLoggingToFile) {
   if (isLoaded) {
     TYRA_LOG("IRX modules already loaded!");
     return;

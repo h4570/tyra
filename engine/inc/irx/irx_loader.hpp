@@ -20,8 +20,8 @@ class IrxLoader {
  public:
   IrxLoader();
   ~IrxLoader();
-  
-  void loadAll(const bool& withUsb, const bool& withHdd, 
+
+  void loadAll(const bool& withUsb, const bool& withHdd,
                const bool& isLoggingToFile);
 
  private:
