@@ -100,8 +100,8 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 * `.png` Texture file support
 
 ### Branches
-* `master` - stable releases - tested on PS2 & PCSX2.
-~~* `develop` - daily builds.~~
+* `master` - stable releases - tested on PS2 & PCSX2.  
+* `develop` - daily builds.
 
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
 
