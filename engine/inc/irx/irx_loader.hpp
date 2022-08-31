@@ -6,6 +6,8 @@
 # Copyright 2022, tyra - https://github.com/h4570/tyra
 # Licensed under Apache License 2.0
 # Wellington Carvalho <wellcoj@gmail.com>
+# Sandro Sobczyński <sandro.sobczynski@gmail.com>
+# André Guilherme <andregui17@outlook.com>
 */
 
 #pragma once
@@ -18,8 +20,9 @@ class IrxLoader {
  public:
   IrxLoader();
   ~IrxLoader();
-
-  void loadAll(const bool& withUsb, const bool& isLoggingToFile);
+  
+  void loadAll(const bool& withUsb, const bool& withHdd, 
+               const bool& isLoggingToFile);
 
  private:
   static bool isLoaded;
@@ -29,6 +32,7 @@ class IrxLoader {
   void loadLibsd(const bool& verbose);
   void loadUsbModules(const bool& verbose);
   void loadAudsrv(const bool& verbose);
+  void loadHddModules(const bool& verbose);
 
   int applyRpcPatches();
   void waitUntilUsbDeviceIsReady();

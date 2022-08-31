@@ -6,6 +6,8 @@
 # Copyright 2022, tyra - https://github.com/h4570/tyra
 # Licensed under Apache License 2.0
 # Wellington Carvalho <wellcoj@gmail.com>
+# Sandro Sobczyński <sandro.sobczynski@gmail.com>
+# André Guilherme <andregui17@outlook.com>
 */
 
 #include "irx/irx_loader.hpp"
@@ -45,6 +47,15 @@ extern int size_usbd_irx;
 extern u8 usbmass_bd_irx[];
 extern int size_usbmass_bd_irx;
 
+extern u8 ps2hdd_irx[];
+extern int size_ps2hdd_irx;
+
+extern u8 ps2fs_irx[];
+extern int size_ps2fs_irx;
+
+extern u8 ps2dev9_irx[];
+extern int size_ps2dev9_irx;
+
 namespace Tyra {
 
 bool IrxLoader::isLoaded = false;
@@ -64,7 +75,7 @@ IrxLoader::IrxLoader() {
 
 IrxLoader::~IrxLoader() {}
 
-void IrxLoader::loadAll(const bool& withUsb, const bool& isLoggingToFile) {
+void IrxLoader::loadAll(const bool& withUsb, const bool &withHdd,const bool& isLoggingToFile) {
   if (isLoaded) {
     TYRA_LOG("IRX modules already loaded!");
     return;
@@ -76,6 +87,9 @@ void IrxLoader::loadAll(const bool& withUsb, const bool& isLoggingToFile) {
 
   if (withUsb) {
     loadUsbModules(!isLoggingToFile);
+  }
+  else if (withHdd) {
+    loadHddModules(!isLoggingToFile);
   }
 
   loadAudsrv(true);
@@ -136,6 +150,23 @@ void IrxLoader::loadUsbModules(const bool& verbose) {
   waitUntilUsbDeviceIsReady();
 
   if (verbose) TYRA_LOG("IRX: Usb modules loaded!");
+}
+
+void IrxLoader::loadHddModules(const bool& verbose) {
+  if(verbose) TYRA_LOG("IRX: Loading Hdd Modules!");
+  
+  int ret;
+
+  SifExecModuleBuffer(&ps2hdd_irx, size_ps2hdd_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret >= 0, "Failed to load module: ps2hdd_irx");
+
+  SifExecModuleBuffer(&ps2fs_irx, size_ps2fs_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret >= 0, "Failed to load module: ps2fs_irx");
+
+  SifExecModuleBuffer(&ps2dev9_irx, size_ps2dev9_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret >= 0, "Failed to load module: ps2dev9_irx");
+
+  if (verbose) TYRA_LOG("IRX: Hdd modules loaded");
 }
 
 void IrxLoader::loadAudsrv(const bool& verbose) {
