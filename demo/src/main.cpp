@@ -20,7 +20,8 @@ int main() {
     options.writeLogsToFile = true;
     options.loadUsbDriver = true;
   }
-  else if (Demo::IS_REAL_PS2_VIA_HDD) {
+  
+  if (Demo::IS_REAL_PS2_VIA_HDD) {
     options.writeLogsToFile = true;
     options.loadHddDriver = true;
   }

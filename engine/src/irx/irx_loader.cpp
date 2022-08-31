@@ -88,7 +88,7 @@ void IrxLoader::loadAll(const bool& withUsb, const bool &withHdd, const bool& is
   if (withUsb) {
     loadUsbModules(!isLoggingToFile);
   }
-  else if (withHdd) {
+  if (withHdd) {
     loadHddModules(!isLoggingToFile);
   }
 
