@@ -1,0 +1,154 @@
+; _____        ____   ___
+;   |     \/   ____| |___|
+;   |     |   |   \  |   |
+;---------------------------------------------------------------
+; Copyright 2022, tyra - https://github.com/h4570/tyra
+; Licensed under Apache License 2.0
+; Sandro Sobczyński <sandro.sobczynski@gmail.com>
+;
+;---------------------------------------------------------------
+; Triangle list
+; Cull = Standard PS2 way. clipw polys are culled.
+; Animation
+; Lighting, texture, color
+;---------------------------------------------------------------
+
+.syntax new
+.name DynPipVU1_TC
+.vu
+.init_vf_all
+.init_vi_all
+
+#include "src/shared/renderer/3d/pipeline/shared/vcl_sml.i"
+#include "src/shared/renderer/3d/pipeline/shared/tyra_macros.i"
+#include "inc/shared/renderer/3d/pipeline/dynamic/core/programs/dynpip_vu1_shared_defines.h"
+
+#define STQ_STORE_OFFSET    0
+#define RGBA_STORE_OFFSET   1
+#define XYZ2_STORE_OFFSET   2
+
+--enter
+--endenter
+
+#vuprog DynPipVU1TC
+
+    ResetClipFlags{ }
+    LoadTyraStaticData{ gifSetTag }
+    MatrixLoad{ mvp, VU1_MVP_MATRIX_ADDR, vi00 }
+    LoadTyraSingleColor{ singleColor, singleColorEnabled, VU1_SINGLE_COLOR_ADDR, VU1_OPTIONS_ADDR }
+    LoadTyraTagsTexture{ lodGifTag, testsTag, texBufferClutGifTag, VU1_LOD_ADDR, VU1_Z_TESTS_ADDR, VU1_CLUT_ADDR }
+    FixColor{ singleColor }
+
+begin:
+    xtop buffer
+    LoadTyraPrimTag{ primTag, buffer }
+
+    ilw.w   vertexCount,        0(buffer)
+    iaddiu  vertexDataFrom,     buffer,         VU1_DYNPIP_VERT_DATA_ADDR
+
+    iadd    stqDataFrom,        vertexDataFrom, vertexCount
+    iadd    stqDataFrom,        stqDataFrom,    vertexCount
+
+    iadd    kickAddress,        stqDataFrom,    vertexCount
+    iadd    destAddress,        kickAddress,    vertexCount
+    iadd    kickAddress,        kickAddress,    vertexCount
+
+    StoreTyraGifTagsTexture{ gifSetTag, lodGifTag, texBufferClutGifTag, primTag, testsTag, destAddress }
+    LoadTyraLerpValue{ interp, VU1_OPTIONS_ADDR }
+    LoadTyraScaleValue{ scale, buffer }
+
+    ;--- Loop
+    iadd vertexCounter, buffer, vertexCount
+vertexLoop:
+
+        iadd    vertexDataTo,   vertexDataFrom, vertexCount
+        iadd    stqDataTo,      stqDataFrom,    vertexCount
+
+        ;--- Vertex 1 - from-to -> lerp
+        lq      vertex1From,    (vertexDataFrom)
+        lq      vertex1To,      (vertexDataTo)
+        Lerp{ vertex1, vertex1From, vertex1To, interp }
+
+        lq      stq1From,       (stqDataFrom)
+        lq      stq1To,         (stqDataTo)
+        Lerp{ stq1, stq1From, stq1To, interp }
+
+        ;--- Vertex 1 - Calculate
+        MatrixMultiplyVertex{ vertex1, mvp, vertex1 }
+        PerformClipCheck{ vertex1, destAddress, XYZ2_STORE_OFFSET }
+        VertexPersCorr{ vertex1, vertex1 }
+        ScaleVertexToGSFormat{ scale, vertex1 }
+        PerformTexturePerspectiveCorrection{ outputStq1, stq1 }
+
+        ;--- Vertex 1 - Store 
+        sq      outputStq1,     STQ_STORE_OFFSET(destAddress)
+        sq      singleColor,    RGBA_STORE_OFFSET(destAddress)
+        sq.xyz  vertex1,        XYZ2_STORE_OFFSET(destAddress)
+
+        ; ---------------------------------------
+
+        ;--- Vertex 2 - from-to -> lerp
+        lq      vertex2From,    1(vertexDataFrom)
+        lq      vertex2To,      1(vertexDataTo)
+        Lerp{ vertex2, vertex2From, vertex2To, interp }
+
+        lq      stq2From,       1(stqDataFrom)
+        lq      stq2To,         1(stqDataTo)
+        Lerp{ stq2, stq2From, stq2To, interp }
+
+        ;--- Vertex 2 - Calculate
+        MatrixMultiplyVertex{ vertex2, mvp, vertex2 }
+        PerformClipCheck{ vertex2, destAddress, XYZ2_STORE_OFFSET+3 }
+        VertexPersCorr{ vertex2, vertex2 }
+        ScaleVertexToGSFormat{ scale, vertex2 }
+        PerformTexturePerspectiveCorrection{ outputStq2, stq2 }
+
+        ;--- Vertex 2 - Store
+        sq      outputStq2,     STQ_STORE_OFFSET+3(destAddress)
+        sq      singleColor,    RGBA_STORE_OFFSET+3(destAddress)
+        sq.xyz  vertex2,        XYZ2_STORE_OFFSET+3(destAddress)
+
+        ; ---------------------------------------
+
+        ;--- Vertex 3 - from-to -> lerp
+        lq      vertex3From,    2(vertexDataFrom)
+        lq      vertex3To,      2(vertexDataTo)
+        Lerp{ vertex3, vertex3From, vertex3To, interp }
+
+        lq      stq3From,       2(stqDataFrom)
+        lq      stq3To,         2(stqDataTo)
+        Lerp{ stq3, stq3From, stq3To, interp }
+
+        ;--- Vertex 3 - Calculate
+        MatrixMultiplyVertex{ vertex3, mvp, vertex3 }
+        PerformClipCheck{ vertex3, destAddress, XYZ2_STORE_OFFSET+6 }
+        VertexPersCorr{ vertex3, vertex3 }
+        ScaleVertexToGSFormat{ scale, vertex3 }
+        PerformTexturePerspectiveCorrection{ outputStq3, stq3 }
+
+        ;--- Vertex 3 - Store
+        sq      outputStq3,     STQ_STORE_OFFSET+6(destAddress)
+        sq      singleColor,    RGBA_STORE_OFFSET+6(destAddress)
+        sq.xyz  vertex3,        XYZ2_STORE_OFFSET+6(destAddress)
+
+        ;-------------------------------
+
+        iaddiu  vertexDataFrom, vertexDataFrom, 3
+        iaddiu  stqDataFrom,    stqDataFrom,    3
+        iaddiu  destAddress,    destAddress,    9
+
+        ;--- Fix loop
+        iaddi   vertexCounter,  vertexCounter,  -3  ; decrement the loop counter 
+        ibne    vertexCounter,  buffer, vertexLoop  ; and repeat if needed
+
+    xgkick kickAddress ; dispatch to the GS rasterizer.
+
+--barrier ; Why the hell I must add barrier AFTER XGKICK? VCL does not adds E bit without it...
+--cont
+
+    b   begin
+
+#endvuprog
+
+--exit
+--endexit

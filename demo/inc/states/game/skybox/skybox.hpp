@@ -11,7 +11,7 @@
 #pragma once
 
 #include <tyra>
-#include "states/game/renderer/renderer_static_pair.hpp"
+#include "states/game/shared/renderer/renderer_static_pair.hpp"
 
 using Tyra::Renderer;
 using Tyra::StaPipOptions;
