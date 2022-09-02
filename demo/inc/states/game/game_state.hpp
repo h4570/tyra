@@ -13,7 +13,7 @@
 #include "state/state.hpp"
 #include "state/global_state_type.hpp"
 #include "./player/player.hpp"
-#include "./shared/renderer/game_renderer.hpp"
+#include "./renderer/game_renderer.hpp"
 #include "./terrain/terrain.hpp"
 #include "./skybox/skybox.hpp"
 #include "./ship/ship.hpp"

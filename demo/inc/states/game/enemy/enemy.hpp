@@ -11,7 +11,7 @@
 #pragma once
 
 #include <tyra>
-#include "states/game/shared/renderer/renderer_dynamic_pair.hpp"
+#include "states/game/renderer/renderer_dynamic_pair.hpp"
 #include "states/game/terrain/heightmap.hpp"
 #include "states/game/player/player_shoot_action.hpp"
 #include "./enemy_info.hpp"

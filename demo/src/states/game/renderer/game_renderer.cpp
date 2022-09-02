@@ -8,7 +8,7 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include "states/game/shared/renderer/game_renderer.hpp"
+#include "states/game/renderer/game_renderer.hpp"
 
 using Tyra::Threading;
 

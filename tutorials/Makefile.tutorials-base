@@ -1,7 +1,7 @@
 LIB         += -ltyra
 LIBDIRS     += -L$(ENGINEDIR)/bin
-INC         += -I$(ENGINEDIR)/inc
-INCDEP		+= -I$(ENGINEDIR)/inc
+INC         += -I$(ENGINEDIR)/inc/ps2 -I$(ENGINEDIR)/inc/shared
+INCDEP		+= -I$(ENGINEDIR)/inc/ps2 -I$(ENGINEDIR)/inc/shared
 
 include ../../Makefile.base
 

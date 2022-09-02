@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "states/game/shared/renderer/renderer_dynamic_pair.hpp"
-#include "states/game/shared/renderer/renderer_static_pair.hpp"
+#include "states/game/renderer/renderer_dynamic_pair.hpp"
+#include "states/game/renderer/renderer_static_pair.hpp"
 #include "states/game/terrain/heightmap.hpp"
 #include "./weapon.hpp"
 #include "./camera.hpp"
