@@ -235,7 +235,7 @@ CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
     // for each corner of the box do ...
     // get out of the cycle as soon as a box as corners
     // both inside and out of the frustum
-    for (char y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
+    for (unsigned char y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
       if (y > calculatedBboxVertexIndex) {
         frustumCheckVertices[y] = model * vertices[y];
         calculatedBboxVertexIndex = y;
@@ -269,7 +269,7 @@ CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
     boxOut = 0;
     boxIn = 0;
 
-    for (char y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
+    for (unsigned char y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
       auto isOut = frustumPlanes[i].distanceTo(vertices[y]) <= margin;
 
       if (isOut)
@@ -292,7 +292,7 @@ bool CoreBBox::isInFrustum(const Plane* frustumPlanes,
   char calculatedBboxVertexIndex = -1;
 
   for (unsigned char i = 0; i < 6; i++) {
-    for (char y = 0; y < 8; y++) {
+    for (unsigned char y = 0; y < 8; y++) {
       if (y > calculatedBboxVertexIndex) {
         frustumCheckVertices[y] = model * vertices[y];
         calculatedBboxVertexIndex = y;
@@ -307,7 +307,7 @@ bool CoreBBox::isInFrustum(const Plane* frustumPlanes,
 
 bool CoreBBox::isInFrustum(const Plane* frustumPlanes) const {
   for (unsigned char i = 0; i < 6; i++) {
-    for (char y = 0; y < 8; y++) {
+    for (unsigned char y = 0; y < 8; y++) {
       auto isIn = frustumPlanes[i].distanceTo(vertices[y]) > 0.0F;
       if (isIn) return true;
     }
