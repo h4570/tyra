@@ -18,8 +18,8 @@ OBJEXT      := o
 CFLAGS      := 
 LIB         := -ltyra
 LIBDIRS     := -L$(ENGINEDIR)/bin
-INC         := -I$(INCDIR) -I$(ENGINEDIR)/inc
-INCDEP      := -I$(INCDIR) -I$(ENGINEDIR)/inc
+INC         := -I$(INCDIR) -I$(ENGINEDIR)/inc/ps2 -I$(ENGINEDIR)/inc/shared
+INCDEP      := -I$(INCDIR) -I$(ENGINEDIR)/inc/ps2 -I$(ENGINEDIR)/inc/shared
 
 include /tyra/Makefile.base
 
