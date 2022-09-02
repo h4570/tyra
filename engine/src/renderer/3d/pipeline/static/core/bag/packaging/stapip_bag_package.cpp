@@ -8,7 +8,6 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include <tamtypes.h>
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -48,25 +47,25 @@ std::string StaPipBagPackage::getPrint(const char* name) const {
   res << "Size: " << static_cast<int>(size) << std::endl;
 
   res << "Vectors: " << std::endl;
-  for (u32 i = 0; i < size; i++) {
+  for (unsigned int i = 0; i < size; i++) {
     res << i << ": " << vertices[i].getPrint() << std::endl;
   }
 
   if (sts != nullptr) {
     res << "STs: " << std::endl;
-    for (u32 i = 0; i < size; i++)
+    for (unsigned int i = 0; i < size; i++)
       res << i << ": " << sts[i].getPrint() << std::endl;
   }
 
   if (colors != nullptr) {
     res << "Colors: " << std::endl;
-    for (u32 i = 0; i < size; i++)
+    for (unsigned int i = 0; i < size; i++)
       res << i << ": " << colors[i].getPrint() << std::endl;
   }
 
   if (normals != nullptr) {
     res << "Normals: " << std::endl;
-    for (u32 i = 0; i < size; i++)
+    for (unsigned int i = 0; i < size; i++)
       res << i << ": " << normals[i].getPrint() << std::endl;
   }
 

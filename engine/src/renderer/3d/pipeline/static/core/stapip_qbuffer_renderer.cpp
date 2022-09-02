@@ -43,7 +43,7 @@ namespace Tyra {
  *
  */
 
-const u16 StaPipQBufferRenderer::buffersCount = 32;
+const unsigned short StaPipQBufferRenderer::buffersCount = 32;
 
 StaPipQBufferRenderer::StaPipQBufferRenderer() {
   currentBufferIndex = 0;
@@ -60,12 +60,12 @@ void StaPipQBufferRenderer::allocateOnUse() {
   objectDataPacket = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
   packets = new packet2_t*[2];
-  for (u16 i = 0; i < 2; i++)
+  for (unsigned short i = 0; i < 2; i++)
     packets[i] =
         packet2_create(qbuffersPacketSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
   buffers = new StaPipQBuffer*[buffersCount];
-  for (u16 i = 0; i < buffersCount; i++) {
+  for (unsigned short i = 0; i < buffersCount; i++) {
     buffers[i] = new StaPipQBuffer();
   }
 
@@ -78,10 +78,10 @@ void StaPipQBufferRenderer::deallocateOnUse() {
   packet2_free(staticDataPacket);
   packet2_free(objectDataPacket);
 
-  for (u16 i = 0; i < 2; i++) packet2_free(packets[i]);
+  for (unsigned short i = 0; i < 2; i++) packet2_free(packets[i]);
   delete[] packets;
 
-  for (u16 i = 0; i < buffersCount; i++) delete buffers[i];
+  for (unsigned short i = 0; i < buffersCount; i++) delete buffers[i];
   delete[] buffers;
 
   delete[] dBufferPrograms;
@@ -132,7 +132,7 @@ void StaPipQBufferRenderer::sendObjectData(
                                      4, false);
   }
 
-  u8 singleColorEnabled = bag->color->single != nullptr;
+  unsigned char singleColorEnabled = bag->color->single != nullptr;
 
   if (singleColorEnabled)  // Color is placed in 4th slot of
                            // VU1_LIGHTS_MATRIX_ADDR
@@ -222,8 +222,8 @@ void StaPipQBufferRenderer::uploadPrograms() {
 }
 
 void StaPipQBufferRenderer::setDoubleBuffer() {
-  u16 startingAddr = VU1_STAPIP_LAST_ITEM_ADDR + 1;
-  const u16 bufferMaxSize = 1000;
+  unsigned short startingAddr = VU1_STAPIP_LAST_ITEM_ADDR + 1;
+  const unsigned short bufferMaxSize = 1000;
   bufferSize = (bufferMaxSize - startingAddr) / 2;
 
   path1->setDoubleBuffer(startingAddr, bufferSize);
@@ -244,8 +244,8 @@ StaPipQBuffer* StaPipQBufferRenderer::getBuffer() {
   return result;
 }
 
-u16 StaPipQBufferRenderer::getQBufferIndex(StaPipQBuffer* buffer) {
-  for (u16 i = 0; i < buffersCount; i++) {
+unsigned short StaPipQBufferRenderer::getQBufferIndex(StaPipQBuffer* buffer) {
+  for (unsigned short i = 0; i < buffersCount; i++) {
     if (buffers[i] == buffer) return i;
   }
   TYRA_TRAP("Buffer not found!");
@@ -332,12 +332,12 @@ void StaPipQBufferRenderer::clearLastProgramName() {
   lastProgramName = StaPipUndefinedProgram;
 }
 
-void StaPipQBufferRenderer::addBuffersDataToPacket(const u32& from,
-                                                   const u32& to) {
+void StaPipQBufferRenderer::addBuffersDataToPacket(const unsigned int& from,
+                                                   const unsigned int& to) {
   auto* currentPacket = packets[context];
   packet2_reset(currentPacket, false);
 
-  for (u32 i = from; i < to; i++) {
+  for (unsigned int i = from; i < to; i++) {
     if (!buffers[i]->any()) continue;
 
     auto* program = dBufferPrograms[i];
@@ -373,8 +373,8 @@ void StaPipQBufferRenderer::sendPacket() {
   context = !context;
 }
 
-void StaPipQBufferRenderer::setMaxVertCount(const u32& count) {
-  for (u32 i = 0; i < buffersCount; i++) {
+void StaPipQBufferRenderer::setMaxVertCount(const unsigned int& count) {
+  for (unsigned int i = 0; i < buffersCount; i++) {
     buffers[i]->setMaxVertCount(count);
   }
   clipper.setMaxVertCount(count);

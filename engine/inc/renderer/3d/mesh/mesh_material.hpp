@@ -19,19 +19,20 @@ namespace Tyra {
 
 class MeshMaterial {
  public:
-  explicit MeshMaterial(const MeshBuilderData& data, const u32& materialIndex);
+  explicit MeshMaterial(const MeshBuilderData& data,
+                        const unsigned int& materialIndex);
   explicit MeshMaterial(const MeshMaterial& material);
   ~MeshMaterial();
 
   bool isMother, lightmapFlag;
-  u32 id;
+  unsigned int id;
   std::string name;
   std::optional<std::string> textureName;
   Color ambient;
 
   std::vector<MeshMaterialFrame*> frames;
 
-  const BBox& getBBox(const u32& frame) const;
+  const BBox& getBBox(const unsigned int& frame) const;
 
   void print() const;
   void print(const char* name) const;

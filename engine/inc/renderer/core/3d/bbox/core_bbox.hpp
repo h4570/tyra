@@ -24,13 +24,14 @@ class CoreBBox {
  public:
   CoreBBox();
   CoreBBox(const CoreBBox& t_bbox);
-  explicit CoreBBox(const Vec4* t_vertices, const u32* faces,
-                    const u32& t_count);
-  explicit CoreBBox(const Vec4* t_vertices, const u32& t_count);
+  explicit CoreBBox(const Vec4* t_vertices, const unsigned int* faces,
+                    const unsigned int& t_count);
+  explicit CoreBBox(const Vec4* t_vertices, const unsigned int& t_count);
   explicit CoreBBox(const Vec4* t_vertices);
-  explicit CoreBBox(CoreBBox** t_bboxes, const u32& count);
+  explicit CoreBBox(CoreBBox** t_bboxes, const unsigned int& count);
   explicit CoreBBox(const std::vector<CoreBBox>& t_bboxes,
-                    const u32& startIndex, const u32& stopIndex);
+                    const unsigned int& startIndex,
+                    const unsigned int& stopIndex);
   explicit CoreBBox(const CoreBBox& t_bbox, const M4x4& t_matrix);
 
   static CoreBBox create(const Vec4& center, const float& size);
@@ -49,9 +50,9 @@ class CoreBBox {
 
   void operator=(const CoreBBox& v);
 
-  const Vec4& operator[](const u8& i) const { return vertices[i]; }
+  const Vec4& operator[](const unsigned char& i) const { return vertices[i]; }
 
-  const u8 getVertexCount() const { return 8; }
+  const unsigned char getVertexCount() const { return 8; }
 
   void print() const;
   void print(const char* name) const;

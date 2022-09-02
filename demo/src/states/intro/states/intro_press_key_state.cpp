@@ -37,8 +37,8 @@ IntroPressKeyState::~IntroPressKeyState() {}
 void IntroPressKeyState::onStart() {
   TYRA_LOG("Intro - presskey. RAM: ", engine->info.getAvailableRAM(), "MB");
 
-  for (u8 i = 0; i < mapRows; i++) {
-    for (u8 j = 0; j < mapCols; j++) {
+  for (unsigned char i = 0; i < mapRows; i++) {
+    for (unsigned char j = 0; j < mapCols; j++) {
       mapSprites[i][j] = new Sprite;
       mapSprites[i][j]->color.a = 0.0F;
       mapSprites[i][j]->mode = SpriteMode::MODE_STRETCH;
@@ -87,8 +87,8 @@ void IntroPressKeyState::onStart() {
 IntroStateType IntroPressKeyState::onFinish() {
   if (!initialized) return STATE_INTRO_END;
 
-  for (u8 i = 0; i < mapRows; i++)
-    for (u8 j = 0; j < mapCols; j++) {
+  for (unsigned char i = 0; i < mapRows; i++)
+    for (unsigned char j = 0; j < mapCols; j++) {
       engine->renderer.core.texture.repository.free(mapTextures[i][j]->id);
       delete mapSprites[i][j];
     }
@@ -130,8 +130,8 @@ void IntroPressKeyState::update() {
   }
 
   if (mapFadeIn) {
-    for (u8 i = 0; i < mapRows; i++) {
-      for (u8 j = 0; j < mapCols; j++) {
+    for (unsigned char i = 0; i < mapRows; i++) {
+      for (unsigned char j = 0; j < mapCols; j++) {
         auto* sprite = mapSprites[i][j];
         if (sprite->color.a >= 16.0F && sprite->color.a < 32.0F) {
           fillerFadeIn = true;
@@ -158,8 +158,8 @@ void IntroPressKeyState::update() {
 
   Threading::switchThread();
 
-  for (u8 i = 0; i < mapRows; i++)
-    for (u8 j = 0; j < mapCols; j++)
+  for (unsigned char i = 0; i < mapRows; i++)
+    for (unsigned char j = 0; j < mapCols; j++)
       engine->renderer.renderer2D.render(mapSprites[i][j]);
 
   renderFiller();
@@ -187,8 +187,8 @@ void IntroPressKeyState::renderFiller() {
 }
 
 void IntroPressKeyState::updateMap() {
-  for (u8 i = 0; i < mapRows; i++)
-    for (u8 j = 0; j < mapCols; j++) {
+  for (unsigned char i = 0; i < mapRows; i++)
+    for (unsigned char j = 0; j < mapCols; j++) {
       mapSprites[i][j]->position.x =
           i * (textureWidthHeight + 1.0F) - mapPosition.x;
       mapSprites[i][j]->position.y =

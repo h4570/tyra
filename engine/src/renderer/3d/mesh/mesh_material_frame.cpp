@@ -10,7 +10,7 @@
 */
 
 #include "debug/debug.hpp"
-#include <tamtypes.h>
+
 #include <iomanip>
 #include <string>
 #include "renderer/models/color.hpp"
@@ -19,8 +19,8 @@
 namespace Tyra {
 
 MeshMaterialFrame::MeshMaterialFrame(const MeshBuilderData& data,
-                                     const u32& frameIndex,
-                                     const u32& materialIndex) {
+                                     const unsigned int& frameIndex,
+                                     const unsigned int& materialIndex) {
   auto* material = data.materials[materialIndex];
 
   TYRA_ASSERT(materialIndex < data.materials.size(), "Provided index \"",
@@ -115,27 +115,27 @@ std::string MeshMaterialFrame::getPrint(const char* name) const {
   res << "BBox: " << bbox->getPrint() << ", " << std::endl;
 
   res << "Vertices: ";
-  for (u32 i = 0; i < count; i++) {
+  for (unsigned int i = 0; i < count; i++) {
     res << vertices[i].getPrint() << ", " << std::endl;
   }
 
   if (normals) {
     res << "Normals: ";
-    for (u32 i = 0; i < count; i++) {
+    for (unsigned int i = 0; i < count; i++) {
       res << normals[i].getPrint() << ", " << std::endl;
     }
   }
 
   if (textureCoords) {
     res << "TextureCoords: ";
-    for (u32 i = 0; i < count; i++) {
+    for (unsigned int i = 0; i < count; i++) {
       res << textureCoords[i].getPrint() << ", " << std::endl;
     }
   }
 
   if (colors) {
     res << "Colors: ";
-    for (u32 i = 0; i < count; i++) {
+    for (unsigned int i = 0; i < count; i++) {
       res << colors[i].getPrint() << ", " << std::endl;
     }
   }

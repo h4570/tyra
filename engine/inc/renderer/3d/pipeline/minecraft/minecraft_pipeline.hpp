@@ -66,25 +66,28 @@ class MinecraftPipeline : public Renderer3DPipeline {
   McpipProgramName latestMode;
 
   McpipBlock*** spamBuffers;
-  u32* spamCounts;
-  u32 spamBuffersCount;
-  u32 spammerIndex;
+  unsigned int* spamCounts;
+  unsigned int spamBuffersCount;
+  unsigned int spammerIndex;
 
   void initBBox();
 
-  void changeMode(const McpipProgramName& requestedMode, const u8& force);
+  void changeMode(const McpipProgramName& requestedMode,
+                  const unsigned char& force);
 
-  void cull(std::vector<McpipBlock*> blocks, const std::vector<u32>& indexes,
+  void cull(std::vector<McpipBlock*> blocks,
+            const std::vector<unsigned int>& indexes,
             RendererCoreTextureBuffers* texBuffers, const bool& isCullOnly,
             const bool& isMulti = false);
 
-  void clip(std::vector<McpipBlock*> blocks, const std::vector<u32>& indexes,
+  void clip(std::vector<McpipBlock*> blocks,
+            const std::vector<unsigned int>& indexes,
             RendererCoreTextureBuffers* texBuffers,
             const bool& isMulti = false);
 
   Tyra::CoreBBoxFrustum isInFrustum(const McpipBlock& block) const;
 
-  void addToSpammer(McpipBlock** blockPointerArray, const u32& count,
+  void addToSpammer(McpipBlock** blockPointerArray, const unsigned int& count,
                     RendererCoreTextureBuffers* texBuffers,
                     const bool& isMulti);
   void flushSpammer(RendererCoreTextureBuffers* texBuffers,

@@ -20,8 +20,8 @@
 namespace Tyra {
 
 struct ObjLoaderAnimationOptions {
-  u16 count = 1;
-  u16 startingIndex = 1;
+  unsigned short count = 1;
+  unsigned short startingIndex = 1;
 };
 
 struct ObjLoaderOptions {
@@ -49,7 +49,8 @@ class ObjLoader {
   static void addOutputMaterialsAndFrames(
       MeshBuilderData* output, const tinyobj::attrib_t& attrib,
       const std::vector<tinyobj::shape_t>& shapes,
-      const std::vector<tinyobj::material_t>& materials, const u16& framesCount,
+      const std::vector<tinyobj::material_t>& materials,
+      const unsigned short& framesCount,
       std::vector<MaterialVertexCount>& materialVertexCounts);
 
   static std::vector<MaterialVertexCount> scan(
@@ -60,8 +61,8 @@ class ObjLoader {
                           const tinyobj::attrib_t& attrib,
                           const std::vector<tinyobj::shape_t>& shapes,
                           const std::vector<tinyobj::material_t>& materials,
-                          const u16& frameIndex, const float& scale,
-                          const bool& invertY, const u16& count);
+                          const unsigned short& frameIndex, const float& scale,
+                          const bool& invertY, const unsigned short& count);
 };
 
 }  // namespace Tyra

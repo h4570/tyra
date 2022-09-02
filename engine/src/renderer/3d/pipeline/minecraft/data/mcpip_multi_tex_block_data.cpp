@@ -25,8 +25,8 @@ McpipMultiTexBlockData::~McpipMultiTexBlockData() {
 }
 
 void McpipMultiTexBlockData::allocateTempData() {
-  u32 tempVertsCount = 24;
-  u32 tempStsCount = 28;
+  unsigned int tempVertsCount = 24;
+  unsigned int tempStsCount = 28;
 
   tempVerts = new Tyra::Vec4[tempVertsCount];
   tempVerts[0].set(-1.0F, -1.0F, -1.0F);
@@ -88,8 +88,8 @@ void McpipMultiTexBlockData::allocateTempData() {
   // Because 16 blocks can fit in single column of 256x256 tex atlas
   offset = 1.0F / 16.0F;
 
-  tempVertFaces = new u32[36];
-  tempTexCoordsFaces = new u32[36];
+  tempVertFaces = new unsigned int[36];
+  tempTexCoordsFaces = new unsigned int[36];
 
   std::string vertexFaces =
       "1,2,3,1,3,4,5,6,7,5,7,8,9,10,11,9,11,12,13,14,15,13,15,16,17,18,19,17,"
@@ -119,7 +119,7 @@ void McpipMultiTexBlockData::unroll() {
   vertices = &comboData[0];
   textureCoords = &comboData[36];
 
-  for (u32 i = 0; i < count; i++) {
+  for (unsigned int i = 0; i < count; i++) {
     vertices[i] = tempVerts[tempVertFaces[i]];
     textureCoords[i] = tempTexCoords[tempTexCoordsFaces[i]];
   }

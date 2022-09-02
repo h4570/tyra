@@ -18,12 +18,12 @@ namespace Tyra {
 std::array<Vec4, 8> CoreBBox::frustumCheckVertices;
 
 CoreBBox::CoreBBox() {
-  for (u32 i = 0; i < 8; i++) {
+  for (unsigned int i = 0; i < 8; i++) {
     vertices[i] = Vec4(0.0F, 0.0F, 0.0F, 1.0F);
   }
 }
 
-CoreBBox::CoreBBox(CoreBBox** t_bboxes, const u32& count) {
+CoreBBox::CoreBBox(CoreBBox** t_bboxes, const unsigned int& count) {
   float lowX = t_bboxes[0]->vertices[0].x;
   float lowY = t_bboxes[0]->vertices[0].y;
   float lowZ = t_bboxes[0]->vertices[0].z;
@@ -32,7 +32,7 @@ CoreBBox::CoreBBox(CoreBBox** t_bboxes, const u32& count) {
   float hiY = t_bboxes[0]->vertices[7].y;
   float hiZ = t_bboxes[0]->vertices[7].z;
 
-  for (u32 i = 0; i < count; i++) {
+  for (unsigned int i = 0; i < count; i++) {
     if (lowX > t_bboxes[i]->vertices[0].x) lowX = t_bboxes[i]->vertices[0].x;
     if (hiX < t_bboxes[i]->vertices[7].x) hiX = t_bboxes[i]->vertices[7].x;
 
@@ -54,8 +54,9 @@ CoreBBox::CoreBBox(CoreBBox** t_bboxes, const u32& count) {
   vertices[7].set(hiX, hiY, hiZ);
 }
 
-CoreBBox::CoreBBox(const std::vector<CoreBBox>& t_bboxes, const u32& startIndex,
-                   const u32& stopIndex) {
+CoreBBox::CoreBBox(const std::vector<CoreBBox>& t_bboxes,
+                   const unsigned int& startIndex,
+                   const unsigned int& stopIndex) {
   float lowX = t_bboxes[startIndex].vertices[0].x;
   float lowY = t_bboxes[startIndex].vertices[0].y;
   float lowZ = t_bboxes[startIndex].vertices[0].z;
@@ -64,7 +65,7 @@ CoreBBox::CoreBBox(const std::vector<CoreBBox>& t_bboxes, const u32& startIndex,
   float hiY = t_bboxes[startIndex].vertices[7].y;
   float hiZ = t_bboxes[startIndex].vertices[7].z;
 
-  for (u32 i = startIndex; i < stopIndex; i++) {
+  for (unsigned int i = startIndex; i < stopIndex; i++) {
     if (lowX > t_bboxes[i].vertices[0].x) lowX = t_bboxes[i].vertices[0].x;
     if (hiX < t_bboxes[i].vertices[7].x) hiX = t_bboxes[i].vertices[7].x;
 
@@ -86,12 +87,13 @@ CoreBBox::CoreBBox(const std::vector<CoreBBox>& t_bboxes, const u32& startIndex,
   vertices[7].set(hiX, hiY, hiZ);
 }
 
-CoreBBox::CoreBBox(const Vec4* t_vertices, const u32* faces, const u32& count) {
+CoreBBox::CoreBBox(const Vec4* t_vertices, const unsigned int* faces,
+                   const unsigned int& count) {
   float lowX, lowY, lowZ, hiX, hiY, hiZ;
   lowX = hiX = t_vertices[faces[0]].x;
   lowY = hiY = t_vertices[faces[0]].y;
   lowZ = hiZ = t_vertices[faces[0]].z;
-  for (u32 i = 0; i < count; i++) {
+  for (unsigned int i = 0; i < count; i++) {
     if (lowX > t_vertices[faces[i]].x) lowX = t_vertices[faces[i]].x;
     if (hiX < t_vertices[faces[i]].x) hiX = t_vertices[faces[i]].x;
 
@@ -113,12 +115,12 @@ CoreBBox::CoreBBox(const Vec4* t_vertices, const u32* faces, const u32& count) {
   vertices[7].set(hiX, hiY, hiZ);
 }
 
-CoreBBox::CoreBBox(const Vec4* t_vertices, const u32& count) {
+CoreBBox::CoreBBox(const Vec4* t_vertices, const unsigned int& count) {
   float lowX, lowY, lowZ, hiX, hiY, hiZ;
   lowX = hiX = t_vertices[0].x;
   lowY = hiY = t_vertices[0].y;
   lowZ = hiZ = t_vertices[0].z;
-  for (u32 i = 0; i < count; i++) {
+  for (unsigned int i = 0; i < count; i++) {
     if (lowX > t_vertices[i].x) lowX = t_vertices[i].x;
     if (hiX < t_vertices[i].x) hiX = t_vertices[i].x;
 
@@ -141,7 +143,7 @@ CoreBBox::CoreBBox(const Vec4* t_vertices, const u32& count) {
 }
 
 CoreBBox::CoreBBox(const CoreBBox& t_bbox, const M4x4& t_matrix) {
-  for (u32 i = 0; i < 8; i++) {
+  for (unsigned int i = 0; i < 8; i++) {
     vertices[i] = t_matrix * t_bbox.vertices[i];
   }
 }
@@ -222,10 +224,10 @@ CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
                                        const M4x4& model,
                                        const float* margins) const {
   CoreBBoxFrustum result = IN_FRUSTUM;
-  u8 boxIn = 0, boxOut = 0;
-  s8 calculatedBboxVertexIndex = -1;
+  unsigned char boxIn = 0, boxOut = 0;
+  char calculatedBboxVertexIndex = -1;
 
-  for (u8 i = 0; i < 6; i++) {
+  for (unsigned char i = 0; i < 6; i++) {
     const auto margin = margins == nullptr ? 0.0F : margins[i];
     boxOut = 0;
     boxIn = 0;
@@ -233,7 +235,7 @@ CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
     // for each corner of the box do ...
     // get out of the cycle as soon as a box as corners
     // both inside and out of the frustum
-    for (s8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
+    for (char y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
       if (y > calculatedBboxVertexIndex) {
         frustumCheckVertices[y] = model * vertices[y];
         calculatedBboxVertexIndex = y;
@@ -260,14 +262,14 @@ CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
 CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
                                        const float* margins) const {
   CoreBBoxFrustum result = IN_FRUSTUM;
-  u8 boxIn = 0, boxOut = 0;
+  unsigned char boxIn = 0, boxOut = 0;
 
-  for (u8 i = 0; i < 6; i++) {
+  for (unsigned char i = 0; i < 6; i++) {
     const auto margin = margins == nullptr ? 0.0F : margins[i];
     boxOut = 0;
     boxIn = 0;
 
-    for (s8 y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
+    for (char y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
       auto isOut = frustumPlanes[i].distanceTo(vertices[y]) <= margin;
 
       if (isOut)
@@ -287,10 +289,10 @@ CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
 
 bool CoreBBox::isInFrustum(const Plane* frustumPlanes,
                            const M4x4& model) const {
-  s8 calculatedBboxVertexIndex = -1;
+  char calculatedBboxVertexIndex = -1;
 
-  for (u8 i = 0; i < 6; i++) {
-    for (s8 y = 0; y < 8; y++) {
+  for (unsigned char i = 0; i < 6; i++) {
+    for (char y = 0; y < 8; y++) {
       if (y > calculatedBboxVertexIndex) {
         frustumCheckVertices[y] = model * vertices[y];
         calculatedBboxVertexIndex = y;
@@ -304,8 +306,8 @@ bool CoreBBox::isInFrustum(const Plane* frustumPlanes,
 }
 
 bool CoreBBox::isInFrustum(const Plane* frustumPlanes) const {
-  for (u8 i = 0; i < 6; i++) {
-    for (s8 y = 0; y < 8; y++) {
+  for (unsigned char i = 0; i < 6; i++) {
+    for (char y = 0; y < 8; y++) {
       auto isIn = frustumPlanes[i].distanceTo(vertices[y]) > 0.0F;
       if (isIn) return true;
     }

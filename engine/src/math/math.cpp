@@ -15,7 +15,8 @@
 #include "math/math.hpp"
 #include <stdlib.h>
 
-extern volatile const u32 TYRA_MATH_ATAN_TABLE[9] alignas(sizeof(float)) = {
+extern volatile const unsigned int TYRA_MATH_ATAN_TABLE[9] alignas(
+    sizeof(float)) = {
     0x3f7ffff5, 0xbeaaa61c, 0x3e4c40a6, 0xbe0e6c63, 0x3dc577df,
     0xbd6501c4, 0x3cb31652, 0xbb84d7e7, 0x3f490fdb,
 };

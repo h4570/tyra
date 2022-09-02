@@ -57,8 +57,8 @@ RendererCoreTextureBuffers RendererCoreTexture::useTexture(
 }
 
 RendererCoreTextureBuffers RendererCoreTexture::getAllocatedBuffersByTextureId(
-    const u32& t_id) {
-  for (u32 i = 0; i < currentAllocations.size(); i++)
+    const unsigned int& t_id) {
+  for (unsigned int i = 0; i < currentAllocations.size(); i++)
     if (currentAllocations[i].id == t_id) return currentAllocations[i];
   return {0, nullptr, nullptr};
 }
@@ -68,10 +68,10 @@ void RendererCoreTexture::registerAllocation(
   currentAllocations.push_back(t_buffers);
 }
 
-void RendererCoreTexture::unregisterAllocation(const u32& textureId) {
-  u32 foundIndex;
+void RendererCoreTexture::unregisterAllocation(const unsigned int& textureId) {
+  unsigned int foundIndex;
 
-  for (u32 i = 0; i < currentAllocations.size(); i++) {
+  for (unsigned int i = 0; i < currentAllocations.size(); i++) {
     if (currentAllocations[i].id == textureId) {
       foundIndex = i;
       break;

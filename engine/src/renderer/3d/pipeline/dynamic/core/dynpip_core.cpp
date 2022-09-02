@@ -50,8 +50,8 @@ void DynPipCore::setLod() {
 
 void DynPipCore::reinitVU1Programs() { qbufferRenderer.reinitVU1(); }
 
-u32 DynPipCore::getMaxVertCountByParams(const bool& isLightingEnabled,
-                                        const bool& isTextureEnabled) {
+unsigned int DynPipCore::getMaxVertCountByParams(const bool& isLightingEnabled,
+                                                 const bool& isTextureEnabled) {
   return repository.getProgramByParams(isLightingEnabled, isTextureEnabled)
       ->getMaxVertCount(qbufferRenderer.getBufferSize());
 }
@@ -90,7 +90,7 @@ void DynPipCore::begin(PipelineInfoBag* bag) {
   }
 }
 
-void DynPipCore::render(DynPipBag** bags, const u32& count) {
+void DynPipCore::render(DynPipBag** bags, const unsigned int& count) {
   if (count <= 0) return;
 
   TYRA_ASSERT(
@@ -120,9 +120,9 @@ void DynPipCore::render(DynPipBag** bags, const u32& count) {
   }
 
   DynPipBag** bagsToRender = new DynPipBag*[count];
-  u32 inserted = 0;
+  unsigned int inserted = 0;
 
-  for (u32 i = 0; i < count; i++) {
+  for (unsigned int i = 0; i < count; i++) {
     auto* bag = bags[i];
 
     CoreBBox bbox(bag->verticesTo, bag->count);

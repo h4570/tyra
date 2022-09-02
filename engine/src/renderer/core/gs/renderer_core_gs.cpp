@@ -9,7 +9,7 @@
 */
 
 #include <dma.h>
-#include <tamtypes.h>
+
 #include <draw.h>
 #include <graph.h>
 #include <gs_privileged.h>

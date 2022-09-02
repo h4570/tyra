@@ -23,7 +23,8 @@ StaPipBag::StaPipBag() {
 
 StaPipBag::~StaPipBag() {}
 
-StaPipBagPackagesBBox StaPipBag::calculateBbox(const u32& maxVertCount) {
+StaPipBagPackagesBBox StaPipBag::calculateBbox(
+    const unsigned int& maxVertCount) {
   TYRA_ASSERT(vertices != nullptr, "Vertices are required to calculate bbox");
   TYRA_ASSERT(count > 0, "Count must be greater than 0 to calculate bbox");
   return StaPipBagPackagesBBox(vertices, count, maxVertCount);

@@ -62,9 +62,9 @@ void Renderer3DUtility::drawBox(const Vec4& v, const float& size,
 
 void Renderer3DUtility::drawLine(const Vec4& from, const Vec4& to,
                                  const Color& color) {
-  const u8 vertCount = 2;
-  const s8 thickness = 2;
-  s16 packetSize = 8 * thickness;
+  const unsigned char vertCount = 2;
+  const char thickness = 2;
+  short packetSize = 8 * thickness;
   auto gsColor = getGSColor(color);
 
   auto* packet =
@@ -79,7 +79,7 @@ void Renderer3DUtility::drawLine(const Vec4& from, const Vec4& to,
   packet2_chain_open_end(packet, 0, 0);
   packet2_update(packet, draw_prim_start(packet->next, 0, &prim, &gsColor));
 
-  for (s8 i = 0; i < thickness; i++) {
+  for (char i = 0; i < thickness; i++) {
     Vec4 scale(2048.0F + i, 2048.0F + i, static_cast<float>(0xFFFFFF) / 32.0F,
                1.0F);
 
@@ -112,10 +112,10 @@ void Renderer3DUtility::drawLine(const Vec4& from, const Vec4& to,
 }
 
 void Renderer3DUtility::drawBBox(const CoreBBox& v, const Color& color) {
-  const u8 stripsCount = 6;
-  const u8 vertCount = 4;
-  const s8 thickness = 2;
-  s16 packetSize = 150 * thickness;
+  const unsigned char stripsCount = 6;
+  const unsigned char vertCount = 4;
+  const char thickness = 2;
+  short packetSize = 150 * thickness;
   auto gsColor = getGSColor(color);
 
   auto* packet =
@@ -128,12 +128,12 @@ void Renderer3DUtility::drawBBox(const CoreBBox& v, const Color& color) {
 
   bool drawedSomething = false;
 
-  for (s8 i = 0; i < thickness; i++) {
+  for (char i = 0; i < thickness; i++) {
     Vec4 scale(2048.0F + i, 2048.0F + i, static_cast<float>(0xFFFFFF) / 32.0F,
                1.0F);
 
-    for (s8 j = 0; j < stripsCount; j++) {
-      for (s8 k = 0; k < vertCount; k++) {
+    for (char j = 0; j < stripsCount; j++) {
+      for (char k = 0; k < vertCount; k++) {
         auto index1 = k;
         auto index2 = (k + 1) % vertCount;
 
@@ -254,10 +254,10 @@ void Renderer3DUtility::fillBBoxVertices(std::array<std::array<Vec4, 4>, 6>& v,
 
 color_t Renderer3DUtility::getGSColor(const Color& color) {
   color_t gsColor;
-  gsColor.r = static_cast<u8>(color.r);
-  gsColor.g = static_cast<u8>(color.g);
-  gsColor.b = static_cast<u8>(color.b);
-  gsColor.a = static_cast<u8>(color.a);
+  gsColor.r = static_cast<unsigned char>(color.r);
+  gsColor.g = static_cast<unsigned char>(color.g);
+  gsColor.b = static_cast<unsigned char>(color.b);
+  gsColor.a = static_cast<unsigned char>(color.a);
   return gsColor;
 }
 
@@ -301,13 +301,13 @@ bool Renderer3DUtility::calcLineVertices(xyz_t* outputArray, const Vec4& a,
   auto converted1 = convertVertices(clippedVerts[0].position, scale);
   auto converted2 = convertVertices(clippedVerts[1].position, scale);
 
-  outputArray[0].x = static_cast<u16>(ftoi4(converted1.x));
-  outputArray[0].y = static_cast<u16>(ftoi4(converted1.y));
-  outputArray[0].z = static_cast<u32>(ftoi4(converted1.z));
+  outputArray[0].x = static_cast<unsigned short>(ftoi4(converted1.x));
+  outputArray[0].y = static_cast<unsigned short>(ftoi4(converted1.y));
+  outputArray[0].z = static_cast<unsigned int>(ftoi4(converted1.z));
 
-  outputArray[1].x = static_cast<u16>(ftoi4(converted2.x));
-  outputArray[1].y = static_cast<u16>(ftoi4(converted2.y));
-  outputArray[1].z = static_cast<u32>(ftoi4(converted2.z));
+  outputArray[1].x = static_cast<unsigned short>(ftoi4(converted2.x));
+  outputArray[1].y = static_cast<unsigned short>(ftoi4(converted2.y));
+  outputArray[1].z = static_cast<unsigned int>(ftoi4(converted2.z));
 
   return true;
 }

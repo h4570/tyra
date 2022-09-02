@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <string>
 #include "renderer/core/texture/models/texture_bpp.hpp"
 
@@ -24,7 +23,7 @@ class TextureData {
   ~TextureData();
 
   int width, height;
-  u32 psm;
+  unsigned int psm;
   unsigned char* data;
   TextureBpp bpp;
   unsigned char components;
@@ -35,6 +34,6 @@ class TextureData {
   std::string getPrint(const unsigned char* name = nullptr) const;
 
  private:
-  u32 getPsmByBpp(const TextureBpp& bpp);
+  unsigned int getPsmByBpp(const TextureBpp& bpp);
 };
 }  // namespace Tyra

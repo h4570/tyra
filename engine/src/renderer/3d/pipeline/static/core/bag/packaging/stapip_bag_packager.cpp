@@ -8,7 +8,6 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include <tamtypes.h>
 #include <math.h>
 #include "debug/debug.hpp"
 #include "renderer/3d/pipeline/static/core/bag/packaging/stapip_bag_packager.hpp"
@@ -28,15 +27,16 @@ void StaPipBagPackager::init(Renderer3DFrustumPlanes* t_frustumPlanes) {
  *
  * @param size Max maxVertCount verts (VU1 buffer size)
  */
-StaPipBagPackage* StaPipBagPackager::create(u16* o_size, StaPipBag* data,
-                                            u16 size) {
+StaPipBagPackage* StaPipBagPackager::create(unsigned short* o_size,
+                                            StaPipBag* data,
+                                            unsigned short size) {
   TYRA_ASSERT(size <= maxVertCount, "StaPipBagPackage can have max ",
               maxVertCount, " verts. Provided \"", size, "\"");
 
   *o_size = ceil(data->count / static_cast<float>(size));
   StaPipBagPackage* result = new StaPipBagPackage[*o_size];
 
-  for (u16 i = 0; i < *o_size; i++) {
+  for (unsigned short i = 0; i < *o_size; i++) {
     result[i].bag = data;
     result[i].vertices = &data->vertices[i * size];
 
@@ -67,16 +67,16 @@ StaPipBagPackage* StaPipBagPackager::create(u16* o_size, StaPipBag* data,
  *
  * @param size Max maxVertCount verts (VU1 buffer size)
  */
-StaPipBagPackage* StaPipBagPackager::create(u16* o_count,
+StaPipBagPackage* StaPipBagPackager::create(unsigned short* o_count,
                                             const StaPipBagPackage& pkg,
-                                            u16 size) {
+                                            unsigned short size) {
   TYRA_ASSERT(size <= maxVertCount, "StaPipBagPackage can have max ",
               maxVertCount, " verts. Provided \"", size, "\"");
 
   *o_count = ceil(pkg.size / static_cast<float>(size));
   auto* result = new StaPipBagPackage[*o_count];
 
-  for (u16 i = 0; i < *o_count; i++) {
+  for (unsigned short i = 0; i < *o_count; i++) {
     result[i].bag = pkg.bag;
     result[i].vertices = &pkg.vertices[i * size];
 
@@ -117,7 +117,7 @@ CoreBBoxFrustum StaPipBagPackager::checkFrustum(const StaPipBagPackage& pkg) {
   }
 }
 
-void StaPipBagPackager::setMaxVertCount(const u32& count) {
+void StaPipBagPackager::setMaxVertCount(const unsigned int& count) {
   maxVertCount = count;
 }
 

@@ -44,7 +44,7 @@ class StaPipQBufferRenderer {
   void sendObjectData(StaPipBag* bag, M4x4* mvp,
                       RendererCoreTextureBuffers* texBuffers) const;
 
-  void setMaxVertCount(const u32& count);
+  void setMaxVertCount(const unsigned int& count);
 
   void setInfo(PipelineInfoBag* bag);
 
@@ -63,7 +63,7 @@ class StaPipQBufferRenderer {
   StaPipVU1Program* getCullProgramByParams(const bool& isLightingEnabled,
                                            const bool& isTextureEnabled);
 
-  const u16& getBufferSize() { return bufferSize; }
+  const unsigned short& getBufferSize() { return bufferSize; }
 
   void allocateOnUse();
   void deallocateOnUse();
@@ -79,13 +79,13 @@ class StaPipQBufferRenderer {
   void setProgramsCache();
   void uploadPrograms();
   void setDoubleBuffer();
-  u16 getQBufferIndex(StaPipQBuffer* buffer);
-  u16 qbuffersPacketSize;
+  unsigned short getQBufferIndex(StaPipQBuffer* buffer);
+  unsigned short qbuffersPacketSize;
 
-  static const u16 buffersCount;
+  static const unsigned short buffersCount;
 
   StaPipVU1Program* getProgramByName(const StaPipProgramName& name);
-  void addBuffersDataToPacket(const u32& from, const u32& to);
+  void addBuffersDataToPacket(const unsigned int& from, const unsigned int& to);
   void sendPacket();
   StaPipVU1Program* getAsIsProgramByBag(const StaPipBag* bag);
   StaPipVU1Program* getCullProgramByType(const StaPipProgramType& programType);
@@ -107,8 +107,8 @@ class StaPipQBufferRenderer {
   StaPipClipper clipper;
   StaPipProgramsRepository repository;
 
-  u16 bufferSize, nextBufferIndex, currentBufferIndex;
-  u8 context;
+  unsigned short bufferSize, nextBufferIndex, currentBufferIndex;
+  unsigned char context;
 };
 
 }  // namespace Tyra

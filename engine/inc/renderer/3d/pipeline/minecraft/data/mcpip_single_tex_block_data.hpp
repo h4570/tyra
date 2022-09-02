@@ -24,8 +24,8 @@ class McpipSingleTexBlockData : public McpipBlockData {
  private:
   Vec4* tempVerts;
   Vec4* tempTexCoords;
-  u32* tempVertFaces;
-  u32* tempTexCoordsFaces;
+  unsigned int* tempVertFaces;
+  unsigned int* tempTexCoordsFaces;
 
   void allocateTempData();
   void unroll();

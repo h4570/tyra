@@ -31,11 +31,11 @@ class StaPipClipper {
   ~StaPipClipper();
   void clip(StaPipQBuffer* buffer);
   void init(const RendererSettings& settings);
-  void setMaxVertCount(const u32& count);
+  void setMaxVertCount(const unsigned int& count);
   void setMVP(M4x4* mvp);
 
  private:
-  u32 maxVertCount;
+  unsigned int maxVertCount;
   PlanesClipAlgorithm algorithm;
   M4x4* mvp;
 

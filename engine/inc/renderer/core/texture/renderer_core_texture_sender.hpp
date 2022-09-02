@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <draw_buffers.h>
 #include <graph.h>
 #include "./models/texture.hpp"
@@ -36,7 +35,7 @@ class RendererCoreTextureSender {
  private:
   RendererCoreGS* gs;
   Path3* path3;
-  TextureBpp getBppByPsm(const u32& psm);
+  TextureBpp getBppByPsm(const unsigned int& psm);
   texbuffer_t* allocateTextureCore(const Texture* t_texture);
   texbuffer_t* allocateTextureClut(const Texture* t_texture);
 };

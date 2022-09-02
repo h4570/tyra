@@ -29,21 +29,22 @@ class McpipCull {
   void init(RendererCore* core, McpipBlockData* t_blockData, prim_t* prim,
             lod_t* lod);
 
-  u32 uploadVU1Program(McpipProgramsRepository* repo, const u32& addr);
+  unsigned int uploadVU1Program(McpipProgramsRepository* repo,
+                                const unsigned int& addr);
 
   void configureVU1AndSendStaticData();
 
-  u32 getMaxBlocksCountPerQBuffer() const;
+  unsigned int getMaxBlocksCountPerQBuffer() const;
 
   void addData(packet2_t* packet, McpipBlock** blockPointerArray,
-               u32 blockPointerArrayCount,
+               unsigned int blockPointerArrayCount,
                RendererCoreTextureBuffers* texBuffers, bool isMulti);
 
  private:
   prim_t* prim;
   lod_t* lod;
   RendererCore* rendererCore;
-  u16 vu1DBufferSize;
+  unsigned short vu1DBufferSize;
   McpipBlockData* blockData;
   packet2_t* staticPacket;
 

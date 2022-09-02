@@ -23,7 +23,7 @@ class Sprite {
   Sprite();
   ~Sprite();
 
-  u32 id;
+  unsigned int id;
   Vec2 position, size;
   float scale;
   Color color;

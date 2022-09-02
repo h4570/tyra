@@ -37,7 +37,7 @@ class StaPipBag {
   StaPipColorBag* color;
 
   /** Mandatory. Vertex count. */
-  u32 count;
+  unsigned int count;
 
   /** Mandatory. Vertices. */
   Vec4* vertices;
@@ -51,7 +51,7 @@ class StaPipBag {
   /**
    * @param maxVertCount This parameter is available in renderer API.
    */
-  StaPipBagPackagesBBox calculateBbox(const u32& maxVertCount);
+  StaPipBagPackagesBBox calculateBbox(const unsigned int& maxVertCount);
 
   void print() const;
   void print(const char* name) const;

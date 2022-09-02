@@ -10,8 +10,8 @@
 
 #include "renderer/3d/pipeline/minecraft/programs/cull/mcpip_cull_vu1_program.hpp"
 
-extern u32 VU1BlocksCull_CodeStart __attribute__((section(".vudata")));
-extern u32 VU1BlocksCull_CodeEnd __attribute__((section(".vudata")));
+extern unsigned int VU1BlocksCull_CodeStart __attribute__((section(".vudata")));
+extern unsigned int VU1BlocksCull_CodeEnd __attribute__((section(".vudata")));
 
 namespace Tyra {
 

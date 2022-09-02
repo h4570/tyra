@@ -15,7 +15,7 @@ namespace Tyra {
 
 timespec Threading::tv = {0, 0};
 
-void Threading::sleep(const u32& ms) {
+void Threading::sleep(const unsigned int& ms) {
   tv.tv_sec = ms / 1000;
   tv.tv_nsec = (ms % 1000) * 1000000;
   nanosleep(&tv, nullptr);

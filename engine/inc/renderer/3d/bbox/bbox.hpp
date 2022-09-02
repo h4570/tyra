@@ -20,9 +20,10 @@ namespace Tyra {
 class BBox : public CoreBBox {
  public:
   BBox(const BBox& t_bbox);
-  explicit BBox(CoreBBox** t_bboxes, const u32& count);
-  explicit BBox(const Vec4* t_vertices, const u32* faces, const u32& t_count);
-  explicit BBox(const Vec4* t_vertices, const u32& t_count);
+  explicit BBox(CoreBBox** t_bboxes, const unsigned int& count);
+  explicit BBox(const Vec4* t_vertices, const unsigned int* faces,
+                const unsigned int& t_count);
+  explicit BBox(const Vec4* t_vertices, const unsigned int& t_count);
   explicit BBox(const BBox& t_bbox, const M4x4& t_matrix);
   explicit BBox(const Vec4* t_vertices);
 

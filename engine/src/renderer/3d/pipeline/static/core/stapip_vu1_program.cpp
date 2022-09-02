@@ -13,10 +13,10 @@
 namespace Tyra {
 
 StaPipVU1Program::StaPipVU1Program(const StaPipProgramName& t_name,
-                                   u32* t_start, u32* t_end,
-                                   const u32& t_reglist,
-                                   const u8& t_reglistCount,
-                                   const u8& t_elementsPerVertex)
+                                   unsigned int* t_start, unsigned int* t_end,
+                                   const unsigned int& t_reglist,
+                                   const unsigned char& t_reglistCount,
+                                   const unsigned char& t_elementsPerVertex)
     : VU1Program(t_start, t_end),
       name(t_name),
       reglistCount(t_reglistCount),
@@ -30,7 +30,7 @@ StaPipVU1Program::~StaPipVU1Program() {}
 
 const StaPipProgramName& StaPipVU1Program::getName() const { return name; }
 
-u32& StaPipVU1Program::getReglist() { return reglist; }
+unsigned int& StaPipVU1Program::getReglist() { return reglist; }
 
 void StaPipVU1Program::addBufferDataToPacket(packet2_t* packet,
                                              StaPipQBuffer* buffer,
@@ -49,9 +49,9 @@ void StaPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
 
   packet2_utils_vu_open_unpack(packet, 0, true);
   {
-    packet2_add_float(packet, 2048.0F);     // scale
-    packet2_add_float(packet, 2048.0F);     // scale
-    packet2_add_float(packet, static_cast<float>(0xFFFFFF) / 32.0F);           // scale
+    packet2_add_float(packet, 2048.0F);                               // scale
+    packet2_add_float(packet, 2048.0F);                               // scale
+    packet2_add_float(packet, static_cast<float>(0xFFFFFF) / 32.0F);  // scale
     packet2_add_u32(packet, buffer->size);  // vertex count
 
     packet2_utils_gs_add_prim_giftag(packet, prim, buffer->size, reglist,
@@ -60,10 +60,10 @@ void StaPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
   packet2_utils_vu_close_unpack(packet);
 }
 
-u16 StaPipVU1Program::getMaxVertCount(const bool& singleColorEnabled,
-                                      const u16& bufferSize) const {
-  u16 res = bufferSize - 7;  // 7 because of -> StoreTyraGifTags{}
-  u8 colorElementsPerVertex =
+unsigned short StaPipVU1Program::getMaxVertCount(
+    const bool& singleColorEnabled, const unsigned short& bufferSize) const {
+  unsigned short res = bufferSize - 7;  // 7 because of -> StoreTyraGifTags{}
+  unsigned char colorElementsPerVertex =
       singleColorEnabled ? elementsPerVertex - 1 : elementsPerVertex;
   res /= (colorElementsPerVertex + reglistCount);
 

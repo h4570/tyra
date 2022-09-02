@@ -11,7 +11,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "math/vec4.hpp"
 #include "renderer/models/color.hpp"
 
@@ -22,7 +21,7 @@ class MeshBuilderMaterialFrameData {
   MeshBuilderMaterialFrameData();
   ~MeshBuilderMaterialFrameData();
 
-  u32 count;
+  unsigned int count;
   Vec4 *vertices, *textureCoords, *normals;
   Color* colors;
 };

@@ -12,8 +12,8 @@
 
 namespace Tyra {
 
-McpipProgram::McpipProgram(const McpipProgramName& t_name, u32* t_start,
-                           u32* t_end)
+McpipProgram::McpipProgram(const McpipProgramName& t_name,
+                           unsigned int* t_start, unsigned int* t_end)
     : VU1Program(t_start, t_end), name(t_name) {}
 
 McpipProgram::~McpipProgram() {}

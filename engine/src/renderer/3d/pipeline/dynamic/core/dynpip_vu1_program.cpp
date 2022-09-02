@@ -13,10 +13,10 @@
 namespace Tyra {
 
 DynPipVU1Program::DynPipVU1Program(const DynPipProgramName& t_name,
-                                   u32* t_start, u32* t_end,
-                                   const u32& t_reglist,
-                                   const u8& t_reglistCount,
-                                   const u8& t_elementsPerVertex)
+                                   unsigned int* t_start, unsigned int* t_end,
+                                   const unsigned int& t_reglist,
+                                   const unsigned char& t_reglistCount,
+                                   const unsigned char& t_elementsPerVertex)
     : VU1Program(t_start, t_end),
       name(t_name),
       reglistCount(t_reglistCount),
@@ -30,7 +30,7 @@ DynPipVU1Program::~DynPipVU1Program() {}
 
 const DynPipProgramName& DynPipVU1Program::getName() const { return name; }
 
-u32& DynPipVU1Program::getReglist() { return reglist; }
+unsigned int& DynPipVU1Program::getReglist() { return reglist; }
 
 void DynPipVU1Program::addBufferDataToPacket(packet2_t* packet, DynPipBag* bag,
                                              prim_t* prim) {
@@ -59,8 +59,9 @@ void DynPipVU1Program::addStandardBufferDataToPacket(packet2_t* packet,
   packet2_utils_vu_close_unpack(packet);
 }
 
-u16 DynPipVU1Program::getMaxVertCount(const u16& bufferSize) const {
-  u16 res = bufferSize - 7;  // 7 because of -> StoreTyraGifTags{}
+unsigned short DynPipVU1Program::getMaxVertCount(
+    const unsigned short& bufferSize) const {
+  unsigned short res = bufferSize - 7;  // 7 because of -> StoreTyraGifTags{}
   res /= (elementsPerVertex + reglistCount);
 
   // Buffer size = VU1 double buffer size (xtop)

@@ -40,7 +40,7 @@ class RendererCore2D {
   static const float GS_DRAW_AREA;
   static const float SCREEN_CENTER;
 
-  u8 context;
+  unsigned char context;
   RendererSettings* settings;
   clutbuffer_t* clutBuffer;
   packet2_t* packets[2];

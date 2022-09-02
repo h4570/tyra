@@ -22,10 +22,11 @@ void audioThread(Tyra::Audio* audio) {
 
 namespace Tyra {
 
-const u16 Audio::threadStackSize = 2 * 1024;
+const unsigned short Audio::threadStackSize = 2 * 1024;
 
 Audio::Audio() {
-  threadStack = static_cast<u8*>(memalign(sizeof(u8), threadStackSize));
+  threadStack = static_cast<unsigned char*>(
+      memalign(sizeof(unsigned char), threadStackSize));
 }
 
 Audio::~Audio() {

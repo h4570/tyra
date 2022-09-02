@@ -25,11 +25,11 @@ typedef void* png_colorp;
 namespace Tyra {
 
 struct PngPixel3 {
-  u8 r, g, b;
+  unsigned char r, g, b;
 };
 
 struct PngPixel4 {
-  u8 r, g, b, a;
+  unsigned char r, g, b, a;
 };
 
 class PngLoader : public TextureLoader {

@@ -50,7 +50,7 @@ class AudioAdpcm {
    * @param t_ch Channel (0-23). Type -1 for use any free channel.
    */
   AdpcmResult tryPlay(audsrv_adpcm_t* t_adpcm);
-  AdpcmResult tryPlay(audsrv_adpcm_t* t_adpcm, const s8& t_ch);
+  AdpcmResult tryPlay(audsrv_adpcm_t* t_adpcm, const char& t_ch);
 
   /**
    * Play ADPCM sample, if channel is occupied, wait for it.
@@ -59,14 +59,14 @@ class AudioAdpcm {
    * @param t_ch Channel (0-23). Type -1 for use any free channel.
    */
   void playWait(audsrv_adpcm_t* t_adpcm);
-  void playWait(audsrv_adpcm_t* t_adpcm, const s8& t_ch);
+  void playWait(audsrv_adpcm_t* t_adpcm, const char& t_ch);
 
   /**
    * Set ADPCM volume.
    * @param t_vol Value 0-100
    * @param t_ch Channel (0-23)
    */
-  void setVolume(const u8& t_vol, const s8& t_ch) {
+  void setVolume(const unsigned char& t_vol, const char& t_ch) {
     audsrv_adpcm_set_volume(t_ch, t_vol);
   }
 

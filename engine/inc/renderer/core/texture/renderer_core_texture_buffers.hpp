@@ -10,14 +10,13 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <draw_buffers.h>
 
 namespace Tyra {
 
 struct RendererCoreTextureBuffers {
   /** Texture id */
-  u32 id;
+  unsigned int id;
 
   /**
    * Texture data.

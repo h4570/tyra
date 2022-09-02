@@ -98,12 +98,12 @@ void RendererCore2D::render(const Sprite& sprite,
   rect->v0.x = sprite.position.x;
   rect->v0.y = sprite.position.y;
   // rect->v0.y /= 2.0F;  // interlacing
-  rect->v0.z = (u32)-1;
+  rect->v0.z = (unsigned int)-1;
 
   rect->v1.x = (sprite.size.x * sprite.scale) + sprite.position.x;
   rect->v1.y = (sprite.size.y * sprite.scale) + sprite.position.y;
   // rect->v1.y /= 2.0F;  // interlacing
-  rect->v1.z = (u32)-1;
+  rect->v1.z = (unsigned int)-1;
 
   auto* packet = packets[context];
 

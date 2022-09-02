@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <time.h>
 
 namespace Tyra {
@@ -20,7 +19,7 @@ class Threading {
   Threading();
   ~Threading();
 
-  static void sleep(const u32& ms);
+  static void sleep(const unsigned int& ms);
   static void sleep(const timespec& tv);
 
   static void switchThread();

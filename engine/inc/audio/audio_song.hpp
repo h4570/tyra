@@ -45,23 +45,23 @@ class AudioSong {
 
   const bool& isLoaded() const;
 
-  const u8& getVolume() const;
+  const unsigned char& getVolume() const;
 
   /**
    * Set song volume.
    * @param t_vol Value 0-100
    */
-  void setVolume(const u8& t_vol);
+  void setVolume(const unsigned char& t_vol);
 
   /**
    * If you want to synchronize some actions with
    * background song, add audio listener.
    * @returns Listener id.
    */
-  u32 addListener(AudioListener* t_listener);
+  unsigned int addListener(AudioListener* t_listener);
 
   /** Remove song listener. */
-  void removeListener(const u32& t_id);
+  void removeListener(const unsigned int& t_id);
 
   std::size_t getListenersCount() const;
 
@@ -69,16 +69,16 @@ class AudioSong {
 
  private:
   bool songLoaded, songPlaying, songFinished;
-  u8 tyraVolume, audsrvVolume;
+  unsigned char tyraVolume, audsrvVolume;
   FILE* wav;
   audsrv_fmt_t format;
   std::vector<AudioListenerRef*> songListeners;
 
   ee_sema_t sema;
-  s32 fillbufferSema;
-  static const u16 chunkSize;
+  int fillbufferSema;
+  static const unsigned short chunkSize;
   char* chunk;
-  s32 chunkReadStatus;
+  int chunkReadStatus;
 
   void initSema();
   void initAUDSRV();

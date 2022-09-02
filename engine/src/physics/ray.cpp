@@ -9,7 +9,7 @@
 */
 
 #include "physics/ray.hpp"
-#include <tamtypes.h>
+
 #include <math.h>
 #include <algorithm>
 #include <sstream>

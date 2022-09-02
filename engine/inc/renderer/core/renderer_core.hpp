@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "./2d/renderer_core_2d.hpp"
 #include "./3d/renderer_core_3d.hpp"
 #include "./gs/renderer_core_gs.hpp"

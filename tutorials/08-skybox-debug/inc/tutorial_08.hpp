@@ -30,7 +30,7 @@ class Tutorial08 : public Game {
   Vec4 cameraLookAt;
 
   Engine* engine;
-  u8 fpsCounter;
+  unsigned char fpsCounter;
 
   StaticPipeline stapip;
   StaPipOptions skyboxRenderOptions;

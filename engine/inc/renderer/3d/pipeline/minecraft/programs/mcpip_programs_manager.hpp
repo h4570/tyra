@@ -42,11 +42,12 @@ class BlockizerProgramsManager {
 
   void clearLastProgram() { lastProgramName = UndefinedMcpipProgram; }
 
-  void cullSpam(McpipBlock*** blockPointerArrays, u32* blockPointerArrayCounts,
-                u32 blockPointerArraysCount,
+  void cullSpam(McpipBlock*** blockPointerArrays,
+                unsigned int* blockPointerArrayCounts,
+                unsigned int blockPointerArraysCount,
                 RendererCoreTextureBuffers* texBuffers, const bool& isMulti);
 
-  void cull(McpipBlock** blockPointerArray, u32 blockPointerArrayCount,
+  void cull(McpipBlock** blockPointerArray, unsigned int blockPointerArrayCount,
             RendererCoreTextureBuffers* texBuffers, const bool& isMulti);
 
   void clip(McpipBlock* block, RendererCoreTextureBuffers* texBuffers,
@@ -71,7 +72,7 @@ class BlockizerProgramsManager {
   packet2_t* programsPacket;
   packet2_t* staticPacket;
   packet2_t* dynamicPackets[2];
-  u8 context;
+  unsigned char context;
   McpipStaticBlockData vu1BlockData;
 
   void setProgramsCache();

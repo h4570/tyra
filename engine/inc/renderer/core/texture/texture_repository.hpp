@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <draw_buffers.h>
 #include <vector>
 #include "./models/texture.hpp"
@@ -28,31 +27,33 @@ class TextureRepository {
   /** Returns all repository textures. */
   std::vector<Texture*>* getAll() { return &textures; }
 
-  u32 getTexturesCount() const { return static_cast<u32>(textures.size()); }
+  unsigned int getTexturesCount() const {
+    return static_cast<unsigned int>(textures.size());
+  }
 
   /**
    * Returns single texture.
    * nullptr if not found.
    */
-  Texture* getBySpriteId(const u32& t_id) const;
+  Texture* getBySpriteId(const unsigned int& t_id) const;
 
   /**
    * Returns single texture.
    * nullptr if not found.
    */
-  Texture* getByMeshMaterialId(const u32& t_id) const;
+  Texture* getByMeshMaterialId(const unsigned int& t_id) const;
 
   /**
    * Returns single texture.
    * nullptr if not found.
    */
-  Texture* getByTextureId(const u32& t_id) const;
+  Texture* getByTextureId(const unsigned int& t_id) const;
 
   /**
    * Returns index of link.
    * -1 if not found.
    */
-  const s32 getIndexOf(const u32& t_texId) const;
+  const int getIndexOf(const unsigned int& t_texId) const;
 
   /**
    * Add unlinked texture.
@@ -92,7 +93,7 @@ class TextureRepository {
    * Remove texture from repository.
    * Texture IS destructed.
    */
-  void free(const u32& texId);
+  void free(const unsigned int& texId);
   void free(const Texture* tex);
   void free(const Texture& tex);
   void freeBySprite(const Sprite& sprite);
@@ -104,10 +105,10 @@ class TextureRepository {
    * Texture is NOT destructed.
    * Not recommended.
    */
-  void removeById(const u32& t_texId);
+  void removeById(const unsigned int& t_texId);
 
  private:
-  void removeByIndex(const u32& t_index);
+  void removeByIndex(const unsigned int& t_index);
 
   std::vector<Texture*> textures;
   TextureLoaderSelector texLoaderSelector;

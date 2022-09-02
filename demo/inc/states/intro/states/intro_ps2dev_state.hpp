@@ -46,7 +46,7 @@ class IntroPs2DevState : public State<IntroStateType> {
   bool initialDelayElapsed;
   bool fadeinActivated;
   bool fadeoutActivated;
-  u8 frameSkipper;
+  unsigned char frameSkipper;
 
   Sprite* sprite;
 };

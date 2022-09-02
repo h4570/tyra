@@ -10,8 +10,8 @@
 
 #include "renderer/3d/pipeline/minecraft/programs/as_is/mcpip_as_is_vu1_program.hpp"
 
-extern u32 VU1BlocksAsIs_CodeStart __attribute__((section(".vudata")));
-extern u32 VU1BlocksAsIs_CodeEnd __attribute__((section(".vudata")));
+extern unsigned int VU1BlocksAsIs_CodeStart __attribute__((section(".vudata")));
+extern unsigned int VU1BlocksAsIs_CodeEnd __attribute__((section(".vudata")));
 
 namespace Tyra {
 

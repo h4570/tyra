@@ -27,7 +27,7 @@ class Heightmap {
   bool isOutside(const Vec4& position) const;
 
   float** map;
-  s16 mapWidth, mapHeight;
+  short mapWidth, mapHeight;
   float minHeight, maxHeight;
   Vec4 leftUp, rightDown;
 
@@ -36,8 +36,9 @@ class Heightmap {
   float getHeightPercentage(const Vec4& playerPosition) const;
   void allocateMap(const unsigned char* data, const int& width,
                    const int& height);
-  float getGameHeight(const u8& inputColor, const u8& minColor,
-                      const u8& maxColor) const;
+  float getGameHeight(const unsigned char& inputColor,
+                      const unsigned char& minColor,
+                      const unsigned char& maxColor) const;
 };
 
 }  // namespace Demo

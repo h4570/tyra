@@ -19,7 +19,7 @@ Mesh::Mesh(const MeshBuilderData* data) {
   TYRA_ASSERT(data->materials.size() > 0,
               "Materials count must be greater than 0");
 
-  for (u32 i = 0; i < data->materials.size(); i++) {
+  for (unsigned int i = 0; i < data->materials.size(); i++) {
     auto* material = new MeshMaterial(*data, i);
 
     if (material->frames.size() == 0) {
@@ -37,7 +37,7 @@ Mesh::Mesh(const MeshBuilderData* data) {
 Mesh::Mesh(const Mesh& mesh) {
   init();
 
-  for (u32 i = 0; i < mesh.materials.size(); i++) {
+  for (unsigned int i = 0; i < mesh.materials.size(); i++) {
     materials.push_back(new MeshMaterial(*mesh.materials[i]));
   }
 
@@ -57,7 +57,7 @@ MeshMaterial* Mesh::getMaterialByName(const std::string& name) {
 }
 
 Mesh::~Mesh() {
-  for (u32 i = 0; i < materials.size(); i++) {
+  for (unsigned int i = 0; i < materials.size(); i++) {
     delete materials[i];
   }
 }

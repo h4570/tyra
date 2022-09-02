@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "./bag/dynpip_bag.hpp"
 #include "renderer/core/renderer_core.hpp"
 #include "./dynpip_programs_repository.hpp"
@@ -37,11 +36,11 @@ class DynPipCore {
   void sendObjectDataToVU1(DynPipBag* data);
 
   /** Render 3D via "bags" */
-  void render(DynPipBag** bags, const u32& count);
+  void render(DynPipBag** bags, const unsigned int& count);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
-  u32 getMaxVertCountByParams(const bool& isLightingEnabled,
-                              const bool& isTextureEnabled);
+  unsigned int getMaxVertCountByParams(const bool& isLightingEnabled,
+                                       const bool& isTextureEnabled);
 
   /**
    * - Uploads standard VU1 programs.
@@ -51,7 +50,7 @@ class DynPipCore {
    */
   void reinitVU1Programs();
 
-  void allocateOnUse(const u32& t_packetSize) {
+  void allocateOnUse(const unsigned int& t_packetSize) {
     qbufferRenderer.allocateOnUse(t_packetSize);
   }
   void deallocateOnUse() { qbufferRenderer.deallocateOnUse(); }

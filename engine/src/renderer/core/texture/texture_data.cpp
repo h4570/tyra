@@ -32,7 +32,7 @@ TextureData::~TextureData() {
   }
 }
 
-u32 TextureData::getPsmByBpp(const TextureBpp& bpp) {
+unsigned int TextureData::getPsmByBpp(const TextureBpp& bpp) {
   if (bpp == bpp32) {
     return GS_PSM_32;
   } else if (bpp == bpp24) {
@@ -82,7 +82,7 @@ std::string TextureData::getPrint(const unsigned char* objectName) const {
     componentsString = "TEXTURE_COMPONENTS_RGB";
 
   res << "data exist: " << static_cast<int>(data != nullptr) << ", ";
-  res << "bpp: " << static_cast<u32>(bpp) << ", ";
+  res << "bpp: " << static_cast<unsigned int>(bpp) << ", ";
   res << "psm: " << psmString << ", ";
   res << "width: " << width << ", ";
   res << "height: " << height << ", ";

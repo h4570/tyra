@@ -40,7 +40,7 @@ void RendererCoreSync::addPath1Req(packet2_t* packet) {
   path1->addDrawFinishTag(packet);
 }
 
-u8 RendererCoreSync::check() { return *GS_REG_CSR & 2; }
+unsigned char RendererCoreSync::check() { return *GS_REG_CSR & 2; }
 
 void RendererCoreSync::clear() { *GS_REG_CSR |= 2; }
 

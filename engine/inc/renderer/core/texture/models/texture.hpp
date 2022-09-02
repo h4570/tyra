@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <vector>
 #include <draw_sampling.h>
 #include "./texture_link.hpp"
@@ -31,7 +30,7 @@ class Texture {
   Texture(TextureBuilderData* data);
   ~Texture();
 
-  u32 id;
+  unsigned int id;
   std::string name;
   TextureData* core;
   TextureData* clut;
@@ -58,7 +57,7 @@ class Texture {
    * For 3D: MeshMaterial id.
    * For 2D: Sprite id.
    */
-  const s32 getIndexOfLink(const u32& t_id) const;
+  const int getIndexOfLink(const unsigned int& t_id) const;
 
   /** Set texture wrapping */
   void setWrapSettings(const TextureWrap t_horizontal,
@@ -69,9 +68,9 @@ class Texture {
   // ----
 
   /** Assign texture to Sprite.Id or MeshMaterial.Id. */
-  void addLink(const u32& t_id);
+  void addLink(const unsigned int& t_id);
 
-  u32 getTextureSize() const;
+  unsigned int getTextureSize() const;
 
   /**
    * Check if texture is linked with MeshMaterial/Sprite.
@@ -79,9 +78,9 @@ class Texture {
    * For 3D: MeshMaterial material id.
    * For 2D: Sprite id.
    */
-  const u8 isLinkedWith(const u32& t_id) const;
+  const unsigned char isLinkedWith(const unsigned int& t_id) const;
 
-  void removeLinkByIndex(const u32& t_index);
+  void removeLinkByIndex(const unsigned int& t_index);
 
   /**
    * Remove texture link with given MeshMaterial/Sprite.
@@ -89,7 +88,7 @@ class Texture {
    * For 3D: MeshMaterial material id.
    * For 2D: Sprite id.
    */
-  void removeLinkById(const u32& t_id);
+  void removeLinkById(const unsigned int& t_id);
 
   void print() const;
   void print(const char* name) const;

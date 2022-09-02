@@ -24,10 +24,12 @@ class PipelineDirLightsBag {
   ~PipelineDirLightsBag();
 
   void setAmbientColor(const Color& color);
-  void setDirectionalLightColors(Color* colors, const u8& count);
-  void setDirectionalLightDirections(Vec4* directions, const u8& count);
-  void setDirectionalLightColor(const Color& color, const u8& index);
-  void setDirectionalLightDirection(const Vec4& direction, const u8& index);
+  void setDirectionalLightColors(Color* colors, const unsigned char& count);
+  void setDirectionalLightDirections(Vec4* directions,
+                                     const unsigned char& count);
+  void setDirectionalLightColor(const Color& color, const unsigned char& index);
+  void setDirectionalLightDirection(const Vec4& direction,
+                                    const unsigned char& index);
 
   void setLightsManually(Vec4* colors, Vec4* directions);
   void disableManualMode();
@@ -43,7 +45,7 @@ class PipelineDirLightsBag {
   void allocate();
   void deallocate();
   void forceDeallocate();
-  u8 isAllocated;
+  unsigned char isAllocated;
   PipelineDirLightsBagMode mode;
 
   Vec4* lightColors;

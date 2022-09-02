@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <timer.h>
 
 namespace Tyra {
@@ -20,11 +19,11 @@ class Timer {
   Timer();
   ~Timer();
 
-  u32 getTimeDelta();
+  unsigned int getTimeDelta();
   inline void prime() { lastTime = *T3_COUNT; }
 
  private:
-  u32 lastTime, time, change;
+  unsigned int lastTime, time, change;
 };
 
 }  // namespace Tyra

@@ -67,13 +67,14 @@ void Tutorial03::loadTexture() {
   textureAtlas = repo.add(FileUtils::fromCwd("atlas.png"));
 }
 
-TutorialBlock Tutorial03::getBlock(const u8& atlasX, const u8& atlasY,
+TutorialBlock Tutorial03::getBlock(const unsigned char& atlasX,
+                                   const unsigned char& atlasY,
                                    const float& translationX) {
   TutorialBlock result;
 
   // --- Set texture atlas offset
 
-  const u8 texturesInAtlasRow = 16;
+  const unsigned char texturesInAtlasRow = 16;
   const float textureOffset = 1.0F / texturesInAtlasRow;
 
   /**

@@ -10,8 +10,8 @@
 
 #include "renderer/core/paths/path1/path1.hpp"
 
-extern u32 VU1DrawFinish_CodeStart __attribute__((section(".vudata")));
-extern u32 VU1DrawFinish_CodeEnd __attribute__((section(".vudata")));
+extern unsigned int VU1DrawFinish_CodeStart __attribute__((section(".vudata")));
+extern unsigned int VU1DrawFinish_CodeEnd __attribute__((section(".vudata")));
 
 namespace Tyra {
 
@@ -75,7 +75,8 @@ void Path1::prepareDrawFinishPacket() {
   packet2_utils_vu_add_end_tag(drawFinishPacket);
 }
 
-u32 Path1::uploadProgram(VU1Program* program, const u32& address) {
+unsigned int Path1::uploadProgram(VU1Program* program,
+                                  const unsigned int& address) {
   // TYRA_LOG("Uploading VU1 program. Size: ", program->getProgramSize(),
   //          ", name: ", program->getStringName(), ", address:", address);
 
@@ -100,18 +101,19 @@ u32 Path1::uploadProgram(VU1Program* program, const u32& address) {
   return address + program->getProgramSize();
 }
 
-packet2_t* Path1::createProgramsCache(VU1Program** programs, const u32& count,
-                                      const u32& address) {
-  u32 packetSize = 1;  // + end tag
-  for (u32 i = 0; i < count; i++) {
+packet2_t* Path1::createProgramsCache(VU1Program** programs,
+                                      const unsigned int& count,
+                                      const unsigned int& address) {
+  unsigned int packetSize = 1;  // + end tag
+  for (unsigned int i = 0; i < count; i++) {
     packetSize += programs[i]->getPacketSize();
   }
 
   packet2_t* packet2 =
       packet2_create(packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, 1);
 
-  u32 currentAddr = address;
-  for (u32 i = 0; i < count; i++) {
+  unsigned int currentAddr = address;
+  for (unsigned int i = 0; i < count; i++) {
     programs[i]->setDestinationAddress(currentAddr);
     packet2_vif_add_micro_program(packet2, currentAddr, programs[i]->getStart(),
                                   programs[i]->getEnd());
@@ -124,7 +126,8 @@ packet2_t* Path1::createProgramsCache(VU1Program** programs, const u32& count,
 }
 
 /** Set double buffer settings */
-void Path1::setDoubleBuffer(const u16& startingAddress, const u16& bufferSize) {
+void Path1::setDoubleBuffer(const unsigned short& startingAddress,
+                            const unsigned short& bufferSize) {
   packet2_reset(doubleBufferPacket, false);
   packet2_utils_vu_add_double_buffer(doubleBufferPacket, startingAddress,
                                      bufferSize);

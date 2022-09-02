@@ -33,7 +33,7 @@ void McpipCull::setDBufferSize() {
   vu1DBufferSize -= VU1_MCPIP_CULL_STATIC_LAST_DATA_ADDR;  // static data
 
   // Our additional, mini output double buffer at the bottom of VU1 mem
-  u16 miniOutputDoubleBufferSize =
+  unsigned short miniOutputDoubleBufferSize =
       blockData->count * 3 +
       5;  // 36 * (ST, XYZ2, RGBAQ) + Set, lod, set, clut, prim
 
@@ -55,8 +55,8 @@ void McpipCull::setDBufferSize() {
   vu1DBufferSize /= 2;  // xtop double buffer
 }
 
-u32 McpipCull::uploadVU1Program(McpipProgramsRepository* repo,
-                                const u32& addr) {
+unsigned int McpipCull::uploadVU1Program(McpipProgramsRepository* repo,
+                                         const unsigned int& addr) {
   auto* program = repo->getProgram(McpipProgramName::McPipCull);
   return rendererCore->renderer3D.uploadVU1Program(program, addr);
 }
@@ -68,8 +68,8 @@ void McpipCull::configureVU1AndSendStaticData() {
   sendVU1StaticData();
 }
 
-u32 McpipCull::getMaxBlocksCountPerQBuffer() const {
-  u32 result = vu1DBufferSize;
+unsigned int McpipCull::getMaxBlocksCountPerQBuffer() const {
+  unsigned int result = vu1DBufferSize;
   result -= 1;  // VU1_MCPIP_CULL_DYNAMIC_SCALE_AND_BLOCKS_COUNT;
   result -= 1;  // Lod tag
   result -= 4;  // View proj
@@ -108,7 +108,7 @@ void McpipCull::sendVU1StaticData() {
 }
 
 void McpipCull::addData(packet2_t* packet, McpipBlock** blockPointerArray,
-                        u32 blockPointerArrayCount,
+                        unsigned int blockPointerArrayCount,
                         RendererCoreTextureBuffers* texBuffers, bool isMulti) {
   rendererCore->texture.updateClutBuffer(texBuffers->clut);
 
@@ -128,9 +128,9 @@ void McpipCull::addData(packet2_t* packet, McpipBlock** blockPointerArray,
   }
   packet2_utils_vu_close_unpack(packet);
 
-  u32 addr = VU1_MCPIP_CULL_DYNAMIC_BLOCKS_DATA;
+  unsigned int addr = VU1_MCPIP_CULL_DYNAMIC_BLOCKS_DATA;
 
-  for (u32 i = 0; i < blockPointerArrayCount; i++) {
+  for (unsigned int i = 0; i < blockPointerArrayCount; i++) {
     packet2_utils_vu_add_unpack_data(packet, addr, blockPointerArray[i]->model,
                                      4, true);
     addr += 4;

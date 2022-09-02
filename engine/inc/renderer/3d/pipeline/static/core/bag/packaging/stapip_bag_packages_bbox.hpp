@@ -20,27 +20,28 @@ namespace Tyra {
  */
 class StaPipBagPackagesBBox {
  public:
-  StaPipBagPackagesBBox(const Vec4* t_vertices, u32* t_faces,
-                        const u32& t_facesCount, const u32& t_maxVertCount);
-  StaPipBagPackagesBBox(const Vec4* t_vertices, const u32& t_counts,
-                        const u32& t_maxVertCount);
+  StaPipBagPackagesBBox(const Vec4* t_vertices, unsigned int* t_faces,
+                        const unsigned int& t_facesCount,
+                        const unsigned int& t_maxVertCount);
+  StaPipBagPackagesBBox(const Vec4* t_vertices, const unsigned int& t_counts,
+                        const unsigned int& t_maxVertCount);
   ~StaPipBagPackagesBBox();
 
-  void setMaxVertCount(const u32& count);
+  void setMaxVertCount(const unsigned int& count);
 
   /**
    * @param index Index of part
    */
-  const RenderBBox& getChildBBox1By3(const u32& index) const;
+  const RenderBBox& getChildBBox1By3(const unsigned int& index) const;
 
   /** @brief CoreBBox created from all of vertices */
   RenderBBox* getMainBBox();
 
   /** @brief Get amount of child Bbox1/3 parts */
-  const u32& getPartsCount() const;
+  const unsigned int& getPartsCount() const;
 
   /** @brief Get amount of vertices */
-  const u32& getVertexCount() const;
+  const unsigned int& getVertexCount() const;
 
   const std::vector<CoreBBox>& getParts() const { return *bboxParts; }
 
@@ -50,7 +51,8 @@ class StaPipBagPackagesBBox {
    * @param index Index of part
    * @param partsSize How many 1/3 parts
    */
-  RenderBBox createChildBBox(const u32& index, const u16& partsSize) const;
+  RenderBBox createChildBBox(const unsigned int& index,
+                             const unsigned short& partsSize) const;
 
   void print() const;
   void print(const char* name) const;
@@ -58,8 +60,8 @@ class StaPipBagPackagesBBox {
   std::string getPrint(const char* name = nullptr) const;
 
  private:
-  u32 maxVertCount;
-  u32 vertexCount, partsCount;
+  unsigned int maxVertCount;
+  unsigned int vertexCount, partsCount;
 
   /** @brief CoreBBox of all vertices */
   RenderBBox* mainBBox;

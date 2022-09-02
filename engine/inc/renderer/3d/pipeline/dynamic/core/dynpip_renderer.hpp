@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "renderer/core/renderer_core.hpp"
 #include "./dynpip_programs_repository.hpp"
 
@@ -29,13 +28,13 @@ class DynPipRenderer {
   void sendObjectData(DynPipBag* bag, M4x4* mvp,
                       RendererCoreTextureBuffers* texBuffers) const;
 
-  void render(DynPipBag** bags, const u32& count);
+  void render(DynPipBag** bags, const unsigned int& count);
 
   void clearLastProgramName();
 
-  const u16& getBufferSize() { return bufferSize; }
+  const unsigned short& getBufferSize() { return bufferSize; }
 
-  void allocateOnUse(const u32& t_packetSize);
+  void allocateOnUse(const unsigned int& t_packetSize);
   void deallocateOnUse();
 
  private:
@@ -44,12 +43,12 @@ class DynPipRenderer {
   void uploadPrograms();
   void setDoubleBuffer();
 
-  void addBufferDataToPacket(DynPipBag** bags, const u32& count);
+  void addBufferDataToPacket(DynPipBag** bags, const unsigned int& count);
   void sendPacket();
 
   prim_t* prim;
   lod_t* lod;
-  u16 packetSize;
+  unsigned short packetSize;
 
   packet2_t* packets[2];
   packet2_t* programsPacket;
@@ -63,8 +62,8 @@ class DynPipRenderer {
 
   DynPipProgramName lastProgramName;
 
-  u16 bufferSize;
-  u8 context;
+  unsigned short bufferSize;
+  unsigned char context;
 };
 
 }  // namespace Tyra

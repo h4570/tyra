@@ -28,8 +28,9 @@ class PlanesClipAlgorithm {
 
   void init(const RendererSettings& settings);
 
-  u8 clip(PlanesClipVertex* o_vertices, PlanesClipVertexPtrs* i_vertices,
-          const EEClipAlgorithmSettings& settings);
+  unsigned char clip(PlanesClipVertex* o_vertices,
+                     PlanesClipVertexPtrs* i_vertices,
+                     const EEClipAlgorithmSettings& settings);
 
   static float clipMargin;
 
@@ -43,10 +44,11 @@ class PlanesClipAlgorithm {
                 const float& planeLimitValue);
 
   /** @return clipped size */
-  u8 clipAgainstPlane(PlanesClipVertex* original, const u8& originalSize,
-                      PlanesClipVertex* clipped, const int& plane,
-                      const float& planeLimitValue,
-                      const EEClipAlgorithmSettings& settings);
+  unsigned char clipAgainstPlane(PlanesClipVertex* original,
+                                 const unsigned char& originalSize,
+                                 PlanesClipVertex* clipped, const int& plane,
+                                 const float& planeLimitValue,
+                                 const EEClipAlgorithmSettings& settings);
 };
 
 }  // namespace Tyra

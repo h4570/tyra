@@ -61,14 +61,14 @@ void StaPipCore::onFrameEnd() { cacher.onFrameEnd(); }
 
 void StaPipCore::reinitVU1Programs() { qbufferRenderer.reinitVU1(); }
 
-u32 StaPipCore::getMaxVertCountByBag(const StaPipBag* bag) {
+unsigned int StaPipCore::getMaxVertCountByBag(const StaPipBag* bag) {
   return qbufferRenderer.getCullProgramByBag(bag)->getMaxVertCount(
       bag->color->many == nullptr, qbufferRenderer.getBufferSize());
 }
 
-u32 StaPipCore::getMaxVertCountByParams(const bool& isSingleColor,
-                                        const bool& isLightingEnabled,
-                                        const bool& isTextureEnabled) {
+unsigned int StaPipCore::getMaxVertCountByParams(const bool& isSingleColor,
+                                                 const bool& isLightingEnabled,
+                                                 const bool& isTextureEnabled) {
   return qbufferRenderer
       .getCullProgramByParams(isLightingEnabled, isTextureEnabled)
       ->getMaxVertCount(isSingleColor, qbufferRenderer.getBufferSize());
@@ -107,12 +107,13 @@ void StaPipCore::render(StaPipBag* bag) {
   TYRA_ASSERT(!(!frustumCull && bag->info->fullClipChecks == true),
               "Full clip checks are not supported with frustum culling = off!");
 
-  u32 maxVertCount = getMaxVertCountByBag(bag);
+  unsigned int maxVertCount = getMaxVertCountByBag(bag);
 
   StaPipBagPackagesBBox* bbox = nullptr;
   if (bag->info->frustumCulling == PipelineInfoBagFrustumCulling_Precise) {
     bbox = cacher.getBBoxes(bag->vertices, bag->count,
-                            reinterpret_cast<u32>(bag->vertices), maxVertCount);
+                            reinterpret_cast<unsigned int>(bag->vertices),
+                            maxVertCount);
   }
 
   setMaxVertCount(maxVertCount);
@@ -170,11 +171,11 @@ void StaPipCore::render(StaPipBag* bag) {
       !frustumCull && !bag->info->fullClipChecks;
 
   if (checkYesFrustumInClipYes || checkYesFrustumInClipNo || checkNoClipNo) {
-    u16 packagesCount = 0;
+    unsigned short packagesCount = 0;
     auto* biggerPkgs = packager.create(&packagesCount, bag, maxVertCount);
     Verbose("Material - in frustum. Pkgs: ", packagesCount,
             " size: ", static_cast<int>(biggerPkgs[0].size));
-    for (u16 i = 0; i < packagesCount; i++) {
+    for (unsigned short i = 0; i < packagesCount; i++) {
       Verbose(i, " package - cull by data pointer");
       auto buffer = qbufferRenderer.getBuffer();
       buffer->fillByPointer(biggerPkgs[i]);
@@ -182,7 +183,7 @@ void StaPipCore::render(StaPipBag* bag) {
     }
     delete[] biggerPkgs;
   } else if (checkYesFrustumPartialClipYes || checkYesFrustumPartialClipNo) {
-    u16 packagesCount = 0;
+    unsigned short packagesCount = 0;
     auto doClip = checkYesFrustumPartialClipYes;
     if (!doClip || bag->count >= maxVertCount * 2) {
       auto packages = packager.create(&packagesCount, bag, maxVertCount);
@@ -205,8 +206,8 @@ void StaPipCore::render(StaPipBag* bag) {
 }
 
 void StaPipCore::renderPkgs(StaPipBagPackage* packages, const bool& doClip,
-                            u16 count) {
-  for (u16 i = 0; i < count; i++) {
+                            unsigned short count) {
+  for (unsigned short i = 0; i < count; i++) {
     auto cull = (doClip && packages[i].isInFrustum == IN_FRUSTUM) || !doClip;
     auto doSubpkgs = doClip && packages[i].isInFrustum == PARTIALLY_IN_FRUSTUM;
 
@@ -216,7 +217,7 @@ void StaPipCore::renderPkgs(StaPipBagPackage* packages, const bool& doClip,
       buffer->fillByPointer(packages[i]);
       qbufferRenderer.cull(buffer);
     } else if (doSubpkgs) {
-      u16 subpkgsSize = 0;
+      unsigned short subpkgsSize = 0;
       auto packages1By3 =
           packager.create(&subpkgsSize, packages[i], maxVertCount / 3);
       Verbose(i, " - partial package. Created subpkgs: ", subpkgsSize);
@@ -228,12 +229,13 @@ void StaPipCore::renderPkgs(StaPipBagPackage* packages, const bool& doClip,
   }
 }
 
-void StaPipCore::renderSubpkgs(StaPipBagPackage* subpkgs, u16 count) {
-  std::vector<u16> doneIndexes;
-  std::vector<u16> loadedIndexes;
+void StaPipCore::renderSubpkgs(StaPipBagPackage* subpkgs,
+                               unsigned short count) {
+  std::vector<unsigned short> doneIndexes;
+  std::vector<unsigned short> loadedIndexes;
 
   // Check if some subpkgs are full in frustum
-  for (u16 i = 0; i < count; i++) {
+  for (unsigned short i = 0; i < count; i++) {
     if (subpkgs[i].isInFrustum == IN_FRUSTUM) {
       if (loadedIndexes.size() <= 1) {
         Verbose(i, " - subpackage in frustum -> load");
@@ -268,7 +270,7 @@ void StaPipCore::renderSubpkgs(StaPipBagPackage* subpkgs, u16 count) {
     doneIndexes.push_back(loadedIndexes[0]);
   }
 
-  for (u16 i = 0; i < count; i++) {
+  for (unsigned short i = 0; i < count; i++) {
     bool isSkip = subpkgs[i].isInFrustum == OUTSIDE_FRUSTUM ||
                   std::find(doneIndexes.begin(), doneIndexes.end(), i) !=
                       doneIndexes.end();
@@ -285,7 +287,7 @@ void StaPipCore::renderSubpkgs(StaPipBagPackage* subpkgs, u16 count) {
   }
 }
 
-void StaPipCore::setMaxVertCount(const u32& count) {
+void StaPipCore::setMaxVertCount(const unsigned int& count) {
   maxVertCount = count;
   packager.setMaxVertCount(count);
   qbufferRenderer.setMaxVertCount(count);

@@ -42,7 +42,7 @@ class RendererCoreSync {
 
   // --- Manual
 
-  u8 check();
+  unsigned char check();
   void clear();
   void waitAndClear();
   void sendPath1Req();

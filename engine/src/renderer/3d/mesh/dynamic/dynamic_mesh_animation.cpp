@@ -40,7 +40,8 @@ void DynamicMeshAnimation::resetAll(const std::vector<MeshFrame*>& frames) {
   restart();
 }
 
-void DynamicMeshAnimation::setSequence(const std::vector<u32>& t_sequence) {
+void DynamicMeshAnimation::setSequence(
+    const std::vector<unsigned int>& t_sequence) {
   TYRA_ASSERT(framesCount != 1,
               "Cant set sequence, because this mesh have only one frame.");
 
@@ -133,7 +134,8 @@ bool DynamicMeshAnimation::updateNoLoopState(
   return true;
 }
 
-u32 DynamicMeshAnimation::getNextSequenceIndexFrom(const u32& index) const {
+unsigned int DynamicMeshAnimation::getNextSequenceIndexFrom(
+    const unsigned int& index) const {
   return index == sequence.size() - 1 ? 0 : index + 1;
 }
 

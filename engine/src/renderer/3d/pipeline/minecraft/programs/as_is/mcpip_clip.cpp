@@ -34,14 +34,14 @@ void McpipClip::init(RendererCore* core, McpipBlockData* t_singleBlockData,
   initStaticPacket();
 }
 
-u32 McpipClip::uploadVU1Program(McpipProgramsRepository* repo,
-                                const u32& addr) {
+unsigned int McpipClip::uploadVU1Program(McpipProgramsRepository* repo,
+                                         const unsigned int& addr) {
   auto* program = repo->getProgram(McpipProgramName::McPipAsIs);
   return rendererCore->renderer3D.uploadVU1Program(program, addr);
 }
 
 void McpipClip::configureVU1AndSendStaticData() {
-  u16 start = VU1_MCPIP_AS_IS_STATIC_LAST_DATA_ADDR + 1;
+  unsigned short start = VU1_MCPIP_AS_IS_STATIC_LAST_DATA_ADDR + 1;
   rendererCore->renderer3D.setVU1DoubleBuffers(start, vu1DBufferSize);
   sendVU1StaticData();
 }
@@ -59,26 +59,26 @@ void McpipClip::initStaticPacket() {
 
 void McpipClip::addData(McpipBlock* block, const bool& isMulti,
                         RendererCoreTextureBuffers* texBuffers,
-                        packet2_t* packet, const u8& context) {
+                        packet2_t* packet, const unsigned char& context) {
   std::vector<PlanesClipVertex> clippedVertices;
   auto mvp = rendererCore->renderer3D.getViewProj() * (*block->model);
 
   const auto* blockData = isMulti ? multiBlockData : singleBlockData;
 
-  for (u32 i = 0; i < blockData->count / 3; i++) {
-    for (u8 j = 0; j < 3; j++) {
+  for (unsigned int i = 0; i < blockData->count / 3; i++) {
+    for (unsigned char j = 0; j < 3; j++) {
       inputVerts[j] = mvp * blockData->vertices[i * 3 + j];
       inputTriangle[j] = {&inputVerts[j], nullptr,
                           &blockData->textureCoords[i * 3 + j], nullptr};
     }
 
-    u8 clippedSize =
+    unsigned char clippedSize =
         algorithm.clip(clippedTriangle, inputTriangle, algoSettings);
 
     if (clippedSize == 0) continue;
 
     auto va = clippedTriangle[0];
-    for (u8 j = 1; j <= clippedSize - 2; j++) {
+    for (unsigned char j = 1; j <= clippedSize - 2; j++) {
       auto vb = clippedTriangle[j];
       auto vc = clippedTriangle[(j + 1) % clippedSize];
       clippedVertices.push_back(va);
@@ -94,21 +94,21 @@ void McpipClip::addData(McpipBlock* block, const bool& isMulti,
 
 void McpipClip::addCorrections(std::vector<PlanesClipVertex>* vertices,
                                McpipBlock* block) {
-  for (u32 i = 0; i < vertices->size(); i++) {
+  for (unsigned int i = 0; i < vertices->size(); i++) {
     (*vertices)[i].position /= (*vertices)[i].position.w;  // Perspective divide
     (*vertices)[i].st += *block->textureOffset;            // Texture offset
   }
 }
 
 void McpipClip::moveDataToBuffer(std::vector<PlanesClipVertex>* vertices,
-                                 const u8& context) {
-  for (u32 i = 0; i < vertices->size(); i++) {
+                                 const unsigned char& context) {
+  for (unsigned int i = 0; i < vertices->size(); i++) {
     vertexBuffers[context][i].set(vertices->at(i).position);
     texCoordBuffers[context][i].set(vertices->at(i).st);
   }
 }
 
-void McpipClip::addDataToPacket(packet2_t* packet, const u8& context,
+void McpipClip::addDataToPacket(packet2_t* packet, const unsigned char& context,
                                 McpipBlock* block, const int& count,
                                 RendererCoreTextureBuffers* texBuffers) {
   packet2_reset(packet, false);
@@ -136,7 +136,7 @@ void McpipClip::addDataToPacket(packet2_t* packet, const u8& context,
   }
   packet2_utils_vu_close_unpack(packet);
 
-  u32 addr = VU1_MCPIP_AS_IS_DYNAMIC_VERTEX_DATA_ADDR;
+  unsigned int addr = VU1_MCPIP_AS_IS_DYNAMIC_VERTEX_DATA_ADDR;
 
   packet2_utils_vu_add_unpack_data(packet, addr, vertexBuffers[context], count,
                                    true);

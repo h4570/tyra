@@ -32,7 +32,7 @@ void Info::update() {
 }
 
 float Info::calcFps() {
-  u32 timeDelta = timer.getTimeDelta();
+  unsigned int timeDelta = timer.getTimeDelta();
 
   if (timeDelta == 0) return -1.0F;
 

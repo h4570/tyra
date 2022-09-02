@@ -32,8 +32,8 @@ void StapipBagBBoxesCacher::onFrameEnd() {
 }
 
 StaPipBagPackagesBBox* StapipBagBBoxesCacher::getBBoxes(
-    const Vec4* vertices, const u32& count, const u32& id,
-    const u32& maxVertCount) {
+    const Vec4* vertices, const unsigned int& count, const unsigned int& id,
+    const unsigned int& maxVertCount) {
   auto* cache = getCache(maxVertCount, id);
 
   if (cache) {
@@ -52,7 +52,7 @@ StaPipBagPackagesBBox* StapipBagBBoxesCacher::getBBoxes(
 }
 
 StapipBagBBoxesCacheItem* StapipBagBBoxesCacher::getCache(
-    const u32& maxVertCount, const u32& id) {
+    const unsigned int& maxVertCount, const unsigned int& id) {
   for (auto& item : storage) {
     if (item.vu1MaxVertCount == maxVertCount && item.id == id) {
       return &item;

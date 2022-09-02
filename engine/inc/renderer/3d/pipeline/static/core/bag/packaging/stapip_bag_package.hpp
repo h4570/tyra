@@ -28,7 +28,7 @@ class StaPipBagPackage {
   const Vec4* colors;
   /** maxVertCount is max value, because we decided to put max maxVertCount
    * verts to single quad buffer in VU1 */
-  u16 size;
+  unsigned short size;
   CoreBBoxFrustum isInFrustum;
 
   /**
@@ -39,7 +39,7 @@ class StaPipBagPackage {
    * maxVertCount verts, we will calculate CoreBBox from 3
    * StaPipBagPackagesBBox's bboxes.
    */
-  u32 indexOf1By3BBox;
+  unsigned int indexOf1By3BBox;
 
   void print() const;
   void print(const char* name) const;

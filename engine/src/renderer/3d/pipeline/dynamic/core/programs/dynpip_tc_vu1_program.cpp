@@ -11,8 +11,8 @@
 #include "debug/debug.hpp"
 #include "renderer/3d/pipeline/dynamic/core/programs/dynpip_tc_vu1_program.hpp"
 
-extern u32 DynPipVU1_TC_CodeStart __attribute__((section(".vudata")));
-extern u32 DynPipVU1_TC_CodeEnd __attribute__((section(".vudata")));
+extern unsigned int DynPipVU1_TC_CodeStart __attribute__((section(".vudata")));
+extern unsigned int DynPipVU1_TC_CodeEnd __attribute__((section(".vudata")));
 
 namespace Tyra {
 
@@ -31,7 +31,7 @@ std::string DynPipTCVU1Program::getStringName() const {
 
 void DynPipTCVU1Program::addProgramQBufferDataToPacket(packet2_t* packet,
                                                        DynPipBag* bag) const {
-  u32 addr = VU1_DYNPIP_VERT_DATA_ADDR;
+  unsigned int addr = VU1_DYNPIP_VERT_DATA_ADDR;
 
   // Add vertices
   packet2_utils_vu_add_unpack_data(packet, addr, bag->verticesFrom, bag->count,

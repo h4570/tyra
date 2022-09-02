@@ -91,8 +91,8 @@ void BlockizerProgramsManager::uploadBlock(bool isMulti) {
 }
 
 void BlockizerProgramsManager::cullSpam(McpipBlock*** blockPointerArrays,
-                                        u32* blockPointerArrayCounts,
-                                        u32 blockPointerArraysCount,
+                                        unsigned int* blockPointerArrayCounts,
+                                        unsigned int blockPointerArraysCount,
                                         RendererCoreTextureBuffers* texBuffers,
                                         const bool& isMulti) {
   uploadBlock(isMulti);
@@ -103,7 +103,7 @@ void BlockizerProgramsManager::cullSpam(McpipBlock*** blockPointerArrays,
 
   packet2_reset(currentPacket, false);
 
-  for (u32 i = 0; i < blockPointerArraysCount; i++) {
+  for (unsigned int i = 0; i < blockPointerArraysCount; i++) {
     auto* blockPointerArray = blockPointerArrays[i];
     auto blockPointerArrayCount = blockPointerArrayCounts[i];
 
@@ -117,7 +117,7 @@ void BlockizerProgramsManager::cullSpam(McpipBlock*** blockPointerArrays,
 }
 
 void BlockizerProgramsManager::cull(McpipBlock** blockPointerArray,
-                                    u32 blockPointerArrayCount,
+                                    unsigned int blockPointerArrayCount,
                                     RendererCoreTextureBuffers* texBuffers,
                                     const bool& isMulti) {
   uploadBlock(isMulti);

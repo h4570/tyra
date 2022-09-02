@@ -14,8 +14,9 @@
 
 namespace Tyra {
 
-u32 TextureLoader::getTextureSize(const u32& width, const u32& height,
-                                  const TextureBpp& bpp) {
+unsigned int TextureLoader::getTextureSize(const unsigned int& width,
+                                           const unsigned int& height,
+                                           const TextureBpp& bpp) {
   switch (bpp) {
     case bpp32:
       return (width * height * 4);

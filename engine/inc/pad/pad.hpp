@@ -17,12 +17,12 @@
 namespace Tyra {
 
 struct PadButtons {
-  u8 Cross, Square, Triangle, Circle, DpadUp, DpadDown, DpadLeft, DpadRight, L1,
-      L2, L3, R1, R2, R3, Start, Select;
+  unsigned char Cross, Square, Triangle, Circle, DpadUp, DpadDown, DpadLeft,
+      DpadRight, L1, L2, L3, R1, R2, R3, Start, Select;
 };
 
 struct PadJoy {
-  u8 h, v, isCentered, isMoved;
+  unsigned char h, v, isCentered, isMoved;
 };
 
 /** Class responsible for player pad */
@@ -44,7 +44,7 @@ class Pad {
   char actAlign[6];
   int actuators, ret, port, slot;
   padButtonStatus buttons;
-  u32 padData, oldPad, newPad;
+  unsigned int padData, oldPad, newPad;
   PadButtons pressed, clicked;
   PadJoy leftJoyPad, rightJoyPad;
 

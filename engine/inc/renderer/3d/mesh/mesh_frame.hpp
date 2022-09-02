@@ -18,13 +18,13 @@ namespace Tyra {
 
 class MeshFrame {
  public:
-  explicit MeshFrame(const MeshBuilderData& data, const u32& index);
+  explicit MeshFrame(const MeshBuilderData& data, const unsigned int& index);
   explicit MeshFrame(const MeshFrame& frame);
   ~MeshFrame();
 
-  u8 isMother;
+  unsigned char isMother;
 
-  u32 id;
+  unsigned int id;
 
   BBox* bbox;
 

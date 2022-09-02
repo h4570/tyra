@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "./dynamic_mesh_anim_state.hpp"
 #include "./animation_sequence_callback.hpp"
 #include "../mesh_frame.hpp"
@@ -34,7 +33,7 @@ class DynamicMeshAnimation {
   void update();
 
   /** Set animation sequence (indices of frames) */
-  void setSequence(const std::vector<u32>& sequence);
+  void setSequence(const std::vector<unsigned int>& sequence);
 
   /** Start animation from beginning */
   void restart();
@@ -51,12 +50,12 @@ class DynamicMeshAnimation {
   void resetAll(const std::vector<MeshFrame*>& frames);
 
  private:
-  u32 framesCount;
-  u32 currentFrameSequenceIndex;
+  unsigned int framesCount;
+  unsigned int currentFrameSequenceIndex;
   DynamicMeshAnimState state;
 
   std::function<void(const AnimationSequenceCallback&)> callback;
-  std::vector<u32> sequence;
+  std::vector<unsigned int> sequence;
 
   void updateLoopState(AnimationSequenceCallback* callbackInfo);
 
@@ -66,7 +65,7 @@ class DynamicMeshAnimation {
    */
   bool updateNoLoopState(AnimationSequenceCallback* callbackInfo);
 
-  u32 getNextSequenceIndexFrom(const u32& index) const;
+  unsigned int getNextSequenceIndexFrom(const unsigned int& index) const;
 };
 
 }  // namespace Tyra

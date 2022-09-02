@@ -17,33 +17,34 @@ TextureRepository::TextureRepository() {}
 TextureRepository::~TextureRepository() {
   TYRA_LOG("Texture repository destructed!");
   if (getTexturesCount() > 0) {
-    for (u32 i = 0; i < getTexturesCount(); i++) delete textures[i];
+    for (unsigned int i = 0; i < getTexturesCount(); i++) delete textures[i];
     textures.clear();
   }
 }
 
-Texture* TextureRepository::getBySpriteId(const u32& t_id) const {
-  for (u32 i = 0; i < textures.size(); i++) {
+Texture* TextureRepository::getBySpriteId(const unsigned int& t_id) const {
+  for (unsigned int i = 0; i < textures.size(); i++) {
     if (textures[i]->isLinkedWith(t_id)) return textures[i];
   }
   return nullptr;
 }
 
-Texture* TextureRepository::getByMeshMaterialId(const u32& t_id) const {
-  for (u32 i = 0; i < textures.size(); i++) {
+Texture* TextureRepository::getByMeshMaterialId(
+    const unsigned int& t_id) const {
+  for (unsigned int i = 0; i < textures.size(); i++) {
     if (textures[i]->isLinkedWith(t_id)) return textures[i];
   }
   return nullptr;
 }
 
-Texture* TextureRepository::getByTextureId(const u32& t_id) const {
-  for (u32 i = 0; i < textures.size(); i++)
+Texture* TextureRepository::getByTextureId(const unsigned int& t_id) const {
+  for (unsigned int i = 0; i < textures.size(); i++)
     if (t_id == textures[i]->id) return textures[i];
   return nullptr;
 }
 
-const s32 TextureRepository::getIndexOf(const u32& t_texId) const {
-  for (u32 i = 0; i < textures.size(); i++)
+const int TextureRepository::getIndexOf(const unsigned int& t_texId) const {
+  for (unsigned int i = 0; i < textures.size(); i++)
     if (textures[i]->id == t_texId) return i;
   return -1;
 }
@@ -53,12 +54,12 @@ Texture* TextureRepository::add(Texture* texture) {
   return texture;
 }
 
-void TextureRepository::removeByIndex(const u32& t_index) {
+void TextureRepository::removeByIndex(const unsigned int& t_index) {
   textures.erase(textures.begin() + t_index);
 }
 
-void TextureRepository::removeById(const u32& t_texId) {
-  s32 index = getIndexOf(t_texId);
+void TextureRepository::removeById(const unsigned int& t_texId) {
+  int index = getIndexOf(t_texId);
   TYRA_ASSERT(index != -1, "Cant remove texture, because it was not found!");
   removeByIndex(index);
 }
@@ -87,8 +88,8 @@ void TextureRepository::free(const Texture* t_tex) { free(t_tex->id); }
 
 void TextureRepository::free(const Texture& t_tex) { free(t_tex.id); }
 
-void TextureRepository::free(const u32& t_texId) {
-  s32 index = getIndexOf(t_texId);
+void TextureRepository::free(const unsigned int& t_texId) {
+  int index = getIndexOf(t_texId);
   auto* tex = textures[index];
 
   TYRA_ASSERT(index != -1, "Cant remove texture, because it was not found!");
@@ -115,8 +116,8 @@ void TextureRepository::addByMesh(const Mesh* mesh, const char* directory,
   std::string dirFixed = directory;
   if (dirFixed.back() != '/' && dirFixed.back() != ':') dirFixed += "/";
 
-  for (u32 i = 0; i < mesh->materials.size(); i++) {
-        if (!mesh->materials[i]->textureName.has_value()) {
+  for (unsigned int i = 0; i < mesh->materials.size(); i++) {
+    if (!mesh->materials[i]->textureName.has_value()) {
       continue;
     }
 

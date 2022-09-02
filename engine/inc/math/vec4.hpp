@@ -12,7 +12,6 @@
 
 extern "C" {
 #include <stdio.h>
-#include <tamtypes.h>
 }
 
 #include <math3d.h>
@@ -130,8 +129,9 @@ class Vec4 {
   bool isOnBox(const Vec4& min, const Vec4& max) const;
 
   /** Check if given triangle should be backface culled */
-  static u8 shouldBeBackfaceCulled(const Vec4* cameraPos, const Vec4* v0,
-                                   const Vec4* v1, const Vec4* v2);
+  static unsigned char shouldBeBackfaceCulled(const Vec4* cameraPos,
+                                              const Vec4* v0, const Vec4* v1,
+                                              const Vec4* v2);
 
   /**
    * Update this vector by linear interpolation between two vertices

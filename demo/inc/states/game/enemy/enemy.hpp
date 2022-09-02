@@ -41,8 +41,8 @@ class Enemy {
               const PlayerShootAction& shootAction);
 
  private:
-  std::vector<u32> walkSequence;
-  std::vector<u32> fightSequence;
+  std::vector<unsigned int> walkSequence;
+  std::vector<unsigned int> fightSequence;
 
   void allocateOptions();
   void walk(const Heightmap& heightmap, const Vec4& positionDiff);

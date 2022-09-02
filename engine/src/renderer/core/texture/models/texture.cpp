@@ -55,26 +55,26 @@ Texture::~Texture() {
   if (clut) delete clut;
 }
 
-const s32 Texture::getIndexOfLink(const u32& t_id) const {
-  for (u32 i = 0; i < links.size(); i++)
+const int Texture::getIndexOfLink(const unsigned int& t_id) const {
+  for (unsigned int i = 0; i < links.size(); i++)
     if (links[i].id == t_id) return i;
   return -1;
 }
 
-const u8 Texture::isLinkedWith(const u32& t_id) const {
-  s32 index = getIndexOfLink(t_id);
+const unsigned char Texture::isLinkedWith(const unsigned int& t_id) const {
+  int index = getIndexOfLink(t_id);
   if (index != -1)
     return true;
   else
     return false;
 }
 
-void Texture::removeLinkByIndex(const u32& t_index) {
+void Texture::removeLinkByIndex(const unsigned int& t_index) {
   links.erase(links.begin() + t_index);
 }
 
-void Texture::removeLinkById(const u32& t_id) {
-  s32 index = getIndexOfLink(t_id);
+void Texture::removeLinkById(const unsigned int& t_id) {
+  int index = getIndexOfLink(t_id);
   TYRA_ASSERT(index != -1, "Cant remove link, because it was not found!");
   removeLinkByIndex(index);
 }
@@ -85,7 +85,7 @@ float Texture::getSizeInMB() const {
 }
 
 /** Based on gsKit code, thank you guys! */
-u32 Texture::getTextureSize() const {
+unsigned int Texture::getTextureSize() const {
   int widthBlocks, heightBlocks;
   int widthAlign, heightAlign;
 
@@ -172,7 +172,7 @@ void Texture::setWrapSettings(const TextureWrap t_horizontal,
   wrap.vertical = t_vertical;
 }
 
-void Texture::addLink(const u32& t_id) {
+void Texture::addLink(const unsigned int& t_id) {
   TextureLink link;
   link.id = t_id;
   links.push_back(link);

@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <stddef.h>
 #include "time/timer.hpp"
 #include "./version.hpp"
@@ -29,7 +28,7 @@ class Info {
   /** Called by engine */
   void update();
 
-  const u32& getFps() const { return fps; };
+  const unsigned int& getFps() const { return fps; };
 
   /** @return Available RAM in MB */
   float getAvailableRAM();
@@ -39,8 +38,8 @@ class Info {
   void* allocateLargestFreeRAMBlock(size_t* size);
   size_t getFreeRAMSize();
 
-  u8 fpsDelayer;
-  u32 fps;
+  unsigned char fpsDelayer;
+  unsigned int fps;
   Timer timer;
 };
 

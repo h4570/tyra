@@ -133,7 +133,7 @@ void Tutorial07::setLightmap(MeshBuilderData* data) {
    * it will be handled by Mesh class.
    */
   frame->colors = new Color[frame->count];
-  for (u32 i = 0; i < frame->count; i++) {
+  for (unsigned int i = 0; i < frame->count; i++) {
     auto randomLight = 0.1F + ((2.0F + frame->vertices[i].x) / 4.0F);
     frame->colors[i] = material->ambient * randomLight;
     frame->colors[i].a = 128.0F;

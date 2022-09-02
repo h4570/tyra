@@ -91,7 +91,7 @@ texbuffer_t* RendererCoreTextureSender::allocateTextureClut(
   return result;
 }
 
-TextureBpp RendererCoreTextureSender::getBppByPsm(const u32& psm) {
+TextureBpp RendererCoreTextureSender::getBppByPsm(const unsigned int& psm) {
   if (psm == GS_PSM_32) {
     return bpp32;
   } else if (psm == GS_PSM_24) {

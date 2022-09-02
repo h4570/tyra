@@ -17,14 +17,15 @@ namespace Tyra {
 
 class MeshMaterialFrame {
  public:
-  explicit MeshMaterialFrame(const MeshBuilderData& data, const u32& frameIndex,
-                             const u32& materialIndex);
+  explicit MeshMaterialFrame(const MeshBuilderData& data,
+                             const unsigned int& frameIndex,
+                             const unsigned int& materialIndex);
   explicit MeshMaterialFrame(const MeshMaterialFrame& frame);
   ~MeshMaterialFrame();
 
-  u8 isMother;
+  unsigned char isMother;
 
-  u32 id, count;
+  unsigned int id, count;
 
   Vec4 *vertices, *textureCoords, *normals;
 

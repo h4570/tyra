@@ -13,8 +13,8 @@
 
 namespace Tyra {
 
-const u32 DynamicPipeline::buffersCount = 64;
-const u32 DynamicPipeline::halfBuffersCount = buffersCount / 2;
+const unsigned int DynamicPipeline::buffersCount = 64;
+const unsigned int DynamicPipeline::halfBuffersCount = buffersCount / 2;
 
 DynamicPipeline::DynamicPipeline() {}
 
@@ -35,7 +35,7 @@ void DynamicPipeline::onUse() {
 
   buffers = new DynPipBag[buffersCount];
 
-  for (u32 i = 0; i < buffersCount; i++) {
+  for (unsigned int i = 0; i < buffersCount; i++) {
     buffers[i].texture = nullptr;
     buffers[i].lighting = nullptr;
   }
@@ -43,14 +43,14 @@ void DynamicPipeline::onUse() {
   auto packetSize =
       buffersCount * 5.1F;  // 5.1 = packet2_get_qw_count / buffersCount
 
-  core.allocateOnUse(static_cast<u32>(packetSize));
+  core.allocateOnUse(static_cast<unsigned int>(packetSize));
   core.reinitVU1Programs();
 }
 
 void DynamicPipeline::onUseEnd() {
   delete[] colorsCache;
 
-  for (u32 i = 0; i < buffersCount; i++) freeBuffer(&buffers[i]);
+  for (unsigned int i = 0; i < buffersCount; i++) freeBuffer(&buffers[i]);
   delete[] buffers;
 
   core.deallocateOnUse();
@@ -94,12 +94,12 @@ void DynamicPipeline::render(const DynamicMesh* mesh,
                                  options->lighting->directionalDirections);
   }
 
-  u16 bufferIndex = 0;
+  unsigned short bufferIndex = 0;
 
   setBuffersDefaultVars(buffers, mesh, infoBag);
   core.begin(infoBag);
 
-  for (u32 i = 0; i < mesh->materials.size(); i++) {
+  for (unsigned int i = 0; i < mesh->materials.size(); i++) {
     auto* material = mesh->materials[i];
 
     auto* frameFrom = material->frames[mesh->animation.getState().currentFrame];
@@ -108,12 +108,13 @@ void DynamicPipeline::render(const DynamicMesh* mesh,
     auto partSize = core.getMaxVertCountByParams(
         options && options->lighting, material->textureName.has_value());
 
-    u32 partsCount = ceil(frameFrom->count / static_cast<float>(partSize));
+    unsigned int partsCount =
+        ceil(frameFrom->count / static_cast<float>(partSize));
 
     auto* colorBag = getColorBag(material);
 
     setBuffersColorBag(buffers, colorBag);
-    u8 isPartInitialized = false;
+    unsigned char isPartInitialized = false;
 
     Texture* texture = nullptr;
 
@@ -127,14 +128,14 @@ void DynamicPipeline::render(const DynamicMesh* mesh,
                   "texture or disable texture coords loading in mesh?");
     }
 
-    for (u32 k = 0; k < partsCount; k++) {
+    for (unsigned int k = 0; k < partsCount; k++) {
       auto& buffer = buffers[bufferIndex];
 
       freeBuffer(&buffer);
       buffer.count =
           k == partsCount - 1 ? frameFrom->count - k * partSize : partSize;
 
-      u32 startIndex = k * partSize;
+      unsigned int startIndex = k * partSize;
 
       addVertices(frameFrom, frameTo, &buffer, startIndex);
 
@@ -167,16 +168,16 @@ void DynamicPipeline::render(const DynamicMesh* mesh,
 }
 
 void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
-                                u16* bufferIndex) {
+                                unsigned short* bufferIndex) {
   auto isEndOf1stDBuffer = *bufferIndex == halfBuffersCount - 1;
   auto isEndOf2ndDBuffer = *bufferIndex == buffersCount - 1;
 
   if (isEndOf1stDBuffer || isEndOf2ndDBuffer) {
-    u32 offset = isEndOf1stDBuffer ? 0 : halfBuffersCount;
+    unsigned int offset = isEndOf1stDBuffer ? 0 : halfBuffersCount;
 
     DynPipBag** sendBuffers = new DynPipBag*[halfBuffersCount];
 
-    for (u32 i = 0; i < halfBuffersCount; i++)
+    for (unsigned int i = 0; i < halfBuffersCount; i++)
       sendBuffers[i] = &buffers[offset + i];
 
     core.render(sendBuffers, halfBuffersCount);
@@ -191,16 +192,16 @@ void DynamicPipeline::setBuffer(DynPipBag* buffers, DynPipBag* buffer,
 }
 
 void DynamicPipeline::sendRestOfBuffers(DynPipBag* buffers,
-                                        const u16& bufferIndex) {
+                                        const unsigned short& bufferIndex) {
   auto isEndOf1stDBuffer = bufferIndex <= halfBuffersCount - 1;
 
-  u32 offset = isEndOf1stDBuffer ? 0 : halfBuffersCount;
-  u32 size = bufferIndex - offset;
+  unsigned int offset = isEndOf1stDBuffer ? 0 : halfBuffersCount;
+  unsigned int size = bufferIndex - offset;
 
   if (size <= 0) return;
 
   DynPipBag** sendBuffers = new DynPipBag*[size];
-  for (u32 i = 0; i < size; i++) {
+  for (unsigned int i = 0; i < size; i++) {
     sendBuffers[i] = &buffers[offset + i];
   }
 
@@ -212,7 +213,7 @@ void DynamicPipeline::sendRestOfBuffers(DynPipBag* buffers,
 void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
                                             const DynamicMesh* mesh,
                                             DynPipInfoBag* infoBag) {
-  for (u32 i = 0; i < buffersCount; i++) {
+  for (unsigned int i = 0; i < buffersCount; i++) {
     buffers[i].info = infoBag;
     buffers[i].interpolation = mesh->animation.getState().interpolation;
   }
@@ -220,7 +221,7 @@ void DynamicPipeline::setBuffersDefaultVars(DynPipBag* buffers,
 
 void DynamicPipeline::setBuffersColorBag(DynPipBag* buffers,
                                          DynPipColorBag* colorBag) {
-  for (u32 i = 0; i < buffersCount; i++) {
+  for (unsigned int i = 0; i < buffersCount; i++) {
     buffers[i].color = colorBag;
   }
 }
@@ -257,7 +258,8 @@ DynPipInfoBag* DynamicPipeline::getInfoBag(const DynamicMesh* mesh,
 
 void DynamicPipeline::addVertices(const MeshMaterialFrame* materialFrameFrom,
                                   const MeshMaterialFrame* materialFrameTo,
-                                  DynPipBag* bag, const u32& startIndex) const {
+                                  DynPipBag* bag,
+                                  const unsigned int& startIndex) const {
   bag->verticesFrom = &materialFrameFrom->vertices[startIndex];
   bag->verticesTo = &materialFrameTo->vertices[startIndex];
 }
@@ -271,7 +273,7 @@ DynPipColorBag* DynamicPipeline::getColorBag(
 
 DynPipTextureBag* DynamicPipeline::getTextureBag(
     Texture* texture, const MeshMaterialFrame* materialFrameFrom,
-    const MeshMaterialFrame* materialFrameTo, const u32& startIndex) {
+    const MeshMaterialFrame* materialFrameTo, const unsigned int& startIndex) {
   if (!materialFrameFrom->textureCoords || texture == nullptr) return nullptr;
 
   auto* result = new DynPipTextureBag();
@@ -288,7 +290,7 @@ DynPipLightingBag* DynamicPipeline::getLightingBag(
     const MeshMaterialFrame* materialFrameFrom,
     const MeshMaterialFrame* materialFrameTo, M4x4* model,
     const DynPipOptions* options, PipelineDirLightsBag* dirLightsBag,
-    const u32& startIndex) const {
+    const unsigned int& startIndex) const {
   if (!materialFrameFrom->normals || options == nullptr ||
       options->lighting == nullptr)
     return nullptr;

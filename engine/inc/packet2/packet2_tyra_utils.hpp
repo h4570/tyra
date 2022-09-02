@@ -19,9 +19,10 @@ namespace Tyra {
 class Packet2TyraUtils {
  public:
   inline static void addUnpackData(packet2_t* packet2,
-                                   const u32& t_dest_address,
-                                   const void* t_data, const u32& t_size,
-                                   const u8& t_use_top) {
+                                   const unsigned int& t_dest_address,
+                                   const void* t_data,
+                                   const unsigned int& t_size,
+                                   const unsigned char& t_use_top) {
     packet2_chain_ref(packet2, t_data, t_size, 0, 0, 0);
     packet2_vif_stcycl(packet2, 0, 0x0101, 0);
     packet2_vif_open_unpack(packet2, P2_UNPACK_V4_32, t_dest_address, t_use_top,

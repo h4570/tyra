@@ -10,7 +10,7 @@
 
 #include "audio/audio_adpcm.hpp"
 #include "debug/debug.hpp"
-#include <tamtypes.h>
+
 #include <malloc.h>
 #include <kernel.h>
 #include <cstdlib>
@@ -37,10 +37,10 @@ void AudioAdpcm::reset() { audsrv_adpcm_init(); }
 audsrv_adpcm_t* AudioAdpcm::load(const char* t_path) {
   FILE* file = fopen(t_path, "rb");
   fseek(file, 0, SEEK_END);
-  u32 adpcmFileSize = ftell(file);
-  u8 data[adpcmFileSize];
+  unsigned int adpcmFileSize = ftell(file);
+  unsigned char data[adpcmFileSize];
   rewind(file);
-  fread(data, sizeof(u8), adpcmFileSize, file);
+  fread(data, sizeof(unsigned char), adpcmFileSize, file);
   auto* result = new audsrv_adpcm_t();
   result->size = 0;
   result->buffer = 0;
@@ -64,7 +64,7 @@ AdpcmResult AudioAdpcm::tryPlay(audsrv_adpcm_t* t_adpcm) {
   return tryPlay(t_adpcm, -1);
 }
 
-AdpcmResult AudioAdpcm::tryPlay(audsrv_adpcm_t* t_adpcm, const s8& t_ch) {
+AdpcmResult AudioAdpcm::tryPlay(audsrv_adpcm_t* t_adpcm, const char& t_ch) {
   int res = audsrv_ch_play_adpcm(t_ch, t_adpcm);
   if (res >= 0) {
     return AdpcmResult::ADPCM_OK;
@@ -81,7 +81,7 @@ AdpcmResult AudioAdpcm::tryPlay(audsrv_adpcm_t* t_adpcm, const s8& t_ch) {
 
 void AudioAdpcm::playWait(audsrv_adpcm_t* t_adpcm) { playWait(t_adpcm, -1); }
 
-void AudioAdpcm::playWait(audsrv_adpcm_t* t_adpcm, const s8& t_ch) {
+void AudioAdpcm::playWait(audsrv_adpcm_t* t_adpcm, const char& t_ch) {
   int res = tryPlay(t_adpcm, t_ch);
 
   while (res == AdpcmResult::ADPCM_NO_FREE_CHANNELS ||

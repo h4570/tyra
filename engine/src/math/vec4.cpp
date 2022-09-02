@@ -290,8 +290,9 @@ float Vec4::distanceTo(const Vec4& v) const {
   return result;
 }
 
-u8 Vec4::shouldBeBackfaceCulled(const Vec4* cameraPos, const Vec4* v0,
-                                const Vec4* v1, const Vec4* v2) {
+unsigned char Vec4::shouldBeBackfaceCulled(const Vec4* cameraPos,
+                                           const Vec4* v0, const Vec4* v1,
+                                           const Vec4* v2) {
   float dot;
   asm volatile(
       "lqc2        $vf4, 0x0(%1)    \n\t"  // $vf4 = cameraPos

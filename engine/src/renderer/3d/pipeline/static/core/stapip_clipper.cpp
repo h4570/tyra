@@ -21,7 +21,9 @@ void StaPipClipper::init(const RendererSettings& settings) {
   algorithm.init(settings);
 }
 
-void StaPipClipper::setMaxVertCount(const u32& count) { maxVertCount = count; }
+void StaPipClipper::setMaxVertCount(const unsigned int& count) {
+  maxVertCount = count;
+}
 
 void StaPipClipper::clip(StaPipQBuffer* buffer) {
   TYRA_ASSERT(buffer->size <= maxVertCount / 3, "Buffer should have max ",
@@ -33,8 +35,8 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
 
   std::vector<PlanesClipVertex> clippedVertices;
 
-  for (u32 i = 0; i < buffer->size / 3; i++) {
-    for (u8 j = 0; j < 3; j++) {
+  for (unsigned int i = 0; i < buffer->size / 3; i++) {
+    for (unsigned char j = 0; j < 3; j++) {
       inputVerts[j] = *mvp * buffer->vertices[i * 3 + j];
 
       inputTriangle[j] = {
@@ -44,13 +46,13 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
           buffer->bag->color->many ? &buffer->colors[i * 3 + j] : nullptr};
     }
 
-    u8 clippedSize =
+    unsigned char clippedSize =
         algorithm.clip(clippedTriangle, inputTriangle, algoSettings);
 
     if (clippedSize == 0) continue;
 
     auto va = clippedTriangle[0];
-    for (u8 j = 1; j <= clippedSize - 2; j++) {
+    for (unsigned char j = 1; j <= clippedSize - 2; j++) {
       auto vb = clippedTriangle[j];
       auto vc = clippedTriangle[(j + 1) % clippedSize];
       clippedVertices.push_back(va);
@@ -64,7 +66,7 @@ void StaPipClipper::clip(StaPipQBuffer* buffer) {
 }
 
 void StaPipClipper::perspectiveDivide(std::vector<PlanesClipVertex>* vertices) {
-  for (u32 i = 0; i < vertices->size(); i++) {
+  for (unsigned int i = 0; i < vertices->size(); i++) {
     (*vertices)[i].position /= (*vertices)[i].position.w;
   }
 }
@@ -73,7 +75,7 @@ void StaPipClipper::moveDataToBuffer(
     const std::vector<PlanesClipVertex>& vertices, StaPipQBuffer* buffer) {
   buffer->reallocateManually(vertices.size());
 
-  for (u32 i = 0; i < vertices.size(); i++) {
+  for (unsigned int i = 0; i < vertices.size(); i++) {
     auto& vertex = vertices.at(i);
     buffer->vertices[i] = vertex.position;
 

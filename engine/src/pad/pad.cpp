@@ -9,7 +9,6 @@
 # Wellington Carvalho <wellcoj@gmail.com>
 */
 
-#include <tamtypes.h>
 #include <loadfile.h>
 #include <sifrpc.h>
 #include <stdio.h>

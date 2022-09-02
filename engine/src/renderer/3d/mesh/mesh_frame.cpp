@@ -10,7 +10,7 @@
 */
 
 #include "debug/debug.hpp"
-#include <tamtypes.h>
+
 #include <iomanip>
 #include <string>
 #include "math/vec4.hpp"
@@ -19,18 +19,18 @@
 
 namespace Tyra {
 
-MeshFrame::MeshFrame(const MeshBuilderData& data, const u32& index) {
+MeshFrame::MeshFrame(const MeshBuilderData& data, const unsigned int& index) {
   id = rand() % 1000000;
 
   auto bboxes = new CoreBBox*[data.materials.size()];
-  for (u32 i = 0; i < data.materials.size(); i++) {
+  for (unsigned int i = 0; i < data.materials.size(); i++) {
     bboxes[i] = new CoreBBox(data.materials[i]->frames[index]->vertices,
                              data.materials[i]->frames[index]->count);
   }
 
   bbox = new BBox(bboxes, data.materials.size());
 
-  for (u32 i = 0; i < data.materials.size(); i++) delete bboxes[i];
+  for (unsigned int i = 0; i < data.materials.size(); i++) delete bboxes[i];
   delete[] bboxes;
 
   isMother = true;

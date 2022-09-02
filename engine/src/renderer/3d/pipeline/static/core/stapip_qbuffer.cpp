@@ -29,7 +29,9 @@ StaPipQBuffer::StaPipQBuffer() {
 
 StaPipQBuffer::~StaPipQBuffer() { deallocateDynamicData(); }
 
-void StaPipQBuffer::setMaxVertCount(const u32& count) { maxVertCount = count; }
+void StaPipQBuffer::setMaxVertCount(const unsigned int& count) {
+  maxVertCount = count;
+}
 
 void StaPipQBuffer::fillByPointer(const StaPipBagPackage& pkg) {
   TYRA_ASSERT(pkg.size <= maxVertCount, "VU1 buffer supports only ",
@@ -61,7 +63,7 @@ void StaPipQBuffer::fillByCopyMax(const StaPipBagPackage& pkg1,
   size = pkg1.size + pkg2.size + pkg3.size;
   allocateDynamicData(size, pkg1.bag);
 
-  for (u16 i = 0; i < pkg1.size; i++) {
+  for (unsigned short i = 0; i < pkg1.size; i++) {
     vertices[i].set(pkg1.vertices[i]);
 
     if (pkg1.bag->texture) sts[i].set(pkg1.sts[i]);
@@ -72,7 +74,7 @@ void StaPipQBuffer::fillByCopyMax(const StaPipBagPackage& pkg1,
     if (pkg1.bag->lighting) normals[i].set(pkg1.normals[i]);
   }
 
-  for (u16 i = 0; i < pkg2.size; i++) {
+  for (unsigned short i = 0; i < pkg2.size; i++) {
     vertices[i + pkg1.size].set(pkg2.vertices[i]);
 
     if (pkg1.bag->texture) sts[i + pkg1.size].set(pkg2.sts[i]);
@@ -83,7 +85,7 @@ void StaPipQBuffer::fillByCopyMax(const StaPipBagPackage& pkg1,
     if (pkg1.bag->lighting) normals[i + pkg1.size].set(pkg2.normals[i]);
   }
 
-  for (u16 i = 0; i < pkg3.size; i++) {
+  for (unsigned short i = 0; i < pkg3.size; i++) {
     vertices[i + pkg1.size + pkg2.size].set(pkg3.vertices[i]);
 
     if (pkg1.bag->texture) sts[i + pkg1.size + pkg2.size].set(pkg3.sts[i]);
@@ -110,7 +112,7 @@ void StaPipQBuffer::fillByCopy1By2(const StaPipBagPackage& pkg1,
   size = pkg1.size + pkg2.size;
   allocateDynamicData(size, pkg1.bag);
 
-  for (u16 i = 0; i < pkg1.size; i++) {
+  for (unsigned short i = 0; i < pkg1.size; i++) {
     vertices[i].set(pkg1.vertices[i]);
 
     if (pkg1.bag->texture) sts[i].set(pkg1.sts[i]);
@@ -121,7 +123,7 @@ void StaPipQBuffer::fillByCopy1By2(const StaPipBagPackage& pkg1,
     if (pkg1.bag->lighting) normals[i].set(pkg1.normals[i]);
   }
 
-  for (u16 i = 0; i < pkg2.size; i++) {
+  for (unsigned short i = 0; i < pkg2.size; i++) {
     vertices[i + pkg1.size].set(pkg2.vertices[i]);
 
     if (pkg1.bag->texture) sts[i + pkg1.size].set(pkg2.sts[i]);
@@ -143,7 +145,7 @@ void StaPipQBuffer::fillByCopy1By3(const StaPipBagPackage& pkg) {
   size = pkg.size;
   allocateDynamicData(size, pkg.bag);
 
-  for (u16 i = 0; i < pkg.size; i++) {
+  for (unsigned short i = 0; i < pkg.size; i++) {
     vertices[i].set(pkg.vertices[i]);
 
     if (pkg.bag->texture) sts[i].set(pkg.sts[i]);
@@ -157,7 +159,7 @@ void StaPipQBuffer::fillByCopy1By3(const StaPipBagPackage& pkg) {
   bag = pkg.bag;
 }
 
-void StaPipQBuffer::reallocateManually(const u16& t_size) {
+void StaPipQBuffer::reallocateManually(const unsigned short& t_size) {
   deallocateDynamicData();
   allocateDynamicData(t_size, bag);
   size = t_size;
@@ -190,7 +192,7 @@ void StaPipQBuffer::deallocateDynamicData() {
  * When we not receive maxVertCount vertices, we must align it by ourself.
  * Too bad - not efficient.
  */
-void StaPipQBuffer::allocateDynamicData(u16 size, StaPipBag* bag) {
+void StaPipQBuffer::allocateDynamicData(unsigned short size, StaPipBag* bag) {
   TYRA_ASSERT(size <= maxVertCount, "Wrong size. Max buffer size in VU1 is ",
               maxVertCount, ". Provided: ", size);
   TYRA_ASSERT(!_isDynamicallyAllocated, "Buffer is already allocated");
@@ -241,24 +243,24 @@ std::string StaPipQBuffer::getPrint(const char* name) const {
   res << "Size: " << static_cast<int>(size) << std::endl;
 
   res << "Vertices: " << std::endl;
-  for (u32 i = 0; i < size; i++)
+  for (unsigned int i = 0; i < size; i++)
     res << i << ": " << vertices[i].getPrint() << std::endl;
 
   if (bag->texture != nullptr) {
     res << "STs: " << std::endl;
-    for (u32 i = 0; i < size; i++)
+    for (unsigned int i = 0; i < size; i++)
       res << i << ": " << sts[i].getPrint() << std::endl;
   }
 
   if (bag->color->many != nullptr) {
     res << "Colors: " << std::endl;
-    for (u32 i = 0; i < size; i++)
+    for (unsigned int i = 0; i < size; i++)
       res << i << ": " << colors[i].getPrint() << std::endl;
   }
 
   if (bag->lighting != nullptr) {
     res << "Normals: " << std::endl;
-    for (u32 i = 0; i < size; i++) {
+    for (unsigned int i = 0; i < size; i++) {
       res << i << ": " << normals[i].getPrint();
       if (i < size - 1) {
         res << std::endl;

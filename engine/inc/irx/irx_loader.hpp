@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
-
 namespace Tyra {
 
 class IrxLoader {

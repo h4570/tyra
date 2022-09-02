@@ -83,7 +83,7 @@ void StaticPipeline::render(const StaticMesh* mesh,
 
   if (options && options->lighting) setLightingColorsCache(options->lighting);
 
-  for (u32 i = 0; i < mesh->materials.size(); i++) {
+  for (unsigned int i = 0; i < mesh->materials.size(); i++) {
     auto* material = mesh->materials[i];
     auto* materialFrame = material->frames[0];
     StaPipBag bag;

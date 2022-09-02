@@ -16,7 +16,7 @@ Timer::Timer() { prime(); }
 
 Timer::~Timer() {}
 
-u32 Timer::getTimeDelta() {
+unsigned int Timer::getTimeDelta() {
   time = *T3_COUNT;
 
   if (time < lastTime)  // The counter has wrapped

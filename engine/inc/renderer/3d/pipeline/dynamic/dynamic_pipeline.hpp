@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "../renderer_3d_pipeline.hpp"
 #include "./dynpip_options.hpp"
 #include "./core/dynpip_core.hpp"
@@ -31,7 +30,7 @@ class DynamicPipeline : public Renderer3DPipeline {
   DynamicPipeline();
   ~DynamicPipeline();
 
-  static const u32 buffersCount;
+  static const unsigned int buffersCount;
 
   DynPipCore core;
 
@@ -55,15 +54,16 @@ class DynamicPipeline : public Renderer3DPipeline {
   RendererCore* rendererCore;
   Vec4* colorsCache;
   DynPipBag* buffers;
-  static const u32 halfBuffersCount;
+  static const unsigned int halfBuffersCount;
 
-  void setBuffer(DynPipBag* buffers, DynPipBag* buffer, u16* bufferIndex);
+  void setBuffer(DynPipBag* buffers, DynPipBag* buffer,
+                 unsigned short* bufferIndex);
 
-  void sendRestOfBuffers(DynPipBag* buffers, const u16& bufferIndex);
+  void sendRestOfBuffers(DynPipBag* buffers, const unsigned short& bufferIndex);
 
   void addVertices(const MeshMaterialFrame* materialFrameFrom,
                    const MeshMaterialFrame* materialFrameTo, DynPipBag* bag,
-                   const u32& startIndex) const;
+                   const unsigned int& startIndex) const;
 
   DynPipInfoBag* getInfoBag(const DynamicMesh* mesh,
                             const DynPipOptions* options, M4x4* model) const;
@@ -73,13 +73,13 @@ class DynamicPipeline : public Renderer3DPipeline {
   DynPipTextureBag* getTextureBag(Texture* texture,
                                   const MeshMaterialFrame* materialFrameFrom,
                                   const MeshMaterialFrame* materialFrameTo,
-                                  const u32& startIndex);
+                                  const unsigned int& startIndex);
 
   DynPipLightingBag* getLightingBag(const MeshMaterialFrame* materialFrameFrom,
                                     const MeshMaterialFrame* materialFrameTo,
                                     M4x4* model, const DynPipOptions* options,
                                     PipelineDirLightsBag* dirLightsBag,
-                                    const u32& startIndex) const;
+                                    const unsigned int& startIndex) const;
 
   void setLightingColorsCache(PipelineLightingOptions* lightingOptions);
   void freeBuffer(DynPipBag* bag);

@@ -19,9 +19,9 @@ class McpipBlockData {
   McpipBlockData();
   ~McpipBlockData();
 
-  u32 count;
+  unsigned int count;
   float offset;
-  u32 getComboCount() const { return count * 2; }
+  unsigned int getComboCount() const { return count * 2; }
 
   Tyra::Vec4* comboData;
   Tyra::Vec4* vertices;

@@ -8,7 +8,6 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include <tamtypes.h>
 #include "renderer/3d/pipeline/minecraft/minecraft_pipeline.hpp"
 #include "thread/threading.hpp"
 
@@ -61,7 +60,7 @@ void MinecraftPipeline::onUse() {
   dma_channel_fast_waits(DMA_CHANNEL_VIF1);
 
   spamBuffers = new McpipBlock**[spamBuffersCount];
-  spamCounts = new u32[spamBuffersCount];
+  spamCounts = new unsigned int[spamBuffersCount];
 
   rendererCore->gs.enableZTests();
 
@@ -91,18 +90,18 @@ void MinecraftPipeline::render(std::vector<McpipBlock*> blocks,
   auto texBuffers = rendererCore->texture.useTexture(t_tex);
 
   manager.clearLastProgram();
-  std::vector<u32> cullIndexes;
+  std::vector<unsigned int> cullIndexes;
 
   if (!fullClipChecks) {
-    for (u32 i = 0; i < blocks.size(); i++) cullIndexes.push_back(i);
+    for (unsigned int i = 0; i < blocks.size(); i++) cullIndexes.push_back(i);
     cull(blocks, cullIndexes, &texBuffers, true, isMulti);
     return;
   }
 
-  u32 culled = 0, clipped = 0;
-  std::vector<u32> clipIndexes;
+  unsigned int culled = 0, clipped = 0;
+  std::vector<unsigned int> clipIndexes;
 
-  for (u32 i = 0; i < blocks.size(); i++) {
+  for (unsigned int i = 0; i < blocks.size(); i++) {
     auto frustum = isInFrustum(*blocks[i]);
     if (frustum == CoreBBoxFrustum::IN_FRUSTUM) {
       cullIndexes.push_back(i);
@@ -123,23 +122,23 @@ CoreBBoxFrustum MinecraftPipeline::isInFrustum(const McpipBlock& block) const {
 }
 
 void MinecraftPipeline::cull(std::vector<McpipBlock*> blocks,
-                             const std::vector<u32>& indexes,
+                             const std::vector<unsigned int>& indexes,
                              RendererCoreTextureBuffers* texBuffers,
                              const bool& isCullOnly, const bool& isMulti) {
   changeMode(McPipCull, false);
 
   auto maxBlocksPerQBuffer = manager.culler.getMaxBlocksCountPerQBuffer();
-  auto partsCount = static_cast<u32>(
+  auto partsCount = static_cast<unsigned int>(
       ceil(indexes.size() / static_cast<float>(maxBlocksPerQBuffer)));
 
-  for (u32 i = 0; i < partsCount; i++) {
-    u32 subArraySize = i != partsCount - 1
-                           ? maxBlocksPerQBuffer
-                           : indexes.size() - i * maxBlocksPerQBuffer;
+  for (unsigned int i = 0; i < partsCount; i++) {
+    unsigned int subArraySize = i != partsCount - 1
+                                    ? maxBlocksPerQBuffer
+                                    : indexes.size() - i * maxBlocksPerQBuffer;
 
     McpipBlock** blockPointerArray = new McpipBlock*[subArraySize];
-    u32 blockPointerArrayCount = 0;
-    for (u32 j = 0; j < subArraySize; j++) {
+    unsigned int blockPointerArrayCount = 0;
+    for (unsigned int j = 0; j < subArraySize; j++) {
       blockPointerArray[blockPointerArrayCount++] =
           blocks[indexes[i * maxBlocksPerQBuffer + j]];
     }
@@ -166,18 +165,18 @@ void MinecraftPipeline::cull(std::vector<McpipBlock*> blocks,
 // Tags: 279 - for example 20 = 259
 // Vert + ST from EE = 259 / 2 = 129 verts | OK!
 void MinecraftPipeline::clip(std::vector<McpipBlock*> blocks,
-                             const std::vector<u32>& indexes,
+                             const std::vector<unsigned int>& indexes,
                              RendererCoreTextureBuffers* texBuffers,
                              const bool& isMulti) {
   changeMode(McPipAsIs, false);
 
-  for (u32 i = 0; i < indexes.size(); i++) {
+  for (unsigned int i = 0; i < indexes.size(); i++) {
     manager.clip(blocks[indexes[i]], texBuffers, isMulti);
   }
 }
 
 void MinecraftPipeline::changeMode(const McpipProgramName& requestedMode,
-                                   const u8& force) {
+                                   const unsigned char& force) {
   if (!force) {
     if (latestMode == requestedMode) return;
   }
@@ -192,7 +191,7 @@ void MinecraftPipeline::changeMode(const McpipProgramName& requestedMode,
 }
 
 void MinecraftPipeline::addToSpammer(McpipBlock** blockPointerArray,
-                                     const u32& count,
+                                     const unsigned int& count,
                                      RendererCoreTextureBuffers* texBuffers,
                                      const bool& isMulti) {
   spamBuffers[spammerIndex] = blockPointerArray;
@@ -206,7 +205,7 @@ void MinecraftPipeline::addToSpammer(McpipBlock** blockPointerArray,
     manager.cullSpam(spamBuffers, spamCounts, spamBuffersCount, texBuffers,
                      isMulti);
 
-    for (u32 i = 0; i < spamBuffersCount; i++) {
+    for (unsigned int i = 0; i < spamBuffersCount; i++) {
       delete[] spamBuffers[i];
     }
   }
@@ -218,7 +217,7 @@ void MinecraftPipeline::flushSpammer(RendererCoreTextureBuffers* texBuffers,
 
   manager.cullSpam(spamBuffers, spamCounts, spammerIndex, texBuffers, isMulti);
 
-  for (u32 i = 0; i < spammerIndex; i++) {
+  for (unsigned int i = 0; i < spammerIndex; i++) {
     delete[] spamBuffers[i];
   }
 

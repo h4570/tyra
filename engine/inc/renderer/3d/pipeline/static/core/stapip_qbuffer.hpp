@@ -23,7 +23,7 @@ class StaPipQBuffer {
   StaPipQBuffer();
   ~StaPipQBuffer();
 
-  void setMaxVertCount(const u32& count);
+  void setMaxVertCount(const unsigned int& count);
 
   /**
    * @brief Dont allocate any dynamic data in buffer.
@@ -56,7 +56,7 @@ class StaPipQBuffer {
    * specified by size.
    * @param size 48 is max
    */
-  void reallocateManually(const u16& size);
+  void reallocateManually(const unsigned short& size);
 
   bool any() const;
 
@@ -66,7 +66,7 @@ class StaPipQBuffer {
   Vec4* sts;
   Vec4* colors;
   Vec4* normals;
-  u32 size;
+  unsigned int size;
 
   void print() const;
   void print(const char* name) const;
@@ -74,10 +74,11 @@ class StaPipQBuffer {
   std::string getPrint(const char* name = nullptr) const;
 
  private:
-  u32 maxVertCount;
+  unsigned int maxVertCount;
   void deallocateDynamicData();
-  void allocateDynamicData(u16 size, StaPipBag* bag);
-  u8 _isDynamicallyAllocated, _stAllocated, _colorAllocated, _normalAllocated;
+  void allocateDynamicData(unsigned short size, StaPipBag* bag);
+  unsigned char _isDynamicallyAllocated, _stAllocated, _colorAllocated,
+      _normalAllocated;
 };
 
 }  // namespace Tyra

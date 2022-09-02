@@ -12,7 +12,7 @@
 
 #include "math/m4x4.hpp"
 #include "./mesh_material.hpp"
-#include <tamtypes.h>
+
 #include "debug/debug.hpp"
 
 namespace Tyra {
@@ -23,9 +23,9 @@ class Mesh {
   Mesh(const Mesh& mesh);
   ~Mesh();
 
-  u8 isMother;
+  unsigned char isMother;
 
-  u32 id;
+  unsigned int id;
 
   M4x4 translation, rotation, scale;
 

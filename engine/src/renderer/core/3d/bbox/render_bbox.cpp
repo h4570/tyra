@@ -14,18 +14,19 @@
 
 namespace Tyra {
 
-RenderBBox::RenderBBox(CoreBBox** t_bboxes, const u32& count)
+RenderBBox::RenderBBox(CoreBBox** t_bboxes, const unsigned int& count)
     : CoreBBox(t_bboxes, count) {}
 
 RenderBBox::RenderBBox(const std::vector<CoreBBox>& t_bboxes,
-                       const u32& startIndex, const u32& stopIndex)
+                       const unsigned int& startIndex,
+                       const unsigned int& stopIndex)
     : CoreBBox(t_bboxes, startIndex, stopIndex) {}
 
-RenderBBox::RenderBBox(const Vec4* t_vertices, const u32* faces,
-                       const u32& count)
+RenderBBox::RenderBBox(const Vec4* t_vertices, const unsigned int* faces,
+                       const unsigned int& count)
     : CoreBBox(t_vertices, faces, count) {}
 
-RenderBBox::RenderBBox(const Vec4* t_vertices, const u32& count)
+RenderBBox::RenderBBox(const Vec4* t_vertices, const unsigned int& count)
     : CoreBBox(t_vertices, count) {}
 
 RenderBBox::RenderBBox(const Vec4* t_vertices) : CoreBBox(t_vertices) {}

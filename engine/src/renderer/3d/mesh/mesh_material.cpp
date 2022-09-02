@@ -9,7 +9,6 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include <tamtypes.h>
 #include <string>
 #include <cstdlib>
 #include <iomanip>
@@ -19,7 +18,7 @@
 namespace Tyra {
 
 MeshMaterial::MeshMaterial(const MeshBuilderData& data,
-                           const u32& materialIndex) {
+                           const unsigned int& materialIndex) {
   TYRA_ASSERT(materialIndex < data.materials.size(), "Provided index \"",
               materialIndex, "\" is out of range");
 
@@ -50,9 +49,9 @@ MeshMaterial::MeshMaterial(const MeshBuilderData& data,
 
   TYRA_ASSERT(name.length() > 0, "MeshMaterial name cannot be empty");
 
-  u32 lastVertexCount = 0;
+  unsigned int lastVertexCount = 0;
 
-  for (u32 i = 0; i < material->frames.size(); i++) {
+  for (unsigned int i = 0; i < material->frames.size(); i++) {
     if (material->frames[i]->count > 0) {
       frames.push_back(new MeshMaterialFrame(data, i, materialIndex));
 
@@ -82,7 +81,7 @@ MeshMaterial::MeshMaterial(const MeshMaterial& mesh) {
   textureName = mesh.textureName;
   ambient.set(128.0F, 128.0F, 128.0F, 128.0F);
 
-  for (u32 i = 0; i < mesh.frames.size(); i++) {
+  for (unsigned int i = 0; i < mesh.frames.size(); i++) {
     frames.push_back(new MeshMaterialFrame(*mesh.frames[i]));
   }
 
@@ -90,12 +89,12 @@ MeshMaterial::MeshMaterial(const MeshMaterial& mesh) {
 }
 
 MeshMaterial::~MeshMaterial() {
-  for (u32 i = 0; i < frames.size(); i++) {
+  for (unsigned int i = 0; i < frames.size(); i++) {
     delete frames[i];
   }
 }
 
-const BBox& MeshMaterial::getBBox(const u32& frame) const {
+const BBox& MeshMaterial::getBBox(const unsigned int& frame) const {
   return *frames[frame]->bbox;
 }
 
@@ -127,7 +126,7 @@ std::string MeshMaterial::getPrint(const char* name) const {
   }
 
   res << "Frames count: " << frames.size() << ", " << std::endl;
-  res << "Lightmap?: " << static_cast<u32>(lightmapFlag) << std::endl;
+  res << "Lightmap?: " << static_cast<unsigned int>(lightmapFlag) << std::endl;
   res << ")";
 
   return res.str();

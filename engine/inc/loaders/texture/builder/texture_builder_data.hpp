@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <string>
 #include "renderer/core/texture/models/texture_bpp.hpp"
 

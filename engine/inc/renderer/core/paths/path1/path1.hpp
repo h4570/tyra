@@ -22,16 +22,18 @@ class Path1 {
   Path1();
   ~Path1();
 
-  u32 uploadProgram(VU1Program* program, const u32& address);
+  unsigned int uploadProgram(VU1Program* program, const unsigned int& address);
 
   void sendDrawFinishTag();
 
   void addDrawFinishTag(packet2_t* packet);
 
-  packet2_t* createProgramsCache(VU1Program** programs, const u32& count,
-                                 const u32& address);
+  packet2_t* createProgramsCache(VU1Program** programs,
+                                 const unsigned int& count,
+                                 const unsigned int& address);
 
-  void setDoubleBuffer(const u16& startingAddress, const u16& bufferSize);
+  void setDoubleBuffer(const unsigned short& startingAddress,
+                       const unsigned short& bufferSize);
 
  private:
   void uploadDrawFinishProgram();
@@ -39,7 +41,7 @@ class Path1 {
 
   packet2_t* doubleBufferPacket;
   packet2_t* drawFinishPacket;
-  u32 drawFinishAddr;
+  unsigned int drawFinishAddr;
 };
 
 }  // namespace Tyra

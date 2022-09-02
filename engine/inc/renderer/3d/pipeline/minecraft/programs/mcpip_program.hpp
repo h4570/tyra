@@ -17,7 +17,8 @@ namespace Tyra {
 
 class McpipProgram : public VU1Program {
  public:
-  McpipProgram(const McpipProgramName& name, u32* start, u32* end);
+  McpipProgram(const McpipProgramName& name, unsigned int* start,
+               unsigned int* end);
   ~McpipProgram();
 
   const McpipProgramName& getName() const;

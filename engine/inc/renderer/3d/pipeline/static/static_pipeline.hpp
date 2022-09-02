@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "../renderer_3d_pipeline.hpp"
 #include "../shared/pipeline_lighting_options.hpp"
 #include "renderer/core/renderer_core.hpp"

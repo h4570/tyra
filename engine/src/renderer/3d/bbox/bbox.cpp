@@ -12,16 +12,18 @@
 
 namespace Tyra {
 
-BBox::BBox(CoreBBox** t_bboxes, const u32& count) : CoreBBox(t_bboxes, count) {
+BBox::BBox(CoreBBox** t_bboxes, const unsigned int& count)
+    : CoreBBox(t_bboxes, count) {
   setData();
 }
 
-BBox::BBox(const Vec4* t_vertices, const u32& count)
+BBox::BBox(const Vec4* t_vertices, const unsigned int& count)
     : CoreBBox(t_vertices, count) {
   setData();
 }
 
-BBox::BBox(const Vec4* t_vertices, const u32* faces, const u32& count)
+BBox::BBox(const Vec4* t_vertices, const unsigned int* faces,
+           const unsigned int& count)
     : CoreBBox(t_vertices, faces, count) {
   setData();
 }
@@ -64,9 +66,9 @@ void BBox::setData() {
 
 Vec4 BBox::min() const {
   Vec4 temp, _min;
-  u8 isInitialized = 0;
+  unsigned char isInitialized = 0;
 
-  for (u8 i = 0; i < 8; i++) {
+  for (unsigned char i = 0; i < 8; i++) {
     temp.set(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
     if (isInitialized == 0) {
       isInitialized = 1;
@@ -83,9 +85,9 @@ Vec4 BBox::min() const {
 
 Vec4 BBox::max() const {
   Vec4 temp, _max;
-  u8 isInitialized = 0;
+  unsigned char isInitialized = 0;
 
-  for (u8 i = 0; i < 8; i++) {
+  for (unsigned char i = 0; i < 8; i++) {
     temp.set(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
     if (isInitialized == 0) {
       isInitialized = 1;
@@ -113,8 +115,8 @@ void BBox::operator=(const BBox& v) {
 void BBox::getMinMax(Vec4* res_min, Vec4* res_max) const {
   Vec4 temp = Vec4();
 
-  u8 isInitialized = 0;
-  for (u8 i = 0; i < 8; i++) {
+  unsigned char isInitialized = 0;
+  for (unsigned char i = 0; i < 8; i++) {
     temp.set(vertices[i].x, vertices[i].y, vertices[i].z, 1.0F);
     if (isInitialized == 0) {
       isInitialized = 1;

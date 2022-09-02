@@ -26,25 +26,27 @@ class StaPipBagPackager {
 
   void init(Renderer3DFrustumPlanes* frustumPlanes);
   void setRenderBBox(StaPipBagPackagesBBox* bbox) { renderBBox = bbox; }
-  void setMaxVertCount(const u32& count);
+  void setMaxVertCount(const unsigned int& count);
 
   /**
    * @brief Create render packages from provided render data
    *
    * @param size Max maxVertCount verts (VU1 buffer size)
    */
-  StaPipBagPackage* create(u16* o_size, StaPipBag* data, u16 size);
+  StaPipBagPackage* create(unsigned short* o_size, StaPipBag* data,
+                           unsigned short size);
   /**
    * @brief Split render package to smaller packages
    *
    * @param size Max maxVertCount verts (VU1 buffer size)
    */
-  StaPipBagPackage* create(u16* o_size, const StaPipBagPackage& pkg, u16 size);
+  StaPipBagPackage* create(unsigned short* o_size, const StaPipBagPackage& pkg,
+                           unsigned short size);
 
   CoreBBoxFrustum checkFrustum(const StaPipBagPackage& pkg);
 
  private:
-  u32 maxVertCount;
+  unsigned int maxVertCount;
   Renderer3DFrustumPlanes* frustumPlanes;
   StaPipBagPackagesBBox* renderBBox;
 };

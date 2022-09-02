@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "math/m4x4.hpp"
 #include "math/vec4.hpp"
 #include "renderer/models/color.hpp"

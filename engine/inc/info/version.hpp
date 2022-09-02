@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <string>
 
 namespace Tyra {
@@ -20,9 +19,9 @@ class Version {
   Version() {}
   ~Version() {}
 
-  static const u8 major = 2;
-  static const u8 minor = 1;
-  static const u8 patch = 0;
+  static const unsigned char major = 2;
+  static const unsigned char minor = 1;
+  static const unsigned char patch = 0;
 
   static std::string toString() {
     return std::to_string(major) + "." + std::to_string(minor) + "." +

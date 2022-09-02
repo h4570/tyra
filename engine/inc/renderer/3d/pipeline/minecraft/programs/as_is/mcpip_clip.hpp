@@ -33,13 +33,14 @@ class McpipClip {
   void init(RendererCore* core, McpipBlockData* t_singleBlockData,
             McpipBlockData* t_multiBlockData, prim_t* prim, lod_t* lod);
 
-  u32 uploadVU1Program(McpipProgramsRepository* repo, const u32& addr);
+  unsigned int uploadVU1Program(McpipProgramsRepository* repo,
+                                const unsigned int& addr);
 
   void configureVU1AndSendStaticData();
 
   void addData(McpipBlock* block, const bool& isMulti,
                RendererCoreTextureBuffers* texBuffers, packet2_t* packet,
-               const u8& context);
+               const unsigned char& context);
 
  private:
   prim_t* prim;
@@ -49,7 +50,7 @@ class McpipClip {
   McpipBlockData* singleBlockData;
   McpipBlockData* multiBlockData;
   packet2_t* staticPacket;
-  u16 vu1DBufferSize;
+  unsigned short vu1DBufferSize;
 
   Vec4 inputVerts[3];
   PlanesClipVertexPtrs inputTriangle[3];
@@ -61,9 +62,9 @@ class McpipClip {
   void addCorrections(std::vector<PlanesClipVertex>* vertices,
                       McpipBlock* block);
   void moveDataToBuffer(std::vector<PlanesClipVertex>* vertices,
-                        const u8& context);
-  void addDataToPacket(packet2_t* packet, const u8& context, McpipBlock* block,
-                       const int& count,
+                        const unsigned char& context);
+  void addDataToPacket(packet2_t* packet, const unsigned char& context,
+                       McpipBlock* block, const int& count,
                        RendererCoreTextureBuffers* texBuffers);
 
   void initStaticPacket();

@@ -76,7 +76,7 @@ M4x4 M4x4::operator*(const M4x4& v) const {
 
 void M4x4::operator*=(const M4x4& v) { cross(this->data, this->data, v.data); }
 
-float& M4x4::operator[](const u8& index) { return data[index]; }
+float& M4x4::operator[](const unsigned char& index) { return data[index]; }
 
 void M4x4::set(const float& m11, const float& m12, const float& m13,
                const float& m14, const float& m21, const float& m22,

@@ -28,7 +28,8 @@ class TextureLoader {
     return load(fullpath.c_str());
   }
 
-  u32 getTextureSize(const u32& width, const u32& height,
-                     const TextureBpp& bpp);
+  unsigned int getTextureSize(const unsigned int& width,
+                              const unsigned int& height,
+                              const TextureBpp& bpp);
 };
 }  // namespace Tyra

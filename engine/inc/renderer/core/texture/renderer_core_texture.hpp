@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include <vector>
 #include "./texture_repository.hpp"
 #include "./renderer_core_texture_sender.hpp"
@@ -40,8 +39,9 @@ class RendererCoreTexture {
 
   void initClut();
   void registerAllocation(const RendererCoreTextureBuffers& t_buffers);
-  void unregisterAllocation(const u32& textureId);
-  RendererCoreTextureBuffers getAllocatedBuffersByTextureId(const u32& id);
+  void unregisterAllocation(const unsigned int& textureId);
+  RendererCoreTextureBuffers getAllocatedBuffersByTextureId(
+      const unsigned int& id);
 
   RendererCoreGS* gs;
   RendererCoreTextureSender sender;

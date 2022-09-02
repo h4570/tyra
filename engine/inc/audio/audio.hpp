@@ -32,8 +32,8 @@ class Audio {
  private:
   ee_thread_t thread;
   int threadId;
-  static const u16 threadStackSize;
-  u8* threadStack;
+  static const unsigned short threadStackSize;
+  unsigned char* threadStack;
 
   void initAUDSRV();
   void initThread();

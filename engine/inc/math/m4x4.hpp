@@ -41,7 +41,7 @@ class M4x4 {
   Vec4 operator*(const Vec4& v) const;
   M4x4 operator*(const M4x4& v) const;
   void operator*=(const M4x4& v);
-  float& operator[](const u8& index);
+  float& operator[](const unsigned char& index);
 
   /**
    * 1 0 0 0

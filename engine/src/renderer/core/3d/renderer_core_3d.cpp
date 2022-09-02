@@ -61,12 +61,13 @@ void RendererCore3D::setProjection() {
       settings->getNear(), settings->getFar());
 }
 
-u32 RendererCore3D::uploadVU1Program(VU1Program* program, const u32& address) {
+unsigned int RendererCore3D::uploadVU1Program(VU1Program* program,
+                                              const unsigned int& address) {
   return path1->uploadProgram(program, address);
 }
 
-void RendererCore3D::setVU1DoubleBuffers(const u16& startingAddress,
-                                         const u16& bufferSize) {
+void RendererCore3D::setVU1DoubleBuffers(const unsigned short& startingAddress,
+                                         const unsigned short& bufferSize) {
   path1->setDoubleBuffer(startingAddress, bufferSize);
 }
 

@@ -10,14 +10,14 @@
 
 #include "audio/audio_song.hpp"
 #include "debug/debug.hpp"
-#include <tamtypes.h>
+
 #include <malloc.h>
 #include <cstdlib>
 #include <audsrv.h>
 
 namespace Tyra {
 
-const u16 AudioSong::chunkSize = 4 * 1024;
+const unsigned short AudioSong::chunkSize = 4 * 1024;
 
 AudioSong::AudioSong() {
   chunkReadStatus = 0;
@@ -72,7 +72,7 @@ const bool& AudioSong::isPlaying() const { return songPlaying; }
 
 const bool& AudioSong::isLoaded() const { return songLoaded; }
 
-const u8& AudioSong::getVolume() const { return tyraVolume; }
+const unsigned char& AudioSong::getVolume() const { return tyraVolume; }
 
 std::size_t AudioSong::getListenersCount() const {
   return songListeners.size();
@@ -124,7 +124,7 @@ void AudioSong::setSongFormat() {
   }
 }
 
-void AudioSong::setVolume(const u8& t_vol) {
+void AudioSong::setVolume(const unsigned char& t_vol) {
   audsrvVolume = t_vol;
   if (songPlaying) tyraVolume = t_vol;
 
@@ -137,7 +137,7 @@ void AudioSong::work() {
   if (!songPlaying || !songLoaded) return;
   if (songFinished) {
     if (inLoop) {
-      for (u32 i = 0; i < getListenersCount(); i++)
+      for (unsigned int i = 0; i < getListenersCount(); i++)
         songListeners[i]->listener->onAudioFinish();
       rewindSongToStart();
     } else {
@@ -149,16 +149,16 @@ void AudioSong::work() {
   if (chunkReadStatus > 0) {
     WaitSema(fillbufferSema);  // wait until previous chunk wasn't finished
     audsrv_play_audio(chunk, chunkReadStatus);
-    for (u32 i = 0; i < getListenersCount(); i++)
+    for (unsigned int i = 0; i < getListenersCount(); i++)
       songListeners[i]->listener->onAudioTick();
   }
 
   chunkReadStatus = fread(chunk, 1, chunkSize, wav);
 
-  if (chunkReadStatus < (s32)chunkSize) songFinished = true;
+  if (chunkReadStatus < (int)chunkSize) songFinished = true;
 }
 
-u32 AudioSong::addListener(AudioListener* t_listener) {
+unsigned int AudioSong::addListener(AudioListener* t_listener) {
   AudioListenerRef* ref = new AudioListenerRef;
   ref->id = rand() % 1000000;
   ref->listener = t_listener;
@@ -166,9 +166,9 @@ u32 AudioSong::addListener(AudioListener* t_listener) {
   return ref->id;
 }
 
-void AudioSong::removeListener(const u32& t_id) {
-  s32 index = -1;
-  for (u32 i = 0; i < songListeners.size(); i++)
+void AudioSong::removeListener(const unsigned int& t_id) {
+  int index = -1;
+  for (unsigned int i = 0; i < songListeners.size(); i++)
     if (songListeners[i]->id == t_id) {
       index = i;
       break;

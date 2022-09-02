@@ -11,14 +11,12 @@
 
 #pragma once
 
-#include <tamtypes.h>
-
 namespace Tyra {
 
 struct DynamicMeshAnimState {
   float interpolation;
-  u32 currentFrame;
-  u32 nextFrame;
+  unsigned int currentFrame;
+  unsigned int nextFrame;
 };
 
 }  // namespace Tyra

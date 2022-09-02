@@ -21,28 +21,28 @@
 
 // external IRX modules
 
-extern u8 sio2man_irx[];
+extern unsigned char sio2man_irx[];
 extern int size_sio2man_irx;
 
-extern u8 padman_irx[];
+extern unsigned char padman_irx[];
 extern int size_padman_irx;
 
-extern u8 audsrv_irx[];
+extern unsigned char audsrv_irx[];
 extern int size_audsrv_irx;
 
-extern u8 libsd_irx[];
+extern unsigned char libsd_irx[];
 extern int size_libsd_irx;
 
-extern u8 bdm_irx[];
+extern unsigned char bdm_irx[];
 extern int size_bdm_irx;
 
-extern u8 bdmfs_fatfs_irx[];
+extern unsigned char bdmfs_fatfs_irx[];
 extern int size_bdmfs_fatfs_irx;
 
-extern u8 usbd_irx[];
+extern unsigned char usbd_irx[];
 extern int size_usbd_irx;
 
-extern u8 usbmass_bd_irx[];
+extern unsigned char usbmass_bd_irx[];
 extern int size_usbmass_bd_irx;
 
 namespace Tyra {

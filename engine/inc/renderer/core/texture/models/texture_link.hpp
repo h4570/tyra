@@ -10,14 +10,12 @@
 
 #pragma once
 
-#include <tamtypes.h>
-
 namespace Tyra {
 struct TextureLink {
   /**
    * For 3D: MeshMaterial material id.
    * For 2D: Sprite id.
    */
-  u32 id;
+  unsigned int id;
 };
 }  // namespace Tyra

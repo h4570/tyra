@@ -10,9 +10,7 @@
 
 #pragma once
 
-extern "C" {
-#include <tamtypes.h>
-}
+extern "C" {}
 
 #include <math.h>
 

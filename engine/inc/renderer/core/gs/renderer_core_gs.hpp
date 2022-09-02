@@ -38,8 +38,8 @@ class RendererCoreGS {
   framebuffer_t frameBuffers[2];
   packet2_t* flipPacket;
   packet2_t* zTestPacket;
-  u8 context;
-  u8 currentField;
+  unsigned char context;
+  unsigned char currentField;
 
   void allocateBuffers();
   void initDrawingEnvironment();

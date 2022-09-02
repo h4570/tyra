@@ -25,7 +25,7 @@ PngLoader::PngLoader() {}
 PngLoader::~PngLoader() {}
 
 struct PngClut {
-  u8 r, g, b, a;
+  unsigned char r, g, b, a;
 };
 
 /** Based on GsKit texture loading - thank you guys! */
@@ -43,7 +43,7 @@ TextureBuilderData* PngLoader::load(const char* fullPath) {
   png_uint_32 width, height;
   png_bytep* rowPointers = nullptr;
 
-  u32 sigRead = 0;
+  unsigned int sigRead = 0;
   int bitDepth, colorType, interlaceType;
 
   pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, (png_voidp) nullptr,
@@ -294,7 +294,7 @@ void PngLoader::handle4bppPalletized(TextureBuilderData* result,
   unsigned char* tmpdst = (unsigned char*)result->data;
   unsigned char* tmpsrc = (unsigned char*)pixel;
 
-  for (u32 byte = 0;
+  for (unsigned int byte = 0;
        byte < getTextureSize(result->width, result->height, result->bpp);
        byte++)
     tmpdst[byte] = (tmpsrc[byte] << 4) | (tmpsrc[byte] >> 4);

@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "./core/renderer_core.hpp"
 #include "./core/3d/camera_info_3d.hpp"
 #include "./3d/renderer_3d.hpp"

@@ -12,13 +12,12 @@
 #pragma once
 
 #include "./audio_listener.hpp"
-#include <tamtypes.h>
 
 namespace Tyra {
 
 struct AudioListenerRef {
   AudioListener* listener;
-  u32 id;
+  unsigned int id;
 };
 
 }  // namespace Tyra

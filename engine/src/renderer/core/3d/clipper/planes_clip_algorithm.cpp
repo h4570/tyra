@@ -27,9 +27,9 @@ void PlanesClipAlgorithm::init(const RendererSettings& settings) {
   far = -settings.getFar();
 }
 
-u8 PlanesClipAlgorithm::clip(PlanesClipVertex* o_vertices,
-                             PlanesClipVertexPtrs* i_vertices,
-                             const EEClipAlgorithmSettings& settings) {
+unsigned char PlanesClipAlgorithm::clip(
+    PlanesClipVertex* o_vertices, PlanesClipVertexPtrs* i_vertices,
+    const EEClipAlgorithmSettings& settings) {
   for (int i = 0; i < 3; i++) {
     o_vertices[i].position = *i_vertices[i].position;
     if (settings.lerpColors) o_vertices[i].color = *i_vertices[i].color;
@@ -37,8 +37,8 @@ u8 PlanesClipAlgorithm::clip(PlanesClipVertex* o_vertices,
     if (settings.lerpTexCoords) o_vertices[i].st = *i_vertices[i].st;
   }
 
-  u8 tempVerticesSize = 0;
-  u8 outputSize = 0;
+  unsigned char tempVerticesSize = 0;
+  unsigned char outputSize = 0;
 
   tempVerticesSize =
       clipAgainstPlane(o_vertices, 3, tempVertices, 1, halfWidth, settings);
@@ -90,13 +90,13 @@ bool PlanesClipAlgorithm::isInside(const int& plane, const float& v,
   }
 }
 
-u8 PlanesClipAlgorithm::clipAgainstPlane(
-    PlanesClipVertex* original, const u8& originalSize,
+unsigned char PlanesClipAlgorithm::clipAgainstPlane(
+    PlanesClipVertex* original, const unsigned char& originalSize,
     PlanesClipVertex* clipped, const int& plane, const float& planeLimitValue,
     const EEClipAlgorithmSettings& settings) {
   int clippedSize = 0;
 
-  for (u32 i = 0; i < originalSize; i++) {
+  for (unsigned int i = 0; i < originalSize; i++) {
     auto a = original[i];
     auto b = original[(i + 1) % originalSize];
     auto apx = getValueByPlane(a, plane);

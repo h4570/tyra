@@ -28,13 +28,13 @@ DynPipRenderer::~DynPipRenderer() {
   if (programsPacket) packet2_free(programsPacket);
 }
 
-void DynPipRenderer::allocateOnUse(const u32& t_packetSize) {
+void DynPipRenderer::allocateOnUse(const unsigned int& t_packetSize) {
   staticDataPacket = packet2_create(3, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
   objectDataPacket = packet2_create(20, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
   packetSize = t_packetSize;
 
-  for (u16 i = 0; i < 2; i++)
+  for (unsigned short i = 0; i < 2; i++)
     packets[i] =
         packet2_create(t_packetSize, P2_TYPE_NORMAL, P2_MODE_CHAIN, true);
 
@@ -45,7 +45,7 @@ void DynPipRenderer::deallocateOnUse() {
   packet2_free(staticDataPacket);
   packet2_free(objectDataPacket);
 
-  for (u16 i = 0; i < 2; i++) packet2_free(packets[i]);
+  for (unsigned short i = 0; i < 2; i++) packet2_free(packets[i]);
 }
 
 void DynPipRenderer::init(RendererCore* t_core,
@@ -112,7 +112,7 @@ void DynPipRenderer::sendObjectData(
                                      4, false);
   }
 
-  u8 singleColorEnabled = bag->color->single != nullptr;
+  unsigned char singleColorEnabled = bag->color->single != nullptr;
 
   if (singleColorEnabled)  // Color is placed in 4th slot of
                            // VU1_LIGHTS_MATRIX_ADDR
@@ -157,18 +157,19 @@ void DynPipRenderer::sendObjectData(
   dma_channel_send_packet2(objectDataPacket, DMA_CHANNEL_VIF1, true);
 }
 
-void DynPipRenderer::render(DynPipBag** bags, const u32& count) {
+void DynPipRenderer::render(DynPipBag** bags, const unsigned int& count) {
   if (count <= 0) return;
 
   addBufferDataToPacket(bags, count);
   sendPacket();
 }
 
-void DynPipRenderer::addBufferDataToPacket(DynPipBag** bags, const u32& count) {
+void DynPipRenderer::addBufferDataToPacket(DynPipBag** bags,
+                                           const unsigned int& count) {
   currentPacket = packets[context];
   packet2_reset(currentPacket, false);
 
-  for (u32 i = 0; i < count; i++) {
+  for (unsigned int i = 0; i < count; i++) {
     if (bags[i]->count <= 0) continue;
 
     auto* program = programsRepo->getProgramByBag(bags[i]);
@@ -210,8 +211,8 @@ void DynPipRenderer::uploadPrograms() {
 }
 
 void DynPipRenderer::setDoubleBuffer() {
-  u16 startingAddr = VU1_DYNPIP_LAST_ITEM_ADDR + 1;
-  const u16 bufferMaxSize = 1000;
+  unsigned short startingAddr = VU1_DYNPIP_LAST_ITEM_ADDR + 1;
+  const unsigned short bufferMaxSize = 1000;
   bufferSize = (bufferMaxSize - startingAddr) / 2;
 
   path1->setDoubleBuffer(startingAddr, bufferSize);

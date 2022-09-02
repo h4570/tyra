@@ -12,7 +12,6 @@
 
 extern "C" {
 #include <stdio.h>
-#include <tamtypes.h>
 }
 
 #include <string>

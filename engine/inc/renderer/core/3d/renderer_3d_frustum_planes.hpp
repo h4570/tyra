@@ -24,9 +24,11 @@ class Renderer3DFrustumPlanes {
 
   void init(RendererSettings* settings, const float& fov);
   void update(const CameraInfo3D& cameraInfo, const float& fov);
-  const Plane& get(u8 index) const { return frustumPlanes[index]; }
+  const Plane& get(unsigned char index) const { return frustumPlanes[index]; }
   const Plane* getAll() const { return frustumPlanes; }
-  const Plane& operator[](u8 index) const { return frustumPlanes[index]; }
+  const Plane& operator[](unsigned char index) const {
+    return frustumPlanes[index];
+  }
 
   void print() const;
   void print(const char* name) const;

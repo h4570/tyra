@@ -73,7 +73,8 @@ class RendererCore3D {
    * @return Address of the end of your program, so next program can start from
    * this + 1
    */
-  u32 uploadVU1Program(VU1Program* program, const u32& address);
+  unsigned int uploadVU1Program(VU1Program* program,
+                                const unsigned int& address);
 
   /**
    * @brief Set VU1 double buffer
@@ -82,7 +83,8 @@ class RendererCore3D {
    * @param bufferSize Buffer size. Example 490, so second buffer will start
    * from 490+10
    */
-  void setVU1DoubleBuffers(const u16& startingAddress, const u16& bufferSize);
+  void setVU1DoubleBuffers(const unsigned short& startingAddress,
+                           const unsigned short& bufferSize);
 
  private:
   M4x4 view, projection, viewProj;

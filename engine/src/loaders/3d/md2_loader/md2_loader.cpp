@@ -61,13 +61,13 @@ typedef struct {
 typedef float vec3_t[3];
 
 typedef struct {
-  s16 index_xyz[3];  // indexes to triangle's vertices
-  s16 index_st[3];   // indexes to vertices' texture coorinates
+  short index_xyz[3];  // indexes to triangle's vertices
+  short index_st[3];   // indexes to vertices' texture coorinates
 } triangle_t;
 
 typedef struct {
-  s16 s;
-  s16 t;
+  short s;
+  short t;
 } texCoord_t;
 
 std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath) {
@@ -99,10 +99,10 @@ std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
   TYRA_ASSERT((header.ident == MD2_IDENT) && (header.version == MD2_VERSION),
               "This MD2 file is not in correct format!");
 
-  u32 framesCount = header.num_frames;
-  u32 vertexCount = header.num_xyz;
-  u32 stsCount = header.num_st;
-  u32 trianglesCount = header.num_tris;
+  unsigned int framesCount = header.num_frames;
+  unsigned int vertexCount = header.num_xyz;
+  unsigned int stsCount = header.num_st;
+  unsigned int trianglesCount = header.num_tris;
 
   auto framesBufferSize = framesCount * header.framesize;
   auto framesBuffer = new char[framesBufferSize];
@@ -134,7 +134,7 @@ std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
   Vec4** tempNormals = new Vec4*[framesCount];
   Vec4** tempTexCoords = new Vec4*[framesCount];
 
-  for (u32 i = 0; i < framesCount; i++) {
+  for (unsigned int i = 0; i < framesCount; i++) {
     auto* outputFrame = new MeshBuilderMaterialFrameData();
     material->frames.push_back(outputFrame);
 
@@ -145,11 +145,12 @@ std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
 
   Vec4 temp(0.0F, 0.0F, 0.0F, 1.0F);
 
-  for (u32 frameIndex = 0; frameIndex < framesCount; frameIndex++) {
+  for (unsigned int frameIndex = 0; frameIndex < framesCount; frameIndex++) {
     auto* frame = reinterpret_cast<frame_t*>(
         &framesBuffer[header.framesize * frameIndex]);
 
-    for (u32 vertexIndex = 0; vertexIndex < vertexCount; vertexIndex++) {
+    for (unsigned int vertexIndex = 0; vertexIndex < vertexCount;
+         vertexIndex++) {
       temp.set(((frame->verts[vertexIndex].v[0] * frame->scale[0]) +
                 frame->translate[0]) *
                    options.scale,
@@ -170,7 +171,7 @@ std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
     }
   }
 
-  for (u32 i = 0; i < stsCount; i++) {
+  for (unsigned int i = 0; i < stsCount; i++) {
     auto* texCoord =
         reinterpret_cast<texCoord_t*>(&stsBuffer[sizeof(texCoord_t) * i]);
 
@@ -179,10 +180,11 @@ std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
 
     if (options.flipUVs) temp.y = 1.0F - temp.y;
 
-    for (u32 j = 0; j < framesCount; j++) tempTexCoords[j][i].set(temp);
+    for (unsigned int j = 0; j < framesCount; j++)
+      tempTexCoords[j][i].set(temp);
   }
 
-  for (u32 x = 0; x < framesCount; x++) {
+  for (unsigned int x = 0; x < framesCount; x++) {
     material->frames[x]->count = trianglesCount * 3;
     material->frames[x]->vertices = new Vec4[trianglesCount * 3];
     material->frames[x]->normals = new Vec4[trianglesCount * 3];
@@ -190,14 +192,14 @@ std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
   }
 
   triangle_t* triangle;
-  for (u32 i = 0; i < trianglesCount; i++) {
+  for (unsigned int i = 0; i < trianglesCount; i++) {
     triangle =
         reinterpret_cast<triangle_t*>(&trianglesBuffer[sizeof(triangle_t) * i]);
 
-    for (u32 x = 0; x < framesCount; x++) {
+    for (unsigned int x = 0; x < framesCount; x++) {
       auto* workFrame = material->frames[x];
 
-      for (u8 j = 0; j < 3; j++) {
+      for (unsigned char j = 0; j < 3; j++) {
         workFrame->vertices[i * 3 + j] =
             tempVertices[x][triangle->index_xyz[j]];
 
@@ -209,7 +211,7 @@ std::unique_ptr<MeshBuilderData> MD2Loader::load(const char* fullpath,
     }
   }
 
-  for (u32 i = 0; i < framesCount; i++) {
+  for (unsigned int i = 0; i < framesCount; i++) {
     delete[] tempVertices[i];
     delete[] tempNormals[i];
     delete[] tempTexCoords[i];

@@ -37,7 +37,7 @@ class DynPipBag {
   DynPipColorBag* color;
 
   /** Mandatory. Vertex count per frame. */
-  u32 count;
+  unsigned int count;
 
   /** Mandatory. From (frame) vertices */
   Vec4* verticesFrom;

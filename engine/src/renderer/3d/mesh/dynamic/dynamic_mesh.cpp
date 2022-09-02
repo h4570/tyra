@@ -9,7 +9,6 @@
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
-#include <tamtypes.h>
 #include "math/m4x4.hpp"
 #include "renderer/3d/mesh/dynamic/dynamic_mesh.hpp"
 
@@ -22,7 +21,7 @@ DynamicMesh::DynamicMesh(const MeshBuilderData* data) : Mesh(data) {
         "should use StaticMesh?");
   }
 
-  for (u32 i = 0; i < data->materials[0]->frames.size(); i++) {
+  for (unsigned int i = 0; i < data->materials[0]->frames.size(); i++) {
     frames.push_back(new MeshFrame(*data, i));
   }
 
@@ -30,7 +29,7 @@ DynamicMesh::DynamicMesh(const MeshBuilderData* data) : Mesh(data) {
 }
 
 DynamicMesh::DynamicMesh(const DynamicMesh& mesh) : Mesh(mesh) {
-  for (u32 i = 0; i < mesh.frames.size(); i++) {
+  for (unsigned int i = 0; i < mesh.frames.size(); i++) {
     frames.push_back(new MeshFrame(*mesh.frames[i]));
   }
 
@@ -38,7 +37,7 @@ DynamicMesh::DynamicMesh(const DynamicMesh& mesh) : Mesh(mesh) {
 }
 
 DynamicMesh::~DynamicMesh() {
-  for (u32 i = 0; i < frames.size(); i++) {
+  for (unsigned int i = 0; i < frames.size(); i++) {
     delete frames[i];
   }
 }

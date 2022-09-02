@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <tamtypes.h>
 #include "./bag/stapip_bag.hpp"
 #include "./bag/packaging/stapip_bag_packages_bbox.hpp"
 #include "./bag/packaging/stapip_bag_package.hpp"
@@ -34,12 +33,12 @@ class StaPipCore {
   void render(StaPipBag* bag);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
-  u32 getMaxVertCountByParams(const bool& isSingleColor,
-                              const bool& isLightingEnabled,
-                              const bool& isTextureEnabled);
+  unsigned int getMaxVertCountByParams(const bool& isSingleColor,
+                                       const bool& isLightingEnabled,
+                                       const bool& isTextureEnabled);
 
   /** Get max vert count of VU1 qbuffer (for optimizations) */
-  u32 getMaxVertCountByBag(const StaPipBag* bag);
+  unsigned int getMaxVertCountByBag(const StaPipBag* bag);
 
   /**
    * - Uploads standard VU1 programs.
@@ -59,15 +58,16 @@ class StaPipCore {
   prim_t prim;
   lod_t lod;
 
-  u32 maxVertCount;
+  unsigned int maxVertCount;
   RendererCore* rendererCore;
   StapipBagBBoxesCacher cacher;
 
-  void setMaxVertCount(const u32& count);
+  void setMaxVertCount(const unsigned int& count);
   StaPipBagPackager packager;
   StaPipQBufferRenderer qbufferRenderer;
-  void renderPkgs(StaPipBagPackage* packages, const bool& doClip, u16 count);
-  void renderSubpkgs(StaPipBagPackage* packages, u16 count);
+  void renderPkgs(StaPipBagPackage* packages, const bool& doClip,
+                  unsigned short count);
+  void renderSubpkgs(StaPipBagPackage* packages, unsigned short count);
 };
 
 }  // namespace Tyra

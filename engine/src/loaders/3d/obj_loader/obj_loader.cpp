@@ -129,7 +129,8 @@ std::vector<MaterialVertexCount> ObjLoader::scan(
 void ObjLoader::addOutputMaterialsAndFrames(
     MeshBuilderData* output, const tinyobj::attrib_t& attrib,
     const std::vector<tinyobj::shape_t>& shapes,
-    const std::vector<tinyobj::material_t>& materials, const u16& framesCount,
+    const std::vector<tinyobj::material_t>& materials,
+    const unsigned short& framesCount,
     std::vector<MaterialVertexCount>& materialVertexCounts) {
   if (attrib.normals.size()) output->loadNormals = true;
 
@@ -176,8 +177,9 @@ void ObjLoader::importFrame(MeshBuilderData* output,
                             const tinyobj::attrib_t& attrib,
                             const std::vector<tinyobj::shape_t>& shapes,
                             const std::vector<tinyobj::material_t>& materials,
-                            const u16& frameIndex, const float& scale,
-                            const bool& invertY, const u16& count) {
+                            const unsigned short& frameIndex,
+                            const float& scale, const bool& invertY,
+                            const unsigned short& count) {
   struct MaterialInsertControl {
     size_t materialId;
     int inserted;
@@ -189,7 +191,7 @@ void ObjLoader::importFrame(MeshBuilderData* output,
     materialInsertControls.push_back(control);
   }
 
-  std::vector<u32> materialIdsWithTextureWarning;
+  std::vector<unsigned int> materialIdsWithTextureWarning;
 
   // Loop over shapes
   for (size_t s = 0; s < shapes.size(); s++) {
