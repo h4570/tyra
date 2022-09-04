@@ -79,15 +79,9 @@ jobs:
           start_dir=$(pwd)
           cd demo && make && cp bin/*.elf $start_dir/artifacts/
 
-      - name: Zip artifacts
-        run: |
-          apt-get install zip -y
-          cd artifacts
-          zip -r tutorials_and_demo.zip * 
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Compiled tutorials and demo
-          path: artifacts/tutorials_and_demo.zip
+          path: artifacts/
           retention-days: 5

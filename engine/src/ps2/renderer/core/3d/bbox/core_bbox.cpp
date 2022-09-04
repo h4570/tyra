@@ -224,13 +224,12 @@ CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
                                        const M4x4& model,
                                        const float* margins) const {
   CoreBBoxFrustum result = IN_FRUSTUM;
-  unsigned char boxIn = 0, boxOut = 0;
   char calculatedBboxVertexIndex = -1;
 
   for (unsigned char i = 0; i < 6; i++) {
     const auto margin = margins == nullptr ? 0.0F : margins[i];
-    boxOut = 0;
-    boxIn = 0;
+    unsigned char boxOut = 0;
+    unsigned char boxIn = 0;
 
     // for each corner of the box do ...
     // get out of the cycle as soon as a box as corners
@@ -262,12 +261,11 @@ CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
 CoreBBoxFrustum CoreBBox::frustumCheck(const Plane* frustumPlanes,
                                        const float* margins) const {
   CoreBBoxFrustum result = IN_FRUSTUM;
-  unsigned char boxIn = 0, boxOut = 0;
 
   for (unsigned char i = 0; i < 6; i++) {
     const auto margin = margins == nullptr ? 0.0F : margins[i];
-    boxOut = 0;
-    boxIn = 0;
+    unsigned char boxOut = 0;
+    unsigned char boxIn = 0;
 
     for (unsigned char y = 0; y < 8 && (boxIn == 0 || boxOut == 0); y++) {
       auto isOut = frustumPlanes[i].distanceTo(vertices[y]) <= margin;

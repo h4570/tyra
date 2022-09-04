@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM alpine
+FROM alpine:latest
 
 # Install necessary packages
 RUN apk add --no-cache wget make rsync \
