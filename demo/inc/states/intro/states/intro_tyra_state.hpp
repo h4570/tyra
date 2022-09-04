@@ -50,7 +50,7 @@ class IntroTyraState : public State<IntroStateType> {
   bool initialDelayElapsed;
   bool animActivated;
   bool fadeoutActivated;
-  u8 frameSkipper;
+  unsigned char frameSkipper;
 
   Sprite* tyraSprite;
   Sprite* bgSprite;

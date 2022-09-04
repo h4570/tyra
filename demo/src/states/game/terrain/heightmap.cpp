@@ -50,8 +50,8 @@ const float& Heightmap::getHeightOffset(const Vec4& playerPosition) const {
   float widthPercentage = getWidthPercentage(playerPosition);
   float heightPercentage = getHeightPercentage(playerPosition);
 
-  auto x = static_cast<s16>(widthPercentage * mapWidth);
-  auto y = static_cast<s16>(heightPercentage * mapHeight);
+  auto x = static_cast<short>(widthPercentage * mapWidth);
+  auto y = static_cast<short>(heightPercentage * mapHeight);
 
   TYRA_ASSERT(x >= 0 && x < mapWidth, "x is out of range");
   TYRA_ASSERT(y >= 0 && y < mapHeight, "y is out of range");
@@ -71,8 +71,8 @@ void Heightmap::allocateMap(const unsigned char* data, const int& width,
                             const int& height) {
   auto* pixels = (struct PngPixel3*)data;
 
-  u8 min = pixels[0].r;  // in grayscale every r,g,b is the same
-  u8 max = pixels[0].r;
+  unsigned char min = pixels[0].r;  // in grayscale every r,g,b is the same
+  unsigned char max = pixels[0].r;
 
   // Get min and max
   for (int i = 0; i < width * height; i++) {
@@ -102,8 +102,9 @@ void Heightmap::allocateMap(const unsigned char* data, const int& width,
   }
 }
 
-float Heightmap::getGameHeight(const u8& inputColor, const u8& minColor,
-                               const u8& maxColor) const {
+float Heightmap::getGameHeight(const unsigned char& inputColor,
+                               const unsigned char& minColor,
+                               const unsigned char& maxColor) const {
   const float mapRange = maxColor - minColor;
   const float gameRange = maxHeight - minHeight;
 

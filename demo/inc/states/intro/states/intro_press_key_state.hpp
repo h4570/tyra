@@ -48,15 +48,15 @@ class IntroPressKeyState : public State<IntroStateType> {
   bool fillerFadeIn;
   bool showPressKey;
   bool pressKeyAlphaToggle;
-  u8 pressKeyAlphaDelayer;
+  unsigned char pressKeyAlphaDelayer;
 
   float fillersOffset;
   constexpr static float textureWidthHeight = 512.0F;
-  const static u8 mapRows = 3;
-  const static u8 mapCols = 3;
+  const static unsigned char mapRows = 3;
+  const static unsigned char mapCols = 3;
 
   Vec2 mapPosition;
-  u8 mapDirection;
+  unsigned char mapDirection;
 
   Texture* fillerTexture;
   Sprite* fillerSprite;

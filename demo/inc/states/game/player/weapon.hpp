@@ -41,14 +41,14 @@ class Weapon {
   Audio* audio;
   Timer shootTimer;
   Vec4 initialPosition;
-  u8 adpcmCurrentChannel;
-  u8 adpcmChannelsCount;
+  unsigned char adpcmCurrentChannel;
+  unsigned char adpcmChannelsCount;
 
   audsrv_adpcm_t* shootAdpcm;
 
   void shoot();
   void allocateOptions();
-  u8 getShootChannel();
+  unsigned char getShootChannel();
 };
 
 }  // namespace Demo

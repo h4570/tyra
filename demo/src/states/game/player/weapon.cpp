@@ -54,8 +54,8 @@ Weapon::Weapon(Engine* engine) {
   adpcmChannelsCount = 8;
   adpcmCurrentChannel = 0;
 
-  const u8 shootVolume = 25;
-  for (u8 i = 0; i < adpcmChannelsCount; i++) {
+  const unsigned char shootVolume = 25;
+  for (unsigned char i = 0; i < adpcmChannelsCount; i++) {
     audio->adpcm.setVolume(shootVolume, i);
   }
 }
@@ -66,7 +66,7 @@ Weapon::~Weapon() {
   delete shootAdpcm;
 }
 
-u8 Weapon::getShootChannel() {
+unsigned char Weapon::getShootChannel() {
   auto result = adpcmCurrentChannel++;
 
   if (adpcmCurrentChannel >= adpcmChannelsCount) {

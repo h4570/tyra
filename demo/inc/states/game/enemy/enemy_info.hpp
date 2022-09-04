@@ -20,7 +20,7 @@ using Tyra::Vec4;
 namespace Demo {
 
 struct EnemyInfo {
-  u8 adpcmChannel;
+  unsigned char adpcmChannel;
   audsrv_adpcm_t* adpcmPunch;
   audsrv_adpcm_t* adpcmDeath;
   DynamicMesh* motherMesh;

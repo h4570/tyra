@@ -44,7 +44,7 @@ class GameState : public State<GlobalStateType> {
   GlobalStateType state;
   bool _wantFinish;
   bool initialized;
-  u8 fpsChecker;
+  unsigned char fpsChecker;
 
   GameRenderer renderer;
   unique_ptr<Player> player;

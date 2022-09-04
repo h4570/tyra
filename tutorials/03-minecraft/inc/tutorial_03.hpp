@@ -27,7 +27,8 @@ class Tutorial03 : public Game {
  private:
   void loadTexture();
 
-  TutorialBlock getBlock(const u8& atlasX, const u8& atlasY,
+  TutorialBlock getBlock(const unsigned char& atlasX,
+                         const unsigned char& atlasY,
                          const float& translationX);
   void rotateBlock(TutorialBlock& block);
 
