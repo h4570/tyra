@@ -11,7 +11,10 @@ jobs:
       - name: Run tests
         run: |
           cd engine
-          make test SRCDIR=src/test INCDIR=inc/test EE_PREFIX= || true
+          make test SRCDIR=src/test INCDIR=inc/test EE_PREFIX=
+          cd bin
+          ls
+          cd ..
           ./bin/tests.elf --success=true --reporters=junit --out=./tests.xml
       - name: Upload test report
         uses: dorny/test-reporter@v1
