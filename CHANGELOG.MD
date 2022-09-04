@@ -1,0 +1,3 @@
+- Added unit tests support
+- Splitted the code into shared and ps2 specific parts
+- Added CI
