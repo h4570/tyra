@@ -55,24 +55,24 @@ jobs:
       - name: Compile tutorials
         run: |
           start_dir=$(pwd)
-          mkdir -p $(start_dir)/artifacts
-          cd $(start_dir)/tutorials/01-hello && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
-          cd $(start_dir)/tutorials/02-sprite && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
-          cd $(start_dir)/tutorials/03-minecraft && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
-          cd $(start_dir)/tutorials/04-de_dust2 && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
-          cd $(start_dir)/tutorials/05-animation && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
-          cd $(start_dir)/tutorials/06-audio && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
-          cd $(start_dir)/tutorials/07-lighting && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
-          cd $(start_dir)/tutorials/08-skybox-debug && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
-          cd $(start_dir)/tutorials/09-manual-mode && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
+          mkdir -p $start_dir/artifacts
+          cd $start_dir/tutorials/01-hello && make build-engine all && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/02-sprite && make build-engine all && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/03-minecraft && make build-engine all && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/04-de_dust2 && make build-engine all && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/05-animation && make build-engine all && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/06-audio && make build-engine all && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/07-lighting && make build-engine all && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/08-skybox-debug && make build-engine all && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/09-manual-mode && make build-engine all && cp bin/*.elf $start_dir/artifacts/
 
       - name: Compile demo
         run: |
-          cd $(start_dir)/demo && make build-engine all && cp bin/*.elf $(start_dir)/artifacts/
+          cd $start_dir/demo && make build-engine all && cp bin/*.elf $start_dir/artifacts/
 
       - name: Zip artifacts
         run: |
-          cd $(start_dir)/artifacts
+          cd $start_dir/artifacts
           zip -r tutorials_and_demo.zip * 
 
       - name: Upload artifacts

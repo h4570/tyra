@@ -1,1 +1,3 @@
 ./engine/inc/test/doctest.hpp
+./engine/inc/ps2/loaders/3d/obj_loader/tiny_obj_loader.hpp
+./engine/inc/ps2/loaders/3d/obj_loader/mapbox/earcut.hpp
