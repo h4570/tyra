@@ -3,11 +3,19 @@ name: Run tests
 on: [ push, pull_request ]
 
 jobs:
-  container:
+  test:
     runs-on: ubuntu-latest
     container: h4570/tyra-test
     steps:
-      - run: |
-          echo This job does specify a container.
-          echo It runs in the container instead of the VM.
-        name: Run in container
+      - uses: actions/checkout@v2
+      - name: Run tests
+        run: |
+          cd engine
+          make test SRCDIR=src/test INCDIR=inc/test EE_PREFIX=
+          ./bin/tests.elf --success=true --reporters=xml --out=./tests.xml
+      - name: Upload test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: Tyra tests
+          path: ./tests.xml
