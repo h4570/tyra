@@ -4,6 +4,7 @@ on: [ push, pull_request ]
 
 jobs:
   test:
+    name: Unit tests
     runs-on: ubuntu-latest
     container: h4570/tyra-test
     steps:
@@ -30,3 +31,4 @@ jobs:
           name: Tyra tests
           reporter: java-junit
           path: ./engine/bin/tests.xml
+          fail-on-error: false
