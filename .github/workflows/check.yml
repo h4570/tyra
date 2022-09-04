@@ -1,0 +1,93 @@
+name: Code check
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+
+jobs:
+  lint:
+    name: Check lint
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.12
+      with:
+        extensions: 'hpp, cpp, h'
+        clangFormatVersion: 12
+        inplace: false
+
+  test:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    container: h4570/tyra-test
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Suppress safe.directory git warning 
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Compile shared code
+        run: |
+          cd engine
+          make test SRCDIR=src/test INCDIR=inc/test EE_PREFIX=
+
+      - name: Run tests
+        run: |
+          cd engine/bin
+          ./tests.elf --success=true --reporters=junit --out=./tests.xml
+
+      - name: Upload test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: Tests report
+          reporter: java-junit
+          path: ./engine/bin/tests.xml
+          fail-on-error: false
+
+  compile:
+    name: Compile demo & tutorials
+    runs-on: ubuntu-latest
+    container: h4570/tyra
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Compile engine
+        run: cd engine && make
+
+      - name: Compile tutorials
+        run: |
+          start_dir=$(pwd)
+          mkdir -p $start_dir/artifacts
+          cd $start_dir/tutorials/01-hello && make && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/02-sprite && make && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/03-minecraft && make && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/04-de_dust2 && make && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/05-animation && make && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/06-audio && make && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/07-lighting && make && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/08-skybox-debug && make && cp bin/*.elf $start_dir/artifacts/
+          cd $start_dir/tutorials/09-manual-mode && make && cp bin/*.elf $start_dir/artifacts/
+
+      - name: Compile demo
+        run: |
+          start_dir=$(pwd)
+          cd demo && make && cp bin/*.elf $start_dir/artifacts/
+
+      - name: Zip artifacts
+        run: |
+          apt-get install zip -y
+          cd artifacts
+          zip -r tutorials_and_demo.zip * 
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Compiled tutorials and demo
+          path: artifacts/tutorials_and_demo.zip
+          retention-days: 5
