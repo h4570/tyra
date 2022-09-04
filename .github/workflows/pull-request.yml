@@ -11,7 +11,6 @@ jobs:
     - uses: actions/checkout@v2
     - uses: DoozyX/clang-format-lint-action@v0.12
       with:
-        source: '.'
         extensions: 'hpp, cpp, h'
         clangFormatVersion: 12
         inplace: false
@@ -52,10 +51,6 @@ jobs:
     container: h4570/tyra
     steps:
       - uses: actions/checkout@v2
-
-      - name: Suppress safe.directory git warning 
-        run: |
-          git config --global --add safe.directory '*'
 
       - name: Compile tutorials
         run: |
