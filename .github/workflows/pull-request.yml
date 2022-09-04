@@ -46,7 +46,7 @@ jobs:
           path: ./engine/bin/tests.xml
           fail-on-error: false
 
-  test:
+  compile:
     name: Compile demo & tutorials
     runs-on: ubuntu-latest
     container: h4570/tyra
