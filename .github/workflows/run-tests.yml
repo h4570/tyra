@@ -8,18 +8,25 @@ jobs:
     container: h4570/tyra-test
     steps:
       - uses: actions/checkout@v2
-      - name: Run tests
+
+      - name: Suppress safe.directory git warning 
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Compile shared code
         run: |
           cd engine
           make test SRCDIR=src/test INCDIR=inc/test EE_PREFIX=
-          cd bin
-          ls
-          cd ..
-          ./bin/tests.elf --success=true --reporters=junit --out=./tests.xml
+
+      - name: Run tests
+        run: |
+          cd engine/bin
+          ./tests.elf --success=true --reporters=junit --out=./tests.xml
+
       - name: Upload test report
         uses: dorny/test-reporter@v1
         if: success() || failure() # run this step even if previous step failed
         with:
           name: Tyra tests
           reporter: java-junit
-          path: ./tests.xml
+          path: ./engine/bin/tests.xml
