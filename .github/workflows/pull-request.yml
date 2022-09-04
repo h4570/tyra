@@ -1,0 +1,88 @@
+name: PR check
+
+on: [ push, pull_request ]
+
+jobs:
+  lint-check:
+    name: Check lint
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.12
+      with:
+        source: '.'
+        extensions: 'hpp, cpp, h'
+        clangFormatVersion: 12
+        inplace: false
+
+  test:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    container: h4570/tyra-test
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Suppress safe.directory git warning 
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Compile shared code
+        run: |
+          cd engine
+          make test SRCDIR=src/test INCDIR=inc/test EE_PREFIX=
+
+      - name: Run tests
+        run: |
+          cd engine/bin
+          ./tests.elf --success=true --reporters=junit --out=./tests.xml
+
+      - name: Upload test report
+        uses: dorny/test-reporter@v1
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: Tests report
+          reporter: java-junit
+          path: ./engine/bin/tests.xml
+          fail-on-error: false
+
+  test:
+    name: Compile demo & tutorials
+    runs-on: ubuntu-latest
+    container: h4570/tyra
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Suppress safe.directory git warning 
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Compile tutorials
+        run: |
+          pwd
+          mkdir -p artifacts
+          cd /tutorials/01-hello && make build-engine all && cp bin/*.elf /artifacts/
+          cd /tutorials/02-sprite && make build-engine all && cp bin/*.elf /artifacts/
+          cd /tutorials/03-minecraft && make build-engine all && cp bin/*.elf /artifacts/
+          cd /tutorials/04-de_dust2 && make build-engine all && cp bin/*.elf /artifacts/
+          cd /tutorials/05-animation && make build-engine all && cp bin/*.elf /artifacts/
+          cd /tutorials/06-audio && make build-engine all && cp bin/*.elf /artifacts/
+          cd /tutorials/07-lighting && make build-engine all && cp bin/*.elf /artifacts/
+          cd /tutorials/08-skybox-debug && make build-engine all && cp bin/*.elf /artifacts/
+          cd /tutorials/09-manual-mode && make build-engine all && cp bin/*.elf /artifacts/
+
+      - name: Compile demo
+        run: |
+          cd demo && make build-engine all && cp bin/*.elf /artifacts/
+
+      - name: Zip artifacts
+        run: |
+          cd /artifacts
+          zip -r tutorials_and_demo.zip * 
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Compiled tutorials and demo
+          path: tutorials_and_demo.zip
+          retention-days: 5

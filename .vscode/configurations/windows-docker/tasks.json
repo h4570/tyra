@@ -87,7 +87,7 @@
         {
             "type": "shell",
             "label": "Run tests",
-            "command": "docker run -it --rm -v ${PWD}:/host h4570/tyra-test sh -c 'cd /host/engine && make test SRCDIR=src/test INCDIR=inc/test EE_PREFIX= && ./bin/tests.elf || true && rm -rf bin/tests.elf && rm -rf obj/*'"
+            "command": "docker run -it --rm -v ${workspaceFolder}:/host h4570/tyra-test sh -c 'cd /host/engine && make test SRCDIR=src/test INCDIR=inc/test EE_PREFIX= && ./bin/tests.elf || true && rm -rf bin/tests.elf && rm -rf obj/*'"
         },
         {
             "type": "shell",
