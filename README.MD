@@ -120,7 +120,8 @@ Contributions are what make the open source community such an amazing place to b
 List of games developed with Tyra.  
 If you created one, please contact me - I will add it to the list :)
 
-* [Tyracraft](https://github.com/Wellinator/tyracraft) 
+* [Tyracraft](https://github.com/Wellinator/tyracraft) by [Wellinator](https://github.com/Wellinator)
+* [Rock, paper, scissors](https://github.com/GuidoDQR/my-ps2-game) by [GuidoDQR](https://github.com/GuidoDQR)
 
 ## License  
 
