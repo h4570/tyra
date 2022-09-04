@@ -1,0 +1,32 @@
+/*
+# _____        ____   ___
+#   |     \/   ____| |___|
+#   |     |   |   \  |   |
+#-----------------------------------------------------------------------
+# Copyright 2022, tyra - https://github.com/h4570/tyra
+# Licensed under Apache License 2.0
+# Sandro Sobczyński <sandro.sobczynski@gmail.com>
+# André Guilherme <andregui17@outlook.com>
+*/
+
+#pragma once
+
+#ifdef PS2
+#include "ps2/engine.hpp"
+#include "ps2/debug/debug.hpp"
+#include "ps2/file/file_utils.hpp"
+#include "ps2/loaders/3d/md2_loader/md2_loader.hpp"
+#include "ps2/loaders/3d/obj_loader/obj_loader.hpp"
+#include "ps2/loaders/texture/png_loader.hpp"
+#include "ps2/packet2/packet2_tyra_utils.hpp"
+#include "ps2/physics/ray.hpp"
+#include "ps2/renderer/3d/pipeline/dynamic/dynamic_pipeline.hpp"
+#include "ps2/renderer/3d/pipeline/static/static_pipeline.hpp"
+#include "ps2/renderer/3d/pipeline/minecraft/minecraft_pipeline.hpp"
+#include "ps2/renderer/3d/mesh/dynamic/dynamic_mesh.hpp"
+#include "ps2/renderer/3d/mesh/static/static_mesh.hpp"
+#include "ps2/thread/threading.hpp"
+#include "ps2/time/timer.hpp"
+#elif defined(SHARED) || defined(X86)
+#include "shared/tyra-shared"
+#endif

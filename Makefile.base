@@ -13,7 +13,7 @@ DVP			:= dvp-as
 IRXEMBEDDEDEXT	:= irx-em
 
 #Flags, Libraries and Includes
-CFLAGS      += -D_EE -Wall -O3
+CFLAGS      += -D_EE -Wall -DPS2
 LINKFLAGS	+= -O3 -Wl,-zmax-page-size=128
 ASFLAGS		+= -O3
 LIB         += -lstdc++ -ldma -lpacket2 -lgraph -ldraw -lmath3d -lpng -lz -lpad -laudsrv -lpatches -lcdvd
