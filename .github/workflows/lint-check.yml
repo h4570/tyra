@@ -1,23 +1,10 @@
-#This is a modified version of the clang format check used on Open-PS2-Loader 
-name: CI-cpp-check
+name: Lint check
 
 on:
-  push:
-    paths:
-      - '**.hpp'
-      - '**.cpp'
-      - '**.'
-      - '**.h'
-      - './engine/inc/tyra'
-      - '.github/workflows/check-format.yml'
-      - '.clang-format'
   pull_request:
     paths:
       - '**.hpp'
       - '**.cpp'
-      - '**.'
-      - '**.h'
-      - './engine/inc/tyra'
       - '.github/workflows/check-format.yml'
       - '.clang-format'
 
