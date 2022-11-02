@@ -169,7 +169,7 @@ void TCP::PrintIPConfig()
 	}
 }
 
-int DHCPCheck()
+int TCP::DHCPCheck()
 {
 	int EthernetLinkMode = NETMAN_NETIF_ETH_LINK_MODE_AUTO;
 	do{
