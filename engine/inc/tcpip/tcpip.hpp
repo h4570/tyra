@@ -13,7 +13,7 @@ int Init(int use_dhcp, ip4_addr *IP_adrr, ip4_addr *Netmask, ip4_addr *Gateway, 
 int End();
 int SetNetIFMode(int mode);
 static void PrintIPConfig();
+int DHCPCheck();
 
 };
 }
-
