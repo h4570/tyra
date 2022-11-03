@@ -40,9 +40,8 @@ static int ethWaitValidNetIFLinkState(void)
 	return WaitValidNetState(&ethGetNetIFLinkStatus);
 }
 
-static int ethGetDHCPStatus(void)
+static int ethGetDHCPStatus()
 {
-	t_ip_info ip_info;
 	int result;
 
 	if ((result = ps2ip_getconfig("sm0", &ip_info)) >= 0)
