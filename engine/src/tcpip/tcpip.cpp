@@ -7,6 +7,7 @@
 
 namespace Tyra {
 
+static char ipAddress[16];
 static void EthStatusCheckCb(s32 alarm_id, u16 time, void *common)
 {
 	iWakeupThread(*(int*)common);
@@ -43,6 +44,7 @@ static int ethWaitValidNetIFLinkState(void)
 static int ethGetDHCPStatus()
 {
 	int result;
+	t_ip_info ip_info;
 
 	if ((result = ps2ip_getconfig("sm0", &ip_info)) >= 0)
 	{	//Check for a successful state if DHCP is enabled.
@@ -82,6 +84,8 @@ int SetNetIFMode(int mode)
 int TCP::Init (int use_dhcp, ip4_addr *IP_adrr, ip4_addr *Netmask, ip4_addr *Gateway, ip4_addr *DNS)
 {
 	int result;
+	t_ip_info ip_info;
+	const ip_addr_t *dns_curr;
 	printf("Started TCP Init. \n");
 	NetManInit();
 
@@ -126,6 +130,8 @@ int TCP::Init (int use_dhcp, ip4_addr *IP_adrr, ip4_addr *Netmask, ip4_addr *Gat
 void TCP::PrintIPConfig()
 {
 	u8 ip_address[4], netmask[4], gateway[4], dns[4];
+	t_ip_info ip_info;
+	const ip_addr_t *dns_curr;
 	//SMAP is registered as the "sm0" device to the TCP/IP stack.
 	if (ps2ip_getconfig("sm0", &ip_info) >= 0)
 	{
