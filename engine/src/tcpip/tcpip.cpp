@@ -171,10 +171,13 @@ void TCP::PrintIPConfig()
 int TCP::DHCPCheck()
 {
 	int EthernetLinkMode = NETMAN_NETIF_ETH_LINK_MODE_AUTO;
+	int result;
+	result = 0;
 	do{
 		//Wait for the link to become ready before changing the setting.
 		if(ethWaitValidNetIFLinkState() != 0) {
 			printf("Error: failed to get valid link status.\n");
+			result = 1;
 			goto end;
 		}
 
@@ -184,6 +187,7 @@ int TCP::DHCPCheck()
 	if(ethWaitValidNetIFLinkState() != 0)
 	{
 		printf("Failed to get valid link status.\n");
+		result = 2;
 		goto end;
 	}
 
@@ -192,13 +196,14 @@ int TCP::DHCPCheck()
 	if (ethWaitValidDHCPState() != 0)
 	{
 		printf("DHCP failed\n.");
+		result = 3;
 		goto end;
 	}
 	printf("Initialized:\n");
 	TCP::PrintIPConfig();
 
 	end:
-
+	return result;
 
 }
 
