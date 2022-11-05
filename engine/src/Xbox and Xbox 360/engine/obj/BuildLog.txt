@@ -1,0 +1,28 @@
+﻿Build started 10/8/2022 6:51:41 PM.
+Project "C:\Documents and Settings\All Users\Desktop\tyra-2.1.0\engine\Xbox_360\Tyrav2.vcxproj" on node 2 (build target(s)).
+C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(298,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+InitializeBuildStatus:
+  Creating "..\obj\Tyrav2.unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files\Microsoft Xbox 360 SDK\bin\win32\CL.exe /c /I../inc /Zi /nologo /W4 /WX- /Ox /Os /D NDEBUG /D _XBOX /D _LIB /D XBOX_360 /D _MBCS /GF /Gm- /MT /GS- /Gy /fp:fast /fp:except- /Zc:wchar_t /Zc:forScope /GR- /openmp- /Fo"..\obj\\" /Fd"..\obj\vc100.pdb" /TP ..\src\info\info.cpp ..\src\thread\threading.cpp ..\src\time\timer.cpp
+  info.cpp
+..\src\info\info.cpp(33): warning C4244: '=' : conversion from 'float' to 'uint32_t', possible loss of data
+..\src\info\info.cpp(72): warning C4146: unary minus operator applied to unsigned type, result still unsigned
+  threading.cpp
+  timer.cpp
+  Generating Code...
+c:\documents and settings\all users\desktop\tyra-2.1.0\engine\src\thread\threading.cpp(26): warning C4706: assignment within conditional expression
+c:\documents and settings\all users\desktop\tyra-2.1.0\engine\src\info\info.cpp(61): warning C4701: potentially uninitialized local variable 'p' used
+Lib:
+  C:\Program Files\Microsoft Xbox 360 SDK\bin\win32\Lib.exe /OUT:"..\bin\Tyrav2.lib" /NOLOGO ..\obj\info.obj
+  ..\obj\threading.obj
+  ..\obj\timer.obj
+  Tyrav2.vcxproj -> C:\Documents and Settings\All Users\Desktop\tyra-2.1.0\engine\Xbox_360\..\bin\Tyrav2.lib
+FinalizeBuildStatus:
+  Deleting file "..\obj\Tyrav2.unsuccessfulbuild".
+  Touching "..\obj\Tyrav2.lastbuildstate".
+Done Building Project "C:\Documents and Settings\All Users\Desktop\tyra-2.1.0\engine\Xbox_360\Tyrav2.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.24

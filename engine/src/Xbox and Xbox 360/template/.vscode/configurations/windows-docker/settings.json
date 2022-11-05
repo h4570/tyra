@@ -1,0 +1,14 @@
+{
+    "buildDirectory": "./",
+    "C_Cpp.default.intelliSenseMode": "gcc-x86",
+    "files.associations": {
+        "*.vcl": "asm-collection",
+        "*.i": "asm-collection",
+        "*.vsm": "asm-collection",
+        "*.vclpp": "asm-collection",
+        "*.hpp": "cpp",
+        "*.cpp": "cpp",
+        "*.h": "c",
+        "*.c": "c"
+    }
+}

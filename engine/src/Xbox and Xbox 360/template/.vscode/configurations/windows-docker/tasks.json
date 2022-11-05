@@ -1,0 +1,130 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build & run",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "1. Copy source code to docker volume",
+                "2. Compile via docker container",
+                "3. Copy binaries to host",
+                "4. Run PCSX2"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "1. Copy source code to docker volume",
+            "command": "docker exec -t tyra-game-compiler sh -c 'rsync -ac --delete --exclude \".git\" --exclude \".vscode\" --exclude \"*obj*/**\" --exclude \"*bin*/**\" /host/ /src/'"
+        },
+        {
+            "type": "shell",
+            "label": "2. Compile via docker container",
+            "command": "docker exec -t tyra-game-compiler sh -c 'cd ${config:buildDirectory} && make'",
+            "problemMatcher": {
+                "base": "$gcc",
+                "fileLocation": [
+                    "autoDetect"
+                ]
+            }
+        },
+        {
+            "type": "shell",
+            "label": "3. Copy binaries to host",
+            "command": "docker exec -t tyra-game-compiler sh -c 'rsync -zac --include=\"*/\" --include=\"*bin*/**\" --exclude=\"*\" /src/ /host/'",
+        },
+        {
+            "type": "shell",
+            "label": "4. Run PCSX2",
+            "options": {
+                "cwd": "${config:buildDirectory}"
+            },
+            "command": "./run.ps1"
+        },
+        {
+            "type": "shell",
+            "label": "Convert WAV to ADPCM",
+            "dependsOn": [
+                "1. Copy source code to docker volume"
+            ],
+            "command": "docker exec -t tyra-game-compiler sh -c 'adpenc ${input:wav2adpcmSource} ${input:wav2adpcmTarget} && rsync -zac /src/${input:wav2adpcmTarget} /host/${input:wav2adpcmTarget}'"
+        },
+        {
+            "type": "shell",
+            "label": "Cleanup",
+            "command": "docker exec -t tyra-game-compiler sh -c 'rm -rf /src/*'"
+        },
+        {
+            "type": "shell",
+            "label": "Update Tyra",
+            "command": "docker exec -t tyra-game-compiler sh -c 'rm -rf /tyra && mkdir -p /tyra && git clone https://github.com/h4570/tyra.git /tyra && cd /tyra && git checkout ${input:tyraBranch} && cd engine && make'"
+        },
+        {
+            "type": "shell",
+            "label": "Send to PS2",
+            "command": "docker exec -t tyra-game-compiler sh -c 'cd ${config:buildDirectory}/bin && killall -v ps2client || $true && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} reset && ps2client -h ${input:ps2Ip} execee host:$(find . -maxdepth 1 -type f -name \"*.elf\")'"
+        },
+        {
+            "type": "shell",
+            "label": "Open PS2 output logger",
+            "command": "docker stop ps2-logs || $true && docker run -t --rm --name=ps2-logs -p ${input:local2Ip}:18194:18194/udp h4570/tyra sh -c 'ps2client -h ${input:ps2Ip} listen'",
+            "runOptions": {
+                "instanceLimit": 1
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Start docker container",
+            "command": "docker compose up -d"
+        },
+        {
+            "type": "shell",
+            "label": "Stop docker container",
+            "command": "docker compose down"
+        },
+        {
+            "type": "shell",
+            "label": "[Debug] Copy obj directory to host",
+            "command": "docker exec -t tyra-game-compiler sh -c 'rsync -zac --include=\"*/\" --include=\"obj/**\" --exclude=\"*\" /src/ /host/'"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "wav2adpcmSource",
+            "description": "Source file path (ex. ):",
+            "default": "res/sound.wav",
+            "type": "promptString"
+        },
+        {
+            "id": "wav2adpcmTarget",
+            "description": "Target file path (ex. ):",
+            "default": "res/sound.adpcm",
+            "type": "promptString"
+        },
+        {
+            "id": "ps2Ip",
+            "description": "PS2link ip address:",
+            "default": "192.168.1.200",
+            "type": "promptString"
+        },
+        {
+            "id": "local2Ip",
+            "description": "Local ip address:",
+            "default": "192.168.1.245",
+            "type": "promptString"
+        },
+        {
+            "id": "tyraBranch",
+            "description": "Tyra branch:",
+            "default": "master",
+            "type": "promptString"
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tyrav2", "Tyrav2.vcproj", "{BA76F268-9DAD-4FAD-9A40-94E803915CFC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Profile = Profile
+		Profile_FastCap = Profile_FastCap
+		Release = Release
+		Release_LTCG = Release_LTCG
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Debug.ActiveCfg = Debug|Xbox
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Debug.Build.0 = Debug|Xbox
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Profile.ActiveCfg = Profile|Xbox
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Profile.Build.0 = Profile|Xbox
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Profile_FastCap.ActiveCfg = Profile_FastCap|Xbox
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Profile_FastCap.Build.0 = Profile_FastCap|Xbox
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Release.ActiveCfg = Release|Xbox
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Release.Build.0 = Release|Xbox
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Release_LTCG.ActiveCfg = Release_LTCG|Xbox
+		{BA76F268-9DAD-4FAD-9A40-94E803915CFC}.Release_LTCG.Build.0 = Release_LTCG|Xbox
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,35 @@
+# ---
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.vsm
+#Wolf3s Begin
+*.obj #Visual C++ Object.
+#Wolf3s End
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.erl
+*.elf
+*.irx

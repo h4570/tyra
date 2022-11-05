@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{5888d114-1e66-4a05-a630-35ea444faba0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{f9f2671a-9db5-4657-892f-87adf9bc882e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\time">
+      <UniqueIdentifier>{7e2087fa-3c4a-4e14-831f-d91eab8e4f8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\time">
+      <UniqueIdentifier>{4ef89826-d791-492e-8a31-0be8d37b9ef9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\info">
+      <UniqueIdentifier>{e506e10d-980c-4a3e-8e0b-fb9459421f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\info">
+      <UniqueIdentifier>{f54cf976-d63e-4371-a802-94664cf6e474}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\thread">
+      <UniqueIdentifier>{aa802551-5c4c-45ac-9ae7-ebe8aa165708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\thread">
+      <UniqueIdentifier>{addda885-e853-4c71-827d-1ec1894cd23a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\pad">
+      <UniqueIdentifier>{c4cc68f7-6952-4fe8-8417-e37b297a332b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\inc\time\timer.hpp">
+      <Filter>inc\time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\info\info.hpp">
+      <Filter>inc\info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\info\version.hpp">
+      <Filter>inc\info</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\game.hpp">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\tyra">
+      <Filter>inc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\thread\threading.hpp">
+      <Filter>inc\thread</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\pad\Xbox_360\pad.hpp">
+      <Filter>inc\pad</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\time\timer.cpp">
+      <Filter>src\time</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\info\info.cpp">
+      <Filter>src\info</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\thread\threading.cpp">
+      <Filter>src\thread</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

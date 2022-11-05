@@ -1,0 +1,42 @@
+{
+    "configurations": [
+        {
+            "name": "Docker PS2SDK",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/tyra/inc/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ps2sdk/common/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ps2sdk/ee/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ps2sdk/iop/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ps2sdk/ports/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ee/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ee/lib/gcc/mips64r5900el-ps2-elf/11.3.0/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ee/lib/gcc/mips64r5900el-ps2-elf/11.3.0/include-fixed/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ee/lib/gcc/mips64r5900el-ps2-elf/11.3.0/install-tools/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ee/lib/gcc/mips64r5900el-ps2-elf/11.3.0/plugin/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ee/mips64r5900el-ps2-elf/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/ee/mips64r5900el-ps2-elf/sys-include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/gsKit/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/iop/lib/gcc/mipsel-ps2-elf/11.3.0/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/iop/lib/gcc/mipsel-ps2-elf/11.3.0/install-tools/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/iop/lib/gcc/mipsel-ps2-elf/11.3.0/plugin/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/iop/lib/gcc/mipsel-ps2-elf/11.3.0/include-fixed/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/iop/lib/gcc/mipsel-ps2-irx/11.3.0/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/iop/lib/gcc/mipsel-ps2-irx/11.3.0/install-tools/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/iop/lib/gcc/mipsel-ps2-irx/11.3.0/plugin/include/**",
+                "C:/Users/YOUR-INTELLISENSE-PATH/ps2dev-intellisense/iop/lib/gcc/mipsel-ps2-irx/11.3.0/include-fixed/**"
+            ],
+            "defines": [
+                "_EE",
+                "_IOP",
+                "__SPU__",
+                "INTELLISENSE"
+            ],
+            "cppStandard": "c++20",
+            "compilerPath": "", // Should be empty
+            "intelliSenseMode": "linux-gcc-x86",
+            "configurationProvider": "ms-vscode.cpptools"
+        }
+    ],
+    "version": 4
+}

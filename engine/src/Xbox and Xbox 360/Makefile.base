@@ -1,0 +1,117 @@
+#Compiler and Linker
+EE_PREFIX	:= mips64r5900el-ps2-elf-
+AR			:= $(EE_PREFIX)ar
+AS			:= $(EE_PREFIX)as
+CC			:= $(EE_PREFIX)gcc
+CXX			:= $(EE_PREFIX)g++
+STRIP		:= $(EE_PREFIX)strip
+BIN2S		:= $(PS2SDK)/bin/bin2s
+VCL			:= vcl
+VCLPP		:= vclpp
+DVP			:= dvp-as
+
+IRXEMBEDDEDEXT	:= irx-em
+
+#Flags, Libraries and Includes
+CFLAGS      += -D_EE -Wall -O3
+LINKFLAGS	+= -O3 -Wl,-zmax-page-size=128
+ASFLAGS		+= -O3
+LIB         += -lstdc++ -ldma -lpacket2 -lgraph -ldraw -lmath3d -lpng -lz -lpad -laudsrv -lpatches -lcdvd
+INC         += -I$(PS2DEV)/ps2sdk/ee/include -I$(PS2DEV)/ps2sdk/common/include -I$(PS2DEV)/ps2sdk/ports/include
+
+#---------------------------------------------------------------------------------
+#DO NOT EDIT BELOW THIS LINE
+#---------------------------------------------------------------------------------
+SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+
+IRXEM_SOURCES  := $(shell find $(SRCDIR) -type f -name *.$(IRXEMBEDDEDEXT))
+IRXEM_OBJECTS  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(IRXEM_SOURCES:.$(IRXEMBEDDEDEXT)=.$(OBJEXT)))
+
+VU_SOURCES_VCL  := $(shell find $(SRCDIR) -type f -name *.$(VCLEXT))
+VU_OBJECTS_VCL  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(VU_SOURCES_VCL:.$(VCLEXT)=.$(OBJEXT)))
+
+VU_SOURCES_VSM  := $(shell find $(SRCDIR) -type f -name *.$(VSMEXT))
+VU_OBJECTS_VSM  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(VU_SOURCES_VSM:.$(VSMEXT)=.$(OBJEXT)))
+
+VCL_SOURCES  := $(shell find $(SRCDIR) -type f -name *.$(VCLPPEXT))
+VCL_OBJECTS  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(VCL_SOURCES:.$(VCLPPEXT)=.$(OBJEXT)))
+
+#Default Make
+all: resources $(TARGET)
+#all: resources irxcopy $(TARGET)
+
+release:
+	$(MAKE) CFLAGS="-DNDEBUG $(CFLAGS)"
+
+#Remake
+remake: cleaner all
+
+#Copy Resources from Resources Directory to Target Directory
+resources: directories
+	@cp -r $(RESDIR)/* $(TARGETDIR)/ || true
+
+#Make the Directories
+directories:
+	@mkdir -p $(TARGETDIR)
+	@mkdir -p $(BUILDDIR)
+
+#Clean only Objects
+clean:
+	@$(RM) -rf $(BUILDDIR)
+
+#Full Clean, Objects and Binaries
+cleaner: clean
+	@$(RM) -rf $(TARGETDIR)
+	@$(RM) -rf $(BUILDDIR)
+
+#irxcopy:
+#	@cp $(PS2SDK)/iop/irx/audsrv.irx $(TARGETDIR)/audsrv.irx
+
+#Pull in dependency info for *existing* .o files
+-include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
+
+#Link
+$(TARGET): $(OBJECTS) $(VCL_OBJECTS) $(VU_OBJECTS_VCL) $(VU_OBJECTS_VSM) $(IRXEM_OBJECTS)
+	$(CXX) -T$(PS2DEV)/ps2sdk/ee/startup/linkfile -o $(TARGETDIR)/$(TARGET) $^ -L$(PS2DEV)/ps2sdk/ee/lib -L$(PS2SDK)/ports/lib $(LINKFLAGS) $(LIBDIRS) $(LIB)
+	$(STRIP) --strip-all $(TARGETDIR)/$(TARGET)
+
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(IRXEMBEDDEDEXT)
+	@mkdir -p $(dir $@)
+	@rm -f $@.s
+	$(BIN2S) $(shell head -1 $<) $@.s $(shell sed -n '2p' $<)
+	$(AS) $(ASFLAGS) $@.s -o $@
+
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(dir $@)
+	$(CXX) $(CFLAGS) $(INC) -c -o $@ $<
+	@$(CXX) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
+	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
+	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
+	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
+	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(VCLEXT)
+	@mkdir -p $(dir $@)
+	@rm -f $@.vsm
+	$(VCL) $< >> $@.vsm
+	$(DVP) $@.vsm -o $@
+
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(VSMEXT)
+	@mkdir -p $(dir $@)
+	$(DVP) $< -o $@
+
+$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(VCLPPEXT)
+	@mkdir -p $(dir $@)
+	@rm -f $@.vcl
+	@rm -f $@.vsm
+	$(VCLPP) $< $@.vcl
+	$(VCL) $@.vcl > $@.vsm
+	$(DVP) $@.vsm -o $@
+
+run-pcsx2:
+	taskkill.exe /f /t /im pcsx2x64.exe || true
+	$(WSL_LINUX_PCSX2)/pcsx2x64.exe --elf=$(WSL_MAKE_WINDOWS)$(CURDIR)/$(TARGETDIR)/$(TARGET)
+
+#Non-File Targets
+.PHONY: all remake clean cleaner resources
