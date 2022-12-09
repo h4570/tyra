@@ -16,7 +16,7 @@ IRXEMBEDDEDEXT	:= irx-em
 CFLAGS      += -D_EE -Wall -O3
 LINKFLAGS	+= -O3 -Wl,-zmax-page-size=128
 ASFLAGS		+= -O3
-LIB         += -lstdc++ -ldma -lpacket2 -lgraph -ldraw -lmath3d -lpng -lz -lpad -laudsrv -lpatches -lcdvd
+LIB         += -lstdc++ -ldma -lpacket2 -lgraph -ldraw -lmath3d -lpng -lz -lpad -laudsrv -lpatches -lcdvd -ldebug -lps2_drivers 
 INC         += -I$(PS2DEV)/ps2sdk/ee/include -I$(PS2DEV)/ps2sdk/common/include -I$(PS2DEV)/ps2sdk/ports/include
 
 #---------------------------------------------------------------------------------
@@ -24,9 +24,6 @@ INC         += -I$(PS2DEV)/ps2sdk/ee/include -I$(PS2DEV)/ps2sdk/common/include -
 #---------------------------------------------------------------------------------
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
-
-IRXEM_SOURCES  := $(shell find $(SRCDIR) -type f -name *.$(IRXEMBEDDEDEXT))
-IRXEM_OBJECTS  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(IRXEM_SOURCES:.$(IRXEMBEDDEDEXT)=.$(OBJEXT)))
 
 VU_SOURCES_VCL  := $(shell find $(SRCDIR) -type f -name *.$(VCLEXT))
 VU_OBJECTS_VCL  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(VU_SOURCES_VCL:.$(VCLEXT)=.$(OBJEXT)))
@@ -112,6 +109,6 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(VCLPPEXT)
 run-pcsx2:
 	taskkill.exe /f /t /im pcsx2x64.exe || true
 	$(WSL_LINUX_PCSX2)/pcsx2x64.exe --elf=$(WSL_MAKE_WINDOWS)$(CURDIR)/$(TARGETDIR)/$(TARGET)
-
+	
 #Non-File Targets
 .PHONY: all remake clean cleaner resources

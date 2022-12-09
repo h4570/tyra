@@ -13,7 +13,7 @@
 
 namespace Tyra {
 
-Engine::Engine() { initAll(false, false); }
+Engine::Engine() { initAll(false, false, false, false); }
 
 Engine::Engine(const EngineOptions& options) {
   info.writeLogsToFile = options.writeLogsToFile;
@@ -36,9 +36,9 @@ void Engine::realLoop() {
   info.update();
 }
 
-void Engine::initAll(const bool& loadUsbDriver, const bool& loadHddDriver) {
+void Engine::initAll(const bool& loadUsbDriver, const bool& loadHddDriver, const bool& loadCdFSDriver, const bool& loadMemcardDriver) {
   srand(time(nullptr));
-  irx.loadAll(loadUsbDriver, loadHddDriver, info.writeLogsToFile);
+  irx.loadAll(loadUsbDriver, loadHddDriver, loadCdFS_Driver, loadMemcardDriver, info.writeLogsToFile);
   renderer.init();
   banner.show(&renderer);
   audio.init();

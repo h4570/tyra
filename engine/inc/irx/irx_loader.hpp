@@ -13,6 +13,7 @@
 #pragma once
 
 #include <tamtypes.h>
+#include <ps2_all_drivers.h>
 
 namespace Tyra {
 
@@ -21,18 +22,13 @@ class IrxLoader {
   IrxLoader();
   ~IrxLoader();
 
-  void loadAll(const bool& withUsb, const bool& withHdd,
+  void loadAll(const bool& withUsb, const bool& withHdd, const bool& withCdFS, const bool&withMC, 
                const bool& isLoggingToFile);
+
+  void UnLoad();
 
  private:
   static bool isLoaded;
-
-  void loadSio2man(const bool& verbose);
-  void loadPadman(const bool& verbose);
-  void loadLibsd(const bool& verbose);
-  void loadUsbModules(const bool& verbose);
-  void loadAudsrv(const bool& verbose);
-  void loadHddModules(const bool& verbose);
 
   int applyRpcPatches();
   void waitUntilUsbDeviceIsReady();

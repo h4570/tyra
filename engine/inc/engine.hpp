@@ -27,10 +27,11 @@ struct EngineOptions {
    * False -> logs will be displayed in console
    */
   bool writeLogsToFile = false;
-
   bool loadUsbDriver = false;
-
   bool loadHddDriver = false;
+  bool loadMemcardDriver = false;
+  bool loadCdFSDriver = false;
+
 };
 
 class Engine {
@@ -53,7 +54,7 @@ class Engine {
   Banner banner;
 
   void realLoop();
-  void initAll(const bool& loadUsbDriver, const bool& loadHddDriver);
+  void initAll(const bool& loadUsbDriver, const bool& loadHddDriver, const bool& loadCdFSDriver, const bool &loadMemcardDriver);
 };
 
 }  // namespace Tyra
