@@ -93,8 +93,9 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 * Background music and sound effects support 
 * Pad support
 * USB support
-* HDD support (WIP)
+* HDD support
 * Memory card support
+* CdFS Support
 * `.wav` Audio file support
 * `.obj` 3D file support
 * `.md2` 3D file support
