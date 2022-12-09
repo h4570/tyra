@@ -31,7 +31,6 @@ struct EngineOptions {
   bool loadHddDriver = false;
   bool loadMemcardDriver = false;
   bool loadCdFSDriver = false;
-
 };
 
 class Engine {
@@ -54,7 +53,8 @@ class Engine {
   Banner banner;
 
   void realLoop();
-  void initAll(const bool& loadUsbDriver, const bool& loadHddDriver, const bool& loadCdFSDriver, const bool &loadMemcardDriver);
+  void initAll(const bool& loadUsbDriver, const bool& loadHddDriver,
+               const bool& loadCdFSDriver, const bool& loadMemcardDriver);
 };
 
 }  // namespace Tyra
