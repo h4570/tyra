@@ -77,6 +77,10 @@ void StaticPipeline::render(const StaticMesh* mesh,
     if (frame->bbox->frustumCheck(
             rendererCore->renderer3D.frustumPlanes.getAll(), model) ==
         CoreBBoxFrustum::OUTSIDE_FRUSTUM) {
+      if (options && optionsManuallyAllocated) {
+        delete options;
+      }
+      delete infoBag;
       return;
     }
   }
