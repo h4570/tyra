@@ -33,11 +33,11 @@ extern int size_audsrv_irx;
 extern u8 libsd_irx[];
 extern int size_libsd_irx;
 
-extern u8 fileXio_irx_irx[];
-extern int size_fileXio_irx_irx;
+extern u8 fileXio_irx[];
+extern int size_fileXio_irx;
 
-extern u8 iomanX_irx_irx[];
-extern int size_iomanX_irx_irx;
+extern u8 iomanX_irx[];
+extern int size_iomanX_irx;
 
 extern u8 bdm_irx[];
 extern int size_bdm_irx;
