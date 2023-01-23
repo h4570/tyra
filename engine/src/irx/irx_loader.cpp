@@ -133,7 +133,6 @@ void IrxLoader::loadPOSIX(const bool& verbose) {
 
   if (verbose) TYRA_LOG("IRX: Loading iomanX...");
 
-  int ret;
   SifExecModuleBuffer(&iomanX_irx, size_iomanX_irx, 0, nullptr, &ret);
   TYRA_ASSERT(ret >= 0, "Failed to load module: iomanX_irx");
 
