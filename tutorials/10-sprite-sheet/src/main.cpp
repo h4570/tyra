@@ -12,10 +12,9 @@
 #include "tutorial_10.hpp"
 
 /**
- * In this tutorial we will learn how to:
- * - Load png file and create texture from it
- * - Create sprite class
- * - Clear screen and render sprite
+ * In this tutorial we will learn:
+ * - How works the offset of the sprite
+ * - how works the texture mapping  
  */
 
 int main() {

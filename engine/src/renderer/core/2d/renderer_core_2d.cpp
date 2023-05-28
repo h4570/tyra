@@ -84,10 +84,10 @@ void RendererCore2D::render(const Sprite& sprite,
   else if (sizeY > sizeX)
     texS = texMax / (sizeY / sizeX);
 
-  rect->t0.s = sprite.flipHorizontal ? texS : 0.0F;
-  rect->t0.t = sprite.flipVertical ? texT : 0.0F;
-  rect->t1.s = sprite.flipHorizontal ? 0.0F : texS;
-  rect->t1.t = sprite.flipVertical ? 0.0F : texT;
+  rect->t0.s = sprite.flipHorizontal ? (texS+sprite.offset.x) : sprite.offset.x;
+  rect->t0.t = sprite.flipVertical ? (texT+sprite.offset.y) : sprite.offset.y;
+  rect->t1.s = sprite.flipHorizontal ? sprite.offset.x : (texS+sprite.offset.x);
+  rect->t1.t = sprite.flipVertical ? sprite.offset.y : (texT+sprite.offset.y);
 
   rect->color.r = sprite.color.r;
   rect->color.g = sprite.color.g;
@@ -129,6 +129,11 @@ void RendererCore2D::render(const Sprite& sprite,
   dma_channel_send_packet2(packet, DMA_CHANNEL_GIF, true);
 
   context = !context;
+}
+
+void RendererCore2D::setTextureMappingType(const PipelineTextureMappingType textureMappingType){
+  lod.mag_filter = textureMappingType;
+  lod.min_filter = textureMappingType;
 }
 
 }  // namespace Tyra

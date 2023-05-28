@@ -11,6 +11,7 @@
 #pragma once
 
 #include <tyra>
+#include "fontSprite.hpp"
 
 namespace Tyra {
 
@@ -27,8 +28,16 @@ class Tutorial10 : public Game {
   void loadSprite();
 
   Engine* engine;
+  Pad* pad;
+  Font font;
 
   Sprite sprite;
+  Sprite spriteFlip;
+  Sprite spriteScale;
+  Sprite spriteStrech;
+  std::string str_filter;
+
+  PipelineTextureMappingType textureFilter;
 };
 
 }  // namespace Tyra
