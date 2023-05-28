@@ -6,7 +6,6 @@
 # Copyright 2022-2023, tyra - https://github.com/h4570/tyra
 # Licensed under Apache License 2.0
 # Guido Diego Quispe Robles
-# Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
 #include "engine.hpp"
@@ -15,7 +14,8 @@
 /**
  * In this tutorial we will learn:
  * - How works the offset of the sprite
- * - how works the texture mapping  
+ * - How works the texture mapping
+ * - How to write text (font)
  */
 
 int main() {

@@ -84,10 +84,12 @@ void RendererCore2D::render(const Sprite& sprite,
   else if (sizeY > sizeX)
     texS = texMax / (sizeY / sizeX);
 
-  rect->t0.s = sprite.flipHorizontal ? (texS+sprite.offset.x) : sprite.offset.x;
-  rect->t0.t = sprite.flipVertical ? (texT+sprite.offset.y) : sprite.offset.y;
-  rect->t1.s = sprite.flipHorizontal ? sprite.offset.x : (texS+sprite.offset.x);
-  rect->t1.t = sprite.flipVertical ? sprite.offset.y : (texT+sprite.offset.y);
+  rect->t0.s =
+      sprite.flipHorizontal ? (texS + sprite.offset.x) : sprite.offset.x;
+  rect->t0.t = sprite.flipVertical ? (texT + sprite.offset.y) : sprite.offset.y;
+  rect->t1.s =
+      sprite.flipHorizontal ? sprite.offset.x : (texS + sprite.offset.x);
+  rect->t1.t = sprite.flipVertical ? sprite.offset.y : (texT + sprite.offset.y);
 
   rect->color.r = sprite.color.r;
   rect->color.g = sprite.color.g;
@@ -131,7 +133,8 @@ void RendererCore2D::render(const Sprite& sprite,
   context = !context;
 }
 
-void RendererCore2D::setTextureMappingType(const PipelineTextureMappingType textureMappingType){
+void RendererCore2D::setTextureMappingType(
+    const PipelineTextureMappingType textureMappingType) {
   lod.mag_filter = textureMappingType;
   lod.min_filter = textureMappingType;
 }

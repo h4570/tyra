@@ -18,7 +18,7 @@ Sprite::Sprite() {
   flipVertical = false;
   size.set(32.0F, 32.0F);
   position.set(100.0F, 100.0F);
-  offset.set(0.0F,0.0F);
+  offset.set(0.0F, 0.0F);
   scale = 1.0F;
   mode = MODE_REPEAT;
   setDefaultColor();

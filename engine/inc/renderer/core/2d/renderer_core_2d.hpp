@@ -31,8 +31,9 @@ class RendererCore2D {
   void render(const Sprite& sprite,
               const RendererCoreTextureBuffers& texBuffers, Texture* texture);
 
-  void setTextureMappingType(const PipelineTextureMappingType textureMappingType);
-   
+  void setTextureMappingType(
+      const PipelineTextureMappingType textureMappingType);
+
  private:
   void setPrim();
   void setLod();
