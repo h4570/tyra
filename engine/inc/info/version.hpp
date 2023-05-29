@@ -21,7 +21,7 @@ class Version {
   ~Version() {}
 
   static const u8 major = 2;
-  static const u8 minor = 1;
+  static const u8 minor = 2;
   static const u8 patch = 0;
 
   static std::string toString() {
