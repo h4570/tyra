@@ -13,6 +13,7 @@
 #include "debug/debug.hpp"
 #include "renderer/core/2d/sprite/sprite.hpp"
 #include "renderer/core/texture/renderer_core_texture_buffers.hpp"
+#include "renderer/3d/pipeline/shared/pipeline_texture_mapping_type.hpp"
 #include "renderer/core/texture/models/texture.hpp"
 #include "renderer/renderer_settings.hpp"
 #include <packet2_utils.h>
@@ -29,6 +30,9 @@ class RendererCore2D {
 
   void render(const Sprite& sprite,
               const RendererCoreTextureBuffers& texBuffers, Texture* texture);
+
+  void setTextureMappingType(
+      const PipelineTextureMappingType textureMappingType);
 
  private:
   void setPrim();
