@@ -3,20 +3,21 @@
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
-# Copyright 2022, tyra - https://github.com/h4570/tyra
+# Copyright 2022 - 2023, tyra - https://github.com/h4570/tyra
 # Licensed under Apache License 2.0
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
+# André Guilherme <andregui17@outlook.com>
 */
 
 #include "engine.hpp"
 
 namespace Tyra {
 
-Engine::Engine() { initAll(false); }
+Engine::Engine() { initAll(false, false); }
 
 Engine::Engine(const EngineOptions& options) {
   info.writeLogsToFile = options.writeLogsToFile;
-  initAll(options.loadUsbDriver);
+  initAll(options.loadUsbDriver, options.loadHddDriver);
 }
 
 Engine::~Engine() {}
@@ -35,9 +36,9 @@ void Engine::realLoop() {
   info.update();
 }
 
-void Engine::initAll(const bool& loadUsbDriver) {
+void Engine::initAll(const bool& loadUsbDriver, const bool& loadHddDriver) {
   srand(time(nullptr));
-  irx.loadAll(loadUsbDriver, info.writeLogsToFile);
+  irx.loadAll(loadUsbDriver, loadHddDriver, info.writeLogsToFile);
   renderer.init();
   banner.show(&renderer);
   audio.init();

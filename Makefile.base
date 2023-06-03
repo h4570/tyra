@@ -16,7 +16,7 @@ IRXEMBEDDEDEXT	:= irx-em
 CFLAGS      += -D_EE -Wall -O3
 LINKFLAGS	+= -O3 -Wl,-zmax-page-size=128
 ASFLAGS		+= -O3
-LIB         += -lstdc++ -ldma -lpacket2 -lgraph -ldraw -lmath3d -lpng -lz -lpad -laudsrv -lpatches -lcdvd
+LIB         += -lstdc++ -ldma -lpacket2 -lgraph -ldraw -lmath3d -lpng -lz -lpad -laudsrv -lpatches -lcdvd -lhdd -lfileXio
 INC         += -I$(PS2DEV)/ps2sdk/ee/include -I$(PS2DEV)/ps2sdk/common/include -I$(PS2DEV)/ps2sdk/ports/include
 
 #---------------------------------------------------------------------------------

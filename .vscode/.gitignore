@@ -1,6 +1,7 @@
 *.log
 
 # Configuration files
+/ps2dev-intellisense
 /c_cpp_properties.json
 /tasks.json
 /settings.json
