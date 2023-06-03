@@ -14,6 +14,6 @@
 namespace Demo {
 
 const bool IS_REAL_PS2_VIA_USB = false;
-//const bool IS_REAL_PS2_VIA_HDD = false;
+const bool IS_REAL_PS2_VIA_HDD = false;
 
 }  // namespace Demo
