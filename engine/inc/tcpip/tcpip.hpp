@@ -1,7 +1,16 @@
-#include <kernel.h>
+/*
+# _____        ____   ___
+#   |     \/   ____| |___|
+#   |     |   |   \  |   |
+#-----------------------------------------------------------------------
+# Copyright 2022 - 2023, tyra - https://github.com/h4570/tyra
+# Licensed under Apache License 2.0
+# Br4k2n <no email>
+# André Guilherme <andregui17@outlook.com>
+*/
+
 #include <netman.h>
 #include <ps2ips.h>
-#include <stdio.h>
 
 #pragma once
 
