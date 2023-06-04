@@ -80,8 +80,13 @@ bool IrxLoader::isLoaded = false;
 IrxLoader::IrxLoader() {
   SifInitRpc(0);
 
+#ifdef RESET_IOP
   while (!SifIopReset("", 0)) {
   };
+#else
+  while (!SifIopReset(nullptr, 0)) {
+  };
+#endif
   while (!SifIopSync()) {
   };
 
