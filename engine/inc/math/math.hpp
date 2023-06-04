@@ -36,9 +36,6 @@ class Math {
   static int randomi(const int& min, const int& max);
   static bool equalf(const float& a, const float& b,
                      const float& epsilon = 0.00001F);
-
- private:
-  Math();
 };
 
 }  // namespace Tyra
