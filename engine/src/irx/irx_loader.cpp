@@ -60,7 +60,6 @@ extern u8 usbmass_bd_irx[];
 extern u32 size_usbmass_bd_irx;
 #endif
 
-
 extern u8 ps2hdd_irx[];
 extern u32 size_ps2hdd_irx;
 
@@ -78,9 +77,9 @@ namespace Tyra {
 bool IrxLoader::isLoaded = false;
 
 IrxLoader::IrxLoader() {
-  SifInitRpc(0);
-
 #ifdef RESET_IOP
+  SifInitRpc(0);
+#ifdef IOP
   while (!SifIopReset("", 0)) {
   };
 #else
@@ -91,7 +90,7 @@ IrxLoader::IrxLoader() {
   };
 
   SifInitRpc(0);
-
+#endif
   this->applyRpcPatches();
 }
 
@@ -181,7 +180,8 @@ void IrxLoader::loadUsbModules(const bool& verbose) {
   SifExecModuleBuffer(&usbd_mini_irx, size_usbd_mini_irx, 0, nullptr, &ret);
   TYRA_ASSERT(ret >= 0, "Failed to load module: usbd_irx");
 
-  SifExecModuleBuffer(&usbmass_bd_mini_irx, size_usbmass_bd_mini_irx, 0, nullptr, &ret);
+  SifExecModuleBuffer(&usbmass_bd_mini_irx, size_usbmass_bd_mini_irx, 0,
+                      nullptr, &ret);
   TYRA_ASSERT(ret >= 0, "Failed to load module: usbmass");
 #else
   SifExecModuleBuffer(&usbd_irx, size_usbd_irx, 0, nullptr, &ret);
@@ -216,7 +216,7 @@ void IrxLoader::loadHddModules(const bool& verbose) {
   TYRA_ASSERT(ret >= 0, "Failed to load module: ps2dev9_irx");
 
   SifExecModuleBuffer(&ps2atad_irx, size_ps2atad_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >- 0, "Failed to load module: ps2atad.irx");
+  TYRA_ASSERT(ret >= 0, "Failed to load module: ps2atad.irx");
 
   if (verbose) TYRA_LOG("IRX: Hdd modules loaded");
 }

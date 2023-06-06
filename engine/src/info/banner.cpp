@@ -59,7 +59,7 @@ void Banner::show(Renderer* renderer) {
   std::cout << "          |     \\/   ____| |___|\n";
   std::cout << "          |     |   |   \\  |   |\n";
   std::cout << "-----------------------------------------\n";
-  std::cout << "Copyright 2022\n";
+  std::cout << "Copyright 2022 - 2023\n";
   std::cout << "Repository: https://github.com/h4570/tyra\n";
   std::cout << "Licensed under Apache License 2.0\n";
   std::cout << "Version: ";

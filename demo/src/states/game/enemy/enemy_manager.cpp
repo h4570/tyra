@@ -3,8 +3,9 @@
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
-# Copyright 2022, tyra - https://github.com/h4570/tyra
+# Copyright 2022 - 2023, tyra - https://github.com/h4570/tyra
 # Licensed under Apache License 2.0
+# André Guilherme <andregui17@outlook.com>
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -45,7 +46,7 @@ EnemyManager::EnemyManager(Engine* engine, const Heightmap& heightmap) {
   auto* death = engine->audio.adpcm.load(
       FileUtils::fromCwd("game/models/zombie/death.adpcm"));
 
-  const int enemyCount = IS_REAL_PS2_VIA_USB ? 8 : 12;
+  const int enemyCount = IS_REAL_PS2_VIA_USB | IS_REAL_PS2_VIA_HDD ? 8 : 12;
   for (int i = 0; i < enemyCount; i++) {
     EnemyInfo info;
     info.adpcmChannel = 9 + i;

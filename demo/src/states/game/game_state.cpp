@@ -3,8 +3,9 @@
 #   |     \/   ____| |___|
 #   |     |   |   \  |   |
 #-----------------------------------------------------------------------
-# Copyright 2022, tyra - https://github.com/h4570/tyra
+# Copyright 2022 - 2023, tyra - https://github.com/h4570/tyra
 # Licensed under Apache License 2.0
+# André Guilherme <andregui17@outlook.com>
 # Sandro Sobczyński <sandro.sobczynski@gmail.com>
 */
 
@@ -45,7 +46,7 @@ void GameState::onStart() {
 
   engine->audio.song.setVolume(85);
 
-  if (IS_REAL_PS2_VIA_USB) engine->renderer.setFrameLimit(false);
+  if (IS_REAL_PS2_VIA_USB || IS_REAL_PS2_VIA_HDD) engine->renderer.setFrameLimit(false);
 
   initialized = true;
 }

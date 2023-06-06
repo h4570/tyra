@@ -22,7 +22,7 @@ int main() {
     options.loadUsbDriver = true;
   }
 
-  else {
+  if (Demo::IS_REAL_PS2_VIA_HDD) {
     options.loadHddDriver = true;
   }
 
