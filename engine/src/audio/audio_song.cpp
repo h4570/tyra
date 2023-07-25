@@ -148,6 +148,7 @@ void AudioSong::work() {
 
   if (chunkReadStatus > 0) {
     WaitSema(fillbufferSema);  // wait until previous chunk wasn't finished
+    audsrv_wait_audio(chunkReadStatus);
     audsrv_play_audio(chunk, chunkReadStatus);
     for (u32 i = 0; i < getListenersCount(); i++)
       songListeners[i]->listener->onAudioTick();
