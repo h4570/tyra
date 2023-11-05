@@ -50,9 +50,9 @@ class TyraDebug {
     if (Tyra::Info::writeLogsToFile) {
       std::ofstream logFile;
       logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
-                  std::ofstream::out | std::ofstream::app);
+                   std::ofstream::out | std::ofstream::app);
       logFile << ss.str();
-      logFile.flush(); 
+      logFile.flush();
       // logFile.close();
     } else {
       printf("%s", ss.str().c_str());
@@ -70,7 +70,7 @@ class TyraDebug {
     if (Tyra::Info::writeLogsToFile) {
       std::ofstream logFile;
       logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
-                  std::ofstream::out | std::ofstream::app);
+                   std::ofstream::out | std::ofstream::app);
       logFile << ss1.str();
       logFile.flush();
       // logFile.close();
@@ -88,7 +88,7 @@ class TyraDebug {
     if (Tyra::Info::writeLogsToFile) {
       std::ofstream logFile;
       logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
-                  std::ofstream::out | std::ofstream::app);
+                   std::ofstream::out | std::ofstream::app);
       logFile << ss2.str();
       logFile.flush();
       // logFile.close();
@@ -113,7 +113,7 @@ class TyraDebug {
     if (Tyra::Info::writeLogsToFile) {
       std::ofstream logFile;
       logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
-                  std::ofstream::out | std::ofstream::app);
+                   std::ofstream::out | std::ofstream::app);
       logFile << ss.str();
       logFile.flush();
       // logFile.close();
