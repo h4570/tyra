@@ -87,7 +87,7 @@ class TyraDebug {
 
  private:
   static void writeInLogFile(std::stringstream* ss);
-  
+
   template <typename Arg, typename... Args>
   static void writeAssertLines(Arg&& arg, Args&&... args) {
     std::stringstream ss;
