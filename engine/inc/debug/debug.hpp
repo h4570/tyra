@@ -48,9 +48,12 @@ class TyraDebug {
     (void)expander{0, (void(ss << std::forward<Args>(args)), 0)...};
 
     if (Tyra::Info::writeLogsToFile) {
-      auto* logFile = getLogFile();
-      *logFile << ss.str();
-      logFile->flush();
+      std::ofstream logFile;
+      logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
+                  std::ofstream::out | std::ofstream::app);
+      logFile << ss.str();
+      logFile.flush(); 
+      // logFile.close();
     } else {
       printf("%s", ss.str().c_str());
     }
@@ -65,9 +68,12 @@ class TyraDebug {
     ss1 << "|\n";
 
     if (Tyra::Info::writeLogsToFile) {
-      auto* logFile = getLogFile();
-      *logFile << ss1.str();
-      logFile->flush();
+      std::ofstream logFile;
+      logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
+                  std::ofstream::out | std::ofstream::app);
+      logFile << ss1.str();
+      logFile.flush();
+      // logFile.close();
     } else {
       printf("%s", ss1.str().c_str());
     }
@@ -80,9 +86,12 @@ class TyraDebug {
     ss2 << "====================================\n\n";
 
     if (Tyra::Info::writeLogsToFile) {
-      auto* logFile = getLogFile();
-      *logFile << ss2.str();
-      logFile->flush();
+      std::ofstream logFile;
+      logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
+                  std::ofstream::out | std::ofstream::app);
+      logFile << ss2.str();
+      logFile.flush();
+      // logFile.close();
     } else {
       printf("%s", ss2.str().c_str());
     }
@@ -92,9 +101,6 @@ class TyraDebug {
   }
 
  private:
-  static std::unique_ptr<std::ofstream> logFile;
-  static std::ofstream* getLogFile();
-
   template <typename Arg, typename... Args>
   static void writeAssertLines(Arg&& arg, Args&&... args) {
     std::stringstream ss;
@@ -105,9 +111,12 @@ class TyraDebug {
         0, (void(ss << "| " << std::forward<Args>(args) << "\n"), 0)...};
 
     if (Tyra::Info::writeLogsToFile) {
-      auto* logfile = getLogFile();
-      *logfile << ss.str();
-      logFile->flush();
+      std::ofstream logFile;
+      logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
+                  std::ofstream::out | std::ofstream::app);
+      logFile << ss.str();
+      logFile.flush();
+      // logFile.close();
     } else {
       printf("%s", ss.str().c_str());
     }
