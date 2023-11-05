@@ -8,18 +8,13 @@
 # Wellington Carvalho <wellcoj@gmail.com>
 */
 
-// #include "debug/debug.hpp"
+#include "debug/debug.hpp"
 
-// std::unique_ptr<std::ofstream> TyraDebug::logFile;
-
-// std::ofstream* TyraDebug::getLogFile() {
-//   if (logFile) {
-//     return logFile.get();
-//   } else {
-//     logFile = std::make_unique<std::ofstream>();
-//     logFile->open(Tyra::FileUtils::fromCwd("log.txt"),
-//                   std::ofstream::out | std::ofstream::app);
-//     return logFile.get();
-//   }
-
-// }  // namespace Tyra
+void TyraDebug::writeInLogFile(std::stringstream* ss) {
+  std::ofstream logFile;
+  logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
+               std::ofstream::out | std::ofstream::app);
+  logFile << ss->str();
+  logFile.flush();
+  // logFile.close();
+}

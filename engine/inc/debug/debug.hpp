@@ -48,12 +48,7 @@ class TyraDebug {
     (void)expander{0, (void(ss << std::forward<Args>(args)), 0)...};
 
     if (Tyra::Info::writeLogsToFile) {
-      std::ofstream logFile;
-      logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
-                   std::ofstream::out | std::ofstream::app);
-      logFile << ss.str();
-      logFile.flush();
-      // logFile.close();
+      writeInLogFile(&ss);
     } else {
       printf("%s", ss.str().c_str());
     }
@@ -68,12 +63,7 @@ class TyraDebug {
     ss1 << "|\n";
 
     if (Tyra::Info::writeLogsToFile) {
-      std::ofstream logFile;
-      logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
-                   std::ofstream::out | std::ofstream::app);
-      logFile << ss1.str();
-      logFile.flush();
-      // logFile.close();
+      writeInLogFile(&ss1);
     } else {
       printf("%s", ss1.str().c_str());
     }
@@ -86,12 +76,7 @@ class TyraDebug {
     ss2 << "====================================\n\n";
 
     if (Tyra::Info::writeLogsToFile) {
-      std::ofstream logFile;
-      logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
-                   std::ofstream::out | std::ofstream::app);
-      logFile << ss2.str();
-      logFile.flush();
-      // logFile.close();
+      writeInLogFile(&ss2);
     } else {
       printf("%s", ss2.str().c_str());
     }
@@ -101,6 +86,8 @@ class TyraDebug {
   }
 
  private:
+  static void writeInLogFile(std::stringstream* ss);
+  
   template <typename Arg, typename... Args>
   static void writeAssertLines(Arg&& arg, Args&&... args) {
     std::stringstream ss;
@@ -111,12 +98,7 @@ class TyraDebug {
         0, (void(ss << "| " << std::forward<Args>(args) << "\n"), 0)...};
 
     if (Tyra::Info::writeLogsToFile) {
-      std::ofstream logFile;
-      logFile.open(Tyra::FileUtils::fromCwd("log.txt"),
-                   std::ofstream::out | std::ofstream::app);
-      logFile << ss.str();
-      logFile.flush();
-      // logFile.close();
+      writeInLogFile(&ss);
     } else {
       printf("%s", ss.str().c_str());
     }
