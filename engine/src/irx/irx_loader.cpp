@@ -215,9 +215,10 @@ void IrxLoader::loadHddModules(const bool& verbose) {
   SifExecModuleBuffer(&ps2dev9_irx, size_ps2dev9_irx, 0, nullptr, &ret);
   TYRA_ASSERT(ret >= 0, "Failed to load module: ps2dev9_irx");
 
+#ifdef ATAD //PS2 Atad support
   SifExecModuleBuffer(&ps2atad_irx, size_ps2atad_irx, 0, nullptr, &ret);
   TYRA_ASSERT(ret >= 0, "Failed to load module: ps2atad.irx");
-
+#endif
   if (verbose) TYRA_LOG("IRX: Hdd modules loaded");
 }
 
