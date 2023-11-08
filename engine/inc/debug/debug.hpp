@@ -20,6 +20,7 @@
 #else  // IF Debug
 
 #include <stdio.h>
+#include <debug.h>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -81,7 +82,12 @@ class TyraDebug {
       printf("%s", ss2.str().c_str());
     }
 
+    init_scr();
     for (;;) {
+      scr_setXY(20, 10);
+      scr_printf(ss1.str().c_str());
+      writeAssertLinesInScreen(args...);
+      scr_printf(ss2.str().c_str());
     }
   }
 
@@ -102,6 +108,18 @@ class TyraDebug {
     } else {
       printf("%s", ss.str().c_str());
     }
+  }
+
+  template <typename Arg, typename... Args>
+  static void writeAssertLinesInScreen(Arg&& arg, Args&&... args) {
+    std::stringstream ss;
+
+    ss << "| " << std::forward<Arg>(arg) << "\n";
+    using expander = int[];
+    (void)expander{
+        0, (void(ss << "| " << std::forward<Args>(args) << "\n"), 0)...};
+
+    scr_printf(ss.str().c_str());
   }
 };
 
