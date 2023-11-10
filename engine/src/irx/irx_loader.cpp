@@ -24,7 +24,7 @@
   extern u8 _irx[]; \
   extern int size_##_irx
 
-EXTERN_IRX(io2man_irx);
+EXTERN_IRX(sio2man_irx);
 EXTERN_IRX(padman_irx);
 EXTERN_IRX(audsrv_irx);
 EXTERN_IRX(libsd_irx);
