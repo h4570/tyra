@@ -22,6 +22,11 @@ INC         += -I$(PS2DEV)/ps2sdk/ee/include -I$(PS2DEV)/ps2sdk/common/include -
 #---------------------------------------------------------------------------------
 #DO NOT EDIT BELOW THIS LINE
 #---------------------------------------------------------------------------------
+ifeq ($(EESIO_USE_SIOCOOKIE), 1)
+  LIB += -lsiocookie
+  CFLAGS += -DEESIO_UART_USE_SIOCOOKIE
+endif
+
 SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 

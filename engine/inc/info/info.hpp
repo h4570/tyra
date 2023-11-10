@@ -15,6 +15,10 @@
 #include "time/timer.hpp"
 #include "./version.hpp"
 
+#define LOGGING_STDOUT (0)
+#define LOGGING_FILE   (1)
+#define LOGGING_EESIO  (3)
+
 namespace Tyra {
 
 class Info {
@@ -24,7 +28,7 @@ class Info {
 
   Version version;
 
-  static bool writeLogsToFile;
+  static int loggingMode;
 
   /** Called by engine */
   void update();
