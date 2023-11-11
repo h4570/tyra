@@ -27,7 +27,7 @@ class IrxLoader {
   void loadSio2man(const bool& verbose);
   void loadPadman(const bool& verbose);
   void loadLibsd(const bool& verbose);
-  void loadPOSIX(const bool& verbose);
+  void loadIO(const bool& verbose);
   void loadUsbModules(const bool& verbose);
   void loadAudsrv(const bool& verbose);
 
