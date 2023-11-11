@@ -8,6 +8,8 @@
 # Wellington Carvalho <wellcoj@gmail.com>
 # André Guilherme <andregui17@outlook.com>
 */
+#define NEWLIB_PORT_AWARE 
+#include <fileXio_rpc.h>
 
 #include "irx/irx_loader.hpp"
 #include "debug/debug.hpp"
@@ -49,21 +51,14 @@ namespace Tyra {
 bool IrxLoader::isLoaded = false;
 
 IrxLoader::IrxLoader() {
-#ifdef RESET_IOP
   SifInitRpc(0);
 
-#ifdef IOP
-  while (!SifIopReset(nullptr, 0)) {
-  };
-#else
   while (!SifIopReset("", 0)) {
   };
-#endif
   while (!SifIopSync()) {
   };
 
   SifInitRpc(0);
-#endif
 
   this->applyRpcPatches();
 }
@@ -139,6 +134,8 @@ void IrxLoader::loadIO(const bool& verbose) {
   irx_id = SifExecModuleBuffer(&fileXio_irx, size_fileXio_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: fileXio_irx ret:", ret, ", id:", irx_id);
 
+  ret = fileXioInit();
+  TYRA_ASSERT(ret < 0, "fileXioInit was not initialized properly ret:", ret);
   if (verbose) TYRA_LOG("IRX: FileXio loaded!");
 }
 
