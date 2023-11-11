@@ -24,7 +24,7 @@ class Sprite {
   ~Sprite();
 
   u32 id;
-  Vec2 position, size;
+  Vec2 position, size, offset;
   float scale;
   Color color;
   SpriteMode mode;

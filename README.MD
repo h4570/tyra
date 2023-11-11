@@ -121,6 +121,7 @@ List of games developed with Tyra.
 If you created one, please contact me - I will add it to the list :)
 
 * [Tyracraft](https://github.com/Wellinator/tyracraft) by [Wellinator](https://github.com/Wellinator)
+* [Game with car](https://github.com/freebytego/gwc-ps2) by [freebytego](https://github.com/freebytego)
 * [Rock, paper, scissors](https://github.com/GuidoDQR/my-ps2-game) by [GuidoDQR](https://github.com/GuidoDQR)
 * [TyraTale](https://github.com/Br4k2n/TyraTale) by [Br4k2n](https://github.com/Br4k2n)
 

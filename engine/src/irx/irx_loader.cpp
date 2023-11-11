@@ -20,36 +20,20 @@
 #include "file/file_utils.hpp"
 
 // external IRX modules
+#define EXTERN_IRX(_irx) \
+  extern u8 _irx[]; \
+  extern int size_##_irx
 
-extern u8 sio2man_irx[];
-extern int size_sio2man_irx;
-
-extern u8 padman_irx[];
-extern int size_padman_irx;
-
-extern u8 audsrv_irx[];
-extern int size_audsrv_irx;
-
-extern u8 libsd_irx[];
-extern int size_libsd_irx;
-
-extern u8 fileXio_irx[];
-extern int size_fileXio_irx;
-
-extern u8 iomanX_irx[];
-extern int size_iomanX_irx;
-
-extern u8 bdm_irx[];
-extern int size_bdm_irx;
-
-extern u8 bdmfs_fatfs_irx[];
-extern int size_bdmfs_fatfs_irx;
-
-extern u8 usbd_irx[];
-extern int size_usbd_irx;
-
-extern u8 usbmass_bd_irx[];
-extern int size_usbmass_bd_irx;
+EXTERN_IRX(sio2man_irx);
+EXTERN_IRX(padman_irx);
+EXTERN_IRX(audsrv_irx);
+EXTERN_IRX(libsd_irx);
+EXTERN_IRX(fileXio_irx);
+EXTERN_IRX(iomanX_irx);
+EXTERN_IRX(bdm_irx);
+EXTERN_IRX(bdmfs_fatfs_irx);
+EXTERN_IRX(usbd_irx);
+EXTERN_IRX(usbmass_bd_irx);
 
 namespace Tyra {
 

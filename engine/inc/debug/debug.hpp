@@ -20,6 +20,7 @@
 #else  // IF Debug
 
 #include <stdio.h>
+#include <debug.h>
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -48,9 +49,7 @@ class TyraDebug {
     (void)expander{0, (void(ss << std::forward<Args>(args)), 0)...};
 
     if (Tyra::Info::writeLogsToFile) {
-      auto* logFile = getLogFile();
-      *logFile << ss.str();
-      logFile->flush();
+      writeInLogFile(&ss);
     } else {
       printf("%s", ss.str().c_str());
     }
@@ -65,9 +64,7 @@ class TyraDebug {
     ss1 << "|\n";
 
     if (Tyra::Info::writeLogsToFile) {
-      auto* logFile = getLogFile();
-      *logFile << ss1.str();
-      logFile->flush();
+      writeInLogFile(&ss1);
     } else {
       printf("%s", ss1.str().c_str());
     }
@@ -80,20 +77,22 @@ class TyraDebug {
     ss2 << "====================================\n\n";
 
     if (Tyra::Info::writeLogsToFile) {
-      auto* logFile = getLogFile();
-      *logFile << ss2.str();
-      logFile->flush();
+      writeInLogFile(&ss2);
     } else {
       printf("%s", ss2.str().c_str());
     }
 
+    init_scr();
     for (;;) {
+      scr_setXY(20, 10);
+      scr_printf(ss1.str().c_str());
+      writeAssertLinesInScreen(args...);
+      scr_printf(ss2.str().c_str());
     }
   }
 
  private:
-  static std::unique_ptr<std::ofstream> logFile;
-  static std::ofstream* getLogFile();
+  static void writeInLogFile(std::stringstream* ss);
 
   template <typename Arg, typename... Args>
   static void writeAssertLines(Arg&& arg, Args&&... args) {
@@ -105,12 +104,22 @@ class TyraDebug {
         0, (void(ss << "| " << std::forward<Args>(args) << "\n"), 0)...};
 
     if (Tyra::Info::writeLogsToFile) {
-      auto* logfile = getLogFile();
-      *logfile << ss.str();
-      logFile->flush();
+      writeInLogFile(&ss);
     } else {
       printf("%s", ss.str().c_str());
     }
+  }
+
+  template <typename Arg, typename... Args>
+  static void writeAssertLinesInScreen(Arg&& arg, Args&&... args) {
+    std::stringstream ss;
+
+    ss << "| " << std::forward<Arg>(arg) << "\n";
+    using expander = int[];
+    (void)expander{
+        0, (void(ss << "| " << std::forward<Args>(args) << "\n"), 0)...};
+
+    scr_printf(ss.str().c_str());
   }
 };
 
