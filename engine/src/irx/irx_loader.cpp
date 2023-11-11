@@ -21,56 +21,30 @@
 #include "file/file_utils.hpp"
 
 // external IRX modules
-#define USE_USBDMINI
-extern u8 sio2man_irx[];
-extern u32 size_sio2man_irx;
+#define EXTERN_IRX(_irx) \
+  extern u8 _irx[]; \
+  extern int size_##_irx
 
-extern u8 padman_irx[];
-extern u32 size_padman_irx;
-
-extern u8 audsrv_irx[];
-extern u32 size_audsrv_irx;
-
-extern u8 libsd_irx[];
-extern u32 size_libsd_irx;
-
-extern u8 fileXio_irx[];
-extern u32 size_fileXio_irx;
-
-extern u8 iomanX_irx[];
-extern u32 size_iomanX_irx;
-
-extern u8 bdm_irx[];
-extern u32 size_bdm_irx;
-
-extern u8 bdmfs_fatfs_irx[];
-extern u32 size_bdmfs_fatfs_irx;
-
-#ifdef USE_USBDMINI
-extern u8 usbd_mini_irx[];
-extern u8 size_usbd_mini_irx;
-
-extern u8 usbmass_bd_mini_irx[];
-extern u32 size_usbmass_bd_mini_irx;
+EXTERN_IRX(sio2man_irx);
+EXTERN_IRX(padman_irx);
+EXTERN_IRX(audsrv_irx);
+EXTERN_IRX(libsd_irx);
+EXTERN_IRX(fileXio_irx);
+EXTERN_IRX(iomanX_irx);
+EXTERN_IRX(bdm_irx);
+EXTERN_IRX(bdmfs_fatfs_irx);
+#ifdef USE_USBBDMINI
+EXTERN_IRX(usbd_mini_irx);
+EXTERN_IRX(usbmass_bd_irx);
 #else
-extern u8 usbd_irx[];
-extern u32 size_usbd_irx;
-
-extern u8 usbmass_bd_irx[];
-extern u32 size_usbmass_bd_irx;
+EXTERN_IRX(usbd_irx);
+EXTERN_IRX(usbmass_bd_mini_irx);
 #endif
+EXTERN_IRX(ps2hdd_irx);
+EXTERN_IRX(ps2fs_irx);
+EXTERN_IRX(ps2dev9_irx);
+EXTERN_IRX(ps2atad_irx);
 
-extern u8 ps2hdd_irx[];
-extern u32 size_ps2hdd_irx;
-
-extern u8 ps2fs_irx[];
-extern u32 size_ps2fs_irx;
-
-extern u8 ps2dev9_irx[];
-extern u32 size_ps2dev9_irx;
-
-extern u8 ps2atad_irx[];
-extern u32 size_ps2atad_irx;
 
 namespace Tyra {
 
@@ -103,7 +77,7 @@ void IrxLoader::loadAll(const bool& withUsb, const bool& withHdd,
     return;
   }
 
-  loadFileXio(!isLoggingToFile);
+  loadIO(!isLoggingToFile);
   loadSio2man(!isLoggingToFile);
   loadPadman(!isLoggingToFile);
   loadLibsd(!isLoggingToFile);
@@ -154,7 +128,8 @@ void IrxLoader::loadLibsd(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Libsd loaded!");
 }
 
-void IrxLoader::loadFileXio(const bool& verbose) {
+void IrxLoader::loadIO(const bool& verbose) {
+  int ret;
   if (verbose) TYRA_LOG("IRX: Loading iomanX...");
 
   int ret;
