@@ -35,13 +35,8 @@ EXTERN_IRX(fileXio_irx);
 EXTERN_IRX(iomanX_irx);
 EXTERN_IRX(bdm_irx);
 EXTERN_IRX(bdmfs_fatfs_irx);
-#ifdef USE_USBBDMINI
-EXTERN_IRX(usbd_mini_irx);
-EXTERN_IRX(usbmass_bd_mini_irx);
-#else
 EXTERN_IRX(usbd_irx);
 EXTERN_IRX(usbmass_bd_irx);
-#endif
 EXTERN_IRX(ps2hdd_irx);
 EXTERN_IRX(ps2fs_irx);
 EXTERN_IRX(ps2dev9_irx);
@@ -143,27 +138,18 @@ void IrxLoader::loadUsbModules(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading usb modules...");
 
   int ret, irx_id;
-#ifdef USE_USBDMINI
-  irx_id = SifExecModuleBuffer(&usbd_mini_irx, size_usbd_mini_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbd_irx ret:", ret, ", id:", irx_id);
-#else
+
   irx_id = SifExecModuleBuffer(&usbd_irx, size_usbd_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbd_irx ret:", ret, ", id:", irx_id);
-#endif
+
   irx_id = SifExecModuleBuffer(&bdm_irx, size_bdm_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: bdm_irx ret:", ret, ", id:", irx_id);
 
   irx_id = SifExecModuleBuffer(&bdmfs_fatfs_irx, size_bdmfs_fatfs_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: bdmfs_fatfs ret:", ret, ", id:", irx_id);
 
-#ifdef USE_USBDMINI
-   irx_id = SifExecModuleBuffer(&usbmass_bd_mini_irx, size_usbmass_bd_mini_irx, 0,
-                      nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbmass_mini ret:", ret, ", id:", irx_id);
-#else
   irx_id = SifExecModuleBuffer(&usbmass_bd_irx, size_usbmass_bd_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbmass ret:", ret, ", id:", irx_id);
-#endif
 
   waitUntilUsbDeviceIsReady();
 
