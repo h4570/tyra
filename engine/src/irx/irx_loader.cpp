@@ -28,6 +28,8 @@ EXTERN_IRX(sio2man_irx);
 EXTERN_IRX(padman_irx);
 EXTERN_IRX(audsrv_irx);
 EXTERN_IRX(libsd_irx);
+EXTERN_IRX(fileXio_irx);
+EXTERN_IRX(iomanX_irx);
 EXTERN_IRX(bdm_irx);
 EXTERN_IRX(bdmfs_fatfs_irx);
 EXTERN_IRX(usbd_irx);
@@ -58,6 +60,7 @@ void IrxLoader::loadAll(const bool& withUsb, const bool& isLoggingToFile) {
     return;
   }
 
+  loadIO(!isLoggingToFile);
   loadSio2man(!isLoggingToFile);
   loadPadman(!isLoggingToFile);
   loadLibsd(!isLoggingToFile);
@@ -102,6 +105,24 @@ void IrxLoader::loadLibsd(const bool& verbose) {
   TYRA_ASSERT(ret >= 0, "Failed to load module: libsd_irx");
 
   if (verbose) TYRA_LOG("IRX: Libsd loaded!");
+}
+
+void IrxLoader::loadIO(const bool& verbose) {
+  int ret;
+  if (verbose) TYRA_LOG("IRX: Loading iomanX...");
+
+  SifExecModuleBuffer(&iomanX_irx, size_iomanX_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret >= 0, "Failed to load module: iomanX_irx");
+
+  if (verbose) TYRA_LOG("IRX: iomanX loaded!");
+
+  if (verbose) TYRA_LOG("IRX: Loading fileXio...");
+
+  SifExecModuleBuffer(&fileXio_irx, size_fileXio_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret >= 0, "Failed to load module: fileXio_irx");
+
+  if (verbose) TYRA_LOG("IRX: fileXio_irx loaded!");
+
 }
 
 void IrxLoader::loadUsbModules(const bool& verbose) {
