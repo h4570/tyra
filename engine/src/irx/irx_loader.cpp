@@ -123,7 +123,7 @@ void IrxLoader::loadLibsd(const bool& verbose) {
 
   int ret, irx_id;
   irx_id = SifExecModuleBuffer(&libsd_irx, size_libsd_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: libsd_irx");
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: libsd_irx ret:", ret, ", id:", irx_id);
 
   if (verbose) TYRA_LOG("IRX: Libsd loaded!");
 }
@@ -134,10 +134,10 @@ void IrxLoader::loadIO(const bool& verbose) {
   int ret, irx_id;
 
   irx_id = SifExecModuleBuffer(&iomanX_irx, size_iomanX_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: iomanX_irx");
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: iomanX_irx ret:", ret, ", id:", irx_id);
 
   irx_id = SifExecModuleBuffer(&fileXio_irx, size_fileXio_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: fileXio_irx");
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: fileXio_irx ret:", ret, ", id:", irx_id);
 
   if (verbose) TYRA_LOG("IRX: FileXio loaded!");
 }
@@ -148,7 +148,7 @@ void IrxLoader::loadUsbModules(const bool& verbose) {
   int ret, irx_id;
 #ifdef USE_USBDMINI
   irx_id = SifExecModuleBuffer(&usbd_mini_irx, size_usbd_mini_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbd_irx");
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbd_irx ret:", ret, ", id:", irx_id);
 #else
   irx_id = SifExecModuleBuffer(&usbd_irx, size_usbd_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbd_irx ret:", ret, ", id:", irx_id);
@@ -162,7 +162,7 @@ void IrxLoader::loadUsbModules(const bool& verbose) {
 #ifdef USE_USBDMINI
    irx_id = SifExecModuleBuffer(&usbmass_bd_mini_irx, size_usbmass_bd_mini_irx, 0,
                       nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbmass");
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbmass_mini ret:", ret, ", id:", irx_id);
 #else
   irx_id = SifExecModuleBuffer(&usbmass_bd_irx, size_usbmass_bd_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: usbmass ret:", ret, ", id:", irx_id);
@@ -179,16 +179,16 @@ void IrxLoader::loadHddModules(const bool& verbose) {
   int ret, irx_id;
 
   irx_id = SifExecModuleBuffer(&ps2dev9_irx, size_ps2dev9_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2dev9_irx");
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2dev9_irx ret:", ret, ", id:", irx_id);
 
   irx_id = SifExecModuleBuffer(&ps2atad_irx, size_ps2atad_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2atad.irx");
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2atad.irx ret:", ret, ", id:", irx_id);
 
   irx_id = SifExecModuleBuffer(&ps2hdd_irx, size_ps2hdd_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2hdd_irx");
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2hdd_irx ret:", ret, ", id:", irx_id);
 
   irx_id = SifExecModuleBuffer(&ps2fs_irx, size_ps2fs_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2fs_irx");
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2fs_irx ret:", ret, ", id:", irx_id);
 
   if (verbose) TYRA_LOG("IRX: Hdd modules loaded");
 }
