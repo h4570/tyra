@@ -44,6 +44,7 @@ EXTERN_IRX(ps2atad_irx);
 namespace Tyra {
 
 bool IrxLoader::isLoaded = false;
+bool IrxLoader::have_dev9 = false;
 
 IrxLoader::IrxLoader() {
   SifInitRpc(0);
@@ -129,8 +130,8 @@ void IrxLoader::loadIO(const bool& verbose) {
   irx_id = SifExecModuleBuffer(&fileXio_irx, size_fileXio_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: fileXio_irx ret:", ret, ", id:", irx_id);
 
-  ret = fileXioInit();
-  TYRA_ASSERT(ret < 0, "fileXioInit was not initialized properly ret:", ret);
+  fileXioInit();
+
   if (verbose) TYRA_LOG("IRX: FileXio loaded!");
 }
 
@@ -156,13 +157,26 @@ void IrxLoader::loadUsbModules(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Usb modules loaded!");
 }
 
+bool IrxLoader::loadDEV9(const bool &verbose)
+{
+  if(verbose) TYRA_LOG("IRX: Loading DEV9 module");
+  
+  if(!have_dev9) {
+    int irx_id, ret;
+    irx_id = SifExecModuleBuffer(&ps2dev9_irx, size_ps2dev9_irx, 0, nullptr, &ret);
+    TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2dev9_irx ret:", ret, ", id:", irx_id);
+    have_dev9 = true;
+  }
+  return true;
+}
+
 void IrxLoader::loadHddModules(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading Hdd Modules!");
 
   int ret, irx_id;
 
-  irx_id = SifExecModuleBuffer(&ps2dev9_irx, size_ps2dev9_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2dev9_irx ret:", ret, ", id:", irx_id);
+  if(!loadDEV9(true))
+    TYRA_LOG("IRX: Loading Standalone: ps2dev9.irx");
 
   irx_id = SifExecModuleBuffer(&ps2atad_irx, size_ps2atad_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2atad.irx ret:", ret, ", id:", irx_id);
