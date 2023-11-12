@@ -20,30 +20,20 @@
 #include "file/file_utils.hpp"
 
 // external IRX modules
+#define EXTERN_IRX(_irx) \
+  extern u8 _irx[]; \
+  extern int size_##_irx
 
-extern u8 sio2man_irx[];
-extern int size_sio2man_irx;
-
-extern u8 padman_irx[];
-extern int size_padman_irx;
-
-extern u8 audsrv_irx[];
-extern int size_audsrv_irx;
-
-extern u8 libsd_irx[];
-extern int size_libsd_irx;
-
-extern u8 bdm_irx[];
-extern int size_bdm_irx;
-
-extern u8 bdmfs_fatfs_irx[];
-extern int size_bdmfs_fatfs_irx;
-
-extern u8 usbd_irx[];
-extern int size_usbd_irx;
-
-extern u8 usbmass_bd_irx[];
-extern int size_usbmass_bd_irx;
+EXTERN_IRX(sio2man_irx);
+EXTERN_IRX(padman_irx);
+EXTERN_IRX(audsrv_irx);
+EXTERN_IRX(libsd_irx);
+EXTERN_IRX(fileXio_irx);
+EXTERN_IRX(iomanX_irx);
+EXTERN_IRX(bdm_irx);
+EXTERN_IRX(bdmfs_fatfs_irx);
+EXTERN_IRX(usbd_irx);
+EXTERN_IRX(usbmass_bd_irx);
 
 namespace Tyra {
 
@@ -70,6 +60,7 @@ void IrxLoader::loadAll(const bool& withUsb, const bool& isLoggingToFile) {
     return;
   }
 
+  loadIO(!isLoggingToFile);
   loadSio2man(!isLoggingToFile);
   loadPadman(!isLoggingToFile);
   loadLibsd(!isLoggingToFile);
@@ -114,6 +105,24 @@ void IrxLoader::loadLibsd(const bool& verbose) {
   TYRA_ASSERT(ret >= 0, "Failed to load module: libsd_irx");
 
   if (verbose) TYRA_LOG("IRX: Libsd loaded!");
+}
+
+void IrxLoader::loadIO(const bool& verbose) {
+  int ret;
+  if (verbose) TYRA_LOG("IRX: Loading iomanX...");
+
+  SifExecModuleBuffer(&iomanX_irx, size_iomanX_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret >= 0, "Failed to load module: iomanX_irx");
+
+  if (verbose) TYRA_LOG("IRX: iomanX loaded!");
+
+  if (verbose) TYRA_LOG("IRX: Loading fileXio...");
+
+  SifExecModuleBuffer(&fileXio_irx, size_fileXio_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret >= 0, "Failed to load module: fileXio_irx");
+
+  if (verbose) TYRA_LOG("IRX: fileXio_irx loaded!");
+
 }
 
 void IrxLoader::loadUsbModules(const bool& verbose) {
