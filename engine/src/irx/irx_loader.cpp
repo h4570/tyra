@@ -68,7 +68,7 @@ void IrxLoader::loadAll(const bool& withUsb, const bool& withHdd,
     return;
   }
 
-  loadIO(!isLoggingToFile);
+  loadFileXio(!isLoggingToFile);
   loadSio2man(!isLoggingToFile);
   loadPadman(!isLoggingToFile);
   loadLibsd(!isLoggingToFile);
@@ -119,7 +119,7 @@ void IrxLoader::loadLibsd(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Libsd loaded!");
 }
 
-void IrxLoader::loadIO(const bool& verbose) {
+void IrxLoader::loadFileXio(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading FileXio...");
 
   int ret, irx_id;
