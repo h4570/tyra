@@ -33,6 +33,7 @@ class IrxLoader {
   void loadUsbModules(const bool& verbose);
   void loadAudsrv(const bool& verbose);
   void loadHddModules(const bool& verbose);
+  void loadPowerOff(const bool& verbose);
   bool loadDEV9(const bool& verbose);
 
   int applyRpcPatches();

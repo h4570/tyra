@@ -21,7 +21,10 @@
 #include <sbv_patches.h>
 #include <iopcontrol.h>
 #include "file/file_utils.hpp"
-
+#include <libpwroff.h>
+#include <hdd-ioctl.h>
+#include <io_common.h>
+#include <usbhdfsd-common.h>
 // external IRX modules
 #define EXTERN_IRX(_irx) \
   extern u8 _irx[]; \
@@ -37,6 +40,7 @@ EXTERN_IRX(bdm_irx);
 EXTERN_IRX(bdmfs_fatfs_irx);
 EXTERN_IRX(usbd_irx);
 EXTERN_IRX(usbmass_bd_irx);
+EXTERN_IRX(poweroff_irx);
 EXTERN_IRX(ps2hdd_irx);
 EXTERN_IRX(ps2fs_irx);
 EXTERN_IRX(ps2dev9_irx);
@@ -77,6 +81,7 @@ void IrxLoader::loadAll(const bool& withUsb, const bool& withHdd,
     loadUsbModules(!isLoggingToFile);
   }
 
+    loadPowerOff(!isLoggingToFile);
   if (withHdd) {
     loadHddModules(!isLoggingToFile);
   }
@@ -155,6 +160,27 @@ void IrxLoader::loadUsbModules(const bool& verbose) {
   waitUntilUsbDeviceIsReady();
 
   if (verbose) TYRA_LOG("IRX: Usb modules loaded!");
+}
+
+static void poweroffCallback(void *arg)
+{
+    fileXioDevctl("pfs:", PDIOC_CLOSEALL, NULL, 0, NULL, 0);
+    while (fileXioDevctl("dev9x:", DDIOC_OFF, NULL, 0, NULL, 0) < 0) {};
+    // As required by some (typically 2.5") HDDs, issue the SCSI STOP UNIT command to avoid causing an emergency park.
+    fileXioDevctl("mass:", USBMASS_DEVCTL_STOP_ALL, NULL, 0, NULL, 0);
+    /* Power-off the PlayStation 2. */
+    poweroffShutdown();
+}
+
+void IrxLoader::loadPowerOff(const bool &verbose) {
+  if (verbose) TYRA_LOG("IRX: Loading poweroff modules...");
+
+  int ret, irx_id;
+
+  irx_id = SifExecModuleBuffer(&poweroff_irx, size_poweroff_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: poweroff_irx ret:", ret, ", id:", irx_id);
+  poweroffInit();
+  poweroffSetCallback(&poweroffCallback, nullptr);
 }
 
 bool IrxLoader::loadDEV9(const bool &verbose)
