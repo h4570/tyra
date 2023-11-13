@@ -22,11 +22,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Get short SHA
-      id: slug
-      run: | 
-        echo "SHA8=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
-
     - name: Compile engine
       run: |
         make clean all -C engine
@@ -52,7 +47,7 @@ jobs:
       if: ${{ success() }}
       uses: actions/upload-artifact@v3
       with:
-        name: binaries-${{ env.SHA8 }}
+        name: tutorials-elf
         path: | 
           tutorials/01-hello/bin
           tutorials/02-sprite/bin
@@ -69,6 +64,6 @@ jobs:
       if: ${{ success() }}
       uses: actions/upload-artifact@v3
       with:
-        name: tyra-${{ env.SHA8 }}
+        name: demo-elf
         path: | 
           demo/bin
