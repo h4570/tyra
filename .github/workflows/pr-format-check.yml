@@ -23,6 +23,7 @@ on:
 
 jobs:
   check-format:
+    name: Check clang format 
     runs-on: ubuntu-latest
     
     steps:
