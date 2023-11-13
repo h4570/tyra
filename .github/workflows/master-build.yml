@@ -22,11 +22,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Get short SHA
-      id: slug
-      run: | 
-        echo "SHA8=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
-
     - name: Compile engine
       run: |
         make clean all -C engine
