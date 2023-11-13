@@ -1,0 +1,74 @@
+name: Official build
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    container: h4570/tyra
+    steps:
+    - name: Install dependencies
+      run: |
+        apt-get update
+        apt install -y git make wget
+        
+    - name: Set git safe directory
+      run: |
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Get short SHA
+      id: slug
+      run: | 
+        echo "SHA8=$(echo ${GITHUB_SHA} | cut -c1-8)" >> $GITHUB_ENV
+
+    - name: Compile engine
+      run: |
+        make clean all -C engine
+
+    - name: Compile tutorials
+      run: |
+        make clean all -C tutorials/01-hello
+        make clean all -C tutorials/02-sprite
+        make clean all -C tutorials/03-minecraft
+        make clean all -C tutorials/04-de_dust2
+        make clean all -C tutorials/05-animation
+        make clean all -C tutorials/06-audio
+        make clean all -C tutorials/07-lighting
+        make clean all -C tutorials/08-skybox-debug
+        make clean all -C tutorials/09-manual-mode
+        make clean all -C tutorials/10-sprite-sheet
+
+    - name: Compile demo
+      run: |
+        make clean all -C demo
+
+    - name: Upload tutorials
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: binaries-${{ env.SHA8 }}
+        path: | 
+          tutorials/01-hello/bin
+          tutorials/02-sprite/bin
+          tutorials/03-minecraft/bin
+          tutorials/04-de_dust2/bin
+          tutorials/05-animation/bin
+          tutorials/06-audio/bin
+          tutorials/07-lighting/bin
+          tutorials/08-skybox-debug/bin
+          tutorials/09-manual-mode/bin
+          tutorials/10-sprite-sheet/bin
+
+    - name: Upload demo
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: tyra-${{ env.SHA8 }}
+        path: | 
+          demo/bin
