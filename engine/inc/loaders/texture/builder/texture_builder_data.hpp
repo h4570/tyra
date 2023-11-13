@@ -24,14 +24,14 @@ class TextureBuilderData {
   std::string name;
 
   int width, height;
-  u8* data;
+  unsigned char* data;
   TextureBpp bpp;
-  u8 gsComponents;
+  unsigned char gsComponents;
 
   int clutWidth, clutHeight;
-  u8* clut;
+  unsigned char* clut;
   TextureBpp clutBpp;
-  u8 clutGsComponents;
+  unsigned char clutGsComponents;
 };
 
 }  // namespace Tyra

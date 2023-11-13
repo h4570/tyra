@@ -7,7 +7,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/h4570/tyra">
-    <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/github-splash.png" alt="Logo" width="100%" height="auto">
+    <img src="https://raw.githubusercontent.com/h4570/tyra/master/assets/github-splash.png" alt="Logo" width="100%" height="auto">
   </a>
 
   <h3 align="center">Tyra</h3>
@@ -27,15 +27,12 @@
   </p>
 </p>  
 
-[![Stargazers repo roster for h4570/tyra](https://reporoster.com/stars/h4570/tyra)](https://github.com/h4570/tyra/stargazers)
-
 ## Table of Contents  
 
 * [About the project](#about-the-project) 
   * [Description](#description) 
   * [Tutorials](#tutorials) 
   * [Features](#features) 
-  * [Branches](#branches) 
 * [Contributing](#contributing) 
 * [Games](#games) 
 * [License](#license) 
@@ -45,8 +42,8 @@
 
 ## About the Project  
 <p align="center">
-  <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/tyra_code.gif" alt="Sample code" width="500" height="auto">  
-  <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/showcase.gif " alt="Sample game" width="500" height="auto"> 
+  <img src="https://raw.githubusercontent.com/h4570/tyra/master/assets/tyra_code.gif" alt="Sample code" width="500" height="auto">  
+  <img src="https://raw.githubusercontent.com/h4570/tyra/master/assets/showcase.gif " alt="Sample game" width="500" height="auto"> 
 </p> 
 
 ---
@@ -99,13 +96,9 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 * `.md2` 3D file support
 * `.png` Texture file support
 
-### Branches
-* `master` - stable releases - tested on PS2 & PCSX2.  
-* `develop` - daily builds.
+## Contributing 
 
 See the [open issues](https://github.com/h4570/tyra/issues) for a list of proposed features (and known issues). 
-
-## Contributing 
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**. 
 
@@ -148,7 +141,7 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 Without these guys, Tyra would not happen:
 * [Dr Henry Fortuna](http://ps2-edu.tensioncore.com/index.html) - for code sources, PS2 academy tutorials
 * Whole [PS2DEV](https://github.com/ps2dev) team, and specially to [Rick Gaiser](https://github.com/rickgaiser), [fjtrujy](https://github.com/fjtrujy) - for a lot of good tips!
-* [Wellington Carvalho](https://github.com/Wellinator), [André Guilheme](https://github.com/Wolf3s) - for testing, contributing to Tyra and sharing cool ideas!
+* [Wellington Carvalho](https://github.com/Wellinator), [André Guilheme](https://github.com/Wolf3s), [Matías Israelson](https://github.com/israpps) - for testing, contributing to Tyra and sharing cool ideas!
 * [Leonardo Ono](https://github.com/leonardo-ono) - for software renderer example (with clipping!)
 * [Lukasz D.K.](https://github.com/lukaszdk) - for huge archive of PS2 stuff
 * [Guilherme Lampert](https://github.com/glampert) - for code sources
@@ -162,7 +155,7 @@ Sandro Sobczyński - sandro.sobczynski@gmail.com
   
 <br />
 <a href="https://github.com/h4570/tyra">
-  <img src="http://apgcglz.cluster028.hosting.ovh.net/tyra/github-splash2.png" alt="Logo" width="100%" height="auto">
+  <img src="https://raw.githubusercontent.com/h4570/tyra/master/assets/github-splash2.png" alt="Logo" width="100%" height="auto">
 </a>
 
 [contributors-shield]: https://img.shields.io/github/contributors/h4570/tyra.svg?style=flat-square  
