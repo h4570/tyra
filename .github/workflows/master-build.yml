@@ -52,7 +52,7 @@ jobs:
       if: ${{ success() }}
       uses: actions/upload-artifact@v3
       with:
-        name: binaries-${{ env.SHA8 }}-${{ env.BRANCH }}
+        name: binaries-${{ env.SHA8 }}
         path: | 
           tutorials/01-hello/bin
           tutorials/02-sprite/bin

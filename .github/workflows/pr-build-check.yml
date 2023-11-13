@@ -51,7 +51,8 @@ jobs:
     - name: Get branch
       id: branch
       run: | 
-        echo "BRANCH=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
+        BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/refs\///g' | sed 's/\//_/g')
+        echo "BRANCH=${BRANCH_NAME}" >> $GITHUB_ENV
 
     - name: Upload build artifacts
       if: ${{ success() }}
