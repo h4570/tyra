@@ -12,8 +12,7 @@
 #include <tamtypes.h>
 #include <cstdio>
 #include <kernel.h>
-#include <limits.h>
-#include <syslimits.h>
+
 #include <unistd.h>
 #include <cstring>
 #include "file/file_utils.hpp"
