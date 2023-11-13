@@ -1,5 +1,5 @@
 #This is a modified version of the clang format check used on Open-PS2-Loader 
-name: CI-cpp-check
+name: PR C++ format check
 
 on:
   push:
