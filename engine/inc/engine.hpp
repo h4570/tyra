@@ -25,7 +25,7 @@ struct EngineOptions {
    * True -> logs will be written to file.
    * False -> logs will be displayed in console
    */
-  bool writeLogsToFile = false;
+  int loggingMode = LOGGING_STDOUT;
 
   bool loadUsbDriver = false;
 };
