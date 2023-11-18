@@ -183,7 +183,8 @@ void IrxLoader::loadPowerOff(const bool &verbose) {
   poweroffSetCallback(&poweroffCallback, nullptr);
 }
 
-/** @brief processes a standard SCE HDD Path to obtain useful information, splitted and ready to use
+/* 
+ * @brief processes a standard SCE HDD Path to obtain useful information, splitted and ready to use
  * @param path input path eg: `hdd0:__system:pfs:/osdmain/osdmain.elf`
  * @param mount_path pointer to std::string wich will contain path to mount partition eg: `hdd0:__system`
  * @param pfs_dev pointer to std::string wich will contain the pfs device, useful for IOCTL commands and unmounting the partition eg: `pfs:`
