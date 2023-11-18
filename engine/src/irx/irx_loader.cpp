@@ -197,7 +197,6 @@ static bool digestSceStandardHDDPath(const std::string& path, std::string* mount
   int p = 0;
   for (int pos = 0; p < 3; p++, pos++) {
     pos = path.find(':', pos);
-    std::cout << "found ':' at "<< pos << "\n";
     I[p] = pos;
   }
   if (p != 3) return false; // because we need 3 ':' for a valid path...
