@@ -18,7 +18,7 @@
         {
             "type": "shell",
             "label": "1. Copy source code to docker volume",
-            "command": "docker exec -t tyra-game-compiler sh -c 'rsync -ac --delete --exclude \".git\" --exclude \".vscode\" --exclude \"*obj*/**\" --exclude \"*bin*/**\" /host/ /src/'"
+            "command": "docker exec -t tyra-game-compiler sh -c 'rsync -ac --delete --exclude=\".git\" --exclude=\".vscode\" --exclude=\"*obj*/**\" --exclude=\"*bin*/**\" /host/ /src/'"
         },
         {
             "type": "shell",
@@ -34,7 +34,7 @@
         {
             "type": "shell",
             "label": "3. Copy binaries to host",
-            "command": "docker exec -t tyra-game-compiler sh -c 'rsync -zac --include=\"*/\" --include=\"*bin*/**\" --exclude=\"*\" /src/ /host/'",
+            "command": "docker exec -t tyra-game-compiler sh -c 'rsync -zac --include=\"*/\" --include=\"*bin*/**\" --exclude=\"*\" /src/ /host/'"
         },
         {
             "type": "shell",
