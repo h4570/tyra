@@ -33,4 +33,5 @@ class TextureBuilderData {
   TextureBpp clutBpp;
   unsigned char clutGsComponents;
 };
+
 }  // namespace Tyra

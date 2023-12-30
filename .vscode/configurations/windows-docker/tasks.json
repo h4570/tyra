@@ -42,7 +42,7 @@
             "options": {
                 "cwd": "${config:buildDirectory}"
             },
-            "command": "./run.ps1"
+            "command": "Start-Job { ./run.ps1 } | Receive-Job -Wait"
         },
         {
             "type": "shell",

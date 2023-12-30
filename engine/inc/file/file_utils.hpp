@@ -11,6 +11,8 @@
 #pragma once
 
 #include <string>
+#include <limits.h>
+#include <syslimits.h>
 
 namespace Tyra {
 
@@ -42,9 +44,9 @@ class FileUtils {
 
  private:
   // Argv name+path & just path
-  char cwd[255];
-  char elfName[255];
-  char elfPath[255 - 14];
+  char cwd[NAME_MAX];
+  char elfName[NAME_MAX];
+  char elfPath[NAME_MAX - 14];
 
   void setPathInfo(const char* path);
 };
