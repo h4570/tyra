@@ -183,6 +183,29 @@ void IrxLoader::loadPowerOff(const bool &verbose) {
   poweroffSetCallback(&poweroffCallback, nullptr);
 }
 
+/* 
+ * @brief processes a standard SCE HDD Path to obtain useful information, splitted and ready to use
+ * @param path input path eg: `hdd0:__system:pfs:/osdmain/osdmain.elf`
+ * @param mount_path pointer to std::string wich will contain path to mount partition eg: `hdd0:__system`
+ * @param pfs_dev pointer to std::string wich will contain the pfs device, useful for IOCTL commands and unmounting the partition eg: `pfs:`
+ * @param pfs_path pointer to std::string wich will contain the full path to the desired file, wich will be accessible after mounting eg: `pfs:/osdmain/osdmain.elf`
+ * @note you can pass nullptr to any of the 3 final parameters to skip them
+ * @return boolean for sucess
+*/
+static bool digestSceStandardHDDPath(const std::string& path, std::string* mount_path, std::string* pfs_dev, std::string* pfs_path) {
+  unsigned int I[3] = {0, 0, 0}; // position of the 3 ':' we are looking for
+  int p = 0;
+  for (int pos = 0; p < 3; p++, pos++) {
+    pos = path.find(':', pos);
+    I[p] = pos;
+  }
+  if (p != 3) return false; // because we need 3 ':' for a valid path...
+  if (mount_path != nullptr) *mount_path = path.substr(0, I[1]);
+  if (pfs_dev != nullptr) *pfs_dev = path.substr(I[1]+1, I[2]-I[1]);
+  if (pfs_path != nullptr) *pfs_path = path.substr(I[1]+1);
+  return true;
+}
+
 bool IrxLoader::loadDEV9(const bool &verbose)
 {
   if(verbose) TYRA_LOG("IRX: Loading DEV9 module");
@@ -212,7 +235,7 @@ void IrxLoader::loadHddModules(const bool& verbose) {
 
   irx_id = SifExecModuleBuffer(&ps2fs_irx, size_ps2fs_irx, 0, nullptr, &ret);
   TYRA_ASSERT(((ret != 1) && (irx_id > 0)), "Failed to load module: ps2fs_irx ret:", ret, ", id:", irx_id);
-
+  
   if (verbose) TYRA_LOG("IRX: Hdd modules loaded");
 }
 
