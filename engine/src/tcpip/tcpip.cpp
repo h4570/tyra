@@ -92,8 +92,6 @@ int TCP::Init(int use_dhcp, ip4_addr* IP_adrr, ip4_addr* Netmask,
   t_ip_info ip_info;
   const ip_addr_t* dns_curr;
   TYRA_LOG("Started TCP Init");
-  NetManInit();
-  ps2ip_init();
 
   // SMAP is registered as the "sm0" device to the TCP/IP stack.
   if ((result = ps2ip_getconfig((char*)"sm0", &ip_info)) >= 0) {

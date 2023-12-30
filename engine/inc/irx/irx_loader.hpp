@@ -19,7 +19,8 @@ class IrxLoader {
   IrxLoader();
   ~IrxLoader();
 
-  void loadAll(const bool& withUsb, const bool& isLoggingToFile);
+  void loadAll(const bool& withUsb, const bool& withNet,
+               const bool& isLoggingToFile);
 
  private:
   static bool isLoaded;
@@ -30,6 +31,7 @@ class IrxLoader {
   void loadIO(const bool& verbose);
   void loadUsbModules(const bool& verbose);
   void loadAudsrv(const bool& verbose);
+  void loadNetworkModules(const bool& verbose);
 
   int applyRpcPatches();
   void waitUntilUsbDeviceIsReady();

@@ -18,10 +18,11 @@
 #include <sbv_patches.h>
 #include <iopcontrol.h>
 #include "file/file_utils.hpp"
+#include "tcpip/tcpip.hpp"
 
 // external IRX modules
 #define EXTERN_IRX(_irx) \
-  extern u8 _irx[]; \
+  extern u8 _irx[];      \
   extern int size_##_irx
 
 EXTERN_IRX(sio2man_irx);
@@ -34,6 +35,8 @@ EXTERN_IRX(bdm_irx);
 EXTERN_IRX(bdmfs_fatfs_irx);
 EXTERN_IRX(usbd_irx);
 EXTERN_IRX(usbmass_bd_irx);
+EXTERN_IRX(netman_irx);
+EXTERN_IRX(smap_irx);
 
 namespace Tyra {
 
@@ -54,7 +57,8 @@ IrxLoader::IrxLoader() {
 
 IrxLoader::~IrxLoader() {}
 
-void IrxLoader::loadAll(const bool& withUsb, const bool& isLoggingToFile) {
+void IrxLoader::loadAll(const bool& withUsb, const bool& withNet,
+                        const bool& isLoggingToFile) {
   if (isLoaded) {
     TYRA_LOG("IRX modules already loaded!");
     return;
@@ -67,6 +71,10 @@ void IrxLoader::loadAll(const bool& withUsb, const bool& isLoggingToFile) {
 
   if (withUsb) {
     loadUsbModules(!isLoggingToFile);
+  }
+
+  if (withNet) {
+    loadNetworkModules(!isLoggingToFile);
   }
 
   loadAudsrv(true);
@@ -122,7 +130,6 @@ void IrxLoader::loadIO(const bool& verbose) {
   TYRA_ASSERT(ret >= 0, "Failed to load module: fileXio_irx");
 
   if (verbose) TYRA_LOG("IRX: fileXio_irx loaded!");
-
 }
 
 void IrxLoader::loadUsbModules(const bool& verbose) {
@@ -175,6 +182,21 @@ void IrxLoader::loadPadman(const bool& verbose) {
   TYRA_ASSERT(ret >= 0, "Failed to load module: padman_irx");
 
   if (verbose) TYRA_LOG("IRX: Padman loaded!");
+}
+
+void IrxLoader::loadNetworkModules(const bool& verbose) {
+  if (verbose) TYRA_LOG("IRX: Loading usb modules...");
+
+  int ret;
+
+  SifExecModuleBuffer(&netman_irx, size_netman_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret >= 0, "Failed to load module: netman_irx");
+
+  SifExecModuleBuffer(&smap_irx, size_smap_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret >= 0, "Failed to load module: smap_irx");
+
+  NetManInit();
+  ps2ip_init();
 }
 
 void IrxLoader::delay(int count) {

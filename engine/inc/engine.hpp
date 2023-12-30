@@ -28,6 +28,8 @@ struct EngineOptions {
   bool writeLogsToFile = false;
 
   bool loadUsbDriver = false;
+
+  bool loadNetDriver = false;
 };
 
 class Engine {
@@ -50,7 +52,7 @@ class Engine {
   Banner banner;
 
   void realLoop();
-  void initAll(const bool& loadUsbDriver);
+  void initAll(const bool& loadUsbDriver, const bool& loadNetModules);
 };
 
 }  // namespace Tyra
