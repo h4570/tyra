@@ -19,7 +19,7 @@
 
 namespace Tyra {
 
-u32 textureCounter = 0;
+u32 textureCounter = 1;
 std::vector<u32> deletedIDs;
 
 Texture::Texture(TextureBuilderData* t_data) {
