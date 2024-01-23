@@ -265,7 +265,7 @@ int getFontSizeIndex(Font* font, const int fontSize) {
   return font->size.size() - 1;
 }
 
-void printText(Font* font, std::string text, float x, float y, int fontSize,
+void drawText(Font* font, std::string text, float x, float y, int fontSize,
                Color color) {
   int charsUsed;
   int codepoint;
@@ -339,9 +339,9 @@ void printText(Font* font, std::string text, float x, float y, int fontSize,
 }
 
 // For default font
-// void printText(std::string text, float x, float y, int fontSize, Color color)
+// void drawText(std::string text, float x, float y, int fontSize, Color color)
 // {
-//   printText(&defaultFont, text, x, y, fontSize, color);
+//   drawText(&defaultFont, text, x, y, fontSize, color);
 // }
 
 void setMaxSizeInFontMemory(float maxMB) {

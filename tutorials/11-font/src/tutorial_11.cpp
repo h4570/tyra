@@ -40,8 +40,8 @@ void Tutorial11::loop() {
   renderer.beginFrame();
 
   /** Render sprite font ttf. */
-  printText(&font, "Hello world in", 20, 60, 32, white);
-  printText(&font, "TYRA", 212, 60, 32, skyBlue);
+  drawText(&font, "Hello world in", 20, 60, 32, white);
+  drawText(&font, "TYRA", 212, 60, 32, skyBlue);
 
   /** End frame will perform vsync. */
   renderer.endFrame();
