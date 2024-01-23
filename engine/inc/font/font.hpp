@@ -54,7 +54,7 @@ extern void loadFont(Font* font, std::string filePath);
 // extern void loadDefaulFont();
 extern void unloadFont(Font* font);
 extern void drawText(Font* font, std::string text, float x, float y,
-                      int fontSize, Color color);
+                     int fontSize, Color color);
 // extern void drawText(std::string text, float x, float y, int fontSize,
 //                       Color color); // For default font
 }  // namespace Tyra

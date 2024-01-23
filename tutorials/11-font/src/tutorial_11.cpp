@@ -20,7 +20,7 @@ Tutorial11::~Tutorial11() {
    * It is not necessary to use it here, it is destroyed when the font is
    * destroyed but in case you stop using it, is good to use it to free up
    * memory.
-  */
+   */
   unloadFont(&font);
 }
 
@@ -28,7 +28,7 @@ void Tutorial11::init() {
   engine->renderer.setClearScreenColor(Color(32.0F, 32.0F, 32.0F));
   // setMaxSizeInFontMemory(2.0f); // by default
   loadFont(&font, FileUtils::fromCwd("roboto-black.ttf"), 32);
-  
+
   white = Color(255.0f, 255.0f, 255.0f, 128.0f);
   skyBlue = Color(32.0f, 164.0f, 243.0f, 128.0f);
 }

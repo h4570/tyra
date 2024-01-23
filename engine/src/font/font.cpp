@@ -266,7 +266,7 @@ int getFontSizeIndex(Font* font, const int fontSize) {
 }
 
 void drawText(Font* font, std::string text, float x, float y, int fontSize,
-               Color color) {
+              Color color) {
   int charsUsed;
   int codepoint;
   int index;  // glyph index
