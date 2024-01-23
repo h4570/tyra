@@ -44,13 +44,13 @@ extern void setMaxSizeInFontMemory(float maxMB);
 /*
  * Loads the font with the size you require
  */
-extern void loadFont(Font* font, std::string filePath, int fontSize);
+extern void loadFont(Font* font, const std::string filePath, int fontSize);
 
 /*
  * Loads the font with the size of 32 by default.
  * It is recommended to put the size you require first so that it loads faster.
  */
-extern void loadFont(Font* font, std::string filePath);
+extern void loadFont(Font* font, const std::string filePath);
 // extern void loadDefaulFont();
 extern void unloadFont(Font* font);
 extern void drawText(Font* font, std::string text, float x, float y,

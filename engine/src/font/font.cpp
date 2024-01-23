@@ -131,7 +131,7 @@ int getGlyphTexture(Font* font, const int fontIndex, int* index,
 
   TextureBuilderData* texData = getTextureData(width, height);
 
-  struct PngPixel4* pixels = (struct PngPixel4*)texData->data;
+  struct PngPixel4* pixels = reinterpret_cast<PngPixel4*>(texData->data);
 
   int k = 0;
   for (unsigned int i = 0; i < slot->bitmap.rows; i++) {
@@ -303,7 +303,8 @@ void drawText(Font* font, std::string text, float x, float y, int fontSize,
       offsetY += fontSize;
       offsetX = 0.0f;
     } else if (text[i] != ' ' && text[i] != '\t') {
-      codepoint = getCodepoint((const unsigned char*)&text[i], &charsUsed);
+      codepoint = getCodepoint(reinterpret_cast<const unsigned char*>(&text[i]),
+                               &charsUsed);
       index = getGlyphIndex(&font->glyph[fontIndex], codepoint);
 
       if (index == TyraFont::glyphNotFound) {
@@ -350,7 +351,7 @@ void setMaxSizeInFontMemory(float maxMB) {
   TyraFont::maxSizeInMB = maxMB;
 }
 
-void loadFont(Font* font, std::string filePath, int fontSize) {
+void loadFont(Font* font, const std::string filePath, int fontSize) {
   FT_Error error = FT_Init_FreeType(&TyraFont::library);
 
   std::ifstream file(filePath, std::ios::binary);
@@ -358,11 +359,15 @@ void loadFont(Font* font, std::string filePath, int fontSize) {
   size_t size = file.tellg();
   file.seekg(0, std::ios::beg);
 
-  font->data = (FT_Byte*)malloc(size);
+  font->data = reinterpret_cast<FT_Byte*>(malloc(size));
 
   TYRA_ASSERT(file.is_open(), "The font file could not be opened.");
 
-  file.read((char*)font->data, size);
+  file.read(reinterpret_cast<char*>(font->data), size);
+
+  TYRA_ASSERT(!file.fail() && file.gcount() != size,
+              "Error trying to read the font file.");
+
   file.close();
 
   error =
@@ -396,7 +401,7 @@ void loadFont(Font* font, std::string filePath, int fontSize) {
   TYRA_LOG("Font Loaded!");
 }
 
-void loadFont(Font* font, std::string filePath) {
+void loadFont(Font* font, const std::string filePath) {
   loadFont(font, filePath.c_str(), TyraFont::defaultFontSize);
 }
 
