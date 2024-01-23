@@ -1,7 +1,7 @@
 LIB         += -ltyra
 LIBDIRS     += -L$(ENGINEDIR)/bin
 INC         += -I$(ENGINEDIR)/inc
-INCDEP		+= -I$(ENGINEDIR)/inc
+INCDEP		+= -I$(ENGINEDIR)/inc -I$(PS2DEV)/ps2sdk/ports/include/freetype2
 
 include ../../Makefile.base
 

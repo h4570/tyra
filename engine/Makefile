@@ -15,9 +15,9 @@ OBJEXT      := o
 
 #Flags, Libraries and Includes
 CFLAGS      := 
-LIB         := -lfreetype
+LIB         :=
 LIBDIRS     := 
-INC         := -I$(INCDIR) -I$(PS2SDK)/ports/include/freetype2
+INC         := -I$(INCDIR)
 INCDEP      := -I$(INCDIR) -I$(PS2SDK)/ports/include/freetype2
 
 include ../Makefile.base
