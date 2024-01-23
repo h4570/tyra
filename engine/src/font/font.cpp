@@ -351,7 +351,7 @@ void setMaxSizeInFontMemory(float maxMB) {
   TyraFont::maxSizeInMB = maxMB;
 }
 
-void loadFont(Font* font, const std::string filePath, int fontSize) {
+void loadFont(Font* font, const std::string& filePath, int fontSize) {
   FT_Error error = FT_Init_FreeType(&TyraFont::library);
 
   std::ifstream file(filePath, std::ios::binary);
@@ -363,10 +363,9 @@ void loadFont(Font* font, const std::string filePath, int fontSize) {
 
   TYRA_ASSERT(file.is_open(), "The font file could not be opened.");
 
-  file.read(reinterpret_cast<char*>(font->data), size);
-
-  TYRA_ASSERT(!file.fail() && file.gcount() != size,
-              "Error trying to read the font file.");
+  if (file.read(reinterpret_cast<char*>(font->data), size).fail() == true) {
+    TYRA_ERROR("Trying to read the font file.");
+  }
 
   file.close();
 
@@ -401,7 +400,7 @@ void loadFont(Font* font, const std::string filePath, int fontSize) {
   TYRA_LOG("Font Loaded!");
 }
 
-void loadFont(Font* font, const std::string filePath) {
+void loadFont(Font* font, const std::string& filePath) {
   loadFont(font, filePath.c_str(), TyraFont::defaultFontSize);
 }
 
