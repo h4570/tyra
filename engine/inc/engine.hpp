@@ -11,6 +11,7 @@
 #pragma once
 
 #include "./renderer/renderer.hpp"
+#include "./font/font.hpp"
 #include "./pad/pad.hpp"
 #include "./audio/audio.hpp"
 #include "./irx/irx_loader.hpp"

@@ -42,6 +42,7 @@ void Engine::initAll(const bool& loadUsbDriver) {
   banner.show(&renderer);
   audio.init();
   pad.init();
+  fontInit(&renderer);
 }
 
 }  // namespace Tyra

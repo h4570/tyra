@@ -1,4 +1,5 @@
-TARGET		:= libtyra.a
+TARGET      := tutorial_11.elf
+ENGINEDIR	:= ../../engine
 
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
@@ -15,12 +16,9 @@ OBJEXT      := o
 
 #Flags, Libraries and Includes
 CFLAGS      := 
-LIB         := 
+LIB         :=
 LIBDIRS     := 
 INC         := -I$(INCDIR)
-INCDEP      := -I$(INCDIR) -I$(PS2SDK)/ports/include/freetype2
+INCDEP      := -I$(INCDIR)
 
-include ../Makefile.base
-
-$(TARGET): $(OBJECTS) $(VCL_OBJECTS) $(VU_OBJECTS_VCL) $(VU_OBJECTS_VSM) $(IRXEM_OBJECTS)
-	$(AR) rcs $(TARGETDIR)/$(TARGET) $(OBJECTS) $(VCL_OBJECTS) $(VU_OBJECTS_VCL) $(VU_OBJECTS_VSM) $(IRXEM_OBJECTS)
+include ../Makefile.tutorials-base
