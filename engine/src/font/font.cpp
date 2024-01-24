@@ -354,20 +354,16 @@ void setMaxSizeInFontMemory(float maxMB) {
 void loadFont(Font* font, const std::string& filePath, int fontSize) {
   FT_Error error = FT_Init_FreeType(&TyraFont::library);
 
-  std::ifstream file(filePath, std::ios::binary);
-  file.seekg(0, file.end);
-  size_t size = file.tellg();
-  file.seekg(0, std::ios::beg);
+  FILE* file = fopen(filePath.c_str(), "rb");
+  fseek(file, 0, SEEK_END);
+  size_t size = ftell(file);
+  fseek(file, 0, SEEK_SET);
 
   font->data = reinterpret_cast<FT_Byte*>(malloc(size));
 
-  TYRA_ASSERT(file.is_open(), "The font file could not be opened.");
+  fread(font->data, 1, size, file);
 
-  if (file.read(reinterpret_cast<char*>(font->data), size).fail() == true) {
-    TYRA_ERROR("Trying to read the font file.");
-  }
-
-  file.close();
+  fclose(file);
 
   error =
       FT_New_Memory_Face(TyraFont::library, font->data, size, 0, &font->face);
