@@ -19,15 +19,17 @@
 
 namespace Tyra {
 
+namespace TyraTexture {
 u32 textureCounter = 1;
 std::vector<u32> deletedIDs;
+}  // namespace TyraTexture
 
 Texture::Texture(TextureBuilderData* t_data) {
-  if (deletedIDs.empty() == false) {
-    id = deletedIDs.front();
-    deletedIDs.erase(deletedIDs.begin());
+  if (TyraTexture::deletedIDs.empty() == false) {
+    id = TyraTexture::deletedIDs.front();
+    TyraTexture::deletedIDs.erase(TyraTexture::deletedIDs.begin());
   } else {
-    id = textureCounter++;
+    id = TyraTexture::textureCounter++;
   }
 
   name = t_data->name;
@@ -58,7 +60,7 @@ Texture::Texture(TextureBuilderData* t_data) {
 }
 
 Texture::~Texture() {
-  deletedIDs.push_back(id);
+  TyraTexture::deletedIDs.push_back(id);
   if (links.size() > 0) links.clear();
   if (core) delete core;
   if (clut) delete clut;
