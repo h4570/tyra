@@ -56,6 +56,17 @@ RendererCoreTextureBuffers RendererCoreTexture::useTexture(
   return newTexBuffer;
 }
 
+RendererCoreTextureBuffers RendererCoreTexture::updateTextureInfo(
+    const Texture* t_tex) {
+  TYRA_ASSERT(t_tex != nullptr, "Provided nullptr texture!");
+
+  auto allocated = getAllocatedBuffersByTextureId(t_tex->id);
+  TYRA_ASSERT(allocated.id != 0, "Can't update an unallocated texture!");
+
+  path3->sendTexture(t_tex, allocated);
+  return allocated;
+}
+
 RendererCoreTextureBuffers RendererCoreTexture::getAllocatedBuffersByTextureId(
     const u32& t_id) {
   for (u32 i = 0; i < currentAllocations.size(); i++)
