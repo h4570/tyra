@@ -62,7 +62,8 @@ class Texture {
 
   /** Set texture wrapping */
   void setWrapSettings(const TextureWrap t_horizontal,
-                       const TextureWrap t_vertical);
+                       const TextureWrap t_vertical, int minu = 0, int minv = 0,
+                       int maxu = 0, int maxv = 0);
 
   // ----
   //  Other
