@@ -17,7 +17,7 @@ namespace Tyra {
 
 class Tutorial11 : public Game {
  public:
-  Tutorial11(Engine* engine);
+  explicit Tutorial11(Engine* engine);
   ~Tutorial11();
 
   void init();
