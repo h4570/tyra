@@ -173,7 +173,6 @@ void StaPipQBufferRenderer::sendObjectData(
 
   packet2_utils_vu_add_end_tag(objectDataPacket);
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
-  // dma_channel_wait(DMA_CHANNEL_GIF, 0);  // 289 - 294
   dma_channel_send_packet2(objectDataPacket, DMA_CHANNEL_VIF1, true);
 }
 
