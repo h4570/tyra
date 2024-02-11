@@ -6,7 +6,7 @@
 1. Git
 2. VSCode
 3. Docker with PowerShell as a default terminal
-4. [PCSX2](https://github.com/h4570/tyra/blob/master/docs/install/pcsx2.md#)
+4. [Configured PCSX2](https://github.com/h4570/tyra/blob/master/docs/install/pcsx2.md#)
 
 ---
 
