@@ -22,6 +22,11 @@ TextureRepository::~TextureRepository() {
   }
 }
 
+void TextureRepository::init(
+    std::vector<RendererCoreTextureBuffers>* t_textureBuffers) {
+  textureBuffers = t_textureBuffers;
+}
+
 Texture* TextureRepository::getBySpriteId(const u32& t_id) const {
   for (u32 i = 0; i < textures.size(); i++) {
     if (textures[i]->isLinkedWith(t_id)) return textures[i];
@@ -57,10 +62,20 @@ void TextureRepository::removeByIndex(const u32& t_index) {
   textures.erase(textures.begin() + t_index);
 }
 
+int TextureRepository::removeBufferId(const u32& t_texId) {
+  for (u32 i = 0; i < textureBuffers->size(); i++)
+    if ((*textureBuffers)[i].id == t_texId) {
+      (*textureBuffers)[i].id = -1;
+      return 0;
+    }
+  return -1;
+}
+
 void TextureRepository::removeById(const u32& t_texId) {
   s32 index = getIndexOf(t_texId);
   TYRA_ASSERT(index != -1, "Cant remove texture, because it was not found!");
   removeByIndex(index);
+  removeBufferId(t_texId);
 }
 
 void TextureRepository::freeByMesh(const Mesh& mesh) {
@@ -93,6 +108,7 @@ void TextureRepository::free(const u32& t_texId) {
 
   TYRA_ASSERT(index != -1, "Cant remove texture, because it was not found!");
   removeByIndex(index);
+  removeBufferId(t_texId);
 
   delete tex;
 }
@@ -116,7 +132,7 @@ void TextureRepository::addByMesh(const Mesh* mesh, const char* directory,
   if (dirFixed.back() != '/' && dirFixed.back() != ':') dirFixed += "/";
 
   for (u32 i = 0; i < mesh->materials.size(); i++) {
-        if (!mesh->materials[i]->textureName.has_value()) {
+    if (!mesh->materials[i]->textureName.has_value()) {
       continue;
     }
 

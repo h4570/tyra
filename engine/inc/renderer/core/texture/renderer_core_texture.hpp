@@ -29,6 +29,12 @@ class RendererCoreTexture {
 
   RendererCoreTextureBuffers useTexture(const Texture* t_tex);
 
+  /**
+   * Called by user after changing texture wrap settings
+   * Updates texture packet without reallocate it
+   */
+  RendererCoreTextureBuffers updateTextureInfo(const Texture* t_tex);
+
   /** Called by renderer during initialization */
   void init(RendererCoreGS* gs, Path3* path3);
 

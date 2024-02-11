@@ -19,8 +19,18 @@
 
 namespace Tyra {
 
+namespace TyraTexture {
+u32 textureCounter = 1;
+std::vector<u32> deletedIDs;
+}  // namespace TyraTexture
+
 Texture::Texture(TextureBuilderData* t_data) {
-  id = rand() % 1000000;
+  if (TyraTexture::deletedIDs.empty() == false) {
+    id = TyraTexture::deletedIDs.front();
+    TyraTexture::deletedIDs.erase(TyraTexture::deletedIDs.begin());
+  } else {
+    id = TyraTexture::textureCounter++;
+  }
 
   name = t_data->name;
 
@@ -50,6 +60,7 @@ Texture::Texture(TextureBuilderData* t_data) {
 }
 
 Texture::~Texture() {
+  TyraTexture::deletedIDs.push_back(id);
   if (links.size() > 0) links.clear();
   if (core) delete core;
   if (clut) delete clut;
@@ -167,9 +178,14 @@ void Texture::setDefaultWrapSettings() {
 }
 
 void Texture::setWrapSettings(const TextureWrap t_horizontal,
-                              const TextureWrap t_vertical) {
+                              const TextureWrap t_vertical, int minu, int minv,
+                              int maxu, int maxv) {
   wrap.horizontal = t_horizontal;
   wrap.vertical = t_vertical;
+  wrap.minu = minu;
+  wrap.minv = minv;
+  wrap.maxu = maxu;
+  wrap.maxv = maxv;
 }
 
 void Texture::addLink(const u32& t_id) {
