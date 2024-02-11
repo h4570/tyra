@@ -15,7 +15,7 @@ namespace Tyra {
 Engine::Engine() { initAll(false); }
 
 Engine::Engine(const EngineOptions& options) {
-  info.writeLogsToFile = options.writeLogsToFile;
+  info.loggingMode = options.loggingMode;
   initAll(options.loadUsbDriver);
 }
 
@@ -37,7 +37,7 @@ void Engine::realLoop() {
 
 void Engine::initAll(const bool& loadUsbDriver) {
   srand(time(nullptr));
-  irx.loadAll(loadUsbDriver, info.writeLogsToFile);
+  irx.loadAll(loadUsbDriver, info.loggingMode);
   renderer.init();
   banner.show(&renderer);
   audio.init();
