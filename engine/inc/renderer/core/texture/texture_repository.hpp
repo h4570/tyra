@@ -16,6 +16,7 @@
 #include "./models/texture.hpp"
 #include "renderer/3d/mesh/mesh.hpp"
 #include "renderer/core/2d/sprite/sprite.hpp"
+#include "./renderer_core_texture_buffers.hpp"
 #include "loaders/texture/base/texture_loader_selector.hpp"
 #include <string>
 
@@ -24,6 +25,8 @@ class TextureRepository {
  public:
   TextureRepository();
   ~TextureRepository();
+
+  void init(std::vector<RendererCoreTextureBuffers>* textureBuffers);
 
   /** Returns all repository textures. */
   std::vector<Texture*>* getAll() { return &textures; }
@@ -100,6 +103,13 @@ class TextureRepository {
   void freeByMesh(const Mesh* mesh);
 
   /**
+   * remove texture buffer id if exist.
+   * Texture buffer is NOT destructed.
+   * easy way to create another texture buffer.
+   */
+  int removeBufferId(const u32& t_texId);
+
+  /**
    * Remove texture from repository.
    * Texture is NOT destructed.
    * Not recommended.
@@ -110,6 +120,7 @@ class TextureRepository {
   void removeByIndex(const u32& t_index);
 
   std::vector<Texture*> textures;
+  std::vector<RendererCoreTextureBuffers>* textureBuffers;
   TextureLoaderSelector texLoaderSelector;
 };
 }  // namespace Tyra

@@ -19,6 +19,7 @@ RendererCoreTexture::~RendererCoreTexture() {}
 void RendererCoreTexture::init(RendererCoreGS* t_gs, Path3* t_path3) {
   gs = t_gs;
   sender.init(t_path3, t_gs);
+  repository.init(&currentAllocations);
   path3 = t_path3;
   initClut();
 }
