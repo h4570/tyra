@@ -68,7 +68,7 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 * 07 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/07-lighting) - Static lightmap and dynamic directional lights
 * 08 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/08-skybox-debug) - Skybox and debug rendering
 * 09 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/09-manual-mode) - Manual rendering (a'la OpenGL)
-* 10 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/10-sprite=sheet) - Sprite sheet (font)
+* 10 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/10-sprite-sheet) - Sprite sheet (font)
 * 11 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/11-texture-region-repeat) - Texture repeating
 * Demo game - [Code](https://github.com/h4570/tyra/tree/master/demo)
 ---
