@@ -178,9 +178,14 @@ void Texture::setDefaultWrapSettings() {
 }
 
 void Texture::setWrapSettings(const TextureWrap t_horizontal,
-                              const TextureWrap t_vertical) {
+                              const TextureWrap t_vertical, int minu, int minv,
+                              int maxu, int maxv) {
   wrap.horizontal = t_horizontal;
   wrap.vertical = t_vertical;
+  wrap.minu = minu;
+  wrap.minv = minv;
+  wrap.maxu = maxu;
+  wrap.maxv = maxv;
 }
 
 void Texture::addLink(const u32& t_id) {
