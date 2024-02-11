@@ -31,8 +31,7 @@ RUN make
 # Download VCL
 RUN mkdir -p /temp/vcl
 WORKDIR "/temp/vcl"
-RUN wget http://apgcglz.cluster028.hosting.ovh.net/tyra/vcl.zip
-RUN unzip vcl.zip
+RUN wget https://github.com/h4570/tyra/raw/master/assets/vcl
 
 # ------------------------------------------------------------------------------
 
