@@ -211,10 +211,6 @@ void PngLoader::handle8bppPalletized(TextureBuilderData* result,
   auto* pixel = static_cast<unsigned char*>(result->data);
   struct PngClut* clut = (struct PngClut*)result->clut;
 
-  for (int i = numPallete; i < 256; i++) {
-    memset(&clut[i], 0, sizeof(clut[i]));
-  }
-
   for (int i = 0; i < numPallete; i++) {
     clut[i].r = palette[i].red;
     clut[i].g = palette[i].green;
@@ -272,10 +268,6 @@ void PngLoader::handle4bppPalletized(TextureBuilderData* result,
 
   auto* pixel = static_cast<unsigned char*>(result->data);
   struct PngClut* clut = (struct PngClut*)result->clut;
-
-  for (int i = numPallete; i < 16; i++) {
-    memset(&clut[i], 0, sizeof(clut[i]));
-  }
 
   for (int i = 0; i < numPallete; i++) {
     clut[i].r = palette[i].red;

@@ -19,6 +19,7 @@ RendererCoreTexture::~RendererCoreTexture() {}
 void RendererCoreTexture::init(RendererCoreGS* t_gs, Path3* t_path3) {
   gs = t_gs;
   sender.init(t_path3, t_gs);
+  repository.init(&currentAllocations);
   path3 = t_path3;
   initClut();
 }
@@ -54,6 +55,17 @@ RendererCoreTextureBuffers RendererCoreTexture::useTexture(
   registerAllocation(newTexBuffer);
 
   return newTexBuffer;
+}
+
+RendererCoreTextureBuffers RendererCoreTexture::updateTextureInfo(
+    const Texture* t_tex) {
+  TYRA_ASSERT(t_tex != nullptr, "Provided nullptr texture!");
+
+  auto allocated = getAllocatedBuffersByTextureId(t_tex->id);
+  TYRA_ASSERT(allocated.id != 0, "Can't update an unallocated texture!");
+
+  path3->sendTexture(t_tex, allocated);
+  return allocated;
 }
 
 RendererCoreTextureBuffers RendererCoreTexture::getAllocatedBuffersByTextureId(
