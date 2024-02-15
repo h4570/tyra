@@ -5,7 +5,7 @@ AS			:= $(EE_PREFIX)as
 CC			:= $(EE_PREFIX)gcc
 CXX			:= $(EE_PREFIX)g++
 STRIP		:= $(EE_PREFIX)strip
-BIN2S		:= $(PS2SDK)/bin/bin2s
+BIN2C		:= $(PS2SDK)/bin/bin2c
 VCL			:= vcl
 VCLPP		:= vclpp
 DVP			:= dvp-as
@@ -76,11 +76,10 @@ $(TARGET): $(OBJECTS) $(VCL_OBJECTS) $(VU_OBJECTS_VCL) $(VU_OBJECTS_VSM) $(IRXEM
 	$(CXX) -T$(PS2DEV)/ps2sdk/ee/startup/linkfile -o $(TARGETDIR)/$(TARGET) $^ -L$(PS2DEV)/ps2sdk/ee/lib -L$(PS2SDK)/ports/lib $(LINKFLAGS) $(LIBDIRS) $(LIB)
 	$(STRIP) --strip-all $(TARGETDIR)/$(TARGET)
 
-$(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(IRXEMBEDDEDEXT)
+$(BUILDDIR)/%.$(SRCEXT): $(SRCDIR)/%.$(IRXEMBEDDEDEXT)
 	@mkdir -p $(dir $@)
 	@rm -f $@.s
-	$(BIN2S) $(shell head -1 $<) $@.s $(shell sed -n '2p' $<)
-	$(AS) $(ASFLAGS) $@.s -o $@
+	$(BIN2C) $(shell head -1 $<) $@ $(shell sed -n '2p' $<)
 
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
