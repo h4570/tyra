@@ -11,8 +11,6 @@
 #pragma once
 
 #include <string>
-#include <limits.h>
-#include <syslimits.h>
 
 namespace Tyra {
 
@@ -43,10 +41,12 @@ class FileUtils {
   const char* getElfPath() const { return elfPath; };
 
  private:
+  static const int MAX_NAME_LEN = 255;
+
   // Argv name+path & just path
-  char cwd[NAME_MAX];
-  char elfName[NAME_MAX];
-  char elfPath[NAME_MAX - 14];
+  char cwd[MAX_NAME_LEN];
+  char elfName[MAX_NAME_LEN];
+  char elfPath[MAX_NAME_LEN - 14];
 
   void setPathInfo(const char* path);
 };
