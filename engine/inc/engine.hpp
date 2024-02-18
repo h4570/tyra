@@ -11,6 +11,7 @@
 #pragma once
 
 #include "./renderer/renderer.hpp"
+#include "./font/font.hpp"
 #include "./pad/pad.hpp"
 #include "./audio/audio.hpp"
 #include "./irx/irx_loader.hpp"
@@ -39,6 +40,7 @@ class Engine {
   Renderer renderer;
   Pad pad;
   Audio audio;
+  Font font;
   Info info;
 
   void run(Game* t_game);

@@ -17,25 +17,36 @@ Tutorial10::Tutorial10(Engine* t_engine)
     : padTimer(0), engine(t_engine), pad(&t_engine->pad) {}
 
 Tutorial10::~Tutorial10() {
-  engine->renderer.getTextureRepository().freeBySprite(sprite);
-  engine->renderer.getTextureRepository().freeBySprite(spriteFlip);
-  engine->renderer.getTextureRepository().freeBySprite(spriteScale);
-  engine->renderer.getTextureRepository().freeBySprite(spriteStretch);
-  font.free(engine->renderer.getTextureRepository());
+  for (int i = 0; i < 4; i++)
+    engine->renderer.getTextureRepository().freeBySprite(sprite[i]);
 }
 
 void Tutorial10::init() {
   engine->renderer.setClearScreenColor(Color(32.0F, 32.0F, 32.0F));
 
-  /** Load all the sprites of the sprite sheet. */
-  font.load(engine->renderer.getTextureRepository(),
-            &engine->renderer.renderer2D);
-
   /** Sprite contains rectangle information. */
   loadSprite();
 
+  posX1 = sprite[normal].position.x;
+  posX2 = sprite[flip].position.x;
+  posX3 = sprite[stretch].position.x;
+  posX4 = sprite[scale].position.x;
+
+  posY1 = sprite[normal].position.y +
+          (sprite[normal].size.y * sprite[normal].scale) + 16;
+  posY2 =
+      sprite[flip].position.y + (sprite[flip].size.y * sprite[flip].scale) + 16;
+  posY3 = sprite[stretch].position.y +
+          (sprite[stretch].size.y * sprite[stretch].scale) + 16;
+  posY4 = sprite[scale].position.y +
+          (sprite[scale].size.y * sprite[scale].scale) + 16;
+
   /** Texture contains png image. */
   loadTexture();
+
+  engine->font.loadFont(&myFont, FileUtils::fromCwd("Roboto-Black.ttf"));
+
+  white = Color(255.0F, 255.0F, 255.0F, 128.0F);
 
   /**  Set the texture filtering. */
   textureFilter = TyraNearest;
@@ -45,6 +56,7 @@ void Tutorial10::init() {
 
 void Tutorial10::loop() {
   auto& renderer = engine->renderer;
+  auto& font = engine->font;
 
   /** Change the texture filtering of the texture.
    *
@@ -70,28 +82,28 @@ void Tutorial10::loop() {
   /** Render sprite. */
   renderer.renderer2D.render(sprite);
   renderer.core.renderer2D.setTextureMappingType(TyraLinear);
-  renderer.renderer2D.render(spriteFlip);
+  renderer.renderer2D.render(sprite[flip]);
   renderer.core.renderer2D.setTextureMappingType(textureFilter);
-  renderer.renderer2D.render(spriteScale);
-  renderer.renderer2D.render(spriteStretch);
+  renderer.renderer2D.render(sprite[scale]);
+  renderer.renderer2D.render(sprite[stretch]);
 
-  font.drawText("tests with sprite sheet", (512 / 2) - 60, 10,
-                Color(255, 255, 255));
-  font.drawText("Press Cross for nearest filter", (512 / 2) - 70, 50,
-                Color(255, 255, 255));
-  font.drawText("Press Circle for linear filter", (512 / 2) - 65, 70,
-                Color(255, 255, 255));
-  font.drawText("Use left stick for move the offsets of the sprites",
-                (512 / 2) - 110, 90, Color(255, 255, 255));
-  font.drawText("sprite 32x32\n   scaled x3", sprite.position.x + 16,
-                sprite.position.y - 40, Color(255, 255, 255));
-  font.drawText("sprite 32x32\nscaled x3 with flip", spriteFlip.position.x + 4,
-                spriteFlip.position.y - 40, Color(255, 255, 255));
-  font.drawText("sprite 96x96 with\n   repeat mode", spriteScale.position.x + 6,
-                spriteScale.position.y - 40, Color(255, 255, 255));
-  font.drawText("sprite 96x96 with\n   stretch mode",
-                spriteStretch.position.x + 6, spriteStretch.position.y - 40,
-                Color(255, 255, 255));
+  renderer.core.renderer2D.setTextureMappingType(TyraLinear);
+  font.drawText(&myFont, "tests with sprite sheet", (512 / 2) - 80, 20, 16, white);
+  font.drawText(&myFont, "Press Cross for nearest filter", (512 / 2) - 95, 50, 16,
+           white);
+  font.drawText(&myFont, "Press Circle for linear filter", (512 / 2) - 90, 70, 16,
+           white);
+  font.drawText(&myFont, "Use left stick for move the offsets of the sprites",
+           (512 / 2) - 150, 90, 16, white);
+  font.drawText(&myFont, "sprite 32x32\n   scaled x3", sprite[normal].position.x,
+           sprite[normal].position.y - 40, 16, white);
+  font.drawText(&myFont, "sprite 32x32\nscaled x3 with\n  \t\tflip",
+           sprite[flip].position.x, sprite[flip].position.y - 40, 16, white);
+  font.drawText(&myFont, "sprite 96x96\n  \t\twith\nrepeat mode",
+           sprite[scale].position.x, sprite[scale].position.y - 40, 16, white);
+  font.drawText(&myFont, "sprite 96x96\n  \t\twith\nstretch mode",
+           sprite[stretch].position.x, sprite[stretch].position.y - 40, 16,
+           white);
 
   if (textureFilter == TyraLinear) {
     strFilter = "Filter: Linear";
@@ -99,23 +111,16 @@ void Tutorial10::loop() {
     strFilter = "Filter: Nearest";
   }
 
-  int posX1 = sprite.position.x + 16;
-  int posX2 = spriteFlip.position.x + 16;
-  int posX3 = spriteStretch.position.x + 16;
-  int posX4 = spriteScale.position.x + 16;
+  font.drawText(&myFont, strFilter, posX1, posY1, 16, white);
+  font.drawText(&myFont, "Filter: Linear", posX2, posY2, 16, white);
+  font.drawText(&myFont, strFilter, posX3, posY3, 16, white);
+  font.drawText(&myFont, strFilter, posX4, posY4, 16, white);
 
-  int posY1 = sprite.position.y + (sprite.size.y * sprite.scale) + 16;
-  int posY2 =
-      spriteFlip.position.y + (spriteFlip.size.y * spriteFlip.scale) + 16;
-  int posY3 = spriteStretch.position.y +
-              (spriteStretch.size.y * spriteStretch.scale) + 16;
-  int posY4 =
-      spriteScale.position.y + (spriteScale.size.y * spriteScale.scale) + 16;
-
-  font.drawText(strFilter, posX1, posY1, Color(255, 255, 255));
-  font.drawText("Filter: Linear", posX2, posY2, Color(255, 255, 255));
-  font.drawText(strFilter, posX3, posY3, Color(255, 255, 255));
-  font.drawText(strFilter, posX4, posY4, Color(255, 255, 255));
+  if (offsetIsNegative == true) {
+    font.drawText(&myFont,
+             "The offset must not be negative or you will get this error", 20,
+             posY1 + 32, 16, Color(255.0F, 0, 0, 128));
+  }
 
   /** End frame will perform vsync. */
   renderer.endFrame();
@@ -149,35 +154,45 @@ void Tutorial10::handlePad() {
 
   if (padTimer <= 0) {
     if (pad->getLeftJoyPad().v <= 100) {  // up
-      sprite.offset -= Vec2(0, 16);
-      spriteFlip.offset -= Vec2(0, 16);
-      spriteScale.offset -= Vec2(0, 16);
-      spriteStretch.offset -= Vec2(0, 16);
+      sprite[normal].offset -= Vec2(0, 16);
+      sprite[flip].offset -= Vec2(0, 16);
+      sprite[scale].offset -= Vec2(0, 16);
+      sprite[stretch].offset -= Vec2(0, 16);
       padTimer = 20;
-      printf("New offset: %f,%f\n", sprite.offset.x, sprite.offset.y);
+      printf("New offset: %f,%f\n", sprite[normal].offset.x,
+             sprite[normal].offset.y);
     } else if (pad->getLeftJoyPad().v >= 200) {  // down
-      sprite.offset += Vec2(0, 16);
-      spriteFlip.offset += Vec2(0, 16);
-      spriteScale.offset += Vec2(0, 16);
-      spriteStretch.offset += Vec2(0, 16);
+      sprite[normal].offset += Vec2(0, 16);
+      sprite[flip].offset += Vec2(0, 16);
+      sprite[scale].offset += Vec2(0, 16);
+      sprite[stretch].offset += Vec2(0, 16);
       padTimer = 20;
-      printf("New offset: %f,%f\n", sprite.offset.x, sprite.offset.y);
+      printf("New offset: %f,%f\n", sprite[normal].offset.x,
+             sprite[normal].offset.y);
     }
 
     if (pad->getLeftJoyPad().h <= 100) {  // left
-      sprite.offset -= Vec2(16, 0);
-      spriteFlip.offset -= Vec2(16, 0);
-      spriteScale.offset -= Vec2(16, 0);
-      spriteStretch.offset -= Vec2(16, 0);
+      sprite[normal].offset -= Vec2(16, 0);
+      sprite[flip].offset -= Vec2(16, 0);
+      sprite[scale].offset -= Vec2(16, 0);
+      sprite[stretch].offset -= Vec2(16, 0);
       padTimer = 20;
-      printf("New offset: %f,%f\n", sprite.offset.x, sprite.offset.y);
+      printf("New offset: %f,%f\n", sprite[normal].offset.x,
+             sprite[normal].offset.y);
     } else if (pad->getLeftJoyPad().h >= 200) {  // right
-      sprite.offset += Vec2(16, 0);
-      spriteFlip.offset += Vec2(16, 0);
-      spriteScale.offset += Vec2(16, 0);
-      spriteStretch.offset += Vec2(16, 0);
+      sprite[normal].offset += Vec2(16, 0);
+      sprite[flip].offset += Vec2(16, 0);
+      sprite[scale].offset += Vec2(16, 0);
+      sprite[stretch].offset += Vec2(16, 0);
       padTimer = 20;
-      printf("New offset: %f,%f\n", sprite.offset.x, sprite.offset.y);
+      printf("New offset: %f,%f\n", sprite[normal].offset.x,
+             sprite[normal].offset.y);
+    }
+
+    if (sprite[normal].offset.x < 0 || sprite[normal].offset.y < 0) {
+      offsetIsNegative = true;
+    } else {
+      offsetIsNegative = false;
     }
 
   } else {
@@ -190,44 +205,22 @@ void Tutorial10::loadSprite() {
 
   int offset = 25;
 
-  sprite.mode = SpriteMode::MODE_REPEAT;
+  for (int i = 0; i < 4; i++) {
+    sprite[i].position =
+        Vec2((offset * (i + 1)) + ((32.0F * 3) * i),
+             screenSettings.getHeight() / 2.0F - sprite[normal].size.y / 2.0F);
+    if (i == normal || i == flip) {
+      sprite[i].size = Vec2(32.0F, 32.0F);
+      sprite[i].scale = 3;
+    } else {
+      sprite[i].size = Vec2(96.0F, 96.0F);
+    }
+  }
 
-  /** Let's scale it down */
-  sprite.size = Vec2(32.0F, 32.0F);
-  sprite.scale = 3;
+  sprite[stretch].mode = SpriteMode::MODE_STRETCH;
 
-  /** Set the position */
-  sprite.position =
-      Vec2(offset, screenSettings.getHeight() / 2.0F - sprite.size.y / 2.0F);
-
-  spriteFlip.mode = SpriteMode::MODE_REPEAT;
-
-  spriteFlip.flipHorizontal = true;
-  spriteFlip.flipVertical = true;
-
-  spriteFlip.size = Vec2(32.0F, 32.0F);
-
-  spriteFlip.scale = 3;
-
-  spriteFlip.position =
-      Vec2(((offset * 2) + (32.0F * 3)),
-           screenSettings.getHeight() / 2.0F - sprite.size.y / 2.0F);
-
-  spriteScale.mode = SpriteMode::MODE_REPEAT;
-
-  spriteScale.size = Vec2(96.0F, 96.0F);
-
-  spriteScale.position =
-      Vec2(((offset * 3) + ((32.0F * 3) * 2)),
-           screenSettings.getHeight() / 2.0F - sprite.size.y / 2.0F);
-
-  spriteStretch.mode = SpriteMode::MODE_STRETCH;
-
-  spriteStretch.size = Vec2(96.0F, 96.0F);
-
-  spriteStretch.position =
-      Vec2(((offset * 4) + ((32.0F * 3) * 3)),
-           screenSettings.getHeight() / 2.0F - sprite.size.y / 2.0F);
+  sprite[flip].flipHorizontal = true;
+  sprite[flip].flipVertical = true;
 
   TYRA_LOG("Sprite created!");
 }
@@ -278,13 +271,12 @@ void Tutorial10::loadTexture() {
   auto* texture = textureRepository.add(filepath);
 
   /** Let's assign this texture to sprite. */
-  texture->addLink(sprite.id);
+  texture->addLink(sprite[normal].id);
 
-  spriteFlip.id = sprite.id;
-  spriteScale.id = sprite.id;
-  spriteStretch.id = sprite.id;
+  sprite[flip].id = sprite[normal].id;
+  sprite[scale].id = sprite[normal].id;
+  sprite[stretch].id = sprite[normal].id;
 
   TYRA_LOG("Texture loaded!");
 }
-
 }  // namespace Tyra

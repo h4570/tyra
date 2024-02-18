@@ -11,7 +11,6 @@
 #pragma once
 
 #include <tyra>
-#include "font_sprite.hpp"
 
 namespace Tyra {
 
@@ -31,12 +30,26 @@ class Tutorial10 : public Game {
   int padTimer;
   Engine* engine;
   Pad* pad;
-  Font font;
+  FontData myFont;
+  Color white;
 
-  Sprite sprite;
-  Sprite spriteFlip;
-  Sprite spriteScale;
-  Sprite spriteStretch;
+  // sprites position
+  const int normal = 0;   // 0
+  const int flip = 1;     // 1
+  const int scale = 2;    // 2
+  const int stretch = 3;  // 3
+  Sprite sprite[4];
+
+  int posX1;
+  int posX2;
+  int posX3;
+  int posX4;
+  int posY1;
+  int posY2;
+  int posY3;
+  int posY4;
+
+  bool offsetIsNegative = false;
   std::string strFilter;
 
   PipelineTextureMappingType textureFilter;

@@ -19,7 +19,7 @@ CFLAGS      :=
 LIB         := -ltyra
 LIBDIRS     := -L$(ENGINEDIR)/bin
 INC         := -I$(INCDIR) -I$(ENGINEDIR)/inc
-INCDEP      := -I$(INCDIR) -I$(ENGINEDIR)/inc
+INCDEP      := -I$(INCDIR) -I$(ENGINEDIR)/inc -I$(PS2DEV)/ps2sdk/ports/include/freetype2
 
 include ../Makefile.base
 
