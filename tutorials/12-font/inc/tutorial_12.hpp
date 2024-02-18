@@ -14,17 +14,18 @@
 
 namespace Tyra {
 
-class Tutorial11 : public Game {
+class Tutorial12 : public Game {
  public:
-  explicit Tutorial11(Engine* engine);
-  ~Tutorial11();
+  explicit Tutorial12(Engine* engine);
+  ~Tutorial12();
 
   void init();
   void loop();
 
  private:
   Engine* engine;
-  Font font;
+  FontData myFont;
+  FontData myEmojiFont;
   Color white;
   Color skyBlue;
 };

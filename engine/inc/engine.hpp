@@ -40,6 +40,7 @@ class Engine {
   Renderer renderer;
   Pad pad;
   Audio audio;
+  Font font;
   Info info;
 
   void run(Game* t_game);

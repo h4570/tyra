@@ -4,31 +4,21 @@
 
 namespace Tyra {
 
-namespace TyraFont {
-FT_Library library; /* handle to library     */
-FT_UInt defaultFontSize = 32;
-FT_Error error;
-int glyphNotFound = -1;
-float maxSizeInMB = 2;
-float sizeInMBused = 0;
-
-Font defaultFont;
-std::vector<Font*> fontLoaded;
-std::vector<int> deletedIDs;
-Renderer* renderer;
-}  // namespace TyraFont
-
 Font::Font() {}
-Font::~Font() { unloadFont(this); }
+Font::~Font() {
+  for (unsigned int i = 0; i < fontData.size(); i++) {
+    unloadFont(fontData[i]);
+  }
+}
 
-void unloadFontTexture(Font* font) {
+void Font::unloadFontTexture(FontData* font) {
   int size;
-  TyraFont::sizeInMBused -= font->sizeInMB;
+  sizeInMBused -= font->sizeInMB;
   for (unsigned int i = 0; i < font->size.size(); i++) {
     size = font->texture[i].size();
     for (int j = 0; j < size; j++) {
       font->sizeInMB -= font->texture[i][j]->getSizeInMB();
-      TyraFont::renderer->getTextureRepository().free(font->texture[i][j]);
+      renderer->getTextureRepository().free(font->texture[i][j]);
       font->texture[i][j] = nullptr;
       font->texture[i].pop_back();
       font->glyph[i].pop_back();
@@ -44,12 +34,13 @@ void unloadFontTexture(Font* font) {
   if (font->sizeInMB < 0) {
     font->sizeInMB *= -1;
   }
-  if (TyraFont::sizeInMBused < 0) {
-    TyraFont::sizeInMBused *= -1;
+  if (sizeInMBused < 0) {
+    sizeInMBused *= -1;
   }
+  printf("texture destroy\n");
 }
 
-void unloadFont(Font* font) {
+void Font::unloadFont(FontData* font) {
   if (font->face != nullptr) {
     FT_Done_Face(font->face);
     font->face = nullptr;
@@ -62,11 +53,11 @@ void unloadFont(Font* font) {
     font->data = nullptr;
   }
 
-  int size = TyraFont::fontLoaded.size();
+  int size = fontData.size();
   for (int i = 0; i < size; i++) {
-    if (font->id == TyraFont::fontLoaded[i]->id) {
-      TyraFont::deletedIDs.push_back(font->id);
-      TyraFont::fontLoaded.erase(TyraFont::fontLoaded.begin() + i);
+    if (font->id == fontData[i]->id) {
+      deletedIDs.push_back(font->id);
+      fontData.erase(fontData.begin() + i);
       break;
     }
   }
@@ -74,11 +65,17 @@ void unloadFont(Font* font) {
   TYRA_LOG("FONT DELETED");
 }
 
-void fontInit(Renderer* t_renderer) { TyraFont::renderer = t_renderer; }
+void Font::init(Renderer* t_renderer) {
+  renderer = t_renderer;
+  error = FT_Init_FreeType(&library);
+}
 
-/*void loadDefaulFont() {
-  TYRA_LOG("Font loaded");
-}*/
+void Font::setLimitFontTexture(float maxMB) {
+  TYRA_ASSERT(maxMB >= 1 && maxMB <= 10,
+              "Max size in Mb must be between 1 and 10");
+  maxSizeInMB = maxMB;
+}
+
 int getSizeTexture(const int size) {
   if (size <= 8) {
     return 8;
@@ -100,21 +97,35 @@ TextureBuilderData* getTextureData(const int width, const int height) {
   TextureBuilderData* texData = new TextureBuilderData();
   texData->width = width;
   texData->height = height;
-  texData->bpp = TextureBpp::bpp32;
-  texData->gsComponents = TEXTURE_COMPONENTS_RGBA;
   texData->data =
-      new (std::align_val_t(128)) unsigned char[width * height * 4]();
+      static_cast<unsigned char*>(memalign(128, width * height * 4));
+  texData->bpp = TextureBpp::bpp32;
+  texData->clutGsComponents = TEXTURE_COMPONENTS_RGBA;
+
   return texData;
 }
 
-int getGlyphTexture(Font* font, const int fontIndex, int* index,
-                    const int codepoint, const int fontSize) {
+int Font::getGlyphTexture(FontData* font, const int fontIndex, int* index,
+                          const int codepoint, const int fontSize) {
   FT_GlyphSlot slot = font->face->glyph;
-  /* load glyph image into the slot (erase previous one) */
-  TyraFont::error = FT_Load_Char(font->face, codepoint, FT_LOAD_RENDER);
-  if (TyraFont::error) {
+
+  int flags = FT_LOAD_DEFAULT;
+  if (font->hasColor == true) {
+    flags |= FT_LOAD_COLOR;
+  }
+
+  FT_UInt glyph_index = FT_Get_Char_Index(font->face, codepoint);
+
+  error = FT_Load_Glyph(font->face, glyph_index, flags);
+  if (error) {
     printf("Error loading glyph\n");
     return 1;
+  }
+
+  error = FT_Render_Glyph(slot, FT_RENDER_MODE_NORMAL);
+  if (error) {
+    printf("Error render glyph\n");
+    return 2;
   }
 
   int width = getSizeTexture(slot->bitmap.width);
@@ -134,46 +145,48 @@ int getGlyphTexture(Font* font, const int fontIndex, int* index,
   struct PngPixel4* pixels = reinterpret_cast<PngPixel4*>(texData->data);
 
   int k = 0;
-  for (unsigned int i = 0; i < slot->bitmap.rows; i++) {
-    for (unsigned int j = 0; j < slot->bitmap.width; j++) {
-      pixels[k].r = (u8)slot->bitmap.buffer[(i * slot->bitmap.width) + j];
-      pixels[k].g = pixels[k].r;
-      pixels[k].b = pixels[k].r;
-      pixels[k].a = (int)(pixels[k].r * 128 / 255);
-      // if(j==0){
-      //   pixels[k].r = 255;
-      // pixels[k].g = 0,
-      // pixels[k].b = 0;
-      // pixels[k].a = 128;
-      // }
-      k++;
+  unsigned char* bitmapPixels = slot->bitmap.buffer;
+
+  if (font->hasColor == false) {
+    for (unsigned int i = 0; i < slot->bitmap.rows; i++) {
+      for (unsigned int j = 0; j < slot->bitmap.width; j++) {
+        pixels[k].r = *bitmapPixels++;
+        pixels[k].g = pixels[k].r;
+        pixels[k].b = pixels[k].r;
+        pixels[k].a = (int)(pixels[k].r * 128 / 255);
+        k++;
+      }
+
+      k += width - slot->bitmap.width;
     }
-    k += width - slot->bitmap.width;
+  } else {
+    for (unsigned int i = 0; i < slot->bitmap.rows; i++) {
+      for (unsigned int j = 0; j < slot->bitmap.width; j++) {
+        pixels[k].b = *bitmapPixels++;
+        pixels[k].g = *bitmapPixels++;
+        pixels[k].r = *bitmapPixels++;
+        pixels[k].a = (int)(*bitmapPixels++ * 128 / 255);
+        k++;
+      }
+
+      k += width - slot->bitmap.width;
+    }
   }
-  // k = 0;
-  // for (int i = 0; i < 1; i++) {
-  //   for (int j = 0; j < (int)slot->bitmap.width; j++) {
-  //     pixels[k].r = 255;
-  //     pixels[k].g = 0,
-  //     pixels[k].b = 0;
-  //     pixels[k].a = 128;
-  //     k++;
-  //   }
-  // }
 
   font->texture[fontIndex].push_back(new Texture(texData));
 
   delete texData;
   font->texture[fontIndex][*index]->addLink(
       font->glyph[fontIndex][*index].sprite.id);
-  TyraFont::renderer->getTextureRepository().add(
-      font->texture[fontIndex][*index]);
+
+  renderer->getTextureRepository().add(font->texture[fontIndex][*index]);
+
   font->sizeInMB += font->texture[fontIndex][*index]->getSizeInMB();
-  TyraFont::sizeInMBused += font->texture[fontIndex][*index]->getSizeInMB();
+  sizeInMBused += font->texture[fontIndex][*index]->getSizeInMB();
   return 0;
 }
 
-int getCodepoint(const unsigned char* text, int* bytes) {
+int Font::getCodepoint(const unsigned char* text, int* bytes) {
   /* UTF-8 more info in https://en.wikipedia.org/wiki/UTF-8
 
     Code point ↔ UTF-8 conversion
@@ -227,19 +240,25 @@ int getCodepoint(const unsigned char* text, int* bytes) {
   return codepoint;
 }
 
-int getGlyphIndex(std::vector<Tyra::Glyph>* glyph, const int codepoint) {
+int Font::getCodepoint(const char* text, int* bytes) {
+  return getCodepoint(reinterpret_cast<const unsigned char*>(&text[0]), bytes);
+}
+
+int Font::getGlyphIndex(std::vector<Tyra::Glyph>* glyph, const int codepoint) {
   for (unsigned int i = 0; i < glyph->size(); i++) {
     if (codepoint == (*glyph)[i].value) {
       return i;
     }
   }
-  return TyraFont::glyphNotFound;
+  return glyphNotFound;
 }
 
-int getFontSizeIndex(Font* font, const int fontSize) {
-  if (TyraFont::sizeInMBused >= TyraFont::maxSizeInMB) {
-    for (unsigned int i = 0; i < TyraFont::fontLoaded.size(); i++) {
-      unloadFontTexture(TyraFont::fontLoaded[i]);
+int Font::getFontSizeIndex(FontData* font, const int fontSize) {
+  if (textureLimits == true) {
+    if (sizeInMBused >= maxSizeInMB) {
+      for (unsigned int i = 0; i < fontData.size(); i++) {
+        unloadFontTexture(fontData[i]);
+      }
     }
   }
 
@@ -265,8 +284,8 @@ int getFontSizeIndex(Font* font, const int fontSize) {
   return font->size.size() - 1;
 }
 
-void drawText(Font* font, std::string text, float x, float y, int fontSize,
-              Color color) {
+void Font::drawText(FontData* font, std::string text, float x, float y,
+                    int fontSize, Color color) {
   int charsUsed;
   int codepoint;
   int index;  // glyph index
@@ -307,7 +326,7 @@ void drawText(Font* font, std::string text, float x, float y, int fontSize,
                                &charsUsed);
       index = getGlyphIndex(&font->glyph[fontIndex], codepoint);
 
-      if (index == TyraFont::glyphNotFound) {
+      if (index == glyphNotFound) {
         getGlyphTexture(font, fontIndex, &index, codepoint, fontSize);
       }
 
@@ -323,8 +342,7 @@ void drawText(Font* font, std::string text, float x, float y, int fontSize,
       font->glyph[fontIndex][index].sprite.position = Vec2(
           x + offsetX, y + offsetY - font->glyph[fontIndex][index].bitmap.y);
 
-      TyraFont::renderer->renderer2D.render(
-          font->glyph[fontIndex][index].sprite);
+      renderer->renderer2D.render(font->glyph[fontIndex][index].sprite);
       offsetX += font->glyph[fontIndex][index].advance.x -
                  font->glyph[fontIndex][index].bitmap.x;
       previous = index;
@@ -339,21 +357,9 @@ void drawText(Font* font, std::string text, float x, float y, int fontSize,
   }
 }
 
-// For default font
-// void drawText(std::string text, float x, float y, int fontSize, Color color)
-// {
-//   drawText(&defaultFont, text, x, y, fontSize, color);
-// }
-
-void setMaxSizeInFontMemory(float maxMB) {
-  TYRA_ASSERT(maxMB >= 1 && maxMB <= 10,
-              "Max size in Mb must be between 1 and 10");
-  TyraFont::maxSizeInMB = maxMB;
-}
-
-void loadFont(Font* font, const std::string& filePath, int fontSize) {
-  FT_Error error = FT_Init_FreeType(&TyraFont::library);
-
+void Font::loadFontGlyphs(FontData* font, const int fontSize,
+                          std::vector<int>& codePoints,
+                          const std::string& filePath) {
   FILE* file = fopen(filePath.c_str(), "rb");
   fseek(file, 0, SEEK_END);
   size_t size = ftell(file);
@@ -365,8 +371,7 @@ void loadFont(Font* font, const std::string& filePath, int fontSize) {
 
   fclose(file);
 
-  error =
-      FT_New_Memory_Face(TyraFont::library, font->data, size, 0, &font->face);
+  error = FT_New_Memory_Face(library, font->data, size, 0, &font->face);
 
   TYRA_ASSERT(
       error != FT_Err_Unknown_File_Format,
@@ -377,27 +382,42 @@ void loadFont(Font* font, const std::string& filePath, int fontSize) {
 
   error = FT_Set_Pixel_Sizes(font->face, 0, fontSize);
 
-  if (TyraFont::deletedIDs.empty() == false) {
-    font->id = TyraFont::deletedIDs.front();
-    TyraFont::deletedIDs.erase(TyraFont::deletedIDs.begin());
+  if (deletedIDs.empty() == false) {
+    font->id = deletedIDs.front();
+    deletedIDs.erase(deletedIDs.begin());
   } else {
-    font->id = TyraFont::fontLoaded.size();
+    font->id = fontData.size();
+  }
+
+  if (FT_HAS_COLOR(font->face) == false) {
+    TYRA_LOG("Font has no color");
+  } else {
+    TYRA_LOG("Font has color");
+    font->hasColor = true;
   }
 
   int fontIndex = getFontSizeIndex(font, fontSize);
   int index;
 
-  // Load the ASCII Font
-  for (int i = 32; i < 128; i++) {
-    getGlyphTexture(font, fontIndex, &index, i, fontSize);
+  for (unsigned int i = 0; i < codePoints.size(); i++) {
+    getGlyphTexture(font, fontIndex, &index, codePoints[i], fontSize);
   }
 
-  TyraFont::fontLoaded.push_back(font);
+  fontData.push_back(font);
   TYRA_LOG("Font Loaded!");
 }
 
-void loadFont(Font* font, const std::string& filePath) {
-  loadFont(font, filePath.c_str(), TyraFont::defaultFontSize);
+void Font::loadFont(FontData* font, const int fontSize,
+                    const std::string& filePath) {
+  std::vector<int> asciiCodepoints;
+  for (int i = 32; i < 128; i++) {
+    asciiCodepoints.push_back(i);
+  }
+  loadFontGlyphs(font, fontSize, asciiCodepoints, filePath);
+}
+
+void Font::loadFont(FontData* font, const std::string& filePath) {
+  loadFont(font, defaultFontSize, filePath);
 }
 
 }  // namespace Tyra

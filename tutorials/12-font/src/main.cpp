@@ -9,16 +9,18 @@
 */
 
 #include "engine.hpp"
-#include "tutorial_11.hpp"
+#include "tutorial_12.hpp"
 
 /**
  * In this tutorial we will learn how to:
  * - Load and unload fonts
+ * - Load an individual character
+ * - How works the limit textures
  */
 
 int main() {
   Tyra::Engine engine;
-  Tyra::Tutorial11 game(&engine);
+  Tyra::Tutorial12 game(&engine);
   engine.run(&game);
   return 0;
 }
