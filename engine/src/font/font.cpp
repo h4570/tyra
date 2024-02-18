@@ -147,7 +147,7 @@ int Font::getGlyphTexture(FontData* font, const int fontIndex, int* index,
   int k = 0;
   unsigned char* bitmapPixels = slot->bitmap.buffer;
 
-  if (font->hasColor == false) {
+  if (slot->bitmap.pixel_mode != FT_PIXEL_MODE_BGRA) {
     for (unsigned int i = 0; i < slot->bitmap.rows; i++) {
       for (unsigned int j = 0; j < slot->bitmap.width; j++) {
         pixels[k].r = *bitmapPixels++;

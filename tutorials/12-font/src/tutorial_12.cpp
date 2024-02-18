@@ -55,8 +55,6 @@ void Tutorial12::init() {
    *
    * If the texture limit is exceeded or change the size of the font in
    * DrawText, the above will happen.
-   *
-   * Also not every font has a char with 32-127 for example seguiemj.tff
    */
 
   engine->font.loadFont(&myFont, FileUtils::fromCwd("roboto-bold.ttf"));
