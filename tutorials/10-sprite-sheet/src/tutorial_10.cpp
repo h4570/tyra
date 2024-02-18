@@ -44,7 +44,7 @@ void Tutorial10::init() {
   /** Texture contains png image. */
   loadTexture();
 
-  loadFont(&font, FileUtils::fromCwd("Roboto-Black.ttf"));
+  engine->font.loadFont(&myFont, FileUtils::fromCwd("Roboto-Black.ttf"));
 
   white = Color(255.0F, 255.0F, 255.0F, 128.0F);
 
@@ -56,6 +56,7 @@ void Tutorial10::init() {
 
 void Tutorial10::loop() {
   auto& renderer = engine->renderer;
+  auto& font = engine->font;
 
   /** Change the texture filtering of the texture.
    *
@@ -87,20 +88,20 @@ void Tutorial10::loop() {
   renderer.renderer2D.render(sprite[stretch]);
 
   renderer.core.renderer2D.setTextureMappingType(TyraLinear);
-  drawText(&font, "tests with sprite sheet", (512 / 2) - 80, 20, 16, white);
-  drawText(&font, "Press Cross for nearest filter", (512 / 2) - 95, 50, 16,
+  font.drawText(&myFont, "tests with sprite sheet", (512 / 2) - 80, 20, 16, white);
+  font.drawText(&myFont, "Press Cross for nearest filter", (512 / 2) - 95, 50, 16,
            white);
-  drawText(&font, "Press Circle for linear filter", (512 / 2) - 90, 70, 16,
+  font.drawText(&myFont, "Press Circle for linear filter", (512 / 2) - 90, 70, 16,
            white);
-  drawText(&font, "Use left stick for move the offsets of the sprites",
+  font.drawText(&myFont, "Use left stick for move the offsets of the sprites",
            (512 / 2) - 150, 90, 16, white);
-  drawText(&font, "sprite 32x32\n   scaled x3", sprite[normal].position.x,
+  font.drawText(&myFont, "sprite 32x32\n   scaled x3", sprite[normal].position.x,
            sprite[normal].position.y - 40, 16, white);
-  drawText(&font, "sprite 32x32\nscaled x3 with\n  \t\tflip",
+  font.drawText(&myFont, "sprite 32x32\nscaled x3 with\n  \t\tflip",
            sprite[flip].position.x, sprite[flip].position.y - 40, 16, white);
-  drawText(&font, "sprite 96x96\n  \t\twith\nrepeat mode",
+  font.drawText(&myFont, "sprite 96x96\n  \t\twith\nrepeat mode",
            sprite[scale].position.x, sprite[scale].position.y - 40, 16, white);
-  drawText(&font, "sprite 96x96\n  \t\twith\nstretch mode",
+  font.drawText(&myFont, "sprite 96x96\n  \t\twith\nstretch mode",
            sprite[stretch].position.x, sprite[stretch].position.y - 40, 16,
            white);
 
@@ -110,13 +111,13 @@ void Tutorial10::loop() {
     strFilter = "Filter: Nearest";
   }
 
-  drawText(&font, strFilter, posX1, posY1, 16, white);
-  drawText(&font, "Filter: Linear", posX2, posY2, 16, white);
-  drawText(&font, strFilter, posX3, posY3, 16, white);
-  drawText(&font, strFilter, posX4, posY4, 16, white);
+  font.drawText(&myFont, strFilter, posX1, posY1, 16, white);
+  font.drawText(&myFont, "Filter: Linear", posX2, posY2, 16, white);
+  font.drawText(&myFont, strFilter, posX3, posY3, 16, white);
+  font.drawText(&myFont, strFilter, posX4, posY4, 16, white);
 
   if (offsetIsNegative == true) {
-    drawText(&font,
+    font.drawText(&myFont,
              "The offset must not be negative or you will get this error", 20,
              posY1 + 32, 16, Color(255.0F, 0, 0, 128));
   }

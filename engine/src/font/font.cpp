@@ -98,7 +98,7 @@ TextureBuilderData* getTextureData(const int width, const int height) {
   texData->width = width;
   texData->height = height;
   texData->data =
-      static_cast<unsigned char*>(memalign(128, width * height * 4));
+      new (std::align_val_t(128)) unsigned char[width * height * 4]();
   texData->bpp = TextureBpp::bpp32;
   texData->clutGsComponents = TEXTURE_COMPONENTS_RGBA;
 

@@ -30,7 +30,7 @@ class Tutorial10 : public Game {
   int padTimer;
   Engine* engine;
   Pad* pad;
-  Font font;
+  FontData myFont;
   Color white;
 
   // sprites position
