@@ -54,6 +54,92 @@ IrxLoader::IrxLoader() {
 
 IrxLoader::~IrxLoader() {}
 
+
+std::map<int, std::string>IrxLoader::IOPErrors = {
+    {-1,   "Unknown error"},
+    {-101, "Illegal intrcode"},
+    {-102, "CPU ID"},
+    {-103, "Interrupt disabled"},
+    {-104, "Found handler"},
+    {-105, "Handler not found"},
+    {-150, "No timer"},
+    {-151, "Illegal timer ID"},    
+    {-152, "Illegal source"},
+    {-153, "Illegal prescale"},
+    {-154, "Timer busy"},
+    {-155, "Timer not setup"},
+    {-156, "Timer not in use"},
+    {-160, "Unit used"},
+    {-161, "Unit not used"},
+    {-162, "No ROMDIR"},
+    {-200, "Linker error (missing driver dependency/imports)"},
+    {-201, "Illegal object"},
+    {-202, "Unknown Module"},
+    {-203, "No such file"},
+    {-204, "File error"},
+    {-205, "Memory in use"},
+    {-206, "Already started"},
+    {-207, "Not started"},
+    {-208, "Module already stopped"},
+    {-209, "Cannot stop module"},
+    {-210, "Module not stopped"},
+    {-211, "Module not removable"},
+    {-212, "Library found"},
+    {-213, "Library not found"},
+    {-214, "Illegal library"},
+    {-215, "Library in use"},
+    {-216, "Already stopping"},
+    {-217, "Illegal offset"},
+    {-218, "Illegal position"},
+    {-219, "Illegal access"},
+    {-220, "Illegal flag"},
+    {-400, "NO MEMORY"},
+    {-401, "Illegal attribute"},
+    {-402, "Illegal entry"},
+    {-403, "Illegal priority"},
+    {-404, "Illegal stack size"},
+    {-405, "Illegal mode"},
+    {-406, "Illegal THID"},
+    {-407, "Unknown THID"},
+    {-408, "Unknown SEMID"},
+    {-409, "Unknown EVFID"},
+    {-410, "Unknown MBXID"},
+    {-411, "Unknown VPLID"},
+    {-412, "Unknown FPLID"},
+    {-413, "Dormant"},
+    {-414, "Not dormant"},
+    {-415, "Not suspend"},
+    {-416, "Not Waiting"},
+    {-417, "Cannot wait"},
+    {-418, "KE_RELEASE_WAIT"},
+    {-419, "KE_SEMA_ZERO"},
+    {-420, "KE_SEMA_OVF"},
+    {-421, "KE_EVF_COND"},
+    {-422, "KE_EVF_MULTI"},
+    {-423, "KE_EVF_ILPAT"},
+    {-424, "KE_MBOX_NOMSG"},
+    {-425, "Wait delete"},
+    {-426, "Illegal memblock"},
+    {-427, "Illegal memsize"},
+    {-428, "Illegal SPAD addr"},
+    {-429, "SPAD in use"},
+    {-430, "SPAD not in use"},
+    {-431, "Illegal type"},
+    {-432, "Illegal size"},
+};
+
+/**
+ * @brief an equivalent of C standard `strerror()` for the IOP error codes
+ * @note although this is intended for checking IRX module error status. it can be used to evaluate return values from any operation requested to the IOP. such as module unload request. simply pass the error number to the ID parameter
+ * @param ID module ID or IOP related return value
+ * @param RET module return value obtained by the last parameter of `SifExecModuleBuffer`
+ * @return description of an IOP error or IRX startup error
+ */
+std::string IrxLoader::GetIrxErrorDescription(const int ID, const int RET = 0) {
+  if (RET == 1) return "Module willingly requested to be unloaded from IOP";
+  return IOPErrors[ID]
+}
+
 void IrxLoader::loadAll(const bool& withUsb, const bool& isLoggingToFile) {
   if (isLoaded) {
     TYRA_LOG("IRX modules already loaded!");
