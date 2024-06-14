@@ -137,7 +137,7 @@ std::map<int, std::string>IrxLoader::IOPErrors = {
  */
 std::string IrxLoader::GetIrxErrorDescription(const int ID, const int RET = 0) {
   if (RET == 1) return "Module willingly requested to be unloaded from IOP";
-  return IOPErrors[ID]
+  return IrxLoader::IOPErrors[ID]
 }
 
 void IrxLoader::loadAll(const bool& withUsb, const bool& isLoggingToFile) {
@@ -186,26 +186,26 @@ int IrxLoader::applyRpcPatches() {
 void IrxLoader::loadLibsd(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading libsd...");
 
-  int ret;
-  SifExecModuleBuffer(&libsd_irx, size_libsd_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: libsd_irx");
+  int ret, id;
+  id = SifExecModuleBuffer(&libsd_irx, size_libsd_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: libsd_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: Libsd loaded!");
 }
 
 void IrxLoader::loadIO(const bool& verbose) {
-  int ret;
+  int ret, id;
   if (verbose) TYRA_LOG("IRX: Loading iomanX...");
 
-  SifExecModuleBuffer(&iomanX_irx, size_iomanX_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: iomanX_irx");
+  id = SifExecModuleBuffer(&iomanX_irx, size_iomanX_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: iomanX_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: iomanX loaded!");
 
   if (verbose) TYRA_LOG("IRX: Loading fileXio...");
 
   SifExecModuleBuffer(&fileXio_irx, size_fileXio_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: fileXio_irx");
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: fileXio_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: fileXio_irx loaded!");
 
@@ -214,19 +214,19 @@ void IrxLoader::loadIO(const bool& verbose) {
 void IrxLoader::loadUsbModules(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading usb modules...");
 
-  int ret;
+  int ret, id;
 
   SifExecModuleBuffer(&usbd_irx, size_usbd_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: usbd_irx");
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: usbd_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   SifExecModuleBuffer(&bdm_irx, size_bdm_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: bdm_irx");
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: bdm_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   SifExecModuleBuffer(&bdmfs_fatfs_irx, size_bdmfs_fatfs_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: bdmfs_fatfs");
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: bdmfs_fatfs_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   SifExecModuleBuffer(&usbmass_bd_irx, size_usbmass_bd_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: usbmass");
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: usbmass_bd_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   waitUntilUsbDeviceIsReady();
 
@@ -236,9 +236,9 @@ void IrxLoader::loadUsbModules(const bool& verbose) {
 void IrxLoader::loadAudsrv(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading audsrv...");
 
-  int ret;
+  int ret, id;
   SifExecModuleBuffer(&audsrv_irx, size_audsrv_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: audsrv_irx");
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: audsrv_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: Audsrv loaded!");
 }
@@ -246,9 +246,9 @@ void IrxLoader::loadAudsrv(const bool& verbose) {
 void IrxLoader::loadSio2man(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading sio2man...");
 
-  int ret;
+  int ret, id;
   SifExecModuleBuffer(&sio2man_irx, size_sio2man_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: sio2man_irx");
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: sio2man_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: Sio2man loaded!");
 }
@@ -256,9 +256,9 @@ void IrxLoader::loadSio2man(const bool& verbose) {
 void IrxLoader::loadPadman(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading padman...");
 
-  int ret;
+  int ret, id;
   SifExecModuleBuffer(&padman_irx, size_padman_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: padman_irx");
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: padman_irx", IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: Padman loaded!");
 }

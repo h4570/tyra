@@ -11,6 +11,7 @@
 #pragma once
 
 #include <tamtypes.h>
+#include <map>
 
 namespace Tyra {
 
@@ -34,6 +35,8 @@ class IrxLoader {
   int applyRpcPatches();
   void waitUntilUsbDeviceIsReady();
   void delay(int count);
+  std::string GetIrxErrorDescription(const int ID, const int RET);
+  std::map<int, std::string>IOPErrors;
 };
 
 }  // namespace Tyra
