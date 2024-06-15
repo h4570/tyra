@@ -12,6 +12,7 @@
 
 #include <tamtypes.h>
 #include <map>
+#include <string>
 
 namespace Tyra {
 
@@ -36,7 +37,7 @@ class IrxLoader {
   void waitUntilUsbDeviceIsReady();
   void delay(int count);
   std::string GetIrxErrorDescription(const int ID, const int RET);
-  std::map<int, std::string>IOPErrors;
+  static std::map<int, std::string> IOPErrors;
 };
 
 }  // namespace Tyra
