@@ -68,6 +68,8 @@ Decision was simple - I need to create an engine which will handle 3D file loadi
 * 07 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/07-lighting) - Static lightmap and dynamic directional lights
 * 08 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/08-skybox-debug) - Skybox and debug rendering
 * 09 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/09-manual-mode) - Manual rendering (a'la OpenGL)
+* 10 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/10-sprite-sheet) - Sprite sheet (font)
+* 11 - [Code](https://github.com/h4570/tyra/tree/master/tutorials/11-texture-region-repeat) - Texture repeating
 * Demo game - [Code](https://github.com/h4570/tyra/tree/master/demo)
 ---
 
@@ -141,7 +143,7 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 Without these guys, Tyra would not happen:
 * [Dr Henry Fortuna](http://ps2-edu.tensioncore.com/index.html) - for code sources, PS2 academy tutorials
 * Whole [PS2DEV](https://github.com/ps2dev) team, and specially to [Rick Gaiser](https://github.com/rickgaiser), [fjtrujy](https://github.com/fjtrujy) - for a lot of good tips!
-* [Wellington Carvalho](https://github.com/Wellinator), [André Guilheme](https://github.com/Wolf3s), [Matías Israelson](https://github.com/israpps) - for testing, contributing to Tyra and sharing cool ideas!
+* [Wellington Carvalho](https://github.com/Wellinator), [André Guilheme](https://github.com/Wolf3s), [Matías Israelson](https://github.com/israpps), [Guido Diego Quispe Robles](https://github.com/israpps) - for testing, contributing to Tyra and sharing cool ideas!
 * [Leonardo Ono](https://github.com/leonardo-ono) - for software renderer example (with clipping!)
 * [Lukasz D.K.](https://github.com/lukaszdk) - for huge archive of PS2 stuff
 * [Guilherme Lampert](https://github.com/glampert) - for code sources

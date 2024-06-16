@@ -168,6 +168,8 @@ void BlockizerProgramsManager::sendPacket(McpipProgram* program) {
   packet2_utils_vu_add_end_tag(currentPacket);
 
   dma_channel_wait(DMA_CHANNEL_VIF1, 0);
+  dma_channel_wait(DMA_CHANNEL_GIF, 0);  // Wait for texture. Issue #182.
+
   // dma_wait_fast(); // This have no impact on performance
 
   dma_channel_send_packet2(currentPacket, DMA_CHANNEL_VIF1, true);
