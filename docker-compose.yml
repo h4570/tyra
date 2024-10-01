@@ -6,7 +6,7 @@ services:
     environment:
       TERM: xterm-256color
     network_mode: host
-    image: "h4570/tyra"
+    image: "h4570/tyra:latest-ps2sdk"
     tty: true
     container_name: tyra-compiler
     volumes:
