@@ -15,8 +15,9 @@
 int main() {
   Tyra::EngineOptions options;
 
+  options.loggingMode = LOGGING_EESIO;
   if (Demo::IS_REAL_PS2_VIA_USB) {
-    options.writeLogsToFile = true;
+    options.loggingMode = LOGGING_FILE;
     options.loadUsbDriver = true;
   }
 

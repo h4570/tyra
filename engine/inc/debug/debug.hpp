@@ -30,6 +30,12 @@
 #include "file/file_utils.hpp"
 #include "info/info.hpp"
 
+#ifdef EESIO_UART_USE_SIOCOOKIE
+#include <SIOCookie.h>
+#else
+#include <sio.h>
+#endif
+
 #define TYRA_LOG(...) TyraDebug::writeLines("LOG: ", ##__VA_ARGS__, "\n")
 #define TYRA_WARN(...) TyraDebug::writeLines("==WARN: ", ##__VA_ARGS__, "\n")
 #define TYRA_ERROR(...) TyraDebug::writeLines("====ERR: ", ##__VA_ARGS__, "\n")
@@ -48,8 +54,11 @@ class TyraDebug {
     using expander = int[];
     (void)expander{0, (void(ss << std::forward<Args>(args)), 0)...};
 
-    if (Tyra::Info::writeLogsToFile) {
+    if (Tyra::Info::loggingMode == LOGGING_FILE) {
       writeInLogFile(&ss);
+    } else if (Tyra::Info::loggingMode == LOGGING_EESIO) {
+      initializeEESIO();
+      sio_putsn(ss.str().c_str());
     } else {
       printf("%s", ss.str().c_str());
     }
@@ -63,7 +72,7 @@ class TyraDebug {
     ss1 << "| Assertion failed!\n";
     ss1 << "|\n";
 
-    if (Tyra::Info::writeLogsToFile) {
+    if (Tyra::Info::loggingMode == LOGGING_FILE) {
       writeInLogFile(&ss1);
     } else {
       printf("%s", ss1.str().c_str());
@@ -76,8 +85,11 @@ class TyraDebug {
     ss2 << "| File : " << file << ":" << line << "\n";
     ss2 << "====================================\n\n";
 
-    if (Tyra::Info::writeLogsToFile) {
+    if (Tyra::Info::loggingMode == LOGGING_FILE) {
       writeInLogFile(&ss2);
+    } else if (Tyra::Info::loggingMode == LOGGING_EESIO) {
+      initializeEESIO();
+      sio_putsn(ss2.str().c_str());
     } else {
       printf("%s", ss2.str().c_str());
     }
@@ -93,6 +105,7 @@ class TyraDebug {
 
  private:
   static void writeInLogFile(std::stringstream* ss);
+  static void initializeEESIO();
 
   template <typename Arg, typename... Args>
   static void writeAssertLines(Arg&& arg, Args&&... args) {
@@ -103,8 +116,11 @@ class TyraDebug {
     (void)expander{
         0, (void(ss << "| " << std::forward<Args>(args) << "\n"), 0)...};
 
-    if (Tyra::Info::writeLogsToFile) {
+    if (Tyra::Info::loggingMode == LOGGING_FILE) {
       writeInLogFile(&ss);
+    } else if (Tyra::Info::loggingMode == LOGGING_EESIO) {
+      initializeEESIO();
+      sio_putsn(ss.str().c_str());
     } else {
       printf("%s", ss.str().c_str());
     }
