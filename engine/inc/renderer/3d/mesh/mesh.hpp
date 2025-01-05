@@ -41,7 +41,13 @@ class Mesh {
     return reinterpret_cast<Vec4*>(&translation.data[3 * 4]);
   }
 
+  /** Get angle from rotation matrix */
+  inline Vec4* getRotation() {
+    return reinterpret_cast<Vec4*>(&rotation.data[3 * 4]);
+  }
+
   void setPosition(const Vec4& v);
+  void setAngle(const Vec4& v);
 
  protected:
   void init();

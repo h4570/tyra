@@ -75,4 +75,9 @@ void Mesh::setPosition(const Vec4& v) {
   reinterpret_cast<Vec4*>(&translation.data[3 * 4])->set(v);
 }
 
+void Mesh::setAngle(const Vec4& v) {
+  TYRA_ASSERT(v.w == 1.0F, "Vec4 must be homogeneous");
+  reinterpret_cast<Vec4*>(&rotation.data[3 * 4])->set(v);
+}
+
 }  // namespace Tyra
