@@ -152,7 +152,7 @@ Without these guys, Tyra would not happen:
 * And so many other guys. Thanks!
 
 Project Link: [https://github.com/h4570/tyra](https://github.com/h4570/tyra)  
-Sandro Sobczyński - sandro.sobczynski@gmail.com  
+Sandro Sobczyński - sandro.sobczynski@gmail.com (<a href="https://hasto.pl">hasto.pl</a>)
 [![LinkedIn][linkedin-shield]](https://linkedin.com/in/sandro-sobczyński-28820b15a)  
   
 <br />
