@@ -8,7 +8,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    container: h4570/tyra
+    container: h4570/tyra:latest-ps2sdk # TODO remove tag when ready
     steps:
     - name: Install dependencies
       run: |

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # Install necessary packages for PS2DEV, VCLPP and VCL.
 RUN apt-get update
@@ -36,7 +36,7 @@ RUN wget https://github.com/h4570/tyra/raw/master/assets/vcl
 # ------------------------------------------------------------------------------
 
 # Start from clean image
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # Set ENV variables
 ENV PS2DEV /usr/local/ps2dev

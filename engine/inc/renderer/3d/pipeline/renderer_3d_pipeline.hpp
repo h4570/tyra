@@ -11,6 +11,7 @@
 #pragma once
 
 #include "renderer/core/renderer_core.hpp"
+#include <functional>
 
 namespace Tyra {
 
