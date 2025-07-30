@@ -21,7 +21,7 @@
 
 // external IRX modules
 #define EXTERN_IRX(_irx) \
-  extern u8 _irx[]; \
+  extern u8 _irx[];      \
   extern int size_##_irx
 
 EXTERN_IRX(sio2man_irx);
@@ -53,6 +53,95 @@ IrxLoader::IrxLoader() {
 }
 
 IrxLoader::~IrxLoader() {}
+
+std::map<int, std::string> IrxLoader::IOPErrors = {
+    {-1, "Unknown error"},
+    {-101, "Illegal intrcode"},
+    {-102, "CPU ID"},
+    {-103, "Interrupt disabled"},
+    {-104, "Found handler"},
+    {-105, "Handler not found"},
+    {-150, "No timer"},
+    {-151, "Illegal timer ID"},
+    {-152, "Illegal source"},
+    {-153, "Illegal prescale"},
+    {-154, "Timer busy"},
+    {-155, "Timer not setup"},
+    {-156, "Timer not in use"},
+    {-160, "Unit used"},
+    {-161, "Unit not used"},
+    {-162, "No ROMDIR"},
+    {-200, "Linker error (missing driver dependency/imports)"},
+    {-201, "Illegal object"},
+    {-202, "Unknown Module"},
+    {-203, "No such file"},
+    {-204, "File error"},
+    {-205, "Memory in use"},
+    {-206, "Already started"},
+    {-207, "Not started"},
+    {-208, "Module already stopped"},
+    {-209, "Cannot stop module"},
+    {-210, "Module not stopped"},
+    {-211, "Module not removable"},
+    {-212, "Library found"},
+    {-213, "Library not found"},
+    {-214, "Illegal library"},
+    {-215, "Library in use"},
+    {-216, "Already stopping"},
+    {-217, "Illegal offset"},
+    {-218, "Illegal position"},
+    {-219, "Illegal access"},
+    {-220, "Illegal flag"},
+    {-400, "NO MEMORY"},
+    {-401, "Illegal attribute"},
+    {-402, "Illegal entry"},
+    {-403, "Illegal priority"},
+    {-404, "Illegal stack size"},
+    {-405, "Illegal mode"},
+    {-406, "Illegal THID"},
+    {-407, "Unknown THID"},
+    {-408, "Unknown SEMID"},
+    {-409, "Unknown EVFID"},
+    {-410, "Unknown MBXID"},
+    {-411, "Unknown VPLID"},
+    {-412, "Unknown FPLID"},
+    {-413, "Dormant"},
+    {-414, "Not dormant"},
+    {-415, "Not suspend"},
+    {-416, "Not Waiting"},
+    {-417, "Cannot wait"},
+    {-418, "KE_RELEASE_WAIT"},
+    {-419, "KE_SEMA_ZERO"},
+    {-420, "KE_SEMA_OVF"},
+    {-421, "KE_EVF_COND"},
+    {-422, "KE_EVF_MULTI"},
+    {-423, "KE_EVF_ILPAT"},
+    {-424, "KE_MBOX_NOMSG"},
+    {-425, "Wait delete"},
+    {-426, "Illegal memblock"},
+    {-427, "Illegal memsize"},
+    {-428, "Illegal SPAD addr"},
+    {-429, "SPAD in use"},
+    {-430, "SPAD not in use"},
+    {-431, "Illegal type"},
+    {-432, "Illegal size"},
+};
+
+/**
+ * @brief an equivalent of C standard `strerror()` for the IOP error codes
+ * @note although this is intended for checking IRX module error status. it can
+ * be used to evaluate return values from any operation requested to the IOP.
+ * such as module unload request. simply pass the error number to the ID
+ * parameter
+ * @param ID module ID or IOP related return value
+ * @param RET module return value obtained by the last parameter of
+ * `SifExecModuleBuffer`
+ * @return description of an IOP error or IRX startup error
+ */
+std::string IrxLoader::GetIrxErrorDescription(const int ID, const int RET = 0) {
+  if (RET == 1) return "Module willingly requested to be unloaded from IOP";
+  return IrxLoader::IOPErrors[ID];
+}
 
 void IrxLoader::loadAll(const bool& withUsb, const bool& isLoggingToFile) {
   if (isLoaded) {
@@ -100,47 +189,55 @@ int IrxLoader::applyRpcPatches() {
 void IrxLoader::loadLibsd(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading libsd...");
 
-  int ret;
-  SifExecModuleBuffer(&libsd_irx, size_libsd_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: libsd_irx");
+  int ret, id;
+  id = SifExecModuleBuffer(&libsd_irx, size_libsd_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: libsd_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: Libsd loaded!");
 }
 
 void IrxLoader::loadIO(const bool& verbose) {
-  int ret;
+  int ret, id;
   if (verbose) TYRA_LOG("IRX: Loading iomanX...");
 
-  SifExecModuleBuffer(&iomanX_irx, size_iomanX_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: iomanX_irx");
+  id = SifExecModuleBuffer(&iomanX_irx, size_iomanX_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: iomanX_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: iomanX loaded!");
 
   if (verbose) TYRA_LOG("IRX: Loading fileXio...");
 
   SifExecModuleBuffer(&fileXio_irx, size_fileXio_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: fileXio_irx");
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: fileXio_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: fileXio_irx loaded!");
-
 }
 
 void IrxLoader::loadUsbModules(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading usb modules...");
 
-  int ret;
+  int ret, id;
 
-  SifExecModuleBuffer(&usbd_irx, size_usbd_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: usbd_irx");
+  id = SifExecModuleBuffer(&usbd_irx, size_usbd_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: usbd_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
-  SifExecModuleBuffer(&bdm_irx, size_bdm_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: bdm_irx");
+  id = SifExecModuleBuffer(&bdm_irx, size_bdm_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: bdm_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
-  SifExecModuleBuffer(&bdmfs_fatfs_irx, size_bdmfs_fatfs_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: bdmfs_fatfs");
+  id = SifExecModuleBuffer(&bdmfs_fatfs_irx, size_bdmfs_fatfs_irx, 0, nullptr,
+                           &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: bdmfs_fatfs_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
-  SifExecModuleBuffer(&usbmass_bd_irx, size_usbmass_bd_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: usbmass");
+  id = SifExecModuleBuffer(&usbmass_bd_irx, size_usbmass_bd_irx, 0, nullptr,
+                           &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: usbmass_bd_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
   waitUntilUsbDeviceIsReady();
 
@@ -150,9 +247,10 @@ void IrxLoader::loadUsbModules(const bool& verbose) {
 void IrxLoader::loadAudsrv(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading audsrv...");
 
-  int ret;
-  SifExecModuleBuffer(&audsrv_irx, size_audsrv_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: audsrv_irx");
+  int ret, id;
+  id = SifExecModuleBuffer(&audsrv_irx, size_audsrv_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: audsrv_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: Audsrv loaded!");
 }
@@ -160,9 +258,10 @@ void IrxLoader::loadAudsrv(const bool& verbose) {
 void IrxLoader::loadSio2man(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading sio2man...");
 
-  int ret;
-  SifExecModuleBuffer(&sio2man_irx, size_sio2man_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: sio2man_irx");
+  int ret, id;
+  id = SifExecModuleBuffer(&sio2man_irx, size_sio2man_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: sio2man_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: Sio2man loaded!");
 }
@@ -170,9 +269,10 @@ void IrxLoader::loadSio2man(const bool& verbose) {
 void IrxLoader::loadPadman(const bool& verbose) {
   if (verbose) TYRA_LOG("IRX: Loading padman...");
 
-  int ret;
-  SifExecModuleBuffer(&padman_irx, size_padman_irx, 0, nullptr, &ret);
-  TYRA_ASSERT(ret >= 0, "Failed to load module: padman_irx");
+  int ret, id;
+  id = SifExecModuleBuffer(&padman_irx, size_padman_irx, 0, nullptr, &ret);
+  TYRA_ASSERT(ret == 1 || id < 0, "Failed to load module: padman_irx",
+              IrxLoader::GetIrxErrorDescription(id, ret));
 
   if (verbose) TYRA_LOG("IRX: Padman loaded!");
 }
