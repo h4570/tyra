@@ -20,10 +20,15 @@
     <a href="https://youtube.com/playlist?list=PLdQVLBcXRRWvtMi-OqccDWLTEFEisD5RH"><strong>YouTube tutorials »</strong></a>
     &nbsp;
     <br />
-    <br />
     <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
     ·
     <a href="https://github.com/h4570/tyra/issues">Request Feature</a>
+    <br />
+    <br />
+    <div style="background-color: #ebcc20; padding: 10px; border-radius: 5px; text-align: center; color: black">
+    Looking for Tyra with GUI editor?  <br />
+    Check <a href="https://github.com/doctorspider42/tyraX"><strong>TyraX</strong></a> by <a href="https://github.com/doctorspider42">doctorspider42</a>!
+    </div>
   </p>
 </p>  
 
