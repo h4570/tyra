@@ -25,9 +25,12 @@
     <a href="https://github.com/h4570/tyra/issues">Request Feature</a>
     <br />
     <br />
-    <div style="background-color: #ebcc20; padding: 10px; border-radius: 5px; text-align: center; color: black">
-    Looking for Tyra with GUI editor?  <br />
-    Check <a href="https://github.com/doctorspider42/tyraX"><strong>TyraX</strong></a> by <a href="https://github.com/doctorspider42">doctorspider42</a>!
+    <div style="background-color: #ebcc20; padding: 10px; border-radius: 5px; color: black">
+      <p align="center"> <strong>
+        Looking for Tyra with GUI editor?
+        <br />
+        Check <a href="https://github.com/doctorspider42/tyraX">TyraX</a> by <a href="https://github.com/doctorspider42">doctorspider42</a>!
+      </strong> </p>
     </div>
   </p>
 </p>  
