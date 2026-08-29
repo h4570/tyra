@@ -37,6 +37,12 @@ VU_OBJECTS_VSM  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(VU_SOURCES_VSM:.$(VSME
 VCL_SOURCES  := $(shell find $(SRCDIR) -type f -name *.$(VCLPPEXT))
 VCL_OBJECTS  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(VCL_SOURCES:.$(VCLPPEXT)=.$(OBJEXT)))
 
+
+ifeq ($(EESIO_USE_SIOCOOKIE), 1)
+  LIB += -lsiocookie
+  CFLAGS += -DEESIO_UART_USE_SIOCOOKIE
+endif
+
 #Default Make
 all: resources $(TARGET)
 #all: resources irxcopy $(TARGET)
