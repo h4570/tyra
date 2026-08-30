@@ -49,10 +49,10 @@ void FileUtils::setPathInfo(const char* path) {
 
 std::string FileUtils::getCwd() {
   std::string result;
-  char _cwd[NAME_MAX];
+  char _cwd[MAX_NAME_LEN];
   getcwd(_cwd, sizeof(_cwd));
   result = _cwd;
-  return result;
+  return result + "/";
 }
 
 std::string FileUtils::fromCwd(const std::string& relativePath) {
