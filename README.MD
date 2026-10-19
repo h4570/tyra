@@ -23,6 +23,7 @@
     <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
     ·
     <a href="https://github.com/h4570/tyra/issues">Request Feature</a>
+    <br /><br /><br />
   </p>
 </p>  
 
