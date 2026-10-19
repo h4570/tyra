@@ -27,12 +27,12 @@
   </p>
 </p>  
 
-<h2 align="center">🚀 Meet TyraX</h2>
+---
 
 <p align="center">
   <strong>Want to build PlayStation 2 games with a visual editor?</strong>
   <br />
-  TyraX brings a GUI editor to the Tyra ecosystem!
+  Check TyraX which brings a GUI editor to the Tyra ecosystem!
 </p>
 
 <p align="center">
