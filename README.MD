@@ -23,17 +23,28 @@
     <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
     ·
     <a href="https://github.com/h4570/tyra/issues">Request Feature</a>
-    <br />
-    <br />
-    <div style="background-color: #ebcc20; padding: 10px; border-radius: 5px; color: black">
-      <p align="center"> <strong>
-        Looking for Tyra with GUI editor?
-        <br />
-        Check <a href="https://github.com/doctorspider42/tyraX">TyraX</a> by <a href="https://github.com/doctorspider42">doctorspider42</a>!
-      </strong> </p>
-    </div>
   </p>
 </p>  
+
+<h2 align="center">🚀 Meet TyraX</h2>
+
+<p align="center">
+  <strong>Want to build PlayStation 2 games with a visual editor?</strong>
+  <br />
+  TyraX brings a GUI editor to the Tyra ecosystem!
+</p>
+
+<p align="center">
+  <a href="https://github.com/doctorspider42/tyraX">
+    <img src="https://img.shields.io/badge/🎮_EXPLORE_TYRAX-FFD700?style=for-the-badge&logoColor=black" alt="Explore TyraX" />
+  </a>
+</p>
+
+<p align="center">
+  Developed by <a href="https://github.com/doctorspider42"><strong>doctorspider42</strong></a>
+</p>
+
+---
 
 ## Table of Contents  
 
