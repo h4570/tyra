@@ -27,15 +27,15 @@ void Camera::update(const Vec4& playerPosition, const float& terrainHeight) {
   const auto& rightJoy = pad->getRightJoyPad();
 
   if (rightJoy.h <= 100) {
-    circleRotation -= rotationOffset;
-  } else if (rightJoy.h >= 200) {
     circleRotation += rotationOffset;
+  } else if (rightJoy.h >= 200) {
+    circleRotation -= rotationOffset;
   }
 
   if (rightJoy.v <= 100) {
-    height -= heightOffset;
-  } else if (rightJoy.v >= 200) {
     height += heightOffset;
+  } else if (rightJoy.v >= 200) {
+    height -= heightOffset;
   }
 
   unitCircle.x = (sin(circleRotation) * lengthFromOrigin);
