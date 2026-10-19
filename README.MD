@@ -23,7 +23,7 @@
     <a href="https://github.com/h4570/tyra/issues">Report Bug</a>
     ·
     <a href="https://github.com/h4570/tyra/issues">Request Feature</a>
-    <br /><br /><br />
+    <br /><br />
   </p>
 </p>  
 
@@ -37,12 +37,18 @@
 
 <p align="center">
   <a href="https://github.com/doctorspider42/tyraX">
-    <img src="https://img.shields.io/badge/🎮_EXPLORE_TYRAX-FFD700?style=for-the-badge&logoColor=black" alt="Explore TyraX" />
+    <img
+      src="https://raw.githubusercontent.com/doctorspider42/tyraX/main/docs/img/readme-banner.png"
+      alt="TyraX - Visual editor for Tyra"
+      width="85%"
+    />
   </a>
 </p>
 
 <p align="center">
   Developed by <a href="https://github.com/doctorspider42"><strong>doctorspider42</strong></a>
+  <br />
+  <a href="https://github.com/doctorspider42/tyraX"><strong>Explore TyraX »</strong></a>
 </p>
 
 ---
